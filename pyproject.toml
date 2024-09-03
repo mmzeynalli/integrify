@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "ClientAz"
+version = "0.1.0"
+description = "Payment API integrations"
+authors = ["mmzeynalli <miradil.zeynalli@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^2.8.2"
+python-dotenv = "^1.0.1"
+httpx = "^0.27.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+mypy = "^1.9.0"
+ruff = "^0.3.5"
+pre-commit = "^3.6.2"
+ptpython = "^3.0.29"
+
+
+[tool.poetry.group.mypy.dependencies]
+types-requests = "^2.32.0.20240712"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # isort
+    "I"
+]
+ignore-init-module-imports = true
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
