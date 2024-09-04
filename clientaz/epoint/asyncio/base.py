@@ -3,7 +3,6 @@ import json
 
 from clientaz.base import AsyncApiRequest, RequestType
 from clientaz.epoint.helper import generate_signature
-from clientaz.epoint.schemas.response import EPointSaveCardResponseSchema
 from clientaz.epoint.sync.base import EPointRequest as SyncEPointRequest
 
 
@@ -15,6 +14,3 @@ class EPointRequest(AsyncApiRequest[RequestType], SyncEPointRequest):  # type: i
             'signature': generate_signature(b64data),
         }
         return await super().__call__(*args, **kwargs)
-
-
-class EPointSaveCardRequest(EPointRequest[EPointSaveCardResponseSchema]): ...

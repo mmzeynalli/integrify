@@ -1,5 +1,5 @@
 from clientaz.epoint.asyncio.base import EPointRequest
-from clientaz.epoint.schemas.response import EPointPayWithSavedCardResponseSchema
+from clientaz.epoint.schemas.request import EPointDecodedCallbackDataSchema
 
 
-class EPointPayWithSavedCardRequest(EPointRequest[EPointPayWithSavedCardResponseSchema]): ...
+class EPointPaymentRequest(EPointRequest[EPointDecodedCallbackDataSchema]): ...

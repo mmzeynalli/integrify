@@ -2,10 +2,6 @@ import logging
 from functools import partial
 from typing import Callable
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 try:
     import logfire  # type: ignore
 except ModuleNotFoundError:

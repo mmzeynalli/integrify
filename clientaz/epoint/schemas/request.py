@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 from urllib.parse import parse_qsl
 
@@ -15,11 +16,11 @@ class EPointCallbackDataSchema(BaseModel):
 
 
 class EPointDecodedCallbackDataSchema(BaseModel):
-    order_id: Optional[str] = None
     status: Optional[str] = None
     code: Optional[str] = None
-    card_id: Optional[str] = None
     message: Optional[str] = None
+    order_id: Optional[str] = None
+    card_id: Optional[str] = None
     transaction: Optional[str] = None
     bank_transaction: Optional[str] = None
     bank_response: Optional[str] = None
@@ -27,5 +28,5 @@ class EPointDecodedCallbackDataSchema(BaseModel):
     rrn: Optional[str] = None
     card_name: Optional[str] = None
     card_mask: Optional[str] = None
-    amount: Optional[str] = None
+    amount: Optional[Decimal] = None
     other_attr: Optional[str] = None
