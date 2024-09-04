@@ -126,6 +126,32 @@ class EPointPayoutRequest(EPointRequest[EPointPayoutResponseSchema]):
 
 
 class EPointRefundRequest(EPointRequest[EPointMinimalResponseSchema]):
+    """
+    EPointRefundRequest is a class used to send a refund request via the EPoint API.
+
+    This class allows you to request a refund for a specific transaction,
+    including the currency used in the transaction and optionally the amount to be refunded.
+
+    Usage:
+    ```python
+    >>> EPointRefundRequest(transaction_id='1234567',currency='AZN',amount=100)() :
+    ```
+
+
+    **Parameters:**
+
+    * **transaction_id** - *(str)* The unique ID of the transaction to be refunded
+    * **currency** - *(str)* The currency to be refunded (for example, 'USD', 'AZN').
+    * **amount** - *(Decimal | None)* The amount to be refunded. If not specified,
+    a full refund is made.
+
+    **Methods:**
+    * __init__: Creates an instance of the EPointRefundRequest class, prepares the necessary data,
+    and configures the refund request.
+    * __call__: Sends the configured refund request to
+    the EPoint API and processes the response from the API.
+    """
+
     def __init__(self, transaction_id: str, currency: str, amount: Decimal | None):
         super().__init__()
 
