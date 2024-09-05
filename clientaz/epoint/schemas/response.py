@@ -16,7 +16,7 @@ class EPointMinimalResponseSchema(BaseModel):
     message: Optional[str] = None
 
 
-class EPointRedirectResponseSchema(EPointMinimalResponseSchema):
+class EPointRedirectUrlResponseSchema(EPointMinimalResponseSchema):
     # if success
     redirect_url: Optional[str] = None
     card_id: Optional[str] = None
@@ -32,6 +32,10 @@ class EPointPayWithSavedCardResponseSchema(EPointMinimalResponseSchema):
     card_mask: Optional[str] = None
     card_name: Optional[str] = None
     amount: Optional[Decimal] = None
+
+
+class EPointSplitPayWithSavedCardResponseSchema(EPointPayWithSavedCardResponseSchema):
+    split_amount: Optional[Decimal] = None
 
 
 class EPointPayoutResponseSchema(EPointMinimalResponseSchema):

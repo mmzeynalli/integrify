@@ -4,7 +4,7 @@ from clientaz.epoint.schemas.response import (
     EPointMinimalResponseSchema,
     EPointPayoutResponseSchema,
     EPointPayWithSavedCardResponseSchema,
-    EPointRedirectResponseSchema,
+    EPointRedirectUrlResponseSchema,
 )
 
 
@@ -14,7 +14,7 @@ class EPointPaymentRequest(EPointRequest[EPointDecodedCallbackDataSchema]): ...
 class EPointPayWithSavedCardRequest(EPointRequest[EPointPayWithSavedCardResponseSchema]): ...
 
 
-class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectResponseSchema]): ...
+class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSchema]): ...
 
 
 class EPointPayoutRequest(EPointRequest[EPointPayoutResponseSchema]): ...

@@ -1,5 +1,5 @@
 from clientaz.epoint.schemas.request import EPointDecodedCallbackDataSchema
-from clientaz.epoint.schemas.response import EPointRedirectResponseSchema
+from clientaz.epoint.schemas.response import EPointRedirectUrlResponseSchema
 from clientaz.epoint.sync.base import EPointRequest
 
 
@@ -11,7 +11,7 @@ class EPointGetTransactionStatusRequest(EPointRequest[EPointDecodedCallbackDataS
         self.data['transaction'] = transaction_id
 
 
-class EPointSaveCardRequest(EPointRequest[EPointRedirectResponseSchema]):
+class EPointSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
     def __init__(self):
         super().__init__()
         self.path = '/api/1/card-registration'

@@ -30,3 +30,7 @@ class EPointDecodedCallbackDataSchema(BaseModel):
     card_mask: Optional[str] = None
     amount: Optional[Decimal] = None
     other_attr: Optional[str] = None
+
+
+class EPointDecodedCallbackSplitPaymentDataSchema(EPointDecodedCallbackDataSchema):
+    split_amount: Optional[Decimal] = None

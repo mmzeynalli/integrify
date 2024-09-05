@@ -6,7 +6,7 @@ from clientaz.epoint.schemas.response import (
     EPointMinimalResponseSchema,
     EPointPayoutResponseSchema,
     EPointPayWithSavedCardResponseSchema,
-    EPointRedirectResponseSchema,
+    EPointRedirectUrlResponseSchema,
 )
 from clientaz.epoint.sync.base import EPointRequest
 
@@ -65,7 +65,7 @@ class EPointPayWithSavedCardRequest(EPointRequest[EPointPayWithSavedCardResponse
         )
 
 
-class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectResponseSchema]):
+class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
     def __init__(
         self,
         amount: Decimal,
@@ -74,6 +74,9 @@ class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectResponseSchema]):
         description: str | None = None,
     ):
         super().__init__()
+
+        self.path = '/api/1/card-registration-with-pay'
+        self.verb = 'POST'
 
         # Required data
         self.data.update(
@@ -93,9 +96,6 @@ class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectResponseSchema]):
 
         if EPOINT_FAILED_REDIRECT_URL:
             self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
-
-        self.path = '/api/1/card-registration-with-pay'
-        self.verb = 'POST'
 
 
 class EPointPayoutRequest(EPointRequest[EPointPayoutResponseSchema]):
