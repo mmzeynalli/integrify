@@ -1,3 +1,12 @@
+"""
+Package to use EPoint endpoints. You need to set EPOINT_PUBLIC_KEY and EPOINT_PRIVATE_KEY
+environmental variables to be able to use this package. For documentation, refer to:
+
+AZ: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20az.pdf
+EN: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20en.pdf
+RU: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20ru.pdf
+"""
+
 import os
 from warnings import warn
 
