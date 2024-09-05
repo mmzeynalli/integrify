@@ -126,7 +126,7 @@ class EPointPayoutRequest(EPointRequest[EPointPayoutResponseSchema]):
 
 
 class EPointRefundRequest(EPointRequest[EPointMinimalResponseSchema]):
-    def __init__(self, transaction_id: str, currency: str, amount: Decimal | None):
+    def __init__(self, transaction_id: str, currency: str, amount: Decimal | None = None):
         super().__init__()
 
         self.path = '/api/1/reverse'
