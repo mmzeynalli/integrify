@@ -1,3 +1,5 @@
+"""Bölmə ilə ödəmə sorğuları (sync)"""
+
 from decimal import Decimal
 
 from clientaz.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
@@ -13,7 +15,7 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
     This request class is used to split the bill with another EPoint user.
 
     Example:
-        >>> EPointSplitPaymentRequest(amount=100, currency='AZN', transaction_id='123456789',
+        >>> EPointSplitPaymentRequest(amount=100, currency='AZN', order_id='123456789',
                                         split_user_id='epoint_user_id', split_amount=50,
                                         description='split payment')
     """
@@ -22,7 +24,7 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
         self,
         amount: Decimal,
         currency: str,
-        transaction_id: str,
+        order_id: str,
         split_user_id: str,
         split_amount: Decimal,
         description: str | None = None,
@@ -31,7 +33,7 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
         """Args:
         amount: Total amount of payment
         currency: 3 letter currency in which refund should be made
-        transaction_id: Unique identifier of transaction on server side
+        order_id: Unique identifier of transaction on server side
         split_user_id: **EPoint** user id for split payment
         split_amount: splitted amount
         description: Optional descriptiton of transaction
@@ -47,7 +49,7 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
             {
                 'amount': amount,
                 'currency': currency,
-                'order_id': transaction_id,
+                'order_id': order_id,
                 'split_user': split_user_id,
                 'split_amount': split_amount,
             }
@@ -72,7 +74,7 @@ class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCa
         self,
         amount: Decimal,
         currency: str,
-        transaction_id: str,
+        order_id: str,
         card_id: str,
         split_user_id: str,
         split_amount: Decimal,
@@ -87,7 +89,7 @@ class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCa
             {
                 'amount': amount,
                 'currency': currency,
-                'order_id': transaction_id,
+                'order_id': order_id,
                 'card_id': card_id,
                 'split_user': split_user_id,
                 'split_amount': split_amount,
@@ -104,7 +106,7 @@ class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSc
         self,
         amount: Decimal,
         currency: str,
-        transaction_id: str,
+        order_id: str,
         split_user_id: str,
         split_amount: Decimal,
         description: str | None = None,
@@ -119,7 +121,7 @@ class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSc
             {
                 'amount': amount,
                 'currency': currency,
-                'order_id': transaction_id,
+                'order_id': order_id,
                 'split_user': split_user_id,
                 'split_amount': split_amount,
             }

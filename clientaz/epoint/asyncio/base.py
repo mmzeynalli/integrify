@@ -7,6 +7,8 @@ from clientaz.epoint.sync.base import EPointRequest as SyncEPointRequest
 
 
 class EPointRequest(AsyncApiRequest[RequestType], SyncEPointRequest):  # type: ignore[misc]
+    """Async sorğular üçün baza class"""
+
     async def __call__(self, *args, **kwargs):
         b64data = base64.b64encode(json.dumps(self.data).encode()).decode()
         self.body = {

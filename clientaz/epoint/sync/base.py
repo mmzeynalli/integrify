@@ -8,6 +8,8 @@ from clientaz.logger import EPOINT_LOGGER_NAME
 
 
 class EPointRequest(SyncApiRequest[RequestType]):
+    """Sync sorğular üçün baza class"""
+
     def __init__(self):
         super().__init__('EPoint', EPOINT_LOGGER_NAME)
         self.base_url = 'https://epoint.az'

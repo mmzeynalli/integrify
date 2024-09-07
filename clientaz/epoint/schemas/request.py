@@ -16,9 +16,9 @@ class EPointCallbackDataSchema(BaseModel):
 
 
 class EPointDecodedCallbackDataSchema(BaseModel):
-    status: Optional[str] = None
-    code: Optional[str] = None
-    message: Optional[str] = None
+    status: str
+    code: str
+    message: str
     order_id: Optional[str] = None
     card_id: Optional[str] = None
     transaction: Optional[str] = None
