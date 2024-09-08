@@ -2,9 +2,8 @@ import base64
 import json
 
 from clientaz.base import RequestType, SyncApiRequest
-from clientaz.epoint import EPOINT_PUBLIC_KEY
+from clientaz.epoint import EPOINT_LOGGER_NAME, EPOINT_PUBLIC_KEY
 from clientaz.epoint.helper import generate_signature
-from clientaz.logger import EPOINT_LOGGER_NAME
 
 
 class EPointRequest(SyncApiRequest[RequestType]):

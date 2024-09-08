@@ -1,23 +1,29 @@
 """Bölmə ilə ödəmə sorğuları (sync)"""
 
 from decimal import Decimal
+from typing import Optional
 
 from clientaz.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
-from clientaz.epoint.schemas.response import (
+from clientaz.epoint.schemas.types import (
     EPointRedirectUrlResponseSchema,
+    EPointRedirectUrlWithCardIdResponseSchema,
     EPointSplitPayWithSavedCardResponseSchema,
 )
 from clientaz.epoint.sync.base import EPointRequest
 
 
 class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
-    """
-    This request class is used to split the bill with another EPoint user.
+    """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
     Example:
         >>> EPointSplitPaymentRequest(amount=100, currency='AZN', order_id='123456789',
-                                        split_user_id='epoint_user_id', split_amount=50,
-                                        description='split payment')
+                                                split_user_id='epoint_user_id', split_amount=50,
+                                                description='split payment')()
+
+    Cavab formatı: :class:`EPointRedirectUrlResponseSchema`
+
+    Axın:
+    -----------------------------------------------------------------------------------
     """
 
     def __init__(
@@ -27,18 +33,21 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
         order_id: str,
         split_user_id: str,
         split_amount: Decimal,
-        description: str | None = None,
+        description: Optional[str] = None,
         **extra,
     ):
-        """Args:
-        amount: Total amount of payment
-        currency: 3 letter currency in which refund should be made
-        order_id: Unique identifier of transaction on server side
-        split_user_id: **EPoint** user id for split payment
-        split_amount: splitted amount
-        description: Optional descriptiton of transaction
-        extra: Optional extra data you want to pass to request, which will be returned in callback
         """
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Ödəniş məzənnəsi. Mümkün dəyərlər: AZN
+            order_id: Unikal ID. Maksimal uzunluq: 255 simvol.
+            split_user_id: Ödənişi böləcəyini **EPoint** user-ini IDsi
+            split_amount: Bölünən miqdar. Numerik dəyər
+            description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
+            **extra: Başqa ötürmək istədiyiniz əlavə dəyərlər. Bu dəyərlər callback sorğuda sizə
+                        geri göndərilir.
+        """
+
         super().__init__()
 
         self.path = '/api/1/split-request'
@@ -70,6 +79,19 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
 
 
 class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCardResponseSchema]):
+    """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
+
+    Example:
+        >>> EPointSplitPayWithSavedCardRequest(amount=100, currency='AZN', order_id='123456789',
+                                        card_id='cexxxxxx', split_user_id='epoint_user_id',
+                                        split_amount=50, description='split payment')()
+
+    Cavab formatı: :class:`EPointSplitPayWithSavedCardResponseSchema`
+
+    Axın:
+    -----------------------------------------------------------------------------------
+    """
+
     def __init__(
         self,
         amount: Decimal,
@@ -78,8 +100,20 @@ class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCa
         card_id: str,
         split_user_id: str,
         split_amount: Decimal,
-        description: str | None = None,
+        description: Optional[str] = None,
     ):
+        """
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Ödəniş məzənnəsi. Mümkün dəyərlər: AZN
+            order_id: Unikal ID. Maksimal uzunluq: 255 simvol.
+            card_id: Saxlanılmış kartın id-si. Adətən `ce` prefiksi ilə başlayır.
+            split_user_id: Ödənişi böləcəyini **EPoint** user-ini IDsi
+            split_amount: Bölünən miqdar. Numerik dəyər
+            description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
+            **extra: Başqa ötürmək istədiyiniz əlavə dəyərlər. Bu dəyərlər callback sorğuda sizə
+                        geri göndərilir.
+        """
         super().__init__()
 
         self.path = '/api/1/split-execute-pay'
@@ -101,7 +135,20 @@ class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCa
             self.data['description'] = description
 
 
-class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
+class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlWithCardIdResponseSchema]):
+    """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
+
+    Example:
+        >>> EPointSplitPayAndSaveCardRequest(amount=100, currency='AZN', order_id='123456789',
+                                                split_user_id='epoint_user_id', split_amount=50,
+                                                description='split payment')()
+
+    Cavab formatı: :class:`EPointRedirectUrlWithCardIdResponseSchema`
+
+    Axın:
+    -----------------------------------------------------------------------------------
+    """
+
     def __init__(
         self,
         amount: Decimal,
@@ -109,8 +156,17 @@ class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlResponseSc
         order_id: str,
         split_user_id: str,
         split_amount: Decimal,
-        description: str | None = None,
+        description: Optional[str] = None,
     ):
+        """
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Ödəniş məzənnəsi. Mümkün dəyərlər: AZN
+            order_id: Unikal ID. Maksimal uzunluq: 255 simvol.
+            split_user_id: Ödənişi böləcəyini **EPoint** user-ini IDsi
+            split_amount: Bölünən miqdar. Numerik dəyər
+            description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
+        """
         super().__init__()
 
         self.path = '/api/1/split-card-registration-with-pay'

@@ -19,4 +19,3 @@ LOGFIRE: Callable = logfire and partial(logfire.with_tags)
 
 
 LOGGER_FUNCTION = LOGGER
-EPOINT_LOGGER_NAME = 'epoint'

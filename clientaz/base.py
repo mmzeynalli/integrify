@@ -1,4 +1,4 @@
-from typing import Any, Generic, Optional, TypeVar, get_args
+from typing import Any, Generic, Optional, TypeVar, Union, get_args
 from urllib.parse import urljoin
 
 import httpx
@@ -18,7 +18,7 @@ class ApiResponse(BaseModel, Generic[ResponseType]):
 
 
 class ApiRequest(Generic[RequestType]):
-    session: httpx.Client | httpx.AsyncClient | None = None
+    session: Union[httpx.Client, httpx.AsyncClient, None] = None
 
     def __init__(self, client_name: str, logger_name: str):
         self.base_url: str
@@ -59,7 +59,7 @@ class ApiRequest(Generic[RequestType]):
 
 
 class SyncApiRequest(ApiRequest[RequestType]):
-    session: httpx.Client | None = None
+    session: Optional[httpx.Client] = None
 
     def __call__(self, *args: Any, **kwds: Any):
         if not self.session:
@@ -70,7 +70,7 @@ class SyncApiRequest(ApiRequest[RequestType]):
 
 
 class AsyncApiRequest(ApiRequest[RequestType]):
-    session: httpx.AsyncClient | None = None
+    session: Optional[httpx.AsyncClient] = None
 
     async def __call__(self, *args, **kwds):
         if not self.session:
