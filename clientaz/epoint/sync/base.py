@@ -2,7 +2,7 @@ import base64
 import json
 
 from clientaz.base import RequestType, SyncApiRequest
-from clientaz.epoint import EPOINT_LOGGER_NAME, EPOINT_PUBLIC_KEY
+from clientaz.epoint import EPOINT_INTERFACE_LANG, EPOINT_LOGGER_NAME, EPOINT_PUBLIC_KEY
 from clientaz.epoint.helper import generate_signature
 
 
@@ -14,7 +14,7 @@ class EPointRequest(SyncApiRequest[RequestType]):
         self.base_url = 'https://epoint.az'
         self.data = {
             'public_key': EPOINT_PUBLIC_KEY,
-            'language': 'en',
+            'language': EPOINT_INTERFACE_LANG,
         }
 
     def __call__(self, *args, **kwargs):
