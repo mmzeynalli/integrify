@@ -3,6 +3,7 @@ from typing import Optional
 from warnings import warn
 
 from dotenv import load_dotenv
+from sync import misc, payment, split
 
 load_dotenv()
 
@@ -19,3 +20,16 @@ EPOINT_LOGGER_NAME = str = os.getenv('EPOINT_LOGGER_NAME', 'epoint')
 
 if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
     warn('set EPOINT_PUBLIC_KEY/EPOINT_PRIVATE_KEY env variables to use this library correctly')
+
+
+__all__ = [
+    'misc',
+    'payment',
+    'split',
+    'VERSION',
+    'EPOINT_PUBLIC_KEY',
+    'EPOINT_PRIVATE_KEY',
+    'EPOINT_INTERFACE_LANG',
+    'EPOINT_SUCCESS_REDIRECT_URL',
+    'EPOINT_FAILED_REDIRECT_URL',
+]

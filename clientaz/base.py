@@ -12,9 +12,16 @@ ResponseType = TypeVar('ResponseType')
 
 class ApiResponse(BaseModel, Generic[ResponseType]):
     ok: bool = Field(validation_alias='is_success')
+    """Cavab sorğusunun statusu 400dən kiçikdirsə"""
+
     status_code: int
+    """Cavab sorğusunun status kodu"""
+
     headers: dict
+    """Cavab sorğusunun header-i"""
+
     body: ResponseType
+    """Cavab sorğusunun body-si"""
 
 
 class ApiRequest(Generic[RequestType]):

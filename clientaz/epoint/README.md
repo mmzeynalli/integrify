@@ -1,19 +1,25 @@
-# EPoint Callback Məntiqi
+# EPoint
+
+Bu sorğulardan istifadə etmək üçün, bu dəyərləri "environment variable"-larına əlavə etməlisiniz: `EPOINT_PUBLIC_KEY`, `EPOINT_PRIVATE_KEY`
+
+EPoint interfeysinin dilini dəyişmək istəyirsinizsə, `EPOINT_INTERFACE_LANG` "environment variable"-na dəyər verin. Default olaraq, Azərbaycan dili olacaq.
+
+Sorğular uğurlu və ya uğursuz olduqda, spesifik URL-ə yönləndirmək istəyirsinizsə, bu dəyişənlərə də mühit levelində dəyər verin: EPOINT_SUCCESS_REDIRECT_URL, EPOINT_FAILED_REDIRECT_URL
 
 ## Sorğular listi
 
 | Sorğu class-ı                        | Məqsəd                                                               |                EPoint API                 | Callback-ə sorğu atılır |
 | :----------------------------------- | :------------------------------------------------------------------- | :---------------------------------------: | :---------------------: |
-| `EPointPaymentRequest`               | Ödəniş                                                               |             `/api/1/request`              |      <li>[x]</li>       |
-| `EPointGetTransactionStatusRequest`  | Ödəniş statusunun yoxlanılması                                       |            `/api/1/get-status`            |      <li>[ ]</li>       |
-| `EPointSaveCardRequest`              | Ödəniş olmadan kartı yadda saxlamaq                                  |        `/api/1/card-registration`         |      <li>[x]</li>       |
-| `EPointPayWithSavedCardRequest`      | Saxlanılan kartla ödəniş                                             |           `/api/1/execute-pay`            |      <li>[ ]</li>       |
-| `EPointPayAndSaveCardRequest`        | Ödəniş etmə və kartı yadda saxlamaq                                  |    `/api/1/card-registration-with-pay`    |      <li>[x]</li>       |
-| `EPointPayoutRequest`                | Vəsaitlərin köçürülməsi                                              |          `/api/1/refund-request`          |      <li>[ ]</li>       |
-| `EPointRefundRequest`                | Ödənişi tam və ya yarımçıq geri qaytarma                             |             `/api/1/reverse`              |      <li>[ ]</li>       |
-| `EPointSplitPaymentRequest`          | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə                    |          `/api/1/split-request`           |      <li>[x]</li>       |
-| `EPointSplitPayWithSavedCardRequest` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |      <li>[ ]</li>       |
-| `EPointSplitPayAndSaveCardRequest`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` |      <li>[x]</li>       |
+| `EPointPaymentRequest`               | Ödəniş                                                               |             `/api/1/request`              |   :heavy_check_mark:    |
+| `EPointGetTransactionStatusRequest`  | Ödəniş statusunun yoxlanılması                                       |            `/api/1/get-status`            |           :x:           |
+| `EPointSaveCardRequest`              | Ödəniş olmadan kartı yadda saxlamaq                                  |        `/api/1/card-registration`         |   :heavy_check_mark:    |
+| `EPointPayWithSavedCardRequest`      | Saxlanılan kartla ödəniş                                             |           `/api/1/execute-pay`            |           :x:           |
+| `EPointPayAndSaveCardRequest`        | Ödəniş etmə və kartı yadda saxlamaq                                  |    `/api/1/card-registration-with-pay`    |   :heavy_check_mark:    |
+| `EPointPayoutRequest`                | Vəsaitlərin köçürülməsi                                              |          `/api/1/refund-request`          |           :x:           |
+| `EPointRefundRequest`                | Ödənişi tam və ya yarımçıq geri qaytarma                             |             `/api/1/reverse`              |           :x:           |
+| `EPointSplitPaymentRequest`          | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə                    |          `/api/1/split-request`           |   :heavy_check_mark:    |
+| `EPointSplitPayWithSavedCardRequest` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |           :x:           |
+| `EPointSplitPayAndSaveCardRequest`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` |   :heavy_check_mark:    |
 
 ## Callback Sorğusu
 
