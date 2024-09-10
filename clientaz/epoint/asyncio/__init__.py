@@ -1,1 +1,1 @@
-"""Async sorğular modulu"""
+"""EPoint üçün async sorğular modulu"""

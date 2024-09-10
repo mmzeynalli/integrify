@@ -7,7 +7,7 @@ from clientaz.epoint.helper import generate_signature
 
 
 class EPointRequest(SyncApiRequest[RequestType]):
-    """Sync sorğular üçün baza class"""
+    """EPoint sorğular üçün baza class"""
 
     def __init__(self):
         super().__init__('EPoint', EPOINT_LOGGER_NAME)

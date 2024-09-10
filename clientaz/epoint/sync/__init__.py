@@ -1,0 +1,1 @@
+"""EPoint üçün sorğular modulu"""
