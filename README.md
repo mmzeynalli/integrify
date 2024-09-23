@@ -1,6 +1,6 @@
-# ClientAz
+# Integrify
 
-ClientAz API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
+Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 
 ## Əsas özəlliklər
 
@@ -11,16 +11,16 @@ ClientAz API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 
 ---
 
-**Dokumentasiya**: []()
+**Dokumentasiya**: [https://integrify.mmzeynalli.dev](https://integrify.mmzeynalli.dev)
 
-**Kod**: [https://github.com/mmzeynalli/clientaz](https://github.com/mmzeynalli/clientaz)
+**Kod**: [https://github.com/mmzeynalli/integrify](https://github.com/mmzeynalli/integrify)
 
 ---
 
 ## Kitabxananın yüklənməsi
 
 ```shell
-$ pip install clientaz
+$ pip install integrify
 ```
 
 ## İstifadəsi
