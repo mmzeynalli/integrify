@@ -30,7 +30,7 @@ Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 ### Sync
 
 ```python
-from clientaz.epoint.payment import EPointPaymentRequest
+from integrify.epoint.payment import EPointPaymentRequest
 
 resp = EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')()
 print(resp.ok, resp.body)
@@ -40,7 +40,7 @@ print(resp.ok, resp.body)
 ### Async
 
 ```python
-from clientaz.epoint.asyncio.payment import EPointPaymentRequest
+from integrify.epoint.asyncio.payment import EPointPaymentRequest
 
 # Async main loop artıq başlamışdır
 resp = await EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')()
@@ -69,6 +69,6 @@ class ApiResponse:
 
 ## Dəstəklənən API inteqrasiyaları
 
-| Servis |   Əsas sorğular    | Bütün sorğular | Dokumentləşdirilmə | Link                                                                     |
-| ------ | :----------------: | :------------: | ------------------ | ------------------------------------------------------------------------ |
-| EPoint | :heavy_check_mark: |      :x:       | Tam                | [Docs](https://github.com/mmzeynalli/clientaz/tree/main/clientaz/epoint) |
+| Servis |   Əsas sorğular    | Bütün sorğular | Dokumentləşdirilmə | Link                                                                       |
+| ------ | :----------------: | :------------: | ------------------ | -------------------------------------------------------------------------- |
+| EPoint | :heavy_check_mark: |      :x:       | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint) |

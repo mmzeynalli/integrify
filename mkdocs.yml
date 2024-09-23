@@ -2,6 +2,7 @@
 site_name: Integrify
 site_description: Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 site_url: https://integrify.mmzeynalli.dev
+
 theme:
   name: material
   palette:
@@ -51,8 +52,8 @@ theme:
   logo: img/logo.png
   favicon: img/favicon.ico
   language: az
-repo_name: mmzeynalli/clientaz
-repo_url: https://github.com/mmzeynalli/clientaz
+repo_name: mmzeynalli/integrify
+repo_url: https://github.com/mmzeynalli/integrify
 plugins:
   # Material for MkDocs
   search:
@@ -114,7 +115,7 @@ extra:
 
   social:
   - icon: fontawesome/brands/github-alt
-    link: https://github.com/mmzeynalli/clientaz
+    link: https://github.com/mmzeynalli/integrify
 
 
 
