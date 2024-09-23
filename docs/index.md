@@ -2,7 +2,7 @@
 
 Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 
-## Əsas özəlliklər
+## Əsas özəlliklər { #esas-ozellikler }
 
 - Kitabxana həm sync, həm də async sorğu dəyişimini dəstəkləyir.
 - Kitabaxanadakı bütün sinif və funksiyalar tamamilə dokumentləşdirilib.
@@ -17,19 +17,19 @@ Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 
 ---
 
-## Kitabxananın yüklənməsi
+## Kitabxananın yüklənməsi { #kitabxananin-yuklenmesi }
 
 <div class="termy">
 
 ```console
-$ pip install integrify"
+$ pip install integrify
 
 ---> 100%
 ```
 
 </div>
 
-## İstifadəsi
+## İstifadəsi { #istifadesi }
 
 Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 
@@ -54,7 +54,7 @@ print(resp.ok, resp.body)
 
 ```
 
-### Sorğu cavabı
+### Sorğu cavabı { #sorgu-cavabi }
 
 Yuxarıdakı sorğuların (və ya istənilən sorğunun) cavab formatı `ApiResponse` class-ıdır:
 
@@ -73,8 +73,8 @@ class ApiResponse:
     """Cavab sorğusunun body-si"""
 ```
 
-## Dəstəklənən API inteqrasiyaları
+## Dəstəklənən API inteqrasiyaları { #desteklenen-api-inteqrasiyalari }
 
 | Servis |   Əsas sorğular    | Bütün sorğular | Dokumentləşdirilmə | Link                                                                       |
 | ------ | :----------------: | :------------: | ------------------ | -------------------------------------------------------------------------- |
-| EPoint | :heavy_check_mark: |      :x:       | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint) |
+| EPoint | :fontawesome-solid-check:  |      :x:       | Tam                | [Docs](api_reference/epoint.md) |

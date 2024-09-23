@@ -24,32 +24,24 @@ theme:
     toggle:
       icon: material/lightbulb-outline
       name: Switch to system preference
-  features:
-  - content.code.annotate
-  - content.code.copy
-  - content.code.select
-  - content.footnote.tooltips
-  - content.tabs.link
-  - content.tooltips
-  - navigation.footer
-  - navigation.indexes
-  - navigation.instant
-  - navigation.instant.prefetch
-  - navigation.instant.preview
-  - navigation.instant.progress
-  - navigation.path
-  - navigation.tabs
-  - navigation.tabs.sticky
-  - navigation.top
-  - navigation.tracking
-  - search.highlight
-  - search.share
-  - search.suggest
-  - toc.follow
+    features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.footnote.tooltips
+    - content.tabs.link
+    - content.tooltips
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
 
-  icon:
-    repo: fontawesome/brands/github-alt
-  logo: img/logo.png
+    icon:
+      repo: fontawesome
+
+ 
+    
+  logo: img/1.svg
   favicon: img/favicon.ico
   language: az
 repo_name: mmzeynalli/integrify
@@ -59,10 +51,10 @@ plugins:
   search:
  
 nav:
-- Integrify: index.md
-# - features.md
-- EPoint:
-  - learn/index.md
+- Giriş: index.md
+- API Reference:
+    - EPoint: "api_reference/epoint.md"
+
 
 
 markdown_extensions:
@@ -76,6 +68,9 @@ markdown_extensions:
     permalink: true
 
   # Python Markdown Extensions
+  pymdownx.emoji:
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator: !!python/name:material.extensions.emoji.to_svg
   pymdownx.betterem:
     smart_enable: all
   pymdownx.caret:
@@ -110,6 +105,7 @@ markdown_extensions:
     alternate_style: True
 
 
+  
 
 extra:
 
