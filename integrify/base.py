@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import httpx
 from pydantic import BaseModel, Field
 
-from clientaz.logger import LOGGER_FUNCTION
+from integrify.logger import LOGGER_FUNCTION
 
 RequestType = TypeVar('RequestType')
 ResponseType = TypeVar('ResponseType')
