@@ -4,7 +4,7 @@ from urllib.parse import parse_qsl
 
 from pydantic import BaseModel, field_validator, model_validator
 
-from clientaz.epoint.schemas.parts import (
+from integrify.epoint.schemas.parts import (
     EPointCode,
     EPointTransactionStatus,
     EPointTransctionStatusExtended,

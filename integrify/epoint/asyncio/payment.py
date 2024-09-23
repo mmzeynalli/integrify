@@ -1,13 +1,13 @@
 """Ödəmə üçün sorğular (async)"""
 
-from clientaz.epoint.asyncio.base import EPointRequest
-from clientaz.epoint.schemas.types import (
+from integrify.epoint.asyncio.base import EPointRequest
+from integrify.epoint.schemas.types import (
     EPointBaseResponseSchema,
     EPointMinimalResponseSchema,
     EPointRedirectUrlResponseSchema,
     EPointRedirectUrlWithCardIdResponseSchema,
 )
-from clientaz.epoint.sync import payment as sync
+from integrify.epoint.sync import payment as sync
 
 
 class EPointPaymentRequest(

@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "ClientAz"
+name = "Integrify"
 version = "0.1.0"
-description = "Payment API integrations"
+description = "API integrations, simplified"
 authors = ["mmzeynalli <miradil.zeynalli@gmail.com>"]
 readme = "README.md"
 

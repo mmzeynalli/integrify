@@ -1,10 +1,10 @@
 """Qeyri-ödəniş sorğular (status və kart yadda saxlama) (sync)"""
 
-from clientaz.epoint.schemas.types import (
+from integrify.epoint.schemas.types import (
     EPointRedirectUrlWithCardIdResponseSchema,
     EPointTransactionStatusResponseSchema,
 )
-from clientaz.epoint.sync.base import EPointRequest
+from integrify.epoint.sync.base import EPointRequest
 
 
 class EPointGetTransactionStatusRequest(EPointRequest[EPointTransactionStatusResponseSchema]):
