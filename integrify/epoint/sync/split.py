@@ -3,13 +3,13 @@
 from decimal import Decimal
 from typing import Optional
 
-from clientaz.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
-from clientaz.epoint.schemas.types import (
+from integrify.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
+from integrify.epoint.schemas.types import (
     EPointRedirectUrlResponseSchema,
     EPointRedirectUrlWithCardIdResponseSchema,
     EPointSplitPayWithSavedCardResponseSchema,
 )
-from clientaz.epoint.sync.base import EPointRequest
+from integrify.epoint.sync.base import EPointRequest
 
 
 class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):

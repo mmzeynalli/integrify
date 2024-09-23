@@ -2,8 +2,9 @@ from typing import Any, Generic, Optional, TypeVar, Union, get_args
 from urllib.parse import urljoin
 
 import httpx
-from clientaz.logger import LOGGER_FUNCTION
 from pydantic import BaseModel, Field
+
+from integrify.logger import LOGGER_FUNCTION
 
 RequestType = TypeVar('RequestType')
 ResponseType = TypeVar('ResponseType')

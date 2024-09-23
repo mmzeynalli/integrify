@@ -1,12 +1,12 @@
 """Bölmə ilə ödəmə sorğuları (async)"""
 
-from clientaz.epoint.asyncio.base import EPointRequest
-from clientaz.epoint.schemas.types import (
+from integrify.epoint.asyncio.base import EPointRequest
+from integrify.epoint.schemas.types import (
     EPointRedirectUrlResponseSchema,
     EPointRedirectUrlWithCardIdResponseSchema,
     EPointSplitPayWithSavedCardResponseSchema,
 )
-from clientaz.epoint.sync import split as sync
+from integrify.epoint.sync import split as sync
 
 
 class EPointSplitPaymentRequest(

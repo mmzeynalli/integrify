@@ -1,9 +1,9 @@
 import base64
 import json
 
-from clientaz.base import AsyncApiRequest, RequestType
-from clientaz.epoint.helper import generate_signature
-from clientaz.epoint.sync.base import EPointRequest as SyncEPointRequest
+from integrify.base import AsyncApiRequest, RequestType
+from integrify.epoint.helper import generate_signature
+from integrify.epoint.sync.base import EPointRequest as SyncEPointRequest
 
 
 class EPointRequest(AsyncApiRequest[RequestType], SyncEPointRequest):  # type: ignore[misc]

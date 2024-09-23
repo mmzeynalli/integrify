@@ -1,7 +1,7 @@
 """Qeyri-ödəniş sorğular (status və kart yadda saxlama) (async)"""
 
-from clientaz.epoint.asyncio.base import EPointRequest
-from clientaz.epoint.schemas.types import (
+from integrify.epoint.asyncio.base import EPointRequest
+from integrify.epoint.schemas.types import (
     EPointRedirectUrlWithCardIdResponseSchema,
     EPointTransactionStatusResponseSchema,
 )

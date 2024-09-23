@@ -2,8 +2,8 @@ import base64
 import json
 from hashlib import sha1
 
-from clientaz.epoint import EPOINT_PRIVATE_KEY
-from clientaz.epoint.schemas.types import EPointCallbackDataSchema, EPointDecodedCallbackDataSchema
+from integrify.epoint import EPOINT_PRIVATE_KEY
+from integrify.epoint.schemas.types import EPointCallbackDataSchema, EPointDecodedCallbackDataSchema
 
 
 def generate_signature(data: str) -> str:
