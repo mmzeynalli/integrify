@@ -17,6 +17,7 @@ mypy = "^1.9.0"
 ruff = "^0.3.5"
 pre-commit = "^3.6.2"
 ptpython = "^3.0.29"
+mkdocs-material = "^9.5.36"
 
 
 [tool.poetry.group.mypy.dependencies]
