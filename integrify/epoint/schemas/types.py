@@ -2,13 +2,12 @@ from decimal import Decimal
 from typing import Optional
 from urllib.parse import parse_qsl
 
-from pydantic import BaseModel, field_validator, model_validator
-
 from clientaz.epoint.schemas.parts import (
     EPointCode,
     EPointTransactionStatus,
     EPointTransctionStatusExtended,
 )
+from pydantic import BaseModel, field_validator, model_validator
 
 
 class EPointMinimalResponseSchema(BaseModel):
