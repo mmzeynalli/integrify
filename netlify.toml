@@ -1,3 +1,6 @@
 [build]
 publish = "site"
-command = "mkdocs build"
+command = """
+pip3 install mkdocs &&
+mkdocs build -d site
+"""
