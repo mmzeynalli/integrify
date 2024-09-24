@@ -2,12 +2,14 @@ import base64
 import json
 from hashlib import sha1
 
-from integrify.epoint import EPOINT_PRIVATE_KEY
+from integrify import epoint
 from integrify.epoint.schemas.types import EPointCallbackDataSchema, EPointDecodedCallbackDataSchema
+
+__all__ = ['generate_signature', 'decode_callback_data']
 
 
 def generate_signature(data: str) -> str:
-    sgn_string = EPOINT_PRIVATE_KEY + data + EPOINT_PRIVATE_KEY
+    sgn_string = epoint.EPOINT_PRIVATE_KEY + data + epoint.EPOINT_PRIVATE_KEY
     return base64.b64encode(sha1(sgn_string.encode()).digest()).decode()
 
 

@@ -4,6 +4,7 @@ from enum import StrEnum
 class EPointTransactionStatus(StrEnum):
     SUCCESS = 'success'
     ERROR = 'error'
+    SERVER_ERROR = 'server_error'
     FAILED = 'failed'
 
 

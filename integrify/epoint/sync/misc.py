@@ -6,6 +6,8 @@ from integrify.epoint.schemas.types import (
 )
 from integrify.epoint.sync.base import EPointRequest
 
+__all__ = ['EPointGetTransactionStatusRequest', 'EPointSaveCardRequest']
+
 
 class EPointGetTransactionStatusRequest(EPointRequest[EPointTransactionStatusResponseSchema]):
     """Transaksiya statusunu öyrənmək üçün sorğu (sync)

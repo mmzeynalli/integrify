@@ -3,7 +3,7 @@
 from decimal import Decimal
 from typing import Optional
 
-from integrify.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
+from integrify import epoint
 from integrify.epoint.schemas.types import (
     EPointBaseResponseSchema,
     EPointMinimalResponseSchema,
@@ -11,6 +11,8 @@ from integrify.epoint.schemas.types import (
     EPointRedirectUrlWithCardIdResponseSchema,
 )
 from integrify.epoint.sync.base import EPointRequest
+
+__all__ = ['EPointPaymentRequest', 'EPointPayWithSavedCardRequest', 'EPointPayAndSaveCardRequest']
 
 
 class EPointPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
@@ -65,11 +67,11 @@ class EPointPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
         if extra:
             self.data['other_attr'] = extra
@@ -162,11 +164,11 @@ class EPointPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlWithCardIdRespo
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
 
 class EPointPayoutRequest(EPointRequest[EPointBaseResponseSchema]):

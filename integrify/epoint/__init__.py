@@ -1,9 +1,16 @@
+"""
+Dokumentasiyalar:
+
+AZ: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20az.pdf
+EN: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20en.pdf
+RU: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20ru.pdf
+"""
+
 import os
 from typing import Optional
 from warnings import warn
 
 from dotenv import load_dotenv
-from sync import misc, payment, split
 
 load_dotenv()
 
@@ -26,13 +33,11 @@ if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
 
 
 __all__ = [
-    'misc',
-    'payment',
-    'split',
     'VERSION',
     'EPOINT_PUBLIC_KEY',
     'EPOINT_PRIVATE_KEY',
     'EPOINT_INTERFACE_LANG',
     'EPOINT_SUCCESS_REDIRECT_URL',
     'EPOINT_FAILED_REDIRECT_URL',
+    'EPOINT_LOGGER_NAME',
 ]

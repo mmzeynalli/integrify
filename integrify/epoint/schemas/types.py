@@ -47,7 +47,7 @@ class EPointBaseResponseSchema(EPointMinimalResponseSchema):
     """Ödəniş məbləği"""
 
 
-class EPointBaseWithCodeSchema(BaseModel):
+class EPointBaseWithCodeSchema(EPointBaseResponseSchema):
     code: Optional[str] = None
     """Bankın cavab kodu. 3 rəqəmli koddan, xəta/uğur mesajına çevrilir."""
 
@@ -81,8 +81,15 @@ class EPointPaymentSchema(EPointBaseWithCodeSchema):
     """Əlavə göndərdiyiniz seçimlər"""
 
 
-class EPointTransactionStatusResponseSchema(EPointPaymentSchema):
-    status: EPointTransctionStatusExtended
+class EPointTransactionStatusResponseSchema(EPointBaseWithCodeSchema):
+    status: EPointTransctionStatusExtended  # type: ignore[assignment]
+    """Tranzaksiyanın detallı statusu"""
+
+    order_id: Optional[str] = None
+    """Tətbiqinizdə unikal əməliyyat ID"""
+
+    other_attr: Optional[str] = None
+    """Əlavə göndərdiyiniz seçimlər"""
 
 
 class EPointSplitPayWithSavedCardResponseSchema(EPointBaseResponseSchema):

@@ -3,13 +3,15 @@
 from decimal import Decimal
 from typing import Optional
 
-from integrify.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
+from integrify import epoint
 from integrify.epoint.schemas.types import (
     EPointRedirectUrlResponseSchema,
     EPointRedirectUrlWithCardIdResponseSchema,
     EPointSplitPayWithSavedCardResponseSchema,
 )
 from integrify.epoint.sync.base import EPointRequest
+
+__all__ = ['EPointSplitPaymentRequest', 'EPointSplitPayAndSaveCardRequest']
 
 
 class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
@@ -68,11 +70,11 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
         if extra:
             self.data['other_attr'] = extra
@@ -187,8 +189,8 @@ class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlWithCardId
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
