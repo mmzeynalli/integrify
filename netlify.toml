@@ -1,6 +1,8 @@
 [build]
 publish = "site"
 command = """
-pip install mkdocs-material &&
-mkdocs serve
+pip3 install -q poetry &&
+poetry config virtualenvs.in-project true &&
+poetry install mkdocs-material &&
+mkdocs build -d site
 """
