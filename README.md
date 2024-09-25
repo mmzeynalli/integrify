@@ -1,7 +1,3 @@
-<style>
-.md-content .md-typeset h1 { display: none; }
-</style>
-
 <p align="center">
   <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="https://raw.githubusercontent.com/mmzeynalli/integrify/refs/heads/epoint-refactor/docs/img/integrify.png" alt="Integrify"></a>
 </p>
