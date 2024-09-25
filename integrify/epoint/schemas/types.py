@@ -81,8 +81,15 @@ class PaymentSchema(BaseWithCodeSchema):
     """Əlavə göndərdiyiniz seçimlər"""
 
 
-class TransactionStatusResponseSchema(PaymentSchema):
-    status: TransactionStatusExtended
+class TransactionStatusResponseSchema(BaseWithCodeSchema):
+    status: TransactionStatusExtended  # type: ignore[assignment]
+    """Tranzaksiyanın detallı statusu"""
+
+    order_id: Optional[str] = None
+    """Tətbiqinizdə unikal əməliyyat ID"""
+
+    other_attr: Optional[str] = None
+    """Əlavə göndərdiyiniz seçimlər"""
 
 
 class SplitPayWithSavedCardResponseSchema(BaseResponseSchema):

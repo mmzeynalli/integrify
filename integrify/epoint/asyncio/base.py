@@ -3,10 +3,10 @@ import json
 
 from integrify.base import AsyncApiRequest, RequestType
 from integrify.epoint.helper import generate_signature
-from integrify.epoint.sync.base import Request as SyncRequest
+from integrify.epoint.sync.base import BaseRequest as SyncRequest
 
 
-class Request(AsyncApiRequest[RequestType], SyncRequest):  # type: ignore[misc]
+class BaseRequest(AsyncApiRequest[RequestType], SyncRequest):  # type: ignore[misc]
     """EPoint async sorğular üçün baza class"""
 
     async def __call__(self, *args, **kwargs):

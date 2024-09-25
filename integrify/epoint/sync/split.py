@@ -3,16 +3,18 @@
 from decimal import Decimal
 from typing import Optional
 
-from integrify.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
+from integrify import epoint
 from integrify.epoint.schemas.types import (
     RedirectUrlResponseSchema,
     RedirectUrlWithCardIdResponseSchema,
     SplitPayWithSavedCardResponseSchema,
 )
-from integrify.epoint.sync.base import Request
+from integrify.epoint.sync.base import BaseRequest
+
+__all__ = ['SplitPaymentRequest', 'SplitPayAndSaveCardRequest']
 
 
-class SplitPaymentRequest(Request[RedirectUrlResponseSchema]):
+class SplitPaymentRequest(BaseRequest[RedirectUrlResponseSchema]):
     """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
     Example:
@@ -68,17 +70,17 @@ class SplitPaymentRequest(Request[RedirectUrlResponseSchema]):
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
         if extra:
             self.data['other_attr'] = extra
 
 
-class SplitPayWithSavedCardRequest(Request[SplitPayWithSavedCardResponseSchema]):
+class SplitPayWithSavedCardRequest(BaseRequest[SplitPayWithSavedCardResponseSchema]):
     """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
     Example:
@@ -135,7 +137,7 @@ class SplitPayWithSavedCardRequest(Request[SplitPayWithSavedCardResponseSchema])
             self.data['description'] = description
 
 
-class SplitPayAndSaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
+class SplitPayAndSaveCardRequest(BaseRequest[RedirectUrlWithCardIdResponseSchema]):
     """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
 
     Example:
@@ -187,8 +189,8 @@ class SplitPayAndSaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL

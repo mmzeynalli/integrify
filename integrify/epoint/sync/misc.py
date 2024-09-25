@@ -4,10 +4,12 @@ from integrify.epoint.schemas.types import (
     RedirectUrlWithCardIdResponseSchema,
     TransactionStatusResponseSchema,
 )
-from integrify.epoint.sync.base import Request
+from integrify.epoint.sync.base import BaseRequest
+
+__all__ = ['GetTransactionStatusRequest', 'SaveCardRequest']
 
 
-class GetTransactionStatusRequest(Request[TransactionStatusResponseSchema]):
+class GetTransactionStatusRequest(BaseRequest[TransactionStatusResponseSchema]):
     """Transaksiya statusunu öyrənmək üçün sorğu (sync)
 
     Example:
@@ -28,7 +30,7 @@ class GetTransactionStatusRequest(Request[TransactionStatusResponseSchema]):
         self.data['transaction'] = transaction_id
 
 
-class SaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
+class SaveCardRequest(BaseRequest[RedirectUrlWithCardIdResponseSchema]):
     """Ödəniş olmadan kartı yadda saxlamaq sorğusu (sync)
 
     Example:

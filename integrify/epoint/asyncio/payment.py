@@ -1,6 +1,6 @@
 """Ödəmə üçün sorğular (async)"""
 
-from integrify.epoint.asyncio.base import Request
+from integrify.epoint.asyncio.base import BaseRequest
 from integrify.epoint.schemas.types import (
     BaseResponseSchema,
     MinimalResponseSchema,
@@ -11,7 +11,7 @@ from integrify.epoint.sync import payment as sync
 
 
 class PaymentRequest(
-    Request[RedirectUrlResponseSchema],
+    BaseRequest[RedirectUrlResponseSchema],
     sync.PaymentRequest,
 ):
     """Ödəniş sorğusu (async)
@@ -32,7 +32,7 @@ class PaymentRequest(
 
 
 class PayWithSavedCardRequest(
-    Request[BaseResponseSchema],
+    BaseRequest[BaseResponseSchema],
     sync.PayWithSavedCardRequest,
 ):
     """Yadda saxlanılmış kartla ödəniş sorğusu (async)
@@ -51,7 +51,7 @@ class PayWithSavedCardRequest(
 
 
 class PayAndSaveCardRequest(
-    Request[RedirectUrlWithCardIdResponseSchema],
+    BaseRequest[RedirectUrlWithCardIdResponseSchema],
     sync.PayAndSaveCardRequest,
 ):
     """Ödəniş və kartı yadda saxlama sorğusu (async)
@@ -72,7 +72,7 @@ class PayAndSaveCardRequest(
 
 
 class PayoutRequest(
-    Request[BaseResponseSchema],
+    BaseRequest[BaseResponseSchema],
     sync.PayoutRequest,
 ):
     """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (async)
@@ -92,7 +92,7 @@ class PayoutRequest(
     """
 
 
-class RefundRequest(Request[MinimalResponseSchema], sync.RefundRequest):
+class RefundRequest(BaseRequest[MinimalResponseSchema], sync.RefundRequest):
     """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (async)
 
     Examples:

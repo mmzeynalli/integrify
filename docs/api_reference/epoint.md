@@ -1,4 +1,4 @@
-::: integrify.epoint.sync.payment.EPointPaymentRequest
+::: integrify.epoint.sync.payment.PaymentRequest
     handler: python
     options:
       members:

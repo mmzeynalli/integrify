@@ -5,6 +5,17 @@ site_url: https://integrify.mmzeynalli.dev
 
 theme:
   name: material
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.footnote.tooltips
+    - content.tabs.link
+    - content.tooltips
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
   palette:
   - media: "(prefers-color-scheme)"
     toggle:
@@ -24,17 +35,7 @@ theme:
     toggle:
       icon: material/lightbulb-outline
       name: Switch to system preference
-    features:
-    - content.code.annotate
-    - content.code.copy
-    - content.code.select
-    - content.footnote.tooltips
-    - content.tabs.link
-    - content.tooltips
-    - search.highlight
-    - search.share
-    - search.suggest
-    - toc.follow
+    
 
     icon:
       repo: fontawesome

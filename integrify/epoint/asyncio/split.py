@@ -1,6 +1,6 @@
 """Bölmə ilə ödəmə sorğuları (async)"""
 
-from integrify.epoint.asyncio.base import Request
+from integrify.epoint.asyncio.base import BaseRequest
 from integrify.epoint.schemas.types import (
     RedirectUrlResponseSchema,
     RedirectUrlWithCardIdResponseSchema,
@@ -10,7 +10,7 @@ from integrify.epoint.sync import split as sync
 
 
 class SplitPaymentRequest(
-    Request[RedirectUrlResponseSchema],
+    BaseRequest[RedirectUrlResponseSchema],
     sync.SplitPaymentRequest,
 ):
     """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (async)
@@ -22,7 +22,7 @@ class SplitPaymentRequest(
 
 
 class SplitPayWithSavedCardRequest(
-    Request[SplitPayWithSavedCardResponseSchema],
+    BaseRequest[SplitPayWithSavedCardResponseSchema],
     sync.SplitPayWithSavedCardRequest,
 ):
     """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (async)
@@ -40,7 +40,7 @@ class SplitPayWithSavedCardRequest(
 
 
 class SplitPayAndSaveCardRequest(
-    Request[RedirectUrlWithCardIdResponseSchema],
+    BaseRequest[RedirectUrlWithCardIdResponseSchema],
     sync.SplitPayAndSaveCardRequest,
 ):
     """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (async)

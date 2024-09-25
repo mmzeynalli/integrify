@@ -1,13 +1,13 @@
 """Qeyri-ödəniş sorğular (status və kart yadda saxlama) (async)"""
 
-from integrify.epoint.asyncio.base import Request
+from integrify.epoint.asyncio.base import BaseRequest
 from integrify.epoint.schemas.types import (
     RedirectUrlWithCardIdResponseSchema,
     TransactionStatusResponseSchema,
 )
 
 
-class GetTransactionStatusRequest(Request[TransactionStatusResponseSchema]):
+class GetTransactionStatusRequest(BaseRequest[TransactionStatusResponseSchema]):
     """Transaksiya statusunu öyrənmək üçün sorğu (async)
 
     Example:
@@ -17,7 +17,7 @@ class GetTransactionStatusRequest(Request[TransactionStatusResponseSchema]):
     """
 
 
-class SaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
+class SaveCardRequest(BaseRequest[RedirectUrlWithCardIdResponseSchema]):
     """Ödəniş olmadan kartı yadda saxlamaq sorğusu (async)
 
     Example:

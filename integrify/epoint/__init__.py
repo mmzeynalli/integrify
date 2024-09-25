@@ -1,3 +1,11 @@
+"""
+Dokumentasiyalar:
+
+AZ: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20az.pdf
+EN: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20en.pdf
+RU: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20ru.pdf
+"""
+
 import os
 from typing import Optional
 from warnings import warn
@@ -31,4 +39,5 @@ __all__ = [
     'EPOINT_INTERFACE_LANG',
     'EPOINT_SUCCESS_REDIRECT_URL',
     'EPOINT_FAILED_REDIRECT_URL',
+    'EPOINT_LOGGER_NAME',
 ]

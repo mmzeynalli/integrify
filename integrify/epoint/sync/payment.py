@@ -3,17 +3,19 @@
 from decimal import Decimal
 from typing import Optional
 
-from integrify.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
+from integrify import epoint
 from integrify.epoint.schemas.types import (
     BaseResponseSchema,
     MinimalResponseSchema,
     RedirectUrlResponseSchema,
     RedirectUrlWithCardIdResponseSchema,
 )
-from integrify.epoint.sync.base import Request
+from integrify.epoint.sync.base import BaseRequest
+
+__all__ = ['PaymentRequest', 'PayWithSavedCardRequest', 'PayAndSaveCardRequest']
 
 
-class PaymentRequest(Request[RedirectUrlResponseSchema]):
+class PaymentRequest(BaseRequest[RedirectUrlResponseSchema]):
     """Ödəniş sorğusu (sync)
 
     Example:
@@ -65,17 +67,17 @@ class PaymentRequest(Request[RedirectUrlResponseSchema]):
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
         if extra:
             self.data['other_attr'] = extra
 
 
-class PayWithSavedCardRequest(Request[BaseResponseSchema]):
+class PayWithSavedCardRequest(BaseRequest[BaseResponseSchema]):
     """Yadda saxlanılmış kartla ödəniş sorğusu (sync)
 
     Example:
@@ -113,7 +115,7 @@ class PayWithSavedCardRequest(Request[BaseResponseSchema]):
         )
 
 
-class PayAndSaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
+class PayAndSaveCardRequest(BaseRequest[RedirectUrlWithCardIdResponseSchema]):
     """Ödəniş və kartı yadda saxlama sorğusu (sync)
 
     Example:
@@ -162,14 +164,14 @@ class PayAndSaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
         if description:
             self.data['description'] = description
 
-        if EPOINT_SUCCESS_REDIRECT_URL:
-            self.data['success_redirect_url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_SUCCESS_REDIRECT_URL:
+            self.data['success_redirect_url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
-        if EPOINT_FAILED_REDIRECT_URL:
-            self.data['error_redirect__url'] = EPOINT_SUCCESS_REDIRECT_URL
+        if epoint.EPOINT_FAILED_REDIRECT_URL:
+            self.data['error_redirect__url'] = epoint.EPOINT_SUCCESS_REDIRECT_URL
 
 
-class PayoutRequest(Request[BaseResponseSchema]):
+class PayoutRequest(BaseRequest[BaseResponseSchema]):
     """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (sync)
 
     Example:
@@ -211,7 +213,7 @@ class PayoutRequest(Request[BaseResponseSchema]):
             self.data['description'] = description
 
 
-class RefundRequest(Request[MinimalResponseSchema]):
+class RefundRequest(BaseRequest[MinimalResponseSchema]):
     """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (sync)
 
     Examples:
