@@ -1,14 +1,24 @@
 import base64
 import json
 from hashlib import sha1
+from typing import Any
 
 import pytest
 from pytest_mock import MockerFixture
 
-from integrify.base import ApiResponse, SyncApiRequest
+from integrify.base import ApiResponse
 from integrify.epoint.schemas.parts import EPointTransactionStatus
+from integrify.epoint.sync import _EPointRequest
 from tests import epoint
 from tests.epoint.mocks import *  # noqa: F403
+
+
+class TestEPointRequest(_EPointRequest):
+    __test__ = False
+
+    def __init__(self, resp_data: dict):
+        super().__init__()
+        self.resp_data = resp_data
 
 
 @pytest.fixture(autouse=True, scope='package')
@@ -19,15 +29,15 @@ def epoint_request_mocker(package_mocker: MockerFixture):
 
 @pytest.fixture(autouse=True, scope='package')
 def epoint_setenv(package_mocker: MockerFixture):
-    package_mocker.patch('integrify.epoint.EPOINT_PUBLIC_KEY', epoint.EPOINT_PUBLIC_KEY)
-    package_mocker.patch('integrify.epoint.EPOINT_PRIVATE_KEY', epoint.EPOINT_PRIVATE_KEY)
+    package_mocker.patch('integrify.epoint.env.EPOINT_PUBLIC_KEY', epoint.EPOINT_PUBLIC_KEY)
+    package_mocker.patch('integrify.epoint.env.EPOINT_PRIVATE_KEY', epoint.EPOINT_PRIVATE_KEY)
     yield
 
 
 @pytest.fixture(scope='function')
 def epoint_set_wrong_env(mocker: MockerFixture):
-    mocker.patch('integrify.epoint.EPOINT_PUBLIC_KEY', 'epoint.EPOINT_PUBLIC_KEY')
-    mocker.patch('integrify.epoint.EPOINT_PRIVATE_KEY', 'epoint.EPOINT_PRIVATE_KEY')
+    mocker.patch('integrify.epoint.env.EPOINT_PUBLIC_KEY', 'epoint.EPOINT_PUBLIC_KEY')
+    mocker.patch('integrify.epoint.env.EPOINT_PRIVATE_KEY', 'epoint.EPOINT_PRIVATE_KEY')
     yield
 
 
@@ -46,17 +56,18 @@ def is_signature_ok(data: dict):
     )
 
 
-def req(req_cls: SyncApiRequest, data: dict):
-    resp = (
-        {
+def req(self: TestEPointRequest, *args, **kwds):
+    resp: dict[str, Any]
+
+    if not is_signature_ok(self.body):
+        resp = {
             'body': {
                 'status': EPointTransactionStatus.SERVER_ERROR,
                 'message': 'Signature did not match',
             }
         }
-        if not is_signature_ok(req_cls.body)
-        else data
-    )
+    else:
+        resp = self.resp_data.copy()
 
     if not resp:
         raise Exception('Mock response data should be provided')
@@ -64,4 +75,5 @@ def req(req_cls: SyncApiRequest, data: dict):
     resp.setdefault('is_success', True)
     resp.setdefault('status_code', 200)
     resp.setdefault('headers', {})
-    return ApiResponse[req_cls.resp_model].model_validate(resp)  # type: ignore[name-defined]
+
+    return ApiResponse[self.resp_model].model_validate(resp)  # type: ignore[name-defined]

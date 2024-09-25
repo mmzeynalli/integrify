@@ -30,9 +30,9 @@ Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 ### Sync
 
 ```python
-from integrify.epoint.payment import EPointPaymentRequest
+from integrify.epoint import EPointRequest
 
-resp = EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')()
+resp = EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
 print(resp.ok, resp.body)
 
 ```
@@ -40,10 +40,10 @@ print(resp.ok, resp.body)
 ### Async
 
 ```python
-from integrify.epoint.asyncio.payment import EPointPaymentRequest
+from integrify.epoint.asyncio import EPointRequest
 
 # Async main loop artıq başlamışdır
-resp = await EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')()
+resp = await EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
 print(resp.ok, resp.body)
 
 ```
