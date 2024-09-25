@@ -1,6 +1,6 @@
 [build]
 publish = "site"
 command = """
-pip3 install mkdocs-material mkdocstrings &&
+pip3 install mkdocs-material mkdocstrings[python] &&
 mkdocs build -d site
 """
