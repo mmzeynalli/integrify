@@ -18,9 +18,13 @@ __all__ = ['PaymentRequest', 'PayWithSavedCardRequest', 'PayAndSaveCardRequest']
 class PaymentRequest(BaseRequest[RedirectUrlResponseSchema]):
     """Ödəniş sorğusu (sync)
 
-    Example:
-        >>> PaymentRequest(amount=100, currency='AZN', order_id='12345678',\
-            description='Ödəniş')()
+    ???+ usage
+        ```python
+        from integrify.epoint import PaymentRequest
+
+
+        PaymentRequest(amount=100, currency='AZN', order_id='12345678',description='Ödəniş')()
+        ```
 
     **Cavab formatı**: :class:`RedirectUrlResponseSchema`
 

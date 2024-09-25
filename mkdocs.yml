@@ -1,4 +1,3 @@
-
 site_name: Integrify
 site_description: Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 site_url: https://integrify.mmzeynalli.dev
@@ -21,21 +20,20 @@ theme:
     toggle:
       icon: material/lightbulb-auto
       name: Switch to light mode
-  - media: '(prefers-color-scheme: light)'
+  - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: teal
     accent: amber
     toggle:
       icon: material/lightbulb
       name: Switch to dark mode
-  - media: '(prefers-color-scheme: dark)'
+  - media: "(prefers-color-scheme: dark)"
     scheme: slate
     primary: teal
     accent: amber
     toggle:
       icon: material/lightbulb-outline
       name: Switch to system preference
-    
 
     icon:
       repo: fontawesome
@@ -43,10 +41,11 @@ theme:
   logo: img/logo.svg
   favicon: img/favicon.ico
   language: az
+
 repo_name: mmzeynalli/integrify
 repo_url: https://github.com/mmzeynalli/integrify
+
 plugins:
-  # Material for MkDocs
   - search:
   - mkdocstrings:
       default_handler: python
@@ -55,73 +54,56 @@ plugins:
           options:
             show_root_heading: true
             show_source: false
- 
-nav:
-- Giriş: index.md
-- İnteqrasiya:
-  - EPoint: 
-    - Ümumi məlumat: "general/epoint.md"
-    - API Reference: "api_reference/epoint.md"
-      
 
+nav:
+  - Giriş: index.md
+  - İnteqrasiya:
+      - EPoint: 
+          - Ümumi məlumat: "general/epoint.md"
+          - API Reference: "api_reference/epoint.md"
 
 markdown_extensions:
-  # Python Markdown
-  abbr:
-  attr_list:
-  footnotes:
-  md_in_html:
-  tables:
-  toc:
-    permalink: true
-
-  # Python Markdown Extensions
-  pymdownx.emoji:
-    emoji_index: !!python/name:material.extensions.emoji.twemoji
-    emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  pymdownx.betterem:
-    smart_enable: all
-  pymdownx.caret:
-  pymdownx.highlight:
-    line_spans: __span
-  pymdownx.inlinehilite:
-  pymdownx.keys:
-  pymdownx.mark:
-  pymdownx.superfences:
-    custom_fences:
-    - name: mermaid
-      class: mermaid
-      format: !!python/name:pymdownx.superfences.fence_code_format
-  pymdownx.tilde:
-
-  # pymdownx blocks
-  pymdownx.blocks.admonition:
-    types:
-    - note
-    - attention
-    - caution
-    - danger
-    - error
-    - tip
-    - hint
-    - warning
-    # Custom types
-    - info
-    - check
-  pymdownx.blocks.details:
-  pymdownx.blocks.tab:
-    alternate_style: True
+  - codehilite:
+      guess_lang: false
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - abbr
+  - attr_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.highlight:
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tilde
 
 extra:
   social:
-  - icon: fontawesome/brands/github-alt
-    link: https://github.com/mmzeynalli/integrify
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/mmzeynalli/integrify
 
 extra_css:
-- css/termynal.css
-- css/custom.css
+  - css/termynal.css
+  - css/custom.css
 
 extra_javascript:
-- js/termynal.js
-- js/custom.js
-
+  - js/termynal.js
+  - js/custom.js

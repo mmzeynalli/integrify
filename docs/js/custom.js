@@ -157,8 +157,7 @@ async function main() {
     }
 
     setupTermynal();
-    showRandomAnnouncement('announce-left', 5000)
-    showRandomAnnouncement('announce-right', 10000)
+   
 }
 document$.subscribe(() => {
     main()
