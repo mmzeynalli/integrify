@@ -39,22 +39,29 @@ theme:
     icon:
       repo: fontawesome
 
- 
-    
-  logo: img/1.svg
+  logo: img/logo.svg
   favicon: img/favicon.ico
   language: az
 repo_name: mmzeynalli/integrify
 repo_url: https://github.com/mmzeynalli/integrify
 plugins:
   # Material for MkDocs
-  search:
+  - search:
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_root_heading: true
+            show_source: false
  
 nav:
 - Giriş: index.md
-- API Reference:
-    - EPoint: "api_reference/epoint.md"
-
+- İnteqrasiya:
+  - EPoint: 
+    - Ümumi məlumat: "general/epoint.md"
+    - API Reference: "api_reference/epoint.md"
+      
 
 
 markdown_extensions:
@@ -104,16 +111,10 @@ markdown_extensions:
   pymdownx.blocks.tab:
     alternate_style: True
 
-
-  
-
 extra:
-
   social:
   - icon: fontawesome/brands/github-alt
     link: https://github.com/mmzeynalli/integrify
-
-
 
 extra_css:
 - css/termynal.css

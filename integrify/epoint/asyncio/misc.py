@@ -1,33 +1,33 @@
 """Qeyri-ödəniş sorğular (status və kart yadda saxlama) (async)"""
 
-from integrify.epoint.asyncio.base import EPointRequest
+from integrify.epoint.asyncio.base import Request
 from integrify.epoint.schemas.types import (
-    EPointRedirectUrlWithCardIdResponseSchema,
-    EPointTransactionStatusResponseSchema,
+    RedirectUrlWithCardIdResponseSchema,
+    TransactionStatusResponseSchema,
 )
 
 
-class EPointGetTransactionStatusRequest(EPointRequest[EPointTransactionStatusResponseSchema]):
+class GetTransactionStatusRequest(Request[TransactionStatusResponseSchema]):
     """Transaksiya statusunu öyrənmək üçün sorğu (async)
 
     Example:
-        >>> await EPointGetTransactionStatusRequest(transaction_id='texxxxxx')()
+        >>> await GetTransactionStatusRequest(transaction_id='texxxxxx')()
 
-    Cavab formatı: :class:`EPointTransactionStatusResponseSchema`
+    Cavab formatı: :class:`TransactionStatusResponseSchema`
     """
 
 
-class EPointSaveCardRequest(EPointRequest[EPointRedirectUrlWithCardIdResponseSchema]):
+class SaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
     """Ödəniş olmadan kartı yadda saxlamaq sorğusu (async)
 
     Example:
-        >>> await EPointSaveCardRequest()()
+        >>> await SaveCardRequest()()
 
-    Cavab formatı: :class:`EPointRedirectUrlWithCardIdResponseSchema`
+    Cavab formatı: :class:`RedirectUrlWithCardIdResponseSchema`
 
     Axın:
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir.
         Müştəri həmin URLə daxil olub, kart məlumatlarını uğurlu qeyd etdikdən sonra,
         backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
-        və eyni `card_id` ilə EPointDecodedCallbackDataSchema formatında məlumat gəlir.
+        və eyni `card_id` ilə DecodedCallbackDataSchema formatında məlumat gəlir.
     """

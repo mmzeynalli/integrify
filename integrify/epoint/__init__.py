@@ -3,7 +3,6 @@ from typing import Optional
 from warnings import warn
 
 from dotenv import load_dotenv
-from sync import misc, payment, split
 
 load_dotenv()
 
@@ -26,9 +25,6 @@ if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
 
 
 __all__ = [
-    'misc',
-    'payment',
-    'split',
     'VERSION',
     'EPOINT_PUBLIC_KEY',
     'EPOINT_PRIVATE_KEY',

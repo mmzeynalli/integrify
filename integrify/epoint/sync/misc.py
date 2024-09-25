@@ -1,19 +1,19 @@
 """Qeyri-ödəniş sorğular (status və kart yadda saxlama) (sync)"""
 
 from integrify.epoint.schemas.types import (
-    EPointRedirectUrlWithCardIdResponseSchema,
-    EPointTransactionStatusResponseSchema,
+    RedirectUrlWithCardIdResponseSchema,
+    TransactionStatusResponseSchema,
 )
-from integrify.epoint.sync.base import EPointRequest
+from integrify.epoint.sync.base import Request
 
 
-class EPointGetTransactionStatusRequest(EPointRequest[EPointTransactionStatusResponseSchema]):
+class GetTransactionStatusRequest(Request[TransactionStatusResponseSchema]):
     """Transaksiya statusunu öyrənmək üçün sorğu (sync)
 
     Example:
-        >>> EPointGetTransactionStatusRequest(transaction_id='texxxxxx')()
+        >>> GetTransactionStatusRequest(transaction_id='texxxxxx')()
 
-    Cavab formatı: :class:`EPointTransactionStatusResponseSchema`
+    Cavab formatı: :class:`TransactionStatusResponseSchema`
     """
 
     def __init__(self, transaction_id: str):
@@ -28,20 +28,20 @@ class EPointGetTransactionStatusRequest(EPointRequest[EPointTransactionStatusRes
         self.data['transaction'] = transaction_id
 
 
-class EPointSaveCardRequest(EPointRequest[EPointRedirectUrlWithCardIdResponseSchema]):
+class SaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
     """Ödəniş olmadan kartı yadda saxlamaq sorğusu (sync)
 
     Example:
-        >>> EPointSaveCardRequest()()
+        >>> SaveCardRequest()()
 
-    Cavab formatı: :class:`EPointRedirectUrlWithCardIdResponseSchema`
+    Cavab formatı: :class:`RedirectUrlWithCardIdResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir.
         Müştəri həmin URLə daxil olub, kart məlumatlarını uğurlu qeyd etdikdən sonra,
         backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
-        və eyni `card_id` ilə EPointDecodedCallbackDataSchema formatında məlumat gəlir.
+        və eyni `card_id` ilə DecodedCallbackDataSchema formatında məlumat gəlir.
     """
 
     def __init__(self):

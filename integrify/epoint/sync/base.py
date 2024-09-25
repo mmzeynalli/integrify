@@ -6,7 +6,7 @@ from integrify.epoint import EPOINT_INTERFACE_LANG, EPOINT_LOGGER_NAME, EPOINT_P
 from integrify.epoint.helper import generate_signature
 
 
-class EPointRequest(SyncApiRequest[RequestType]):
+class Request(SyncApiRequest[RequestType]):
     """EPoint sorğular üçün baza class"""
 
     def __init__(self):

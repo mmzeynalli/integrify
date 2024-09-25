@@ -18,6 +18,7 @@ ruff = "^0.3.5"
 pre-commit = "^3.6.2"
 ptpython = "^3.0.29"
 mkdocs-material = "^9.5.36"
+mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 
 
 [tool.poetry.group.mypy.dependencies]

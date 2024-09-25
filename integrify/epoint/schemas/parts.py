@@ -1,13 +1,13 @@
 from enum import StrEnum
 
 
-class EPointTransactionStatus(StrEnum):
+class TransactionStatus(StrEnum):
     SUCCESS = 'success'
     ERROR = 'error'
     FAILED = 'failed'
 
 
-class EPointTransctionStatusExtended(StrEnum):
+class TransactionStatusExtended(StrEnum):
     NEW = 'new'
     SUCCESS = 'success'
     RETURNED = 'returned'
@@ -15,7 +15,7 @@ class EPointTransctionStatusExtended(StrEnum):
     SERVER_ERROR = 'server_error'
 
 
-EPointCode = {
+Codes = {
     '000': 'Təsdiq edildi',
     '100': 'İmtina (ümumi, şərh yoxdur)',
     '101': 'İmtina (kartın istifadə müddəti bitib)',

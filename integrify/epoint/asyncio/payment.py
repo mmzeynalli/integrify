@@ -1,105 +1,105 @@
 """Ödəmə üçün sorğular (async)"""
 
-from integrify.epoint.asyncio.base import EPointRequest
+from integrify.epoint.asyncio.base import Request
 from integrify.epoint.schemas.types import (
-    EPointBaseResponseSchema,
-    EPointMinimalResponseSchema,
-    EPointRedirectUrlResponseSchema,
-    EPointRedirectUrlWithCardIdResponseSchema,
+    BaseResponseSchema,
+    MinimalResponseSchema,
+    RedirectUrlResponseSchema,
+    RedirectUrlWithCardIdResponseSchema,
 )
 from integrify.epoint.sync import payment as sync
 
 
-class EPointPaymentRequest(
-    EPointRequest[EPointRedirectUrlResponseSchema],
-    sync.EPointPaymentRequest,
+class PaymentRequest(
+    Request[RedirectUrlResponseSchema],
+    sync.PaymentRequest,
 ):
     """Ödəniş sorğusu (async)
 
     Example:
-        >>> await EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678',\
+        >>> await PaymentRequest(amount=100, currency='AZN', order_id='12345678',\
         description='Ödəniş')()
 
-    **Cavab formatı**: :class:`EPointRedirectUrlResponseSchema`
+    **Cavab formatı**: :class:`RedirectUrlResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------
     Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
     olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
     APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id`
-    ilə EPointDecodedCallbackDataSchema formatında məlumat gəlir.
+    ilə DecodedCallbackDataSchema formatında məlumat gəlir.
     """
 
 
-class EPointPayWithSavedCardRequest(
-    EPointRequest[EPointBaseResponseSchema],
-    sync.EPointPayWithSavedCardRequest,
+class PayWithSavedCardRequest(
+    Request[BaseResponseSchema],
+    sync.PayWithSavedCardRequest,
 ):
     """Yadda saxlanılmış kartla ödəniş sorğusu (async)
 
     Example:
-        >>> await EPointPayWithSavedCardRequest(amount=100, currency='AZN', \
+        >>> await PayWithSavedCardRequest(amount=100, currency='AZN', \
                                             order_id='12345678', card_id='cexxxxxx')()
 
-    Cavab formatı: :class:`EPointBaseResponseSchema`
+    Cavab formatı: :class:`BaseResponseSchema`
 
     Axın:
     -------------------------------------------------------------------------------------
-    Bu sorğunu göndərdikdə, cavab olaraq :class:`EPointBaseResponseSchema` formatında
+    Bu sorğunu göndərdikdə, cavab olaraq :class:`BaseResponseSchema` formatında
     cavab gəlir, və ödənişin statusu birbaşa qayıdır: heç bir callback sorğusu gəlmir
     """
 
 
-class EPointPayAndSaveCardRequest(
-    EPointRequest[EPointRedirectUrlWithCardIdResponseSchema],
-    sync.EPointPayAndSaveCardRequest,
+class PayAndSaveCardRequest(
+    Request[RedirectUrlWithCardIdResponseSchema],
+    sync.PayAndSaveCardRequest,
 ):
     """Ödəniş və kartı yadda saxlama sorğusu (async)
 
     Example:
-        >>> await EPointPayAndSaveCardRequest(amount=100, currency='AZN', \
+        >>> await PayAndSaveCardRequest(amount=100, currency='AZN', \
                                     order_id='12345678', description='Ödəniş')()
 
-    Cavab formatı: :class:`EPointRedirectUrlWithCardIdResponseSchema`
+    Cavab formatı: :class:`RedirectUrlWithCardIdResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------------
     Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir. Müştəri həmin URLə
     daxil olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
     APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id` və
-    `card_id` ilə :class:`EPointDecodedCallbackDataSchema` formatında məlumat gəlir.
+    `card_id` ilə :class:`DecodedCallbackDataSchema` formatında məlumat gəlir.
     """
 
 
-class EPointPayoutRequest(
-    EPointRequest[EPointBaseResponseSchema],
-    sync.EPointPayoutRequest,
+class PayoutRequest(
+    Request[BaseResponseSchema],
+    sync.PayoutRequest,
 ):
     """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (async)
 
     Example:
-        >>> await EPointPayAndSaveCardRequest(amount=100, currency='AZN', \
+        >>> await PayAndSaveCardRequest(amount=100, currency='AZN', \
                                     order_id='12345678', description='Ödəniş')()
 
 
-    Cavab sorğu formatı: :class:`EPointBaseResponseSchema`
+    Cavab sorğu formatı: :class:`BaseResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------------
     Bu sorğunu göndərdikdə, əməliyyat Epoint xidməti tərəfindən işləndikdən və bankdan ödəniş
-    statusu alındıqdan sonra cavab :class:`EPointBaseResponseSchema` formatında
+    statusu alındıqdan sonra cavab :class:`BaseResponseSchema` formatında
     qayıdacaqdır.
     """
 
 
-class EPointRefundRequest(EPointRequest[EPointMinimalResponseSchema], sync.EPointRefundRequest):
+class RefundRequest(Request[MinimalResponseSchema], sync.RefundRequest):
     """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (async)
 
     Examples:
-        >>> await EPointRefundRequest(transaction_id='texxxxxx', currency='AZN')()
-        >>> await EPointRefundRequest(transaction_id='texxxxxx', currency='AZN', amount=50)()
+        >>> await RefundRequest(transaction_id='texxxxxx', currency='AZN')()
+        >>> await RefundRequest(transaction_id='texxxxxx', currency='AZN', amount=50)()
 
-    Cavab formatı: :class:`EPointMinimalResponseSchema`
+    Cavab formatı: :class:`MinimalResponseSchema`
 
     Axın:
     -----------------------------------------------------------------

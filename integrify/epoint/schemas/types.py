@@ -5,21 +5,21 @@ from urllib.parse import parse_qsl
 from pydantic import BaseModel, field_validator, model_validator
 
 from integrify.epoint.schemas.parts import (
-    EPointCode,
-    EPointTransactionStatus,
-    EPointTransctionStatusExtended,
+    Codes,
+    TransactionStatus,
+    TransactionStatusExtended,
 )
 
 
-class EPointMinimalResponseSchema(BaseModel):
-    status: EPointTransactionStatus
+class MinimalResponseSchema(BaseModel):
+    status: TransactionStatus
     """Success və ya failed əməliyyatının nəticəsi"""
 
     message: Optional[str] = None
     """Ödənişin icra statusu haqqında mesaj"""
 
 
-class EPointBaseResponseSchema(EPointMinimalResponseSchema):
+class BaseResponseSchema(MinimalResponseSchema):
     # if success
     transaction: Optional[str] = None
     """Epoint xidmətinin əməliyyat IDsi"""
@@ -47,18 +47,18 @@ class EPointBaseResponseSchema(EPointMinimalResponseSchema):
     """Ödəniş məbləği"""
 
 
-class EPointBaseWithCodeSchema(BaseModel):
+class BaseWithCodeSchema(BaseModel):
     code: Optional[str] = None
     """Bankın cavab kodu. 3 rəqəmli koddan, xəta/uğur mesajına çevrilir."""
 
     @field_validator('code', mode='before')
     @classmethod
     def code_to_msg(cls, v: Optional[str] = None):
-        return EPointCode[v] if v else None
+        return Codes[v] if v else None
 
 
 #################################################################
-class EPointRedirectUrlResponseSchema(EPointMinimalResponseSchema):
+class RedirectUrlResponseSchema(MinimalResponseSchema):
     # if success
     transaction: Optional[str] = None
     """Epoint xidmətinin əməliyyat IDsi"""
@@ -67,13 +67,13 @@ class EPointRedirectUrlResponseSchema(EPointMinimalResponseSchema):
     """İstifadəçinin kart məlumatlarını daxil etmək üçün yönləndirilməsi lazım olan URL"""
 
 
-class EPointRedirectUrlWithCardIdResponseSchema(EPointRedirectUrlResponseSchema):
+class RedirectUrlWithCardIdResponseSchema(RedirectUrlResponseSchema):
     card_id: Optional[str] = None
     """Ödənişləri yerinə yetirmək üçün istifadə edilməsi
     lazım olan unikal kart identifikatoru"""
 
 
-class EPointPaymentSchema(EPointBaseWithCodeSchema):
+class PaymentSchema(BaseWithCodeSchema):
     order_id: str
     """Tətbiqinizdə unikal əməliyyat ID"""
 
@@ -81,17 +81,17 @@ class EPointPaymentSchema(EPointBaseWithCodeSchema):
     """Əlavə göndərdiyiniz seçimlər"""
 
 
-class EPointTransactionStatusResponseSchema(EPointPaymentSchema):
-    status: EPointTransctionStatusExtended
+class TransactionStatusResponseSchema(PaymentSchema):
+    status: TransactionStatusExtended
 
 
-class EPointSplitPayWithSavedCardResponseSchema(EPointBaseResponseSchema):
+class SplitPayWithSavedCardResponseSchema(BaseResponseSchema):
     split_amount: Optional[Decimal] = None
     """İkinci istifadəçi üçün ödəniş məbləği."""
 
 
 #########################################################################
-class EPointCallbackDataSchema(BaseModel):
+class CallbackDataSchema(BaseModel):
     data: str
     signature: str
 
@@ -101,7 +101,7 @@ class EPointCallbackDataSchema(BaseModel):
         return dict(parse_qsl(data.decode()))
 
 
-class EPointDecodedCallbackDataSchema(EPointBaseWithCodeSchema):
+class DecodedCallbackDataSchema(BaseWithCodeSchema):
     order_id: Optional[str] = None
     """Tətbiqinizdə unikal əməliyyat ID"""
 

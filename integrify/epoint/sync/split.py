@@ -5,22 +5,22 @@ from typing import Optional
 
 from integrify.epoint import EPOINT_FAILED_REDIRECT_URL, EPOINT_SUCCESS_REDIRECT_URL
 from integrify.epoint.schemas.types import (
-    EPointRedirectUrlResponseSchema,
-    EPointRedirectUrlWithCardIdResponseSchema,
-    EPointSplitPayWithSavedCardResponseSchema,
+    RedirectUrlResponseSchema,
+    RedirectUrlWithCardIdResponseSchema,
+    SplitPayWithSavedCardResponseSchema,
 )
-from integrify.epoint.sync.base import EPointRequest
+from integrify.epoint.sync.base import Request
 
 
-class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
+class SplitPaymentRequest(Request[RedirectUrlResponseSchema]):
     """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
     Example:
-        >>> EPointSplitPaymentRequest(amount=100, currency='AZN', order_id='123456789',
+        >>> SplitPaymentRequest(amount=100, currency='AZN', order_id='123456789',
                                                 split_user_id='epoint_user_id', split_amount=50,
                                                 description='split payment')()
 
-    Cavab formatı: :class:`EPointRedirectUrlResponseSchema`
+    Cavab formatı: :class:`RedirectUrlResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------
@@ -78,15 +78,15 @@ class EPointSplitPaymentRequest(EPointRequest[EPointRedirectUrlResponseSchema]):
             self.data['other_attr'] = extra
 
 
-class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCardResponseSchema]):
+class SplitPayWithSavedCardRequest(Request[SplitPayWithSavedCardResponseSchema]):
     """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
     Example:
-        >>> EPointSplitPayWithSavedCardRequest(amount=100, currency='AZN', order_id='123456789',
+        >>> SplitPayWithSavedCardRequest(amount=100, currency='AZN', order_id='123456789',
                                         card_id='cexxxxxx', split_user_id='epoint_user_id',
                                         split_amount=50, description='split payment')()
 
-    Cavab formatı: :class:`EPointSplitPayWithSavedCardResponseSchema`
+    Cavab formatı: :class:`SplitPayWithSavedCardResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------
@@ -135,15 +135,15 @@ class EPointSplitPayWithSavedCardRequest(EPointRequest[EPointSplitPayWithSavedCa
             self.data['description'] = description
 
 
-class EPointSplitPayAndSaveCardRequest(EPointRequest[EPointRedirectUrlWithCardIdResponseSchema]):
+class SplitPayAndSaveCardRequest(Request[RedirectUrlWithCardIdResponseSchema]):
     """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
 
     Example:
-        >>> EPointSplitPayAndSaveCardRequest(amount=100, currency='AZN', order_id='123456789',
+        >>> SplitPayAndSaveCardRequest(amount=100, currency='AZN', order_id='123456789',
                                                 split_user_id='epoint_user_id', split_amount=50,
                                                 description='split payment')()
 
-    Cavab formatı: :class:`EPointRedirectUrlWithCardIdResponseSchema`
+    Cavab formatı: :class:`RedirectUrlWithCardIdResponseSchema`
 
     Axın:
     -----------------------------------------------------------------------------------
