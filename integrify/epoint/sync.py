@@ -7,12 +7,12 @@ from integrify.base import ApiResponse, SyncApiRequest, send_request
 from integrify.epoint import env
 from integrify.epoint.helper import generate_signature
 from integrify.epoint.schemas.types import (
-    EPointBaseResponseSchema,
-    EPointMinimalResponseSchema,
-    EPointRedirectUrlResponseSchema,
-    EPointRedirectUrlWithCardIdResponseSchema,
-    EPointSplitPayWithSavedCardResponseSchema,
-    EPointTransactionStatusResponseSchema,
+    BaseResponseSchema,
+    MinimalResponseSchema,
+    RedirectUrlResponseSchema,
+    RedirectUrlWithCardIdResponseSchema,
+    SplitPayWithSavedCardResponseSchema,
+    TransactionStatusResponseSchema,
 )
 
 __all__ = ['EPointRequest']
@@ -37,7 +37,7 @@ class _EPointRequest(SyncApiRequest):
         order_id: str,
         description: Optional[str] = None,
         **extra,
-    ) -> ApiResponse[EPointRedirectUrlResponseSchema]:
+    ) -> ApiResponse[RedirectUrlResponseSchema]:
         """Ödəniş sorğusu (sync)
 
         Example:
@@ -45,14 +45,14 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
         ```
 
-        **Cavab formatı**: `EPointRedirectUrlResponseSchema`
+        **Cavab formatı**: `RedirectUrlResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
         olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
         APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id`
-        ilə EPointDecodedCallbackDataSchema formatında məlumat gəlir.
+        ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
@@ -64,7 +64,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.PAY
         self.verb = 'POST'
-        self.resp_model = EPointRedirectUrlResponseSchema
+        self.resp_model = RedirectUrlResponseSchema
 
         # Required data
         self.data.update(
@@ -94,7 +94,7 @@ class _EPointRequest(SyncApiRequest):
     def get_transaction_status(  # type: ignore[return]
         self,
         transaction_id: str,
-    ) -> ApiResponse[EPointTransactionStatusResponseSchema]:
+    ) -> ApiResponse[TransactionStatusResponseSchema]:
         """
         Transaksiya statusunu öyrənmək üçün sorğu (sync)
 
@@ -103,7 +103,7 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.get_transaction_status(transaction_id='texxxxxx')
         ```
 
-        Cavab formatı: `EPointTransactionStatusResponseSchema`
+        Cavab formatı: `TransactionStatusResponseSchema`
 
         Args:
             transaction_id: EPoint tərəfindən verilmiş tranzaksiya IDsi.
@@ -112,10 +112,10 @@ class _EPointRequest(SyncApiRequest):
         self.verb = 'POST'
         self.path = env.API.GET_STATUS
         self.data['transaction'] = transaction_id
-        self.resp_model = EPointTransactionStatusResponseSchema
+        self.resp_model = TransactionStatusResponseSchema
 
     @send_request
-    def save_card(self) -> ApiResponse[EPointRedirectUrlWithCardIdResponseSchema]:  # type: ignore[return]
+    def save_card(self) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:  # type: ignore[return]
         """Ödəniş olmadan kartı yadda saxlamaq sorğusu (sync)
 
         Example:
@@ -123,18 +123,18 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.save_card()
         ```
 
-        Cavab formatı: `EPointRedirectUrlWithCardIdResponseSchema`
+        Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir.
             Müştəri həmin URLə daxil olub, kart məlumatlarını uğurlu qeyd etdikdən sonra,
             backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
-            və eyni `card_id` ilə EPointDecodedCallbackDataSchema formatında məlumat gəlir.
+            və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
         """
         self.path = env.API.CARD_REGISTRATION
         self.verb = 'POST'
-        self.resp_model = EPointRedirectUrlWithCardIdResponseSchema
+        self.resp_model = RedirectUrlWithCardIdResponseSchema
 
     @send_request
     def pay_with_saved_card(  # type: ignore[return]
@@ -143,7 +143,7 @@ class _EPointRequest(SyncApiRequest):
         currency: str,
         order_id: str,
         card_id: str,
-    ) -> ApiResponse[EPointBaseResponseSchema]:
+    ) -> ApiResponse[BaseResponseSchema]:
         """Yadda saxlanılmış kartla ödəniş sorğusu (sync)
 
         Example:
@@ -151,11 +151,11 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.pay_with_saved_card(amount=100, currency='AZN', order_id='12345678', card_id='cexxxxxx')
         ```
 
-        Cavab formatı: `EPointBaseResponseSchema`
+        Cavab formatı: `BaseResponseSchema`
 
         Axın:
         -------------------------------------------------------------------------------------
-        Bu sorğunu göndərdikdə, cavab olaraq `EPointBaseResponseSchema` formatında
+        Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
         cavab gəlir, və ödənişin statusu birbaşa qayıdır: heç bir callback sorğusu gəlmir.
 
         Args:
@@ -166,7 +166,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.PAY_WITH_CARD
         self.verb = 'POST'
-        self.resp_model = EPointBaseResponseSchema
+        self.resp_model = BaseResponseSchema
 
         self.data.update(
             {
@@ -184,7 +184,7 @@ class _EPointRequest(SyncApiRequest):
         currency: str,
         order_id: str,
         description: Optional[str] = None,
-    ) -> ApiResponse[EPointRedirectUrlWithCardIdResponseSchema]:
+    ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
         """Ödəniş və kartı yadda saxlama sorğusu (sync)
 
         Example:
@@ -192,14 +192,14 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.pay_and_save_card(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
         ```
 
-        Cavab formatı: `EPointRedirectUrlWithCardIdResponseSchema`
+        Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir. Müştəri həmin URLə
         daxil olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
         APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id` və
-        `card_id` ilə `EPointDecodedCallbackDataSchema` formatında məlumat gəlir.
+        `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
@@ -209,7 +209,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.PAY_AND_SAVE_CARD
         self.verb = 'POST'
-        self.resp_model = EPointRedirectUrlWithCardIdResponseSchema
+        self.resp_model = RedirectUrlWithCardIdResponseSchema
 
         # Required data
         self.data.update(
@@ -238,7 +238,7 @@ class _EPointRequest(SyncApiRequest):
         order_id: str,
         card_id: str,
         description: Optional[str] = None,
-    ) -> ApiResponse[EPointBaseResponseSchema]:
+    ) -> ApiResponse[BaseResponseSchema]:
         """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (sync)
 
         Example:
@@ -246,12 +246,12 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.payout(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
         ```
 
-        Cavab sorğu formatı: `EPointBaseResponseSchema`
+        Cavab sorğu formatı: `BaseResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, əməliyyat Epoint xidməti tərəfindən işləndikdən və bankdan ödəniş
-        statusu alındıqdan sonra cavab `EPointBaseResponseSchema` formatında qayıdacaqdır
+        statusu alındıqdan sonra cavab `BaseResponseSchema` formatında qayıdacaqdır
 
         Args:
             amount: Nağdlaşdırmaq miqdarı. Numerik dəyər.
@@ -262,7 +262,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.PAYOUT
         self.verb = 'POST'
-        self.resp_model = EPointBaseResponseSchema
+        self.resp_model = BaseResponseSchema
 
         self.data.update(
             {
@@ -282,7 +282,7 @@ class _EPointRequest(SyncApiRequest):
         transaction_id: str,
         currency: str,
         amount: Optional[Decimal] = None,
-    ) -> ApiResponse[EPointMinimalResponseSchema]:
+    ) -> ApiResponse[MinimalResponseSchema]:
         """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (sync)
 
         Examples:
@@ -295,7 +295,7 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.refund(transaction_id='texxxxxx', currency='AZN', amount=50)
         ```
 
-        Cavab formatı: `EPointMinimalResponseSchema`
+        Cavab formatı: `MinimalResponseSchema`
 
         Axın:
         -----------------------------------------------------------------
@@ -311,7 +311,7 @@ class _EPointRequest(SyncApiRequest):
         """
         self.path = env.API.REFUND
         self.verb = 'POST'
-        self.resp_model = EPointMinimalResponseSchema
+        self.resp_model = MinimalResponseSchema
 
         self.data.update({'transaction': transaction_id, 'currency': currency})
 
@@ -328,7 +328,7 @@ class _EPointRequest(SyncApiRequest):
         split_amount: Decimal,
         description: Optional[str] = None,
         **extra,
-    ) -> ApiResponse[EPointRedirectUrlResponseSchema]:
+    ) -> ApiResponse[RedirectUrlResponseSchema]:
         """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
         Example:
@@ -336,7 +336,7 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.split_pay(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
         ```
 
-        Cavab formatı: `EPointRedirectUrlResponseSchema`
+        Cavab formatı: `RedirectUrlResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------
@@ -353,7 +353,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.SPLIT_PAY
         self.verb = 'POST'
-        self.resp_model = EPointRedirectUrlResponseSchema
+        self.resp_model = RedirectUrlResponseSchema
 
         # Required data
         self.data.update(
@@ -389,7 +389,7 @@ class _EPointRequest(SyncApiRequest):
         split_user_id: str,
         split_amount: Decimal,
         description: Optional[str] = None,
-    ) -> ApiResponse[EPointSplitPayWithSavedCardResponseSchema]:
+    ) -> ApiResponse[SplitPayWithSavedCardResponseSchema]:
         """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
         Example:
@@ -398,7 +398,7 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.split_pay_with_saved_card(amount=100, currency='AZN', order_id='123456789', card_id='cexxxxxx', split_user_id='epoint_user_id', split_amount=50, description='split payment')
         ```
 
-        Cavab formatı: `EPointSplitPayWithSavedCardResponseSchema`
+        Cavab formatı: `SplitPayWithSavedCardResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------
@@ -416,7 +416,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.SPLIT_PAY_WITH_SAVED_CARD
         self.verb = 'POST'
-        self.resp_model = EPointSplitPayWithSavedCardResponseSchema
+        self.resp_model = SplitPayWithSavedCardResponseSchema
 
         self.data.update(
             {
@@ -442,7 +442,7 @@ class _EPointRequest(SyncApiRequest):
         split_user_id: str,
         split_amount: Decimal,
         description: Optional[str] = None,
-    ) -> ApiResponse[EPointRedirectUrlWithCardIdResponseSchema]:
+    ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
         """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
 
         Example:
@@ -450,7 +450,7 @@ class _EPointRequest(SyncApiRequest):
         EPointRequest.split_pay_and_save_card(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
         ```
 
-        Cavab formatı: `EPointRedirectUrlWithCardIdResponseSchema`
+        Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
 
         Axın:
         -----------------------------------------------------------------------------------
@@ -465,7 +465,7 @@ class _EPointRequest(SyncApiRequest):
         """  # noqa: E501
         self.path = env.API.SPLIT_PAY_AND_SAVE_CARD
         self.verb = 'POST'
-        self.resp_model = EPointRedirectUrlWithCardIdResponseSchema
+        self.resp_model = RedirectUrlWithCardIdResponseSchema
 
         # Required data
         self.data.update(

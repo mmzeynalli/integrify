@@ -7,7 +7,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from integrify.base import ApiResponse
-from integrify.epoint.schemas.parts import EPointTransactionStatus
+from integrify.epoint.schemas.parts import TransactionStatus
 from integrify.epoint.sync import _EPointRequest
 from tests import epoint
 from tests.epoint.mocks import *  # noqa: F403
@@ -62,7 +62,7 @@ def req(self: TestEPointRequest, *args, **kwds):
     if not is_signature_ok(self.body):
         resp = {
             'body': {
-                'status': EPointTransactionStatus.SERVER_ERROR,
+                'status': TransactionStatus.SERVER_ERROR,
                 'message': 'Signature did not match',
             }
         }

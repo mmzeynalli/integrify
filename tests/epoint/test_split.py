@@ -1,4 +1,4 @@
-from integrify.epoint.schemas.parts import EPointTransactionStatus
+from integrify.epoint.schemas.parts import TransactionStatus
 from tests.epoint.conftest import TestEPointRequest
 
 
@@ -11,7 +11,7 @@ def test_epoint_split_payment_request(epoint_mock_split_payment_response):
         split_amount=50,
     )
 
-    assert resp.body.status == EPointTransactionStatus.SUCCESS
+    assert resp.body.status == TransactionStatus.SUCCESS
     assert resp.body.redirect_url
 
 
@@ -27,7 +27,7 @@ def test_epoint_split_pay_with_saved_card_request(epoint_mock_split_pay_with_sav
         card_id='cexxxxxx',
     )
 
-    assert resp.body.status == EPointTransactionStatus.SUCCESS
+    assert resp.body.status == TransactionStatus.SUCCESS
     assert resp.body.transaction
 
 
@@ -40,7 +40,7 @@ def test_epoint_split_pay_and_save_card_request(epoint_mock_split_pay_and_save_c
         split_amount=50,
     )
 
-    assert resp.body.status == EPointTransactionStatus.SUCCESS
+    assert resp.body.status == TransactionStatus.SUCCESS
     assert resp.body.redirect_url
     assert resp.body.transaction
     assert resp.body.card_id

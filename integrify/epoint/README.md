@@ -8,18 +8,18 @@ Sorğular uğurlu və ya uğursuz olduqda, spesifik URL-ə yönləndirmək istə
 
 ## Sorğular listi
 
-| Sorğu class-ı                        | Məqsəd                                                               |                EPoint API                 | Callback-ə sorğu atılır |
-| :----------------------------------- | :------------------------------------------------------------------- | :---------------------------------------: | :---------------------: |
-| `EPointPaymentRequest`               | Ödəniş                                                               |             `/api/1/request`              |   :heavy_check_mark:    |
-| `EPointGetTransactionStatusRequest`  | Ödəniş statusunun yoxlanılması                                       |            `/api/1/get-status`            |           :x:           |
-| `EPointSaveCardRequest`              | Ödəniş olmadan kartı yadda saxlamaq                                  |        `/api/1/card-registration`         |   :heavy_check_mark:    |
-| `EPointPayWithSavedCardRequest`      | Saxlanılan kartla ödəniş                                             |           `/api/1/execute-pay`            |           :x:           |
-| `EPointPayAndSaveCardRequest`        | Ödəniş etmə və kartı yadda saxlamaq                                  |    `/api/1/card-registration-with-pay`    |   :heavy_check_mark:    |
-| `EPointPayoutRequest`                | Vəsaitlərin köçürülməsi                                              |          `/api/1/refund-request`          |           :x:           |
-| `EPointRefundRequest`                | Ödənişi tam və ya yarımçıq geri qaytarma                             |             `/api/1/reverse`              |           :x:           |
-| `EPointSplitPaymentRequest`          | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə                    |          `/api/1/split-request`           |   :heavy_check_mark:    |
-| `EPointSplitPayWithSavedCardRequest` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |           :x:           |
-| `EPointSplitPayAndSaveCardRequest`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` |   :heavy_check_mark:    |
+| Sorğu funksiyası            | Məqsəd                                                               |                EPoint API                 | Callback-ə sorğu atılır |
+| :-------------------------- | :------------------------------------------------------------------- | :---------------------------------------: | :---------------------: |
+| `pay`                       | Ödəniş                                                               |             `/api/1/request`              |   :heavy_check_mark:    |
+| `get_transaction_status`    | Ödəniş statusunun yoxlanılması                                       |            `/api/1/get-status`            |           :x:           |
+| `save_card`                 | Ödəniş olmadan kartı yadda saxlamaq                                  |        `/api/1/card-registration`         |   :heavy_check_mark:    |
+| `pay_with_saved_card`       | Saxlanılan kartla ödəniş                                             |           `/api/1/execute-pay`            |           :x:           |
+| `pay_and_save_card`         | Ödəniş etmə və kartı yadda saxlamaq                                  |    `/api/1/card-registration-with-pay`    |   :heavy_check_mark:    |
+| `payout`                    | Vəsaitlərin köçürülməsi                                              |          `/api/1/refund-request`          |           :x:           |
+| `refund`                    | Ödənişi tam və ya yarımçıq geri qaytarma                             |             `/api/1/reverse`              |           :x:           |
+| `split_pay`                 | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə                    |          `/api/1/split-request`           |   :heavy_check_mark:    |
+| `split_pay_with_saved_card` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |           :x:           |
+| `split_pay_and_save_card`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` |   :heavy_check_mark:    |
 
 ## Callback Sorğusu
 
@@ -32,7 +32,7 @@ Bəzi sorğular müştəri məlumat daxil etdikdən və arxa fonda bank işləml
 }
 ```
 
-Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callback üçün API yazdıqda, datanı alıb, `helper.py`-dakı `decode_callback_data` funksiyası ilə həm signature yoxlanması həm də datanın decode-unu edə bilərsiniz. Bu funksiya sizə `EPointDecodedCallbackDataSchema` formatında decode olunmuş datanı qaytarır.
+Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callback üçün API yazdıqda, datanı alıb, `helper.py`-dakı `decode_callback_data` funksiyası ilə həm signature yoxlanması həm də datanın decode-unu edə bilərsiniz. Bu funksiya sizə `DecodedCallbackDataSchema` formatında decode olunmuş datanı qaytarır.
 
 > **Qeyd**
 >
@@ -40,7 +40,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 >
 > ```python
 > @router.post('/epoint/callback')
-> async def epoint_callback(data: EPointDecodedCallbackDataSchema = Depends(decode_callback_data)):
+> async def epoint_callback(data: DecodedCallbackDataSchema = Depends(decode_callback_data)):
 > ```
 >
 > Funksiyanı belə yazdıqda, data avtomatik signature-i yoxlanaraq decode edilir.
@@ -49,7 +49,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 
 ## Callback Data formatı
 
-Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz fərqlənə bilər. `EPointDecodedCallbackDataSchema` bütün bu dataları özündə cəmləsə də, hansı fieldlərin gəlməyəcəyini (yəni, decode-dan sonra `None` olacağını) bilmək yaxşı olar. Ümumilikdə, mümkün olacaq datalar bunlardır:
+Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz fərqlənə bilər. `DecodedCallbackDataSchema` bütün bu dataları özündə cəmləsə də, hansı fieldlərin gəlməyəcəyini (yəni, decode-dan sonra `None` olacağını) bilmək yaxşı olar. Ümumilikdə, mümkün olacaq datalar bunlardır:
 
 ```text
 status -> Success və ya failed əməliyyatının nəticəsi
@@ -71,13 +71,13 @@ other_attr -> Əlavə göndərdiyiniz seçimlər
 
 Sorğudan asılı olaraq, bu data-lar callback-də **GƏLMİR** (yəni, avtomatik `None` dəyəri alır):
 
-| Sorğu class-ı                      | Callback-də gəlməyəcək datalar                    |
-| :--------------------------------- | :------------------------------------------------ |
-| `EPointPaymentRequest`             | `card_id`, `split_amount`                         |
-| `EPointSaveCardRequest`            | `order_id`, `transaction`, `amount`, `other_attr` |
-| `EPointPayAndSaveCardRequest`      | `message`                                         |
-| `EPointSplitPaymentRequest`        | -                                                 |
-| `EPointSplitPayAndSaveCardRequest` | `message`                                         |
+| Sorğu class-ı             | Callback-də gəlməyəcək datalar                    |
+| :------------------------ | :------------------------------------------------ |
+| `pay`                     | `card_id`, `split_amount`                         |
+| `save_card`               | `order_id`, `transaction`, `amount`, `other_attr` |
+| `pay_and_save_card`       | `message`                                         |
+| `split_pay`               | -                                                 |
+| `split_pay_and_save_card` | `message`                                         |
 
 > **Qeyd**
 >

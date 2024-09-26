@@ -1,7 +1,7 @@
 const div = document.querySelector('.github-topic-projects')
 
 async function getDataBatch(page) {
-    const response = await fetch(`https://api.github.com/search/repositories?q=topic:fastapi&per_page=100&page=${page}`, { headers: { Accept: 'application/vnd.github.mercy-preview+json' } })
+    const response = await fetch(`https://api.github.com/search/repositories?q=topic:integrify&per_page=100&page=${page}`, { headers: { Accept: 'application/vnd.github.mercy-preview+json' } })
     const data = await response.json()
     return data
 }
@@ -140,30 +140,13 @@ function shuffle(array) {
     return array;
 }
 
-async function showRandomAnnouncement(groupId, timeInterval) {
-    const announceFastAPI = document.getElementById(groupId);
-    if (announceFastAPI) {
-        let children = [].slice.call(announceFastAPI.children);
-        children = shuffle(children)
-        let index = 0
-        const announceRandom = () => {
-            children.forEach((el, i) => { el.style.display = "none" });
-            children[index].style.display = "block"
-            index = (index + 1) % children.length
-        }
-        announceRandom()
-        setInterval(announceRandom, timeInterval
-        )
-    }
-}
-
 async function main() {
     if (div) {
         data = await getData()
         div.innerHTML = '<ul></ul>'
         const ul = document.querySelector('.github-topic-projects ul')
         data.forEach(v => {
-            if (v.full_name === 'fastapi/fastapi') {
+            if (v.full_name === 'mmzeynalli/integrify') {
                 return
             }
             const li = document.createElement('li')
@@ -173,9 +156,8 @@ async function main() {
     }
 
     setupTermynal();
-    showRandomAnnouncement('announce-left', 5000)
-    showRandomAnnouncement('announce-right', 10000)
 }
+
 document$.subscribe(() => {
     main()
 })
