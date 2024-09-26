@@ -41,6 +41,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 > ```python
 > @router.post('/epoint/callback')
 > async def epoint_callback(data: DecodedCallbackDataSchema = Depends(decode_callback_data)):
+>   ...
 > ```
 >
 > Funksiyanı belə yazdıqda, data avtomatik signature-i yoxlanaraq decode edilir.
