@@ -15,10 +15,10 @@ from integrify.epoint.schemas.types import (
 )
 from integrify.epoint.sync import _EPointRequest as SyncEPointRequest
 
-__all__ = ['EPointRequest']
+__all__ = ['AsyncEPointRequest']
 
 
-class _EPointRequest(AsyncApiRequest, SyncEPointRequest):
+class _AsyncEPointRequest(AsyncApiRequest, SyncEPointRequest):
     """EPoint async sorğular üçün baza class"""
 
     async def pay(  # type: ignore[override]
@@ -353,4 +353,4 @@ class _EPointRequest(AsyncApiRequest, SyncEPointRequest):
         return await super().__call__(*args, **kwargs)
 
 
-EPointRequest = _EPointRequest()
+AsyncEPointRequest = _AsyncEPointRequest()

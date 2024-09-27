@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from integrify.epoint.schemas.parts import TransactionStatus, TransctionStatusExtended
+from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
 
 MESSAGE_SUCCESS = 'Təsdiq edildi'
 MESSAGE_SERVER_ERROR = 'Signature did not match'
@@ -12,7 +12,7 @@ MESSAGE_SERVER_ERROR = 'Signature did not match'
 def epoint_mock_get_transaction_status_response():
     return {
         'body': {
-            'status': TransctionStatusExtended.SUCCESS,
+            'status': TransactionStatusExtended.SUCCESS,
             'message': MESSAGE_SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'bank_transaction': 'base64data',

@@ -7,7 +7,7 @@ from pydantic import BaseModel, field_validator, model_validator
 from integrify.epoint.schemas.parts import (
     Code,
     TransactionStatus,
-    TransctionStatusExtended,
+    TransactionStatusExtended,
 )
 
 
@@ -82,7 +82,7 @@ class PaymentSchema(BaseWithCodeSchema):
 
 
 class TransactionStatusResponseSchema(BaseWithCodeSchema):
-    status: TransctionStatusExtended  # type: ignore[assignment]
+    status: TransactionStatusExtended  # type: ignore[assignment]
     """Tranzaksiyanın detallı statusu"""
 
     order_id: Optional[str] = None

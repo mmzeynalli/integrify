@@ -29,7 +29,7 @@ class _EPointRequest(SyncApiRequest):
             'language': env.EPOINT_INTERFACE_LANG,
         }
 
-    # @send_request
+    @send_request
     def pay(  # type: ignore[return]
         self,
         amount: Decimal,
@@ -40,15 +40,15 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[RedirectUrlResponseSchema]:
         """Ödəniş sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
 
-        **Cavab formatı**: `RedirectUrlResponseSchema`
+            EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
+            ```
 
-        Axın:
-        -----------------------------------------------------------------------------------
+        Cavab formatı: `RedirectUrlResponseSchema`
+
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
         olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
         APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id`
@@ -88,8 +88,6 @@ class _EPointRequest(SyncApiRequest):
         if extra:
             self.data['other_attr'] = extra
 
-        return self.__call__()
-
     @send_request
     def get_transaction_status(  # type: ignore[return]
         self,
@@ -98,10 +96,12 @@ class _EPointRequest(SyncApiRequest):
         """
         Transaksiya statusunu öyrənmək üçün sorğu (sync)
 
-        Example:
-        ```python
-        EPointRequest.get_transaction_status(transaction_id='texxxxxx')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.get_transaction_status(transaction_id='texxxxxx')
+            ```
 
         Cavab formatı: `TransactionStatusResponseSchema`
 
@@ -118,19 +118,19 @@ class _EPointRequest(SyncApiRequest):
     def save_card(self) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:  # type: ignore[return]
         """Ödəniş olmadan kartı yadda saxlamaq sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.save_card()
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.save_card()
+            ```
 
         Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
 
-        Axın:
-        -----------------------------------------------------------------------------------
-            Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir.
-            Müştəri həmin URLə daxil olub, kart məlumatlarını uğurlu qeyd etdikdən sonra,
-            backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
-            və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
+        Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir.
+        Müştəri həmin URLə daxil olub, kart məlumatlarını uğurlu qeyd etdikdən sonra,
+        backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
+        və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
         """
         self.path = env.API.CARD_REGISTRATION
         self.verb = 'POST'
@@ -146,15 +146,15 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[BaseResponseSchema]:
         """Yadda saxlanılmış kartla ödəniş sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.pay_with_saved_card(amount=100, currency='AZN', order_id='12345678', card_id='cexxxxxx')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.pay_with_saved_card(amount=100, currency='AZN', order_id='12345678', card_id='cexxxxxx')
+            ```
 
         Cavab formatı: `BaseResponseSchema`
 
-        Axın:
-        -------------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
         cavab gəlir, və ödənişin statusu birbaşa qayıdır: heç bir callback sorğusu gəlmir.
 
@@ -187,15 +187,15 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
         """Ödəniş və kartı yadda saxlama sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.pay_and_save_card(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.pay_and_save_card(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
+            ```
 
         Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
 
-        Axın:
-        -----------------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir. Müştəri həmin URLə
         daxil olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
         APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id` və
@@ -241,15 +241,15 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[BaseResponseSchema]:
         """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.payout(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.payout(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
+            ```
 
         Cavab sorğu formatı: `BaseResponseSchema`
 
-        Axın:
-        -----------------------------------------------------------------------------------------
         Bu sorğunu göndərdikdə, əməliyyat Epoint xidməti tərəfindən işləndikdən və bankdan ödəniş
         statusu alındıqdan sonra cavab `BaseResponseSchema` formatında qayıdacaqdır
 
@@ -285,20 +285,19 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[MinimalResponseSchema]:
         """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (sync)
 
-        Examples:
-        ```python
-        # Full refund
-        EPointRequest.refund(transaction_id='texxxxxx', currency='AZN')
-        ```
-        ```python
-        # Partial refund
-        EPointRequest.refund(transaction_id='texxxxxx', currency='AZN', amount=50)
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            # Full refund
+            EPointRequest.refund(transaction_id='texxxxxx', currency='AZN')
+
+            # Partial refund
+            EPointRequest.refund(transaction_id='texxxxxx', currency='AZN', amount=50)
+            ```
 
         Cavab formatı: `MinimalResponseSchema`
 
-        Axın:
-        -----------------------------------------------------------------
         Bu sorğunu göndərdikdə, cavab olaraq `status` və `message` gəlir.
         Heç bir callback sorğusu göndərilmir.
 
@@ -331,15 +330,14 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[RedirectUrlResponseSchema]:
         """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.split_pay(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.split_pay(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
+            ```
 
         Cavab formatı: `RedirectUrlResponseSchema`
-
-        Axın:
-        -----------------------------------------------------------------------------------
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
@@ -392,16 +390,14 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[SplitPayWithSavedCardResponseSchema]:
         """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
-        Example:
-        Example:
-        ```python
-        EPointRequest.split_pay_with_saved_card(amount=100, currency='AZN', order_id='123456789', card_id='cexxxxxx', split_user_id='epoint_user_id', split_amount=50, description='split payment')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.split_pay_with_saved_card(amount=100, currency='AZN', order_id='123456789', card_id='cexxxxxx', split_user_id='epoint_user_id', split_amount=50, description='split payment')
+            ```
 
         Cavab formatı: `SplitPayWithSavedCardResponseSchema`
-
-        Axın:
-        -----------------------------------------------------------------------------------
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
@@ -445,15 +441,14 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
         """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
 
-        Example:
-        ```python
-        EPointRequest.split_pay_and_save_card(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
-        ```
+        ???+ usage
+            ```python
+            from integrify.epoint import EPointRequest
+
+            EPointRequest.split_pay_and_save_card(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
+            ```
 
         Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
-
-        Axın:
-        -----------------------------------------------------------------------------------
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.

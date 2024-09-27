@@ -8,7 +8,7 @@ class TransactionStatus(StrEnum):
     FAILED = 'failed'
 
 
-class TransctionStatusExtended(StrEnum):
+class TransactionStatusExtended(StrEnum):
     NEW = 'new'
     SUCCESS = 'success'
     RETURNED = 'returned'

@@ -60,7 +60,7 @@ nav:
   - İnteqrasiya:
       - EPoint: 
           - Ümumi məlumat: "general/epoint.md"
-          - API Reference: "api_reference/epoint.md"
+          - API Referansı: "api_reference/epoint.md"
 
 markdown_extensions:
   - codehilite:
