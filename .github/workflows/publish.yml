@@ -2,6 +2,8 @@ name: Publish
 
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
 
@@ -9,9 +11,11 @@ jobs:
   publish:
     name: "Publish release"
     runs-on: "ubuntu-latest"
-    
     permissions:
       id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/p/integrify/
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
