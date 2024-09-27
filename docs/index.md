@@ -1,9 +1,5 @@
-<style>
-.md-content .md-typeset h1 { display: none; }
-</style>
-
 <p align="center">
-  <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="./img/integrify.png" alt="Integrify"></a>
+  <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="assets/integrify.png" alt="Integrify"></a>
 </p>
 <p align="center">
     <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.</em>
@@ -14,8 +10,11 @@
   </a>
 </p>
 
+# Integrify
 
-## Əsas özəlliklər { #esas-ozellikler }
+Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
+
+## Əsas özəlliklər
 
 - Kitabxana həm sync, həm də async sorğu dəyişimini dəstəkləyir.
 - Kitabaxanadakı bütün sinif və funksiyalar tamamilə dokumentləşdirilib.
@@ -30,19 +29,17 @@
 
 ---
 
-## Kitabxananın yüklənməsi { #kitabxananin-yuklenmesi }
+## Kitabxananın yüklənməsi
 
 <div class="termy">
 
 ```console
 $ pip install integrify
-
----> 100%
 ```
 
 </div>
 
-## İstifadəsi { #istifadesi }
+## İstifadəsi
 
 Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 
@@ -67,7 +64,7 @@ print(resp.ok, resp.body)
 
 ```
 
-### Sorğu cavabı { #sorgu-cavabi }
+### Sorğu cavabı
 
 Yuxarıdakı sorğuların (və ya istənilən sorğunun) cavab formatı `ApiResponse` class-ıdır:
 
@@ -86,8 +83,10 @@ class ApiResponse:
     """Cavab sorğusunun body-si"""
 ```
 
-## Dəstəklənən API inteqrasiyaları { #desteklenen-api-inteqrasiyalari }
 
-| Servis |       Əsas sorğular       | Bütün sorğular | Dokumentləşdirilmə | Link                    |
-| ------ | :-----------------------: | :------------: | ------------------ | ----------------------- |
-| EPoint | :fontawesome-solid-check: |      :x:       | Tam                | [Docs](epoint/about.md) |
+## Dəstəklənən API inteqrasiyaları
+
+| Servis  |            Əsas sorğular             |            Bütün sorğular            | Dokumentləşdirilmə | Link                                                                       |
+| ------- | :----------------------------------: | :----------------------------------: | ------------------ | -------------------------------------------------------------------------- |
+| EPoint  |          :heavy_check_mark:          | ![loading](assets/spinner-solid.svg) | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint) |
+| Payriff | ![loading](assets/spinner-solid.svg) | ![loading](assets/spinner-solid.svg) | Tam                | ![loading](assets/spinner-solid.svg)                                       |

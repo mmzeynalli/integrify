@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="docs/img/integrify.png" alt="Integrify"></a>
+  <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="docs/assets/integrify.png" alt="Integrify"></a>
 </p>
 <p align="center">
     <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.</em>
@@ -56,7 +56,7 @@ print(resp.ok, resp.body)
 ### Async
 
 ```python
-from integrify.epoint.asyncio import AsyncEPointRequest
+from integrify.epoint.asyncio import EPointRequest
 
 # Async main loop artıq başlamışdır
 resp = await EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
@@ -83,8 +83,11 @@ class ApiResponse:
     """Cavab sorğusunun body-si"""
 ```
 
+![loading](docs/assets/spinner-solid.svg)
+
 ## Dəstəklənən API inteqrasiyaları
 
-| Servis |   Əsas sorğular    | Bütün sorğular | Dokumentləşdirilmə | Link                                                                       |
-| ------ | :----------------: | :------------: | ------------------ | -------------------------------------------------------------------------- |
-| EPoint | :heavy_check_mark: |      :x:       | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint) |
+| Servis  |               Əsas sorğular               |              Bütün sorğular               | Dokumentləşdirilmə | Link                                                                       |
+| ------- | :---------------------------------------: | :---------------------------------------: | ------------------ | -------------------------------------------------------------------------- |
+| EPoint  |            :heavy_check_mark:             | ![loading](docs/assets/spinner-solid.svg) | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint) |
+| Payriff | ![loading](docs/assets/spinner-solid.svg) | ![loading](docs/assets/spinner-solid.svg) | Tam                | ![loading](docs/assets/spinner-solid.svg)                                  |
