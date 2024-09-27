@@ -12,7 +12,7 @@ readme = "README.md"
 Homepage = "https://github.com/mmzeynalli/integrify"
 Documentation = "https://integrify.mmzeynalli.dev/"
 Repository = "https://github.com/mmzeynalli/integrify"
-Repository = "https://github.com/mmzeynalli/integrify/issues"
+Issues = "https://github.com/mmzeynalli/integrify/issues"
 
 [tool.poetry.dependencies]
 python = "^3.9"
