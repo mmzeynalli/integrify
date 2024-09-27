@@ -1,4 +1,4 @@
-site_name: integrify
+site_name: Integrify
 site_description: Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 site_url: https://integrify.mmzeynalli.dev
 
@@ -54,7 +54,6 @@ plugins:
           options:
             show_root_heading: true
             show_source: false
-            show_root_heading: true
             show_if_no_docstring: true
             inherited_members: true
             members_order: source

@@ -10,9 +10,13 @@
   </a>
 </p>
 
-# Integrify
+---
 
-Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
+**Dokumentasiya**: [https://integrify.mmzeynalli.dev](https://integrify.mmzeynalli.dev)
+
+**Kod**: [https://github.com/mmzeynalli/integrify](https://github.com/mmzeynalli/integrify)
+
+---
 
 ## Əsas özəlliklər
 
@@ -20,12 +24,6 @@ Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
 - Kitabaxanadakı bütün sinif və funksiyalar tamamilə dokumentləşdirilib.
 - Kitabaxanadakı bütün sinif və funksiyalar tipləndirildiyindən, "type hinting" aktivdir.
 - Sorğuların çoxunun məntiq axını (flowsu) izah edilib.
-
----
-
-**Dokumentasiya**: [https://integrify.mmzeynalli.dev](https://integrify.mmzeynalli.dev)
-
-**Kod**: [https://github.com/mmzeynalli/integrify](https://github.com/mmzeynalli/integrify)
 
 ---
 
