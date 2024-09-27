@@ -1,6 +1,19 @@
-# Integrify
+<style>
+.md-content .md-typeset h1 { display: none; }
+</style>
 
-Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.
+<p align="center">
+  <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="./img/integrify.png" alt="Integrify"></a>
+</p>
+<p align="center">
+    <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.</em>
+</p>
+<p align="center">
+  <a href="https://app.netlify.com/sites/integrify-docs/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/d8931b6a-80c7-41cb-bdbb-bf6ef5789f80/deploy-status" alt="Netlify Status">
+  </a>
+</p>
+
 
 ## Əsas özəlliklər { #esas-ozellikler }
 
@@ -36,9 +49,9 @@ Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 ### Sync
 
 ```python
-from integrify.epoint.payment import EPointPaymentRequest
+from integrify.epoint import EPointRequest
 
-resp = EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')()
+resp = EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
 print(resp.ok, resp.body)
 
 ```
@@ -46,10 +59,10 @@ print(resp.ok, resp.body)
 ### Async
 
 ```python
-from integrify.epoint.asyncio.payment import EPointPaymentRequest
+from integrify.epoint.asyncio import EPointRequest
 
 # Async main loop artıq başlamışdır
-resp = await EPointPaymentRequest(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')()
+resp = await EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
 print(resp.ok, resp.body)
 
 ```
@@ -75,6 +88,6 @@ class ApiResponse:
 
 ## Dəstəklənən API inteqrasiyaları { #desteklenen-api-inteqrasiyalari }
 
-| Servis |   Əsas sorğular    | Bütün sorğular | Dokumentləşdirilmə | Link                                                                       |
-| ------ | :----------------: | :------------: | ------------------ | -------------------------------------------------------------------------- |
-| EPoint | :fontawesome-solid-check:  |      :x:       | Tam                | [Docs](api_reference/epoint.md) |
+| Servis |       Əsas sorğular       | Bütün sorğular | Dokumentləşdirilmə | Link                    |
+| ------ | :-----------------------: | :------------: | ------------------ | ----------------------- |
+| EPoint | :fontawesome-solid-check: |      :x:       | Tam                | [Docs](epoint/about.md) |

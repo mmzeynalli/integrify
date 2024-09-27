@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from integrify.epoint.schemas.parts import EPointTransactionStatus, EPointTransctionStatusExtended
+from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
 
 MESSAGE_SUCCESS = 'Təsdiq edildi'
 MESSAGE_SERVER_ERROR = 'Signature did not match'
@@ -12,7 +12,7 @@ MESSAGE_SERVER_ERROR = 'Signature did not match'
 def epoint_mock_get_transaction_status_response():
     return {
         'body': {
-            'status': EPointTransctionStatusExtended.SUCCESS,
+            'status': TransactionStatusExtended.SUCCESS,
             'message': MESSAGE_SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'bank_transaction': 'base64data',
@@ -44,7 +44,7 @@ def epoint_mock_save_card_response():
 def epoint_mock_payment_response():
     return {
         'body': {
-            'status': EPointTransactionStatus.SUCCESS,
+            'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
         }
@@ -55,7 +55,7 @@ def epoint_mock_payment_response():
 def epoint_mock_pay_and_save_card_response():
     return {
         'body': {
-            'status': EPointTransactionStatus.SUCCESS,
+            'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
             'card_id': 'cexxxxxxxxxx',
@@ -67,7 +67,7 @@ def epoint_mock_pay_and_save_card_response():
 def epoint_mock_pay_with_saved_card_response():
     return {
         'body': {
-            'status': EPointTransactionStatus.SUCCESS,
+            'status': TransactionStatus.SUCCESS,
             'message': 'Approved',
             'transaction': 'texxxxxxxxxx',
             'bank_transaction': 'base64data',
@@ -85,7 +85,7 @@ def epoint_mock_pay_with_saved_card_response():
 def epoint_mock_split_payment_response():
     return {
         'body': {
-            'status': EPointTransactionStatus.SUCCESS,
+            'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
         }
@@ -96,7 +96,7 @@ def epoint_mock_split_payment_response():
 def epoint_mock_split_pay_with_saved_card_response():
     return {
         'body': {
-            'status': EPointTransactionStatus.SUCCESS,
+            'status': TransactionStatus.SUCCESS,
             'message': 'Approved',
             'transaction': 'texxxxxxxxxx',
             'bank_transaction': 'base64data',
@@ -115,7 +115,7 @@ def epoint_mock_split_pay_with_saved_card_response():
 def epoint_mock_split_pay_and_save_card_response():
     return {
         'body': {
-            'status': EPointTransactionStatus.SUCCESS,
+            'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
             'card_id': 'cexxxxxxxxxx',
