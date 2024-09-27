@@ -1,7 +1,7 @@
 import base64
 import json
 from decimal import Decimal
-from typing import Optional
+from typing import Any, Optional
 
 from integrify.base import ApiResponse, SyncApiRequest, send_request
 from integrify.epoint import env
@@ -36,18 +36,20 @@ class _EPointRequest(SyncApiRequest):
         currency: str,
         order_id: str,
         description: Optional[str] = None,
-        **extra,
+        **extra: Any,
     ) -> ApiResponse[RedirectUrlResponseSchema]:
         """Ödəniş sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/request*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
             EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
             ```
 
-        Cavab formatı: `RedirectUrlResponseSchema`
+        **Cavab formatı**: `RedirectUrlResponseSchema`
 
         Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
         olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
@@ -96,7 +98,9 @@ class _EPointRequest(SyncApiRequest):
         """
         Transaksiya statusunu öyrənmək üçün sorğu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/get-status*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -118,7 +122,9 @@ class _EPointRequest(SyncApiRequest):
     def save_card(self) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:  # type: ignore[return]
         """Ödəniş olmadan kartı yadda saxlamaq sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/card-registration*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -146,7 +152,9 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[BaseResponseSchema]:
         """Yadda saxlanılmış kartla ödəniş sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/execute-pay*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -187,7 +195,9 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
         """Ödəniş və kartı yadda saxlama sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/card-registration-with-pay*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -241,7 +251,9 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[BaseResponseSchema]:
         """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/refund-request*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -285,7 +297,9 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[MinimalResponseSchema]:
         """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/reverse*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -326,11 +340,13 @@ class _EPointRequest(SyncApiRequest):
         split_user_id: str,
         split_amount: Decimal,
         description: Optional[str] = None,
-        **extra,
+        **extra: Any,
     ) -> ApiResponse[RedirectUrlResponseSchema]:
         """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/split-request*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -390,7 +406,9 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[SplitPayWithSavedCardResponseSchema]:
         """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/split-execute-pay*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 
@@ -407,8 +425,6 @@ class _EPointRequest(SyncApiRequest):
             split_user_id: Ödənişi böləcəyini **EPoint** user-ini IDsi
             split_amount: Bölünən miqdar. Numerik dəyər
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
-            **extra: Başqa ötürmək istədiyiniz əlavə dəyərlər. Bu dəyərlər callback sorğuda sizə
-                        geri göndərilir.
         """  # noqa: E501
         self.path = env.API.SPLIT_PAY_WITH_SAVED_CARD
         self.verb = 'POST'
@@ -441,7 +457,9 @@ class _EPointRequest(SyncApiRequest):
     ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
         """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
 
-        ???+ usage
+        **Endpoint:** */api/1/split-card-registration-with-pay*
+
+        Example:
             ```python
             from integrify.epoint import EPointRequest
 

@@ -1,13 +1,18 @@
 ???+ note
 
     İstifadəsi göstərilən bütün sorğular sinxrondur. Asinxron versiyasaları istifadə etmək üçün
-    bu importu edin:
+    bu importu edin və eyni-adlı funksiyaları `await` ilə çağırın:
     
     ```python
-    from integrify.epoint.asyncio import AsyncEPointRequest
+    from integrify.epoint.asyncio import EPointRequest
     ```
 
-    Qeyd: Hər iki versiyadakı metodlar eyni addadır.
+::: integrify.epoint.sync.EPointRequest
+
+???+ note
+
+    Bu artıq hazır yaradılmış klass obyektidir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
+    bütün sorğuları `_EPointRequest().save_card()` kimi istifadə etməlisiniz.
 
 ::: integrify.epoint.sync._EPointRequest
     handler: python
@@ -23,5 +28,3 @@
         - split_pay
         - split_pay_with_saved_card
         - split_pay_and_save_card
-        
-

@@ -6,6 +6,7 @@ EN: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20
 RU: https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20ru.pdf
 """
 
+from .env import VERSION
 from .sync import EPointRequest
 
-__all__ = ['EPointRequest']
+__all__ = ['EPointRequest', 'VERSION']

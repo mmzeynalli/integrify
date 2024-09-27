@@ -1,27 +1,35 @@
 # EPoint
-???+ note
 
+???+ warning
     Bu sorğulardan istifadə etmək üçün, bu dəyərləri "environment variable"-larına əlavə etməlisiniz: `EPOINT_PUBLIC_KEY`, `EPOINT_PRIVATE_KEY`
 
+???+ note
+    EPoint interfeysinin dilini dəyişmək istəyirsinizsə, `EPOINT_INTERFACE_LANG` "environment variable"-na dəyər verin. Default olaraq, Azərbaycan dili olacaq.
 
-EPoint interfeysinin dilini dəyişmək istəyirsinizsə, `EPOINT_INTERFACE_LANG` "environment variable"-na dəyər verin. Default olaraq, Azərbaycan dili olacaq.
+    Sorğular uğurlu və ya uğursuz olduqda, spesifik URL-ə yönləndirmək istəyirsinizsə, bu dəyişənlərə də mühit levelində dəyər verin: `EPOINT_SUCCESS_REDIRECT_URL`, `EPOINT_FAILED_REDIRECT_URL`
 
-Sorğular uğurlu və ya uğursuz olduqda, spesifik URL-ə yönləndirmək istəyirsinizsə, bu dəyişənlərə də mühit levelində dəyər verin: `EPOINT_SUCCESS_REDIRECT_URL`, `EPOINT_FAILED_REDIRECT_URL`
+## Rəsmi Dokumentasiya (v1.0.3)
+
+[Azərbaycanca](https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20az.pdf)
+
+[İngliscə](https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20en.pdf)
+
+[Rusca](https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20ru.pdf)
 
 ## Sorğular listi
 
-| Sorğu metodu                        | Məqsəd                                                               |                EPoint API                 | Callback-ə sorğu atılır |
-| :----------------------------------- | :------------------------------------------------------------------- | :---------------------------------------: | :---------------------: |
-| `pay`               | Ödəniş                                                               |             `/api/1/request`              |   :fontawesome-solid-check:     |
-| `get_transaction_status`  | Ödəniş statusunun yoxlanılması                                       |            `/api/1/get-status`            |           :x:           |
-| `save_card`              | Ödəniş olmadan kartı yadda saxlamaq                                  |        `/api/1/card-registration`         |   :fontawesome-solid-check:     |
-| `pay_with_saved_card`      | Saxlanılan kartla ödəniş                                             |           `/api/1/execute-pay`            |           :x:           |
-| `pay_and_save_card`        | Ödəniş etmə və kartı yadda saxlamaq                                  |    `/api/1/card-registration-with-pay`    |   :fontawesome-solid-check:     |
-| `payout`                | Vəsaitlərin köçürülməsi                                              |          `/api/1/refund-request`          |           :x:           |
-| `refund`                | Ödənişi tam və ya yarımçıq geri qaytarma                             |             `/api/1/reverse`              |           :x:           |
-| `split_pay`          | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə                    |          `/api/1/split-request`           |   :fontawesome-solid-check:     |
-| `split_pay_with_saved_card` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |           :x:           |
-| `split_pay_and_save_card`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` |   :fontawesome-solid-check:     |
+| Sorğu metodu                | Məqsəd                                                               |                EPoint API                 |  Callback-ə sorğu atılır  |
+| :-------------------------- | :------------------------------------------------------------------- | :---------------------------------------: | :-----------------------: |
+| `pay`                       | Ödəniş                                                               |             `/api/1/request`              | :fontawesome-solid-check: |
+| `get_transaction_status`    | Ödəniş statusunun yoxlanılması                                       |            `/api/1/get-status`            |            :x:            |
+| `save_card`                 | Ödəniş olmadan kartı yadda saxlamaq                                  |        `/api/1/card-registration`         | :fontawesome-solid-check: |
+| `pay_with_saved_card`       | Saxlanılan kartla ödəniş                                             |           `/api/1/execute-pay`            |            :x:            |
+| `pay_and_save_card`         | Ödəniş etmə və kartı yadda saxlamaq                                  |    `/api/1/card-registration-with-pay`    | :fontawesome-solid-check: |
+| `payout`                    | Vəsaitlərin köçürülməsi                                              |          `/api/1/refund-request`          |            :x:            |
+| `refund`                    | Ödənişi tam və ya yarımçıq geri qaytarma                             |             `/api/1/reverse`              |            :x:            |
+| `split_pay`                 | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə                    |          `/api/1/split-request`           | :fontawesome-solid-check: |
+| `split_pay_with_saved_card` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |            :x:            |
+| `split_pay_and_save_card`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` | :fontawesome-solid-check: |
 
 ## Callback Sorğusu
 
@@ -49,6 +57,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 >
 > @router.post('/epoint/callback')
 > async def epoint_callback(data: DecodedCallbackDataSchema = Depends(decode_callback_data)):
+>    ...
 > ```
 >
 > Funksiyanı belə yazdıqda, data avtomatik signature-i yoxlanaraq decode edilir.
@@ -59,7 +68,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 
 Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz fərqlənə bilər. `DecodedCallbackDataSchema` bütün bu dataları özündə cəmləsə də, hansı fieldlərin gəlməyəcəyini (yəni, decode-dan sonra `None` olacağını) bilmək yaxşı olar. Ümumilikdə, mümkün olacaq datalar bunlardır:
 
-| Dəyişən adı       | İzahı                                                                                             |
+| Dəyişən adı      | İzahı                                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------------------- |
 | status           | Success və ya failed əməliyyatının nəticəsi                                                             |
 | message          | Ödənişin icra statusu haqqında mesaj                                                                    |
@@ -77,15 +86,14 @@ Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz f
 | split_amount     | İkinci istifadəçi üçün ödəniş məbləği                                                                   |
 | other_attr       | Əlavə göndərdiyiniz seçimlər                                                                            |
 
-
 Sorğudan asılı olaraq, bu data-lar callback-də **GƏLMİR** (yəni, avtomatik `None` dəyəri alır):
 
-| Sorğu metodu                      | Callback-də gəlməyəcək datalar                    |
-| :--------------------------------- | :------------------------------------------------ |
-| `pay`             | `card_id`, `split_amount`                         |
-| `save_card`            | `order_id`, `transaction`, `amount`, `other_attr` |
-| `pay_and_save_card`      | `message`                                         |
-| `split_pay`        | -                                                 |
+| Sorğu metodu              | Callback-də gəlməyəcək datalar                    |
+| :------------------------ | :------------------------------------------------ |
+| `pay`                     | `card_id`, `split_amount`                         |
+| `save_card`               | `order_id`, `transaction`, `amount`, `other_attr` |
+| `pay_and_save_card`       | `message`                                         |
+| `split_pay`               | -                                                 |
 | `split_pay_and_save_card` | `message`                                         |
 
 > **Qeyd**

@@ -88,6 +88,6 @@ class ApiResponse:
 
 ## Dəstəklənən API inteqrasiyaları { #desteklenen-api-inteqrasiyalari }
 
-| Servis |       Əsas sorğular       | Bütün sorğular | Dokumentləşdirilmə | Link                            |
-| ------ | :-----------------------: | :------------: | ------------------ | ------------------------------- |
-| EPoint | :fontawesome-solid-check: |      :x:       | Tam                | [Docs](api_reference/epoint.md) |
+| Servis |       Əsas sorğular       | Bütün sorğular | Dokumentləşdirilmə | Link                    |
+| ------ | :-----------------------: | :------------: | ------------------ | ----------------------- |
+| EPoint | :fontawesome-solid-check: |      :x:       | Tam                | [Docs](epoint/about.md) |

@@ -46,7 +46,7 @@ repo_name: mmzeynalli/integrify
 repo_url: https://github.com/mmzeynalli/integrify
 
 plugins:
-  - search:
+  - search
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -54,13 +54,26 @@ plugins:
           options:
             show_root_heading: true
             show_source: false
+            show_root_heading: true
+            show_if_no_docstring: true
+            inherited_members: true
+            members_order: source
+            separate_signature: true
+            unwrap_annotated: true
+            filters:
+            - '!^_'
+            merge_init_into_class: true
+            docstring_section_style: spacy
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
 
 nav:
   - Giriş: index.md
   - İnteqrasiya:
       - EPoint: 
-          - Ümumi məlumat: "general/epoint.md"
-          - API Referansı: "api_reference/epoint.md"
+          - Ümumi məlumat: "epoint/about.md"
+          - API Referansı: "epoint/api-reference.md"
 
 markdown_extensions:
   - codehilite:

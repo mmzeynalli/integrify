@@ -1,6 +1,6 @@
 import os
 from enum import StrEnum
-from typing import Optional
+from typing import Literal, Optional
 from warnings import warn
 
 VERSION = '1.0.3'
@@ -22,16 +22,20 @@ if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
 
 
 class API(StrEnum):
-    PAY = '/api/1/request'
-    GET_STATUS = '/api/1/get-status'
-    CARD_REGISTRATION = '/api/1/card-registration'
-    PAY_WITH_CARD = '/api/1/execute-pay'
-    PAY_AND_SAVE_CARD = '/api/1/card-registration-with-pay'
-    PAYOUT = '/api/1/refund-request'
-    REFUND = '/api/1/reverse'
-    SPLIT_PAY = '/api/1/split-request'
-    SPLIT_PAY_WITH_SAVED_CARD = '/api/1/split-execute-pay'
-    SPLIT_PAY_AND_SAVE_CARD = '/api/1/split-card-registration-with-pay'
+    PAY: Literal['/api/1/request'] = '/api/1/request'
+    GET_STATUS: Literal['/api/1/get-status'] = '/api/1/get-status'
+    CARD_REGISTRATION: Literal['/api/1/card-registration'] = '/api/1/card-registration'
+    PAY_WITH_CARD: Literal['/api/1/execute-pay'] = '/api/1/execute-pay'
+    PAY_AND_SAVE_CARD: Literal['/api/1/card-registration-with-pay'] = (
+        '/api/1/card-registration-with-pay'
+    )
+    PAYOUT: Literal['/api/1/refund-request'] = '/api/1/refund-request'
+    REFUND: Literal['/api/1/reverse'] = '/api/1/reverse'
+    SPLIT_PAY: Literal['/api/1/split-request'] = '/api/1/split-request'
+    SPLIT_PAY_WITH_SAVED_CARD: Literal['/api/1/split-execute-pay'] = '/api/1/split-execute-pay'
+    SPLIT_PAY_AND_SAVE_CARD: Literal['/api/1/split-card-registration-with-pay'] = (
+        '/api/1/split-card-registration-with-pay'
+    )
 
 
 __all__ = [
