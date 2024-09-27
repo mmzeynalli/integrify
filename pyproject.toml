@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "integrify"
-version = "1.0.0"
+version = "1.0.1"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 authors = ["mmzeynalli <miradil.zeynalli@gmail.com>", "vahidzhe <vahidzhe@gmail.com>"]
 readme = "README.md"
