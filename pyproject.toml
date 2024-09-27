@@ -4,6 +4,7 @@ dynamic = ["version"]
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 authors = ["mmzeynalli <miradil.zeynalli@gmail.com>", "vahidzhe <vahidzhe@gmail.com>"]
 readme = "README.md"
+version = { source = "file", path = "integrify/__init__.py" }
 
 [tool.poetry.dependencies]
 python = "^3.9"
