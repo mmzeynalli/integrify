@@ -2,8 +2,17 @@
 name = "integrify"
 version = "1.0.0"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
-authors = ["mmzeynalli <miradil.zeynalli@gmail.com>", "vahidzhe <vahidzhe@gmail.com>"]
+authors = [
+    { name = "Miradil Zeynalli", email = "miradil.zeynalli@gmail.com" }, 
+    { name = "Vahid Hasanzade", email = "vahidzhe@gmail.com" }
+]
 readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/mmzeynalli/integrify"
+Documentation = "https://integrify.mmzeynalli.dev/"
+Repository = "https://github.com/mmzeynalli/integrify"
+Repository = "https://github.com/mmzeynalli/integrify/issues"
 
 [tool.poetry.dependencies]
 python = "^3.9"
