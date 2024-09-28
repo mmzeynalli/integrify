@@ -17,6 +17,60 @@ from integrify.epoint.schemas.types import (
 
 __all__ = ['EPointRequest']
 
+# Define the API_DETAILS mapping structure
+API_DETAILS = {
+    'pay': {
+        'path': env.API.PAY,
+        'verb': 'POST',
+        'resp_model': RedirectUrlResponseSchema,
+    },
+    'get_transaction_status': {
+        'path': env.API.GET_STATUS,
+        'verb': 'POST',
+        'resp_model': TransactionStatusResponseSchema,
+    },
+    'save_card': {
+        'path': env.API.CARD_REGISTRATION,
+        'verb': 'POST',
+        'resp_model': RedirectUrlWithCardIdResponseSchema,
+    },
+    'pay_with_saved_card': {
+        'path': env.API.PAY_WITH_CARD,
+        'verb': 'POST',
+        'resp_model': BaseResponseSchema,
+    },
+    'pay_and_save_card': {
+        'path': env.API.PAY_AND_SAVE_CARD,
+        'verb': 'POST',
+        'resp_model': RedirectUrlWithCardIdResponseSchema,
+    },
+    'payout': {
+        'path': env.API.PAYOUT,
+        'verb': 'POST',
+        'resp_model': BaseResponseSchema,
+    },
+    'refund': {
+        'path': env.API.REFUND,
+        'verb': 'POST',
+        'resp_model': MinimalResponseSchema,
+    },
+    'split_pay': {
+        'path': env.API.SPLIT_PAY,
+        'verb': 'POST',
+        'resp_model': RedirectUrlResponseSchema,
+    },
+    'split_pay_with_saved_card': {
+        'path': env.API.SPLIT_PAY_WITH_SAVED_CARD,
+        'verb': 'POST',
+        'resp_model': SplitPayWithSavedCardResponseSchema,
+    },
+    'split_pay_and_save_card': {
+        'path': env.API.SPLIT_PAY_AND_SAVE_CARD,
+        'verb': 'POST',
+        'resp_model': RedirectUrlWithCardIdResponseSchema,
+    },
+}
+
 
 class _EPointRequest(SyncApiRequest):
     """EPoint sorğular üçün baza class"""
@@ -28,6 +82,9 @@ class _EPointRequest(SyncApiRequest):
             'public_key': env.EPOINT_PUBLIC_KEY,
             'language': env.EPOINT_INTERFACE_LANG,
         }
+        self.verb = 'POST'
+        self.path = ''
+        self.resp_model = BaseResponseSchema
 
     @send_request
     def pay(  # type: ignore[return]
@@ -64,9 +121,8 @@ class _EPointRequest(SyncApiRequest):
             **extra: Başqa ötürmək istədiyiniz əlavə dəyərlər. Bu dəyərlər callback sorğuda sizə
                         geri göndərilir.
         """  # noqa: E501
-        self.path = env.API.PAY
-        self.verb = 'POST'
-        self.resp_model = RedirectUrlResponseSchema
+        api_info = API_DETAILS['pay']
+        self.set_path_verb_resp_model(api_info)
 
         # Required data
         self.data.update(
@@ -89,6 +145,11 @@ class _EPointRequest(SyncApiRequest):
 
         if extra:
             self.data['other_attr'] = extra
+
+    def set_path_verb_resp_model(self, api_info: dict[str, Any]):
+        self.path = api_info['path']
+        self.verb = api_info['verb']
+        self.resp_model = api_info['resp_model']
 
     @send_request
     def get_transaction_status(  # type: ignore[return]
@@ -113,10 +174,9 @@ class _EPointRequest(SyncApiRequest):
             transaction_id: EPoint tərəfindən verilmiş tranzaksiya IDsi.
                             Adətən `te` prefiksi ilə olur.
         """
-        self.verb = 'POST'
-        self.path = env.API.GET_STATUS
+        api_info = API_DETAILS['get_transaction_status']
+        self.set_path_verb_resp_model(api_info)
         self.data['transaction'] = transaction_id
-        self.resp_model = TransactionStatusResponseSchema
 
     @send_request
     def save_card(self) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:  # type: ignore[return]
@@ -138,9 +198,8 @@ class _EPointRequest(SyncApiRequest):
         backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
         və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
         """
-        self.path = env.API.CARD_REGISTRATION
-        self.verb = 'POST'
-        self.resp_model = RedirectUrlWithCardIdResponseSchema
+        api_info = API_DETAILS['save_card']
+        self.set_path_verb_resp_model(api_info)
 
     @send_request
     def pay_with_saved_card(  # type: ignore[return]
@@ -172,9 +231,8 @@ class _EPointRequest(SyncApiRequest):
             order_id: Unikal ID. Maksimal uzunluq: 255 simvol.
             card_id: Saxlanılmış kartın id-si. Adətən `ce` prefiksi ilə başlayır.
         """  # noqa: E501
-        self.path = env.API.PAY_WITH_CARD
-        self.verb = 'POST'
-        self.resp_model = BaseResponseSchema
+        api_info = API_DETAILS['pay_with_saved_card']
+        self.set_path_verb_resp_model(api_info)
 
         self.data.update(
             {
@@ -217,9 +275,8 @@ class _EPointRequest(SyncApiRequest):
             order_id: Unikal ID. Maksimal uzunluq: 255 simvol.
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        self.path = env.API.PAY_AND_SAVE_CARD
-        self.verb = 'POST'
-        self.resp_model = RedirectUrlWithCardIdResponseSchema
+        api_info = API_DETAILS['pay_and_save_card']
+        self.set_path_verb_resp_model(api_info)
 
         # Required data
         self.data.update(
@@ -272,9 +329,8 @@ class _EPointRequest(SyncApiRequest):
             card_id: Saxlanılmış kartın id-si. Adətən `ce` prefiksi ilə başlayır.
             description: Nağdlaşdırmanın təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        self.path = env.API.PAYOUT
-        self.verb = 'POST'
-        self.resp_model = BaseResponseSchema
+        api_info = API_DETAILS['payout']
+        self.set_path_verb_resp_model(api_info)
 
         self.data.update(
             {
@@ -322,9 +378,8 @@ class _EPointRequest(SyncApiRequest):
             amount: Ödəniş məbləği. Məbləğin göndərilməsi yarımçıq geri-qaytarma hesab olunur,
                     əks halda tam geri-qaytarma baş verəcəkdir.
         """
-        self.path = env.API.REFUND
-        self.verb = 'POST'
-        self.resp_model = MinimalResponseSchema
+        api_info = API_DETAILS['refund']
+        self.set_path_verb_resp_model(api_info)
 
         self.data.update({'transaction': transaction_id, 'currency': currency})
 
@@ -365,9 +420,8 @@ class _EPointRequest(SyncApiRequest):
             **extra: Başqa ötürmək istədiyiniz əlavə dəyərlər. Bu dəyərlər callback sorğuda sizə
                         geri göndərilir.
         """  # noqa: E501
-        self.path = env.API.SPLIT_PAY
-        self.verb = 'POST'
-        self.resp_model = RedirectUrlResponseSchema
+        api_info = API_DETAILS['split_pay']
+        self.set_path_verb_resp_model(api_info)
 
         # Required data
         self.data.update(
@@ -426,9 +480,8 @@ class _EPointRequest(SyncApiRequest):
             split_amount: Bölünən miqdar. Numerik dəyər
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        self.path = env.API.SPLIT_PAY_WITH_SAVED_CARD
-        self.verb = 'POST'
-        self.resp_model = SplitPayWithSavedCardResponseSchema
+        api_info = API_DETAILS['split_pay_with_saved_card']
+        self.set_path_verb_resp_model(api_info)
 
         self.data.update(
             {
@@ -476,9 +529,8 @@ class _EPointRequest(SyncApiRequest):
             split_amount: Bölünən miqdar. Numerik dəyər
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        self.path = env.API.SPLIT_PAY_AND_SAVE_CARD
-        self.verb = 'POST'
-        self.resp_model = RedirectUrlWithCardIdResponseSchema
+        api_info = API_DETAILS['split_pay_and_save_card']
+        self.set_path_verb_resp_model(api_info)
 
         # Required data
         self.data.update(
