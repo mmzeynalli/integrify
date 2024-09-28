@@ -18,6 +18,6 @@ repos:
     hooks:
       - id: secure
         name: secure
-        entry: bandit -r integrify --config pyproject.toml
+        entry: make secure
         language: system
         types: [ python ]
