@@ -76,7 +76,7 @@ class SyncApiRequest(ApiRequest):
 
     def __call__(self, *args: Any, **kwds: Any):
         if not self.session:
-            self.session = httpx.Client()
+            self.session = httpx.Client(timeout=10)
 
         resp = self.session.request(self.verb, self.url, data=self.body, headers=self.headers)  # type: ignore[arg-type]
         return self.process_response(resp)
@@ -87,7 +87,7 @@ class AsyncApiRequest(ApiRequest):
 
     async def __call__(self, *args, **kwds):
         if not self.session:
-            self.session = httpx.AsyncClient()
+            self.session = httpx.AsyncClient(timeout=10)
 
         resp = await self.session.request(
             self.verb,

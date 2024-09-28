@@ -54,6 +54,7 @@ pre-commit = "^3.6.2"
 ptpython = "^3.0.29"
 mkdocs-material = "^9.5.36"
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
+bandit = "^1.7.10"
 
 [tool.ruff]
 target-version = "py311"
@@ -76,4 +77,7 @@ quote-style = "single"
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
+
+[tool.bandit]
+skips = []
 
