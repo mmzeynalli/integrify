@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from integrify.logger import LOGGER_FUNCTION
 
 ResponseType = TypeVar('ResponseType', bound=BaseModel)
+RequestType = TypeVar('RequestType')
 
 
 class ApiResponse(BaseModel, Generic[ResponseType]):

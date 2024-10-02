@@ -5,9 +5,12 @@
     <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.</em>
 </p>
 <p align="center">
-  <a href="https://app.netlify.com/sites/integrify-docs/deploys">
-    <img src="https://api.netlify.com/api/v1/badges/d8931b6a-80c7-41cb-bdbb-bf6ef5789f80/deploy-status" alt="Netlify Status">
-  </a>
+<a href="https://pypi.org/project/integrify" target="_blank">
+  <img src="https://img.shields.io/pypi/v/integrify?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
+<a href="https://app.netlify.com/sites/integrify-docs/deploys">
+  <img src="https://api.netlify.com/api/v1/badges/d8931b6a-80c7-41cb-bdbb-bf6ef5789f80/deploy-status" alt="Netlify Status">
+</a>
 </p>
 
 ---
