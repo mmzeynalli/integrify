@@ -32,7 +32,9 @@ jobs:
             python-version: '3.8'
           - os: macos-latest
             python-version: '3.9'
-
+    defaults:
+      run:
+        shell: bash
     env:
       OS: ${{ matrix.os }}
       DEPS: yes
@@ -56,8 +58,11 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v08
-      - name: Install poetry
-        run: make install-poetry
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.8.3
+          virtualenvs-create: true
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: make install

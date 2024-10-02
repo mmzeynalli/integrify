@@ -14,11 +14,11 @@ install-poetry:
 
 .PHONY: install
 install:
-	poetry install
+	poetry install --no-interaction
 
 .PHONY: install-main
 install-main:
-	poetry install --only main
+	poetry install --no-interaction --only main
 
 .PHONY: secure
 secure:
