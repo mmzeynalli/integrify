@@ -14,11 +14,11 @@ install-poetry:
 
 .PHONY: install
 install:
-	poetry run poetry install
+	poetry install
 
 .PHONY: install-main
 install-main:
-	poetry run poetry install --only main
+	poetry install --only main
 
 .PHONY: secure
 secure:
@@ -26,4 +26,4 @@ secure:
 
 .PHONY: test
 test:
-	poetry run poetry run pytest -s
+	poetry run pytest -s
