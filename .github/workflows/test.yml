@@ -62,7 +62,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: make install
       - name: Test
-        run: make test
+        run: |
+          source $VENV
+          pytest -s
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
