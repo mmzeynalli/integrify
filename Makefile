@@ -8,10 +8,6 @@ endif
 
 SETTINGS_FILENAME = pyproject.toml
 
-.PHONY: 
-install-poetry:
-	curl -sSL https://install.python-poetry.org | python3 -
-
 .PHONY: install
 install:
 	poetry install --no-interaction
