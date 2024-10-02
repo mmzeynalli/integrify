@@ -5,7 +5,7 @@ from typing import Any, Coroutine, Optional
 
 from integrify.base import ApiResponse, AsyncApiRequest
 from integrify.epoint.helper import generate_signature
-from integrify.epoint.schemas.types import (
+from integrify.epoint.schemas.response import (
     BaseResponseSchema,
     MinimalResponseSchema,
     RedirectUrlResponseSchema,
@@ -13,12 +13,12 @@ from integrify.epoint.schemas.types import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
-from integrify.epoint.sync import _EPointRequest as SyncEPointRequest
+from integrify.epoint.sync import EPointRequestClass as SyncEPointRequest
 
 __all__ = ['EPointRequest']
 
 
-class _EPointRequest(AsyncApiRequest, SyncEPointRequest):
+class EPointRequestClass(AsyncApiRequest, SyncEPointRequest):
     """EPoint async sorğular üçün baza class"""
 
     async def pay(  # type: ignore[override]
@@ -349,4 +349,4 @@ class _EPointRequest(AsyncApiRequest, SyncEPointRequest):
         return await super().__call__(*args, **kwargs)
 
 
-EPointRequest = _EPointRequest()
+EPointRequest = EPointRequestClass()

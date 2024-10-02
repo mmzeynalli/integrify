@@ -8,6 +8,22 @@ endif
 
 SETTINGS_FILENAME = pyproject.toml
 
+.PHONY: 
+install-poetry:
+	curl -sSL https://install.python-poetry.org | python3 -
 
+.PHONY: install
+install:
+	poetry run poetry install
+
+.PHONY: install-main
+install-main:
+	poetry run poetry install --only main
+
+.PHONY: secure
 secure:
-	${PYTHON} -m bandit -r integrify --config ${SETTINGS_FILENAME}
+	poetry run bandit -r integrify --config ${SETTINGS_FILENAME}
+
+.PHONY: test
+test:
+	poetry run poetry run pytest -s

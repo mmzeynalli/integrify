@@ -4,6 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "integrify"
+packages = [{include = "integrify", from="src"}]
 version = "1.0.2"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 license = "GPL-3.0-or-later"
@@ -77,6 +78,9 @@ quote-style = "single"
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
+
+[tool.pytest.ini_options]
+pythonpath = ["src/"]
 
 [tool.bandit]
 skips = []

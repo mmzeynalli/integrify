@@ -1,9 +1,9 @@
 import base64
 import json
-
 from hashlib import sha1
+
 from integrify.epoint import env
-from integrify.epoint.schemas.types import CallbackDataSchema, DecodedCallbackDataSchema
+from integrify.epoint.schemas.response import CallbackDataSchema, DecodedCallbackDataSchema
 
 __all__ = ['generate_signature', 'decode_callback_data']
 

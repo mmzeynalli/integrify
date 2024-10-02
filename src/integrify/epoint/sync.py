@@ -6,7 +6,7 @@ from typing import Any, Optional
 from integrify.base import ApiResponse, SyncApiRequest, send_request
 from integrify.epoint import env
 from integrify.epoint.helper import generate_signature
-from integrify.epoint.schemas.types import (
+from integrify.epoint.schemas.response import (
     BaseResponseSchema,
     MinimalResponseSchema,
     RedirectUrlResponseSchema,
@@ -18,7 +18,7 @@ from integrify.epoint.schemas.types import (
 __all__ = ['EPointRequest']
 
 
-class _EPointRequest(SyncApiRequest):
+class EPointRequestClass(SyncApiRequest):
     """EPoint sorğular üçün baza class"""
 
     def __init__(self):
@@ -510,4 +510,4 @@ class _EPointRequest(SyncApiRequest):
         return super().__call__(*args, **kwargs)
 
 
-EPointRequest = _EPointRequest()
+EPointRequest = EPointRequestClass()

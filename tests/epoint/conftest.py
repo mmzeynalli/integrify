@@ -4,16 +4,16 @@ from hashlib import sha1
 from typing import Any
 
 import pytest
-from pytest_mock import MockerFixture
-
 from integrify.base import ApiResponse
 from integrify.epoint.schemas.parts import TransactionStatus
-from integrify.epoint.sync import _EPointRequest
+from integrify.epoint.sync import EPointRequestClass
+from pytest_mock import MockerFixture
+
 from tests import epoint
 from tests.epoint.mocks import *  # noqa: F403
 
 
-class TestEPointRequest(_EPointRequest):
+class TestEPointRequest(EPointRequestClass):
     __test__ = False
 
     def __init__(self, resp_data: dict):
