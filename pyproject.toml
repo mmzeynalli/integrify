@@ -68,6 +68,7 @@ ptpython = "^3.0.29"
 mkdocs-material = "^9.5.36"
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 bandit = "^1.7.10"
+coverage-badge = "^1.1.2"
 
 [tool.ruff]
 target-version = "py38"
