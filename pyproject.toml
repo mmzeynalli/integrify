@@ -4,6 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "integrify"
+packages = [{include = "integrify", from="src"}]
 version = "1.0.3"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 license = "GPL-3.0-or-later"
@@ -32,6 +33,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -41,23 +43,35 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 pydantic = "^2.8.2"
 httpx = "^0.27.2"
+
+# Packages needed for Github Actions, for future, we might add others
+[tool.poetry.group.gh]
+optional = true
+
+[tool.poetry.group.gh.dependencies]
+pytest = "^8.1.1"
+pytest-mock = "^3.14.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
 pytest-mock = "^3.14.0"
 mypy = "^1.9.0"
 ruff = "^0.3.5"
-pre-commit = "^3.6.2"
+pre-commit = [
+    { version = "^3.8.0", python = ">=3.9" },
+    { version = "^3.5.0", python = "3.8" }
+]
 ptpython = "^3.0.29"
 mkdocs-material = "^9.5.36"
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 bandit = "^1.7.10"
+coverage-badge = "^1.1.2"
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py38"
 line-length = 100
 
 [tool.ruff.lint]
@@ -77,6 +91,9 @@ quote-style = "single"
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
+
+[tool.pytest.ini_options]
+pythonpath = ["src/"]
 
 [tool.bandit]
 skips = []

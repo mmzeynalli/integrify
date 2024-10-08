@@ -1,0 +1,1 @@
+<script data-goatcounter="https://mmzeynalli.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

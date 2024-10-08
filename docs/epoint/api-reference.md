@@ -12,9 +12,9 @@
 ???+ note
 
     Bu artıq hazır yaradılmış klass obyektidir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
-    bütün sorğuları `_EPointRequest().save_card()` kimi istifadə etməlisiniz.
+    bütün sorğuları `EPointRequestClass().save_card()` kimi istifadə etməlisiniz.
 
-::: integrify.epoint.sync._EPointRequest
+::: integrify.epoint.sync.EPointRequestClass
     handler: python
     options:
       members:
