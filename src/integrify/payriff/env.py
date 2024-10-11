@@ -11,11 +11,7 @@ import os
 from typing import Optional
 from warnings import warn
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-PAYRIFF_SECRET_KEY: str = os.getenv('PAYRIFF_SECRET_KEY', '')
+PAYRIFF_AUTHORIZATION_KEY: str = os.getenv('PAYRIFF_AUTHORIZATION_KEY', '')
 PAYRIFF_MERCHANT_ID: str = os.getenv('PAYRIFF_MERCHANT_ID', '')
 
 PAYRIFF_SUCCESS_REDIRECT_URL: Optional[str] = os.getenv('PAYRIFF_SUCCESS_REDIRECT_URL')
@@ -25,5 +21,8 @@ PAYRIFF_CANCELED_REDIRECT_URL: Optional[str] = os.getenv('PAYRIFF_CANCELED_REDIR
 PAYRIFF_LOGGER_NAME: str = os.getenv('PAYRIFF_LOGGER_NAME', 'payriff')
 
 
-if not PAYRIFF_SECRET_KEY or not PAYRIFF_MERCHANT_ID:
-    warn('set PAYRIFF_SECRET_KEY/PAYRIFF_MERCHANT_ID env variables to use this library correctly')
+if not PAYRIFF_AUTHORIZATION_KEY or not PAYRIFF_MERCHANT_ID:
+    warn(
+        'set PAYRIFF_AUTHORIZATION_KEY/PAYRIFF_MERCHANT_ID mühit dəyişənlərinə dəyər verməsəniz'
+        'sorğular çalışmayacaq!'
+    )
