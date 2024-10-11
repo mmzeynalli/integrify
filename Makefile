@@ -8,6 +8,18 @@ endif
 
 SETTINGS_FILENAME = pyproject.toml
 
+.PHONY: install
+install:
+	poetry install --no-interaction
 
+.PHONY: install-main
+install-main:
+	poetry install --no-interaction --only main
+
+.PHONY: secure
 secure:
-	${PYTHON} -m bandit -r integrify --config ${SETTINGS_FILENAME}
+	poetry run bandit -r integrify --config ${SETTINGS_FILENAME}
+
+.PHONY: test
+test:
+	poetry run pytest -s

@@ -1,5 +1,5 @@
 import os
-from enum import StrEnum
+from enum import Enum
 from typing import Literal, Optional
 from warnings import warn
 
@@ -21,7 +21,7 @@ if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
     )
 
 
-class API(StrEnum):
+class API(str, Enum):
     PAY: Literal['/api/1/request'] = '/api/1/request'
     GET_STATUS: Literal['/api/1/get-status'] = '/api/1/get-status'
     CARD_REGISTRATION: Literal['/api/1/card-registration'] = '/api/1/card-registration'

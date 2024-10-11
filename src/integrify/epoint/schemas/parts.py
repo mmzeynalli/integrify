@@ -1,14 +1,14 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class TransactionStatus(StrEnum):
+class TransactionStatus(str, Enum):
     SUCCESS = 'success'
     ERROR = 'error'
     SERVER_ERROR = 'server_error'
     FAILED = 'failed'
 
 
-class TransactionStatusExtended(StrEnum):
+class TransactionStatusExtended(str, Enum):
     NEW = 'new'
     SUCCESS = 'success'
     RETURNED = 'returned'
