@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 
-from integrify.payriff.schemas.parts import ResultCodes, ResultMessages
+from integrify.payriff.schemas.parts import ResultCodes
 
 
 class PayriffMinimalResponse(BaseModel):
     code: ResultCodes
     internalMessage: str
-    message: ResultMessages
+    route: str
+    message: str
+    # message: ResultMessages

@@ -8,7 +8,8 @@ Test kard məlumatları:
 """
 
 import os
-from typing import Optional
+from enum import Enum
+from typing import Literal, Optional
 from warnings import warn
 
 PAYRIFF_AUTHORIZATION_KEY: str = os.getenv('PAYRIFF_AUTHORIZATION_KEY', '')
@@ -26,3 +27,7 @@ if not PAYRIFF_AUTHORIZATION_KEY or not PAYRIFF_MERCHANT_ID:
         'set PAYRIFF_AUTHORIZATION_KEY/PAYRIFF_MERCHANT_ID mühit dəyişənlərinə dəyər verməsəniz'
         'sorğular çalışmayacaq!'
     )
+
+
+class V2_API(str, Enum):
+    INVOICES: Literal['/api/v2/invoices'] = '/api/v2/invoices'

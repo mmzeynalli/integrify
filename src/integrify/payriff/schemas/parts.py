@@ -1,7 +1,7 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class ResultCodes(StrEnum):
+class ResultCodes(str, Enum):
     SUCCESS = '00000'
     SUCCESS_GATEWAY = '00'
     SUCCESS_GATEWAY_APPROVE = 'APPROVED'
@@ -14,7 +14,7 @@ class ResultCodes(StrEnum):
     INVALID_TOKEN = '14014'
 
 
-class ResultMessages(StrEnum):
+class ResultMessages(str, Enum):
     OK = 'OK'
     SUCCESS = 'Operation performed successfully'
     ERROR = 'Internal Error'
