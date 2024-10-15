@@ -16,7 +16,7 @@ EPOINT_LOGGER_NAME: str = os.getenv('EPOINT_LOGGER_NAME', 'epoint')
 
 if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
     warn(
-        'EPOINT_PUBLIC_KEY/EPOINT_PRIVATE_KEY mühit dəyişənlərinə dəyər verməsəniz'
+        'EPOINT_PUBLIC_KEY/EPOINT_PRIVATE_KEY mühit dəyişənlərinə dəyər verməsəniz '
         'sorğular çalışmayacaq!'
     )
 

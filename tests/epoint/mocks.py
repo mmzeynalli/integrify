@@ -1,7 +1,6 @@
 from decimal import Decimal
 
 import pytest
-
 from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
 
 MESSAGE_SUCCESS = 'Təsdiq edildi'

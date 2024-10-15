@@ -4,9 +4,9 @@ from hashlib import sha1
 from typing import Any
 
 import pytest
-from integrify.base import ApiResponse
+from integrify.base import APIHandler, ApiResponse
+from integrify.epoint.client import EPointRequestClass
 from integrify.epoint.schemas.parts import TransactionStatus
-from integrify.epoint.sync import EPointRequestClass
 from pytest_mock import MockerFixture
 
 from tests import epoint
@@ -23,7 +23,7 @@ class TestEPointRequest(EPointRequestClass):
 
 @pytest.fixture(autouse=True, scope='package')
 def epoint_request_mocker(package_mocker: MockerFixture):
-    package_mocker.patch('integrify.base.SyncApiRequest.__call__', new=req)
+    package_mocker.patch('integrify.base.APISupport.sync_req', new=req)
     yield
 
 
@@ -56,10 +56,10 @@ def is_signature_ok(data: dict):
     )
 
 
-def req(self: TestEPointRequest, *args, **kwds):
+def req(self: TestEPointRequest, url: str, handler: APIHandler, *args, **kwds):
     resp: dict[str, Any]
 
-    if not is_signature_ok(self.body):
+    if not is_signature_ok(handler.handle_request(*args, **kwds)):
         resp = {
             'body': {
                 'status': TransactionStatus.SERVER_ERROR,
@@ -76,4 +76,4 @@ def req(self: TestEPointRequest, *args, **kwds):
     resp.setdefault('status_code', 200)
     resp.setdefault('headers', {})
 
-    return ApiResponse[self.resp_model].model_validate(resp)  # type: ignore[name-defined]
+    return ApiResponse[handler.resp_model].model_validate(resp)  # type: ignore[name-defined]

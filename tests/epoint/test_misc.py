@@ -1,4 +1,5 @@
 from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
+
 from tests.epoint.conftest import TestEPointRequest
 
 
