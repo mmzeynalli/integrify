@@ -1,19 +1,19 @@
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any, Optional
 
-from integrify.base import ApiResponse, APISupport
+from integrify.base import APIClient, APIResponse
 from integrify.epoint import env
 from integrify.epoint.handlers import (
-    GetTransactionStatusAPIHandler,
-    PayAndSaveCardAPIHandler,
-    PaymentAPIHandler,
-    PayoutAPIHandler,
-    PayWithSavedCardAPIHandler,
-    RefundAPIHandler,
-    SaveCardAPIHandler,
-    SplitPayAndSaveCardAPIHandler,
-    SplitPayAPIHandler,
-    SplitPayWithSavedCardAPIHandler,
+    GetTransactionStatusPayloadHandler,
+    PayAndSaveCardPayloadHandler,
+    PaymentPayloadHandler,
+    PayoutPayloadHandler,
+    PayWithSavedCardPayloadHandler,
+    RefundPayloadHandler,
+    SaveCardPayloadHandler,
+    SplitPayAndSaveCardPayloadHandler,
+    SplitPayPayloadHandler,
+    SplitPayWithSavedCardPayloadHandler,
 )
 from integrify.epoint.schemas.response import (
     BaseResponseSchema,
@@ -27,41 +27,45 @@ from integrify.epoint.schemas.response import (
 __all__ = ['EPointRequest']
 
 
-class EPointRequestClass(APISupport):
+class EPointRequestClass(APIClient):
     """EPoint sorğular üçün baza class"""
 
     def __init__(self, sync: bool = True):
-        super().__init__('https://epoint.az', None, sync)
+        super().__init__('EPoint', 'https://epoint.az', None, sync)
 
-        self.add_url('pay', '/api/1/request')
-        self.add_handler('pay', PaymentAPIHandler)
+        self.add_url('pay', env.API.PAY)
+        self.add_handler('pay', PaymentPayloadHandler)
 
-        self.add_url('get_transaction_status', '/api/1/get-status')
-        self.add_handler('get_transaction_status', GetTransactionStatusAPIHandler)
+        self.add_url('get_transaction_status', env.API.GET_STATUS)
+        self.add_handler('get_transaction_status', GetTransactionStatusPayloadHandler)
 
-        self.add_url('save_card', '/api/1/card-registration')
-        self.add_handler('save_card', SaveCardAPIHandler)
+        self.add_url('save_card', env.API.SAVE_CARD)
+        self.add_handler('save_card', SaveCardPayloadHandler)
 
-        self.add_url('pay_with_saved_card', '/api/1/execute-pay')
-        self.add_handler('pay_with_saved_card', PayWithSavedCardAPIHandler)
+        self.add_url('pay_with_saved_card', env.API.PAY_WITH_SAVED_CARD)
+        self.add_handler('pay_with_saved_card', PayWithSavedCardPayloadHandler)
 
-        self.add_url('pay_and_save_card', '/api/1/card-registration-with-pay')
-        self.add_handler('pay_and_save_card', PayAndSaveCardAPIHandler)
+        self.add_url('pay_and_save_card', env.API.PAY_AND_SAVE_CARD)
+        self.add_handler('pay_and_save_card', PayAndSaveCardPayloadHandler)
 
-        self.add_url('payout', '/api/1/refund-request')
-        self.add_handler('payout', PayoutAPIHandler)
+        self.add_url('payout', env.API.PAYOUT)
+        self.add_handler('payout', PayoutPayloadHandler)
 
-        self.add_url('refund', '/api/1/reverse')
-        self.add_handler('refund', RefundAPIHandler)
+        self.add_url('refund', env.API.REFUND)
+        self.add_handler('refund', RefundPayloadHandler)
 
-        self.add_url('split_pay', '/api/1/split-request')
-        self.add_handler('split_pay', SplitPayAPIHandler)
+        self.add_url('split_pay', env.API.SPLIT_PAY)
+        self.add_handler('split_pay', SplitPayPayloadHandler)
 
-        self.add_url('split_pay_with_saved_card', '/api/1/split-execute-pay')
-        self.add_handler('split_pay_with_saved_card', SplitPayWithSavedCardAPIHandler)
+        self.add_url('split_pay_with_saved_card', env.API.SPLIT_PAY_WITH_SAVED_CARD)
+        self.add_handler('split_pay_with_saved_card', SplitPayWithSavedCardPayloadHandler)
 
-        self.add_url('split_pay_and_save_card', '/api/1/split-card-registration-with-pay')
-        self.add_handler('split_pay_and_save_card', SplitPayAndSaveCardAPIHandler)
+        self.add_url('split_pay_and_save_card', env.API.SPLIT_PAY_AND_SAVE_CARD)
+        self.add_handler('split_pay_and_save_card', SplitPayAndSaveCardPayloadHandler)
+
+    def add_url(self, route_name, url):
+        # All Epoint requests are POST
+        return super().add_url(route_name, url, 'POST')
 
     if TYPE_CHECKING:
 
@@ -72,7 +76,7 @@ class EPointRequestClass(APISupport):
             order_id: str,
             description: Optional[str] = None,
             **extra: Any,
-        ) -> ApiResponse[RedirectUrlResponseSchema]:
+        ) -> APIResponse[RedirectUrlResponseSchema]:
             """Ödəniş sorğusu (sync)
 
             **Endpoint:** */api/1/request*
@@ -103,7 +107,7 @@ class EPointRequestClass(APISupport):
         def get_transaction_status(
             self,
             transaction_id: str,
-        ) -> ApiResponse[TransactionStatusResponseSchema]:
+        ) -> APIResponse[TransactionStatusResponseSchema]:
             """
             Transaksiya statusunu öyrənmək üçün sorğu (sync)
 
@@ -123,7 +127,7 @@ class EPointRequestClass(APISupport):
                                 Adətən `te` prefiksi ilə olur.
             """
 
-        def save_card(self) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
+        def save_card(self) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş olmadan kartı yadda saxlamaq sorğusu (sync)
 
             **Endpoint:** */api/1/card-registration*
@@ -142,7 +146,7 @@ class EPointRequestClass(APISupport):
             backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
             və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
             """
-            self.path = env.API.CARD_REGISTRATION
+            self.path = env.API.SAVE_CARD
             self.verb = 'POST'
             self.resp_model = RedirectUrlWithCardIdResponseSchema
 
@@ -152,7 +156,7 @@ class EPointRequestClass(APISupport):
             currency: str,
             order_id: str,
             card_id: str,
-        ) -> ApiResponse[BaseResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema]:
             """Yadda saxlanılmış kartla ödəniş sorğusu (sync)
 
             **Endpoint:** */api/1/execute-pay*
@@ -182,7 +186,7 @@ class EPointRequestClass(APISupport):
             currency: str,
             order_id: str,
             description: Optional[str] = None,
-        ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
+        ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş və kartı yadda saxlama sorğusu (sync)
 
             **Endpoint:** */api/1/card-registration-with-pay*
@@ -215,7 +219,7 @@ class EPointRequestClass(APISupport):
             order_id: str,
             card_id: str,
             description: Optional[str] = None,
-        ) -> ApiResponse[BaseResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema]:
             """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu (sync)
 
             **Endpoint:** */api/1/refund-request*
@@ -245,7 +249,7 @@ class EPointRequestClass(APISupport):
             transaction_id: str,
             currency: str,
             amount: Optional[Decimal] = None,
-        ) -> ApiResponse[MinimalResponseSchema]:
+        ) -> APIResponse[MinimalResponseSchema]:
             """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu (sync)
 
             **Endpoint:** */api/1/reverse*
@@ -283,7 +287,7 @@ class EPointRequestClass(APISupport):
             split_amount: Decimal,
             description: Optional[str] = None,
             **extra: Any,
-        ) -> ApiResponse[RedirectUrlResponseSchema]:
+        ) -> APIResponse[RedirectUrlResponseSchema]:
             """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
             **Endpoint:** */api/1/split-request*
@@ -317,7 +321,7 @@ class EPointRequestClass(APISupport):
             split_user_id: str,
             split_amount: Decimal,
             description: Optional[str] = None,
-        ) -> ApiResponse[SplitPayWithSavedCardResponseSchema]:
+        ) -> APIResponse[SplitPayWithSavedCardResponseSchema]:
             """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu (sync)
 
             **Endpoint:** */api/1/split-execute-pay*
@@ -349,7 +353,7 @@ class EPointRequestClass(APISupport):
             split_user_id: str,
             split_amount: Decimal,
             description: Optional[str] = None,
-        ) -> ApiResponse[RedirectUrlWithCardIdResponseSchema]:
+        ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu (sync)
 
             **Endpoint:** */api/1/split-card-registration-with-pay*

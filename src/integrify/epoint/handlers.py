@@ -3,7 +3,7 @@ import json
 from decimal import Decimal
 from typing import Any, Optional
 
-from integrify.base import APIHandler, RequestType, ResponseType
+from integrify.base import APIPayloadHandler, RequestType, ResponseType
 from integrify.epoint import env
 from integrify.epoint.helper import generate_signature
 from integrify.epoint.schemas.response import (
@@ -16,9 +16,9 @@ from integrify.epoint.schemas.response import (
 )
 
 
-class BaseAPIHandler(APIHandler):
+class BasePayloadHandler(APIPayloadHandler):
     def __init__(self, req_model: type[RequestType], resp_model: type[ResponseType]):
-        super().__init__('POST', req_model, resp_model)
+        super().__init__(req_model, resp_model)
 
     def pre_handle_payload(self, *args, **kwds):
         return {
@@ -34,7 +34,7 @@ class BaseAPIHandler(APIHandler):
         }
 
 
-class PaymentAPIHandler(BaseAPIHandler):
+class PaymentPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, RedirectUrlResponseSchema)
 
@@ -68,7 +68,7 @@ class PaymentAPIHandler(BaseAPIHandler):
         return data
 
 
-class GetTransactionStatusAPIHandler(BaseAPIHandler):
+class GetTransactionStatusPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, TransactionStatusResponseSchema)
 
@@ -76,12 +76,12 @@ class GetTransactionStatusAPIHandler(BaseAPIHandler):
         return {'transaction': transaction_id}
 
 
-class SaveCardAPIHandler(BaseAPIHandler):
+class SaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, RedirectUrlWithCardIdResponseSchema)
 
 
-class PayWithSavedCardAPIHandler(BaseAPIHandler):
+class PayWithSavedCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, BaseResponseSchema)
 
@@ -94,7 +94,7 @@ class PayWithSavedCardAPIHandler(BaseAPIHandler):
         }
 
 
-class PayAndSaveCardAPIHandler(BaseAPIHandler):
+class PayAndSaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, RedirectUrlWithCardIdResponseSchema)
 
@@ -123,7 +123,7 @@ class PayAndSaveCardAPIHandler(BaseAPIHandler):
         return data
 
 
-class PayoutAPIHandler(BaseAPIHandler):
+class PayoutPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, BaseResponseSchema)
 
@@ -148,7 +148,7 @@ class PayoutAPIHandler(BaseAPIHandler):
         return data
 
 
-class RefundAPIHandler(BaseAPIHandler):
+class RefundPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, MinimalResponseSchema)
 
@@ -166,7 +166,7 @@ class RefundAPIHandler(BaseAPIHandler):
         return data
 
 
-class SplitPayAPIHandler(BaseAPIHandler):
+class SplitPayPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, RedirectUrlResponseSchema)
 
@@ -204,7 +204,7 @@ class SplitPayAPIHandler(BaseAPIHandler):
         return data
 
 
-class SplitPayWithSavedCardAPIHandler(BaseAPIHandler):
+class SplitPayWithSavedCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, SplitPayWithSavedCardResponseSchema)
 
@@ -234,7 +234,7 @@ class SplitPayWithSavedCardAPIHandler(BaseAPIHandler):
         return data
 
 
-class SplitPayAndSaveCardAPIHandler(BaseAPIHandler):
+class SplitPayAndSaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(None, RedirectUrlWithCardIdResponseSchema)
 

@@ -1,10 +1,11 @@
 import base64
 import json
+from functools import partial
 from hashlib import sha1
 from typing import Any
 
 import pytest
-from integrify.base import APIHandler, ApiResponse
+from integrify.base import APIPayloadHandler, APIResponse
 from integrify.epoint.client import EPointRequestClass
 from integrify.epoint.schemas.parts import TransactionStatus
 from pytest_mock import MockerFixture
@@ -18,13 +19,7 @@ class TestEPointRequest(EPointRequestClass):
 
     def __init__(self, resp_data: dict):
         super().__init__()
-        self.resp_data = resp_data
-
-
-@pytest.fixture(autouse=True, scope='package')
-def epoint_request_mocker(package_mocker: MockerFixture):
-    package_mocker.patch('integrify.base.APISupport.sync_req', new=req)
-    yield
+        self.request_executor.sync_req = partial(req, resp_data)  # type: ignore[method-assign]
 
 
 @pytest.fixture(autouse=True, scope='package')
@@ -56,18 +51,18 @@ def is_signature_ok(data: dict):
     )
 
 
-def req(self: TestEPointRequest, url: str, handler: APIHandler, *args, **kwds):
+def req(resp_data: dict, url: str, verb: str, handler: APIPayloadHandler, *args, **kwds):
     resp: dict[str, Any]
 
     if not is_signature_ok(handler.handle_request(*args, **kwds)):
         resp = {
-            'body': {
+            'content': {
                 'status': TransactionStatus.SERVER_ERROR,
                 'message': 'Signature did not match',
             }
         }
     else:
-        resp = self.resp_data.copy()
+        resp = resp_data.copy()
 
     if not resp:
         raise Exception('Mock response data should be provided')
@@ -76,4 +71,7 @@ def req(self: TestEPointRequest, url: str, handler: APIHandler, *args, **kwds):
     resp.setdefault('status_code', 200)
     resp.setdefault('headers', {})
 
-    return ApiResponse[handler.resp_model].model_validate(resp)  # type: ignore[name-defined]
+    if handler.resp_model:
+        return APIResponse[handler.resp_model].model_validate(resp)  # type: ignore[name-defined]
+
+    return resp

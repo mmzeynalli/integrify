@@ -10,7 +10,7 @@ MESSAGE_SERVER_ERROR = 'Signature did not match'
 @pytest.fixture(scope='package')
 def epoint_mock_get_transaction_status_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatusExtended.SUCCESS,
             'message': MESSAGE_SUCCESS,
             'transaction': 'texxxxxxxxxx',
@@ -31,7 +31,7 @@ def epoint_mock_get_transaction_status_response():
 @pytest.fixture(scope='package')
 def epoint_mock_save_card_response():
     return {
-        'body': {
+        'content': {
             'status': 'success',
             'redirect_url': 'https://epoint.az',
             'card_id': 'cexxxxxxxxxx',
@@ -42,7 +42,7 @@ def epoint_mock_save_card_response():
 @pytest.fixture(scope='package')
 def epoint_mock_payment_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
@@ -53,7 +53,7 @@ def epoint_mock_payment_response():
 @pytest.fixture(scope='package')
 def epoint_mock_pay_and_save_card_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
@@ -65,7 +65,7 @@ def epoint_mock_pay_and_save_card_response():
 @pytest.fixture(scope='package')
 def epoint_mock_pay_with_saved_card_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatus.SUCCESS,
             'message': 'Approved',
             'transaction': 'texxxxxxxxxx',
@@ -83,7 +83,7 @@ def epoint_mock_pay_with_saved_card_response():
 @pytest.fixture(scope='package')
 def epoint_mock_split_payment_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
@@ -94,7 +94,7 @@ def epoint_mock_split_payment_response():
 @pytest.fixture(scope='package')
 def epoint_mock_split_pay_with_saved_card_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatus.SUCCESS,
             'message': 'Approved',
             'transaction': 'texxxxxxxxxx',
@@ -113,7 +113,7 @@ def epoint_mock_split_pay_with_saved_card_response():
 @pytest.fixture(scope='package')
 def epoint_mock_split_pay_and_save_card_response():
     return {
-        'body': {
+        'content': {
             'status': TransactionStatus.SUCCESS,
             'transaction': 'texxxxxxxxxx',
             'redirect_url': 'https://epoint.az/',
