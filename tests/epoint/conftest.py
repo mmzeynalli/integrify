@@ -5,7 +5,7 @@ from hashlib import sha1
 from typing import Any
 
 import pytest
-from integrify.base import APIPayloadHandler, APIResponse
+from integrify.api import APIPayloadHandler, APIResponse
 from integrify.epoint.client import EPointRequestClass
 from integrify.epoint.schemas.parts import TransactionStatus
 from pytest_mock import MockerFixture

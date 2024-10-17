@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any, Optional
 
-from integrify.base import APIClient, APIResponse
+from integrify.api import APIClient, APIResponse
 from integrify.epoint import env
 from integrify.epoint.handlers import (
     GetTransactionStatusPayloadHandler,
@@ -228,7 +228,7 @@ class EPointRequestClass(APIClient):
                 ```python
                 from integrify.epoint import EPointRequest
 
-                EPointRequest.payout(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
+                EPointRequest.payout(amount=100, currency='AZN', order_id='12345678', card_id='cexxxxxx', description='Ödəniş')
                 ```
 
             Cavab sorğu formatı: `BaseResponseSchema`

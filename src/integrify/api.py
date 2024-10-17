@@ -1,36 +1,10 @@
-from typing import Any, Callable, Coroutine, Generic, Optional, TypeVar
+from typing import Any, Callable, Coroutine, Optional
 from urllib.parse import urljoin
 
 import httpx
-from pydantic import BaseModel, Field, field_validator
 
 from integrify.logger import LOGGER_FUNCTION
-
-RequestType = TypeVar('RequestType', bound=BaseModel)
-ResponseType = TypeVar('ResponseType', bound=BaseModel)
-
-
-class APIResponse(BaseModel, Generic[ResponseType]):
-    ok: bool = Field(validation_alias='is_success')
-    """Cavab sorğusunun statusu 400dən kiçikdirsə"""
-
-    status_code: int
-    """Cavab sorğusunun status kodu"""
-
-    headers: dict
-    """Cavab sorğusunun header-i"""
-
-    body: ResponseType = Field(validation_alias='content')
-    """Cavab sorğusunun body-si"""
-
-    @field_validator('body', mode='before')
-    def convert_to_dict(cls, v: str | bytes | dict) -> dict:
-        if isinstance(v, dict):  # in tests
-            return v
-
-        import json
-
-        return json.loads(v)
+from integrify.schemas import APIResponse, PayloadBaseModel, ResponseType
 
 
 class APIClient:
@@ -76,7 +50,7 @@ class APIClient:
 class APIPayloadHandler:
     def __init__(
         self,
-        req_model: Optional[type[RequestType]] = None,
+        req_model: Optional[type[PayloadBaseModel]] = None,
         resp_model: Optional[type[ResponseType]] = None,
     ):
         self.req_model = req_model
@@ -90,7 +64,13 @@ class APIPayloadHandler:
         pass
 
     def handle_payload(self, *args, **kwds):
-        return {}
+        if self.req_model:
+            return self.req_model.from_args(*args, **kwds).model_dump(
+                exclude_none=True,
+                mode='json',  # TODO: Maybe serialize Decimal in different way
+            )
+
+        raise NotImplementedError
 
     def post_handle_payload(self, data):
         return data
@@ -125,7 +105,7 @@ class APIExecutor:
         self,
     ) -> Callable[
         [str, str, Optional['APIPayloadHandler'], Any],  # input args
-        APIResponse[RequestType] | Coroutine[Any, Any, APIResponse[RequestType]],  # output
+        APIResponse[ResponseType] | Coroutine[Any, Any, APIResponse[ResponseType]],  # output
     ]:
         if self.sync:
             return lambda *args, **kwds: self.sync_req(*args, **kwds)
