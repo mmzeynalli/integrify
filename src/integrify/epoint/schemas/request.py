@@ -7,64 +7,64 @@ from integrify.epoint import env
 from integrify.schemas import PayloadBaseModel
 
 
-class MinimalPaymentInputPayloadSchema(PayloadBaseModel):
+class MinimalPaymentRequestSchema(PayloadBaseModel):
     amount: Decimal
     currency: str
     order_id: str
 
 
-class BasePaymentInputPayloadSchema(MinimalPaymentInputPayloadSchema):
+class BasePaymentRequestSchema(MinimalPaymentRequestSchema):
     success_redirect_url: Optional[str] = env.EPOINT_SUCCESS_REDIRECT_URL
     error_redirect_url: Optional[str] = env.EPOINT_FAILED_REDIRECT_URL
     description: Optional[str] = None
 
 
 ##############################################################################
-class PaymentInputPayloadSchema(BasePaymentInputPayloadSchema):
+class PaymentRequestSchema(BasePaymentRequestSchema):
     other_attr: Optional[dict] = None
 
 
-class GetTransactionStatusInputPayloadSchema(PayloadBaseModel):
+class GetTransactionStatusRequestSchema(PayloadBaseModel):
     transaction: str = Field(validation_alias='transaction_id')
 
 
-class SaveCardInputPayloadSchema(PayloadBaseModel):
+class SaveCardRequestSchema(PayloadBaseModel):
     pass
 
 
-class PayWithSavedCardInputPayloadSchema(MinimalPaymentInputPayloadSchema):
+class PayWithSavedCardRequestSchema(MinimalPaymentRequestSchema):
     card_id: str
 
 
-class PayAndSaveCardInputPayloadSchema(BasePaymentInputPayloadSchema):
+class PayAndSaveCardRequestSchema(BasePaymentRequestSchema):
     pass
 
 
-class PayoutInputPayloadSchema(MinimalPaymentInputPayloadSchema):
+class PayoutRequestSchema(MinimalPaymentRequestSchema):
     card_id: str
     description: Optional[str] = None
 
 
-class RefundInputPayloadSchema(PayloadBaseModel):
+class RefundRequestSchema(PayloadBaseModel):
     transaction: str = Field(validation_alias='transaction_id')
     currency: str
     amount: Optional[Decimal] = None
 
 
-class SplitPayInputPayloadSchema(BasePaymentInputPayloadSchema):
+class SplitPayRequestSchema(BasePaymentRequestSchema):
     split_user: str = Field(validation_alias='split_user_id')
     split_amount: Decimal
     other_attr: Optional[dict] = None
 
 
-class SplitPayWithSavedCardInputPayloadSchema(MinimalPaymentInputPayloadSchema):
+class SplitPayWithSavedCardRequestSchema(MinimalPaymentRequestSchema):
     card_id: str
     split_user: str = Field(validation_alias='split_user_id')
     split_amount: Decimal
     description: Optional[str] = None
 
 
-class SplitPayAndSaveCardInputPayloadSchema(BasePaymentInputPayloadSchema):
+class SplitPayAndSaveCardRequestSchema(BasePaymentRequestSchema):
     split_user: str = Field(validation_alias='split_user_id')
     split_amount: Decimal
     description: Optional[str] = None

@@ -20,7 +20,7 @@ def test_epoint_pay_with_saved_card_request(epoint_mock_pay_with_saved_card_resp
         amount=1,
         currency='AZN',
         order_id='123456789',
-        card_id='card_id',
+        card_id='cexxxxxx',
     )
 
     assert resp.body.status == TransactionStatus.SUCCESS
@@ -39,4 +39,22 @@ def test_epoint_pay_and_save_card_request(epoint_mock_pay_and_save_card_response
     assert resp.body.card_id
 
 
-# TODO: Add test for payout and refund
+def test_epoint_payout_request(epoint_mock_payout_response):
+    resp = TestEPointRequest(epoint_mock_payout_response).payout(
+        amount=1,
+        currency='AZN',
+        order_id='test',
+        card_id='cexxxxxx',
+    )
+
+    assert resp.body.status == TransactionStatus.SUCCESS
+    assert resp.body.transaction
+
+
+def test_epoint_refund_request(epoint_mock_refund_response):
+    resp = TestEPointRequest(epoint_mock_refund_response).refund(
+        transaction_id='texxxxxx',
+        currency='AZN',
+    )
+
+    assert resp.body.status == TransactionStatus.SUCCESS

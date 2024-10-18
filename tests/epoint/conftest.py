@@ -5,7 +5,7 @@ from hashlib import sha1
 from typing import Any
 
 import pytest
-from integrify.api import APIPayloadHandler, APIResponse
+from integrify.api import APIPayloadHandler
 from integrify.epoint.client import EPointRequestClass
 from integrify.epoint.schemas.parts import TransactionStatus
 from pytest_mock import MockerFixture
@@ -54,7 +54,9 @@ def is_signature_ok(data: dict):
 def req(resp_data: dict, url: str, verb: str, handler: APIPayloadHandler, *args, **kwds):
     resp: dict[str, Any]
 
-    if not is_signature_ok(handler.handle_request(*args, **kwds)):
+    data = handler.handle_request(*args, **kwds)  # Handler should exist
+
+    if not is_signature_ok(data):
         resp = {
             'content': {
                 'status': TransactionStatus.SERVER_ERROR,
@@ -71,7 +73,4 @@ def req(resp_data: dict, url: str, verb: str, handler: APIPayloadHandler, *args,
     resp.setdefault('status_code', 200)
     resp.setdefault('headers', {})
 
-    if handler.resp_model:
-        return APIResponse[handler.resp_model].model_validate(resp)  # type: ignore[name-defined]
-
-    return resp
+    return handler.handle_response(resp)

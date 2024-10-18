@@ -1,20 +1,23 @@
 import base64
 import json
 
+import httpx
+
 from integrify.api import APIPayloadHandler, ResponseType
 from integrify.epoint import env
 from integrify.epoint.helper import generate_signature
+from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
 from integrify.epoint.schemas.request import (
-    GetTransactionStatusInputPayloadSchema,
-    PayAndSaveCardInputPayloadSchema,
-    PaymentInputPayloadSchema,
-    PayoutInputPayloadSchema,
-    PayWithSavedCardInputPayloadSchema,
-    RefundInputPayloadSchema,
-    SaveCardInputPayloadSchema,
-    SplitPayAndSaveCardInputPayloadSchema,
-    SplitPayInputPayloadSchema,
-    SplitPayWithSavedCardInputPayloadSchema,
+    GetTransactionStatusRequestSchema,
+    PayAndSaveCardRequestSchema,
+    PaymentRequestSchema,
+    PayoutRequestSchema,
+    PayWithSavedCardRequestSchema,
+    RefundRequestSchema,
+    SaveCardRequestSchema,
+    SplitPayAndSaveCardRequestSchema,
+    SplitPayRequestSchema,
+    SplitPayWithSavedCardRequestSchema,
 )
 from integrify.epoint.schemas.response import (
     BaseResponseSchema,
@@ -24,7 +27,7 @@ from integrify.epoint.schemas.response import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
-from integrify.schemas import PayloadBaseModel
+from integrify.schemas import APIResponse, PayloadBaseModel
 
 
 class BasePayloadHandler(APIPayloadHandler):
@@ -44,55 +47,72 @@ class BasePayloadHandler(APIPayloadHandler):
             'signature': generate_signature(b64data),
         }
 
+    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)
+
+        # EPoint həmişə 200 qaytarır, error olsa belə
+        if (
+            isinstance(api_resp.body.status, TransactionStatusExtended)
+            and api_resp.body == TransactionStatusExtended.SERVER_ERROR
+        ):
+            api_resp.ok = False
+        elif api_resp.body.status != TransactionStatus.SUCCESS:
+            api_resp.ok = False
+
+        return api_resp  # type: ignore[return-value]
+
 
 class PaymentPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(PaymentInputPayloadSchema, RedirectUrlResponseSchema)
+        super().__init__(PaymentRequestSchema, RedirectUrlResponseSchema)
 
 
 class GetTransactionStatusPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(GetTransactionStatusInputPayloadSchema, TransactionStatusResponseSchema)
+        super().__init__(GetTransactionStatusRequestSchema, TransactionStatusResponseSchema)
 
 
 class SaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(SaveCardInputPayloadSchema, RedirectUrlWithCardIdResponseSchema)
+        super().__init__(SaveCardRequestSchema, RedirectUrlWithCardIdResponseSchema)
 
 
 class PayWithSavedCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(PayWithSavedCardInputPayloadSchema, BaseResponseSchema)
+        super().__init__(PayWithSavedCardRequestSchema, BaseResponseSchema)
 
 
 class PayAndSaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(PayAndSaveCardInputPayloadSchema, RedirectUrlWithCardIdResponseSchema)
+        super().__init__(PayAndSaveCardRequestSchema, RedirectUrlWithCardIdResponseSchema)
 
 
 class PayoutPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(PayoutInputPayloadSchema, BaseResponseSchema)
+        super().__init__(PayoutRequestSchema, BaseResponseSchema)
 
 
 class RefundPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(RefundInputPayloadSchema, MinimalResponseSchema)
+        super().__init__(RefundRequestSchema, MinimalResponseSchema)
 
 
 class SplitPayPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(SplitPayInputPayloadSchema, RedirectUrlResponseSchema)
+        super().__init__(SplitPayRequestSchema, RedirectUrlResponseSchema)
 
 
 class SplitPayWithSavedCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(
-            SplitPayWithSavedCardInputPayloadSchema,
+            SplitPayWithSavedCardRequestSchema,
             SplitPayWithSavedCardResponseSchema,
         )
 
 
 class SplitPayAndSaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(SplitPayAndSaveCardInputPayloadSchema, RedirectUrlWithCardIdResponseSchema)
+        super().__init__(
+            SplitPayAndSaveCardRequestSchema,
+            RedirectUrlWithCardIdResponseSchema,
+        )

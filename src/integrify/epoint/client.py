@@ -377,7 +377,5 @@ class EPointRequestClass(APIClient):
             """  # noqa: E501
 
 
-EPointRequest = EPointRequestClass()
-
-
-EPointRequest.save_card()
+EPointRequest = EPointRequestClass(sync=True)
+EPointAsyncRequest = EPointRequestClass(sync=False)

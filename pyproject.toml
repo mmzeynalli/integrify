@@ -94,6 +94,9 @@ docstring-quotes = "double"
 
 [tool.pytest.ini_options]
 pythonpath = ["src/"]
+filterwarnings = [
+    "ignore::UserWarning",
+]
 
 [tool.bandit]
 skips = []
