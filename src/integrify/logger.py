@@ -3,12 +3,12 @@ from functools import partial
 from typing import Callable
 
 try:
-    import logfire
+    import logfire  # type: ignore[import-not-found]
 except ModuleNotFoundError:
     logfire = None
 
 try:
-    import loguru
+    import loguru  # type: ignore[import-not-found]
 except ModuleNotFoundError:
     loguru = None
 

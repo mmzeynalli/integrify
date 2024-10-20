@@ -4,17 +4,18 @@
     bu importu edin və eyni-adlı funksiyaları `await` ilə çağırın:
     
     ```python
-    from integrify.epoint.asyncio import EPointRequest
+    from integrify.epoint import EPointAsyncRequest
     ```
 
-::: integrify.epoint.sync.EPointRequest
+::: integrify.epoint.EPointRequest
+::: integrify.epoint.EPointAsyncRequest
 
 ???+ note
 
-    Bu artıq hazır yaradılmış klass obyektidir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
+    Bunlar artıq hazır yaradılmış klass obyektləridir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
     bütün sorğuları `EPointRequestClass().save_card()` kimi istifadə etməlisiniz.
 
-::: integrify.epoint.sync.EPointRequestClass
+::: integrify.epoint.client.EPointRequestClass
     handler: python
     options:
       members:

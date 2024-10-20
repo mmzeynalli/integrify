@@ -146,9 +146,6 @@ class EPointRequestClass(APIClient):
             backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
             və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
             """
-            self.path = env.API.SAVE_CARD
-            self.verb = 'POST'
-            self.resp_model = RedirectUrlWithCardIdResponseSchema
 
         def pay_with_saved_card(
             self,

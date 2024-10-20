@@ -73,4 +73,4 @@ def req(resp_data: dict, url: str, verb: str, handler: APIPayloadHandler, *args,
     resp.setdefault('status_code', 200)
     resp.setdefault('headers', {})
 
-    return handler.handle_response(resp)
+    return handler.handle_response(resp)  # type: ignore[arg-type]

@@ -4,6 +4,7 @@ site_url: https://integrify.mmzeynalli.dev
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - content.code.annotate
     - content.code.copy
@@ -74,6 +75,7 @@ nav:
       - EPoint: 
           - Ümumi məlumat: "epoint/about.md"
           - API Referansı: "epoint/api-reference.md"
+  - Contibuting: "resources/contributing.md"
 
 markdown_extensions:
   - codehilite:
@@ -112,12 +114,13 @@ extra:
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/mmzeynalli/integrify
+  analytics:
+    provider: goatcounter
 
 extra_css:
   - css/termynal.css
   - css/custom.css
 
 extra_javascript:
-  - js/termynal.js
   - js/custom.js
-  - js/goatcounter.js
+  - js/termynal.js
