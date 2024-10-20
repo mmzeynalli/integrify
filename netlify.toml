@@ -2,5 +2,5 @@
 publish = "site"
 command = """
 pip3 install mkdocs-material mkdocstrings[python] &&
-mkdocs build -d site
+make docs
 """

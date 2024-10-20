@@ -86,6 +86,10 @@ Dəyişikliklərinizi bitirdək sonra, commit və öz branch-ınıza push edib, 
 
 Pull request-iniz review üçün hazırdırsa, "Zəhmət olmazsa, review edin" comment-ini yazın, ən yaxın zamanda nəzər yetirəcəyik.
 
+## Kod arxitekturası (!)
+
+Bu hissə uzun və detallı yazılmalı olduğundan, məqalə [burada](./code-architecture.md) yerləşdirilib.
+
 ## Dokumentasiya stili
 
 Dokumentasiya markdown-da yazılır və [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) aləti ilə generasiya olunur. API dokumentasiyası isə docstring-lərdən [mkdocstrings](https://mkdocstrings.github.io/) ilə generasiya olunur.

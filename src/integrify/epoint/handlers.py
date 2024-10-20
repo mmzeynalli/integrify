@@ -51,13 +51,10 @@ class BasePayloadHandler(APIPayloadHandler):
         api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)
 
         # EPoint həmişə 200 qaytarır, error olsa belə
-        if (
-            isinstance(api_resp.body.status, TransactionStatusExtended)
-            and api_resp.body == TransactionStatusExtended.SERVER_ERROR
-        ):
-            api_resp.ok = False
-        elif api_resp.body.status != TransactionStatus.SUCCESS:
-            api_resp.ok = False
+        if isinstance(api_resp.body.status, TransactionStatusExtended):
+            api_resp.ok = api_resp.body.status != TransactionStatusExtended.SERVER_ERROR
+        else:
+            api_resp.ok = api_resp.body.status == TransactionStatus.SUCCESS
 
         return api_resp  # type: ignore[return-value]
 

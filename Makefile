@@ -46,13 +46,14 @@ testcov: test
 	@poetry run coverage html
 	@echo "building coverage lcov"
 	@poetry run coverage lcov
+	@poetry run coverage-badge -o coverage.svg
+
+lang=az
 
 .PHONY: docs  ## Generate the docs
 docs:
-	poetry run mkdocs build --strict
+	poetry run mkdocs build -f docs/${lang}/mkdocs.yml --strict
 
-
-lang=az
 .PHONY: docs-serve  ## Serve the docs
 docs-serve:
 	poetry run mkdocs serve -f docs/${lang}/mkdocs.yml
