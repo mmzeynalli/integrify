@@ -1,5 +1,5 @@
 from httpx import Response
-from integrify.epoint.client import EPointRequestClass
+from integrify.epoint.client import EPointClientClass
 from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
 from pytest_mock import MockerFixture
 
@@ -7,7 +7,7 @@ from tests.epoint.mocks import MESSAGE_TRANSACTION_FAIL
 
 
 def test_ok_signature(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_get_transaction_status_success_response: Response,
     mocker: MockerFixture,
 ):
@@ -23,7 +23,7 @@ def test_ok_signature(
 
 def test_wrong_signature(
     epoint_set_wrong_env,
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_bad_signature_response,
     mocker: MockerFixture,
 ):
@@ -39,7 +39,7 @@ def test_wrong_signature(
 
 
 def test_get_failed_transaction_status(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_get_transaction_status_failed_response,
     mocker: MockerFixture,
 ):
@@ -55,7 +55,7 @@ def test_get_failed_transaction_status(
 
 
 def test_epoint_save_card_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_save_card_response,
     mocker: MockerFixture,
 ):
@@ -71,7 +71,7 @@ def test_epoint_save_card_request(
 
 
 def test_epoint_save_card_failed_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_save_card_failed_response,
     mocker: MockerFixture,
 ):

@@ -1,5 +1,5 @@
 import pytest
-from integrify.epoint.client import EPointRequestClass
+from integrify.epoint.client import EPointClientClass
 from pytest_mock import MockerFixture
 
 from tests import epoint
@@ -22,4 +22,4 @@ def epoint_set_wrong_env(mocker: MockerFixture):
 
 @pytest.fixture(scope='package')
 def epoint_client():
-    yield EPointRequestClass()
+    yield EPointClientClass()

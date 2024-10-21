@@ -24,10 +24,10 @@ from integrify.epoint.schemas.response import (
     TransactionStatusResponseSchema,
 )
 
-__all__ = ['EPointRequest']
+__all__ = ['EPointClientClass']
 
 
-class EPointRequestClass(APIClient):
+class EPointClientClass(APIClient):
     """EPoint sorğular üçün baza class"""
 
     def __init__(self, sync: bool = True):
@@ -374,5 +374,5 @@ class EPointRequestClass(APIClient):
             """  # noqa: E501
 
 
-EPointRequest = EPointRequestClass(sync=True)
-EPointAsyncRequest = EPointRequestClass(sync=False)
+EPointRequest = EPointClientClass(sync=True)
+EPointAsyncRequest = EPointClientClass(sync=False)

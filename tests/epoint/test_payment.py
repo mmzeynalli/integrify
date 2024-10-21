@@ -1,11 +1,11 @@
 from httpx import Response
-from integrify.epoint.client import EPointRequestClass
+from integrify.epoint.client import EPointClientClass
 from integrify.epoint.schemas.parts import TransactionStatus
 from pytest_mock import MockerFixture
 
 
 def test_epoint_payment_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_payment_response: Response,
     mocker: MockerFixture,
 ):
@@ -22,7 +22,7 @@ def test_epoint_payment_request(
 
 
 def test_epoint_pay_with_saved_card_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_pay_with_saved_card_response: Response,
     mocker: MockerFixture,
 ):
@@ -41,7 +41,7 @@ def test_epoint_pay_with_saved_card_request(
 
 
 def test_epoint_pay_and_save_card_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_pay_and_save_card_response: Response,
     mocker: MockerFixture,
 ):
@@ -58,7 +58,7 @@ def test_epoint_pay_and_save_card_request(
 
 
 def test_epoint_payout_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_payout_response: Response,
     mocker: MockerFixture,
 ):
@@ -75,7 +75,7 @@ def test_epoint_payout_request(
 
 
 def test_epoint_refund_request(
-    epoint_client: EPointRequestClass,
+    epoint_client: EPointClientClass,
     epoint_mock_refund_response: Response,
     mocker: MockerFixture,
 ):

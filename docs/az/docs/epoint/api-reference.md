@@ -15,7 +15,7 @@
     Bunlar artıq hazır yaradılmış klass obyektləridir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
     bütün sorğuları `EPointRequestClass().save_card()` kimi istifadə etməlisiniz.
 
-::: integrify.epoint.client.EPointRequestClass
+::: integrify.epoint.client.EPointClientClass
     handler: python
     options:
       members:
