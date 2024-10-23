@@ -34,7 +34,7 @@
 
 ---
 
-## Əsas özəlliklər
+## Əsas özəlliklər { #main-features }
 
 - Kitabxana həm sync, həm də async sorğu dəyişimini dəstəkləyir.
 - Kitabaxanadakı bütün sinif və funksiyalar tamamilə dokumentləşdirilib.
@@ -43,7 +43,7 @@
 
 ---
 
-## Kitabxananın yüklənməsi
+## Kitabxananın yüklənməsi { #installation }
 
 <div class="termy">
 
@@ -53,7 +53,7 @@ $ pip install integrify
 
 </div>
 
-## İstifadəsi
+## İstifadəsi { #usage }
 
 Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 
@@ -78,7 +78,7 @@ print(resp.ok, resp.body)
 
 ```
 
-### Sorğu cavabı
+### Sorğu cavabı { #request-response }
 
 Yuxarıdakı sorğuların (və ya istənilən sorğunun) cavab formatı `ApiResponse` class-ıdır:
 
@@ -98,7 +98,7 @@ class ApiResponse:
 ```
 
 
-## Dəstəklənən API inteqrasiyaları
+## Dəstəklənən API inteqrasiyaları  { #supported-integrations }
 
 | Servis  |                                             Əsas sorğular                                             |                                            Bütün sorğular                                             | Dokumentləşdirilmə | Link                                                                                                  |
 | ------- | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | ------------------ | ----------------------------------------------------------------------------------------------------- |

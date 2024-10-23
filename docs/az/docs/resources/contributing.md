@@ -15,14 +15,14 @@ Bug qeyd etdikdə, istifadə etdiyiniz əməliyyat sistemi və kitabxananın ver
 
     **tl;dr:** Kodu format etmək üçün `make format`, test və lint etmək üçün `make` və dokumentasiya generasiya etmək üçün `make docs` kommandını icra edin.
 
-### Rekvizitlər
+### Rekvizitlər { #requisites }
 
 * Python 3.9 və 3.12 arası istənilən versiya
 * git
 * make
 * [Poetry](https://python-poetry.org/docs/#installation)
 
-### İnstallasiya və quraşdırılma
+### İnstallasiya və quraşdırılma  { #installation }
 
 ```bash
 # Clone your fork and cd into the repo directory
@@ -36,7 +36,7 @@ curl -sSL https://install.python-poetry.org | python3 -
 make install
 ```
 
-### Yeni branch-a keçin və öz dəyişiklikləriniz əlavə edin
+### Yeni branch-a keçin və öz dəyişiklikləriniz əlavə edin  { #new-branch }
 
 ```bash
 # Yeni branch-a keçid edin
@@ -80,21 +80,21 @@ make docs
 # make docs-serve kommandını icra etsəz, localhost:8000 addresində yeni dokumentasiyanı da görə bilərsiniz.
 ```
 
-### Dəyişiklikləriniz commit və push edin
+### Dəyişiklikləriniz commit və push edin  { #commit-push-and-pr }
 
 Dəyişikliklərinizi bitirdək sonra, commit və öz branch-ınıza push edib, bizə pull request yaradın.
 
 Pull request-iniz review üçün hazırdırsa, "Zəhmət olmazsa, review edin" comment-ini yazın, ən yaxın zamanda nəzər yetirəcəyik.
 
-## Kod arxitekturası (!)
+## Kod arxitekturası (!) { #code-architecture }
 
 Bu hissə uzun və detallı yazılmalı olduğundan, məqalə [burada](./code-architecture.md) yerləşdirilib.
 
-## Dokumentasiya stili
+## Dokumentasiya stili { #documentation }
 
 Dokumentasiya markdown-da yazılır və [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) aləti ilə generasiya olunur. API dokumentasiyası isə docstring-lərdən [mkdocstrings](https://mkdocstrings.github.io/) ilə generasiya olunur.
 
-### Kodun dokumentləşdirilməsi
+### Kodun dokumentləşdirilməsi { #incode-documentation-style }
 
 Öz dəyişikliklərinizi əlavə edərkən, bütün kodun dokumentləşdirildiyindən əmin olun. Qeyd olunanlar format olunmuş docstring-lərlə yaxşıca dokumentləşdirilməlidir:
 
@@ -107,13 +107,13 @@ Integrify [PEP 257](https://www.python.org/dev/peps/pep-0257/) standartları il�
 
 Docstring-lərdə misal (example) göstərə bilərsiniz. Bu misal tam işlənə bilən kod olmalıdır.
 
-### Dokumentasiya
+### Dokumentasiya { #documentation-style }
 
 Ümumiyyətlə, dokumentasiya əlçatan üslubda yazılmalıdır. Oxunması və başa düşülməsi asan olmalı və qısa və konkret olmalıdır.
 
 Kod nümunələri əlavə etməyiniz şiddətlə tövsiyyə olunur, lakin qısa və sadə saxlanılmalıdır. Bununla belə, hər bir kod nümunəsi tam, müstəqil və işlək olmalıdır. (Bunu necə edəcəyinizə əmin deyilsinizsə, kömək istəyin!).
 
-## Tərcümə
+## Tərcümə { #translation }
 
 Hal-hazırda proyekt əsasən Azərbaycanlı developerlər üçün nəzərdə tutulduğundan, dokumentasiya və docstring-lər Azərbaycan dilindədir.
 Amma, bu proyekti gələcəkdə daha qloballaşdırmaq fikrində olduğumuzdan, ingiliscəyə tərcümədə yardıma ehtiyacımız var. Gələcəkdə ölkə-spesifik inteqrasiyalar

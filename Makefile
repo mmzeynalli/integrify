@@ -101,4 +101,11 @@ else
 	rm -rf coverage.xml
 endif
 
-	
+.PHONY: new-integration  ## Create new integration folder
+new-integration:
+	mkdir src/integrify/${name}
+	touch src/integrify/${name}/__init__.py src/integrify/${name}/client.py src/integrify/${name}/handlers.py src/integrify/${name}/env.py
+	mkdir src/integrify/${name}/schemas
+	touch src/integrify/${name}/schemas/__init__.py src/integrify/${name}/schemas/request.py src/integrify/${name}/schemas/response.py;
+	mkdir tests/${name}
+	touch tests/${name}/__init__.py tests/${name}/conftest.py tests/${name}/mocks.py
