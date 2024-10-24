@@ -48,7 +48,7 @@ class BasePayloadHandler(APIPayloadHandler):
         }
 
     def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
-        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)
+        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
 
         # EPoint həmişə 200 qaytarır, error olsa belə
         if isinstance(api_resp.body.status, TransactionStatusExtended):

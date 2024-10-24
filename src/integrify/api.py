@@ -118,7 +118,7 @@ class APIPayloadHandler:
 
         Misal üçün: Bax [`EPointRequestClass`][integrify.epoint.client.EPointRequestClass]
         """
-        pass
+        pass  # pragma: no cover
 
     def handle_payload(self, *args, **kwds):
         """Verilən argumentləri `self.req_model` formatında payload-a çevirən funksiya.
@@ -141,7 +141,7 @@ class APIPayloadHandler:
         Args:
             data: `pre_handle_payload` və `handle_payload` funksiyalarından yaradılmış data.
         """
-        return data
+        return data  # pragma: no cover
 
     def handle_request(self, *args, **kwds):
         """Sorğu üçün payload-u hazırlayan funksiya. Üç mərhələ icra edir,
@@ -157,14 +157,14 @@ class APIPayloadHandler:
         data = {**pre_data, **self.handle_payload(*args, **kwds)}
         return self.post_handle_payload(data)
 
-    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType] | httpx.Response:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
         if self.resp_model:
             return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)  # type: ignore[name-defined]
 
-        return resp.json()
+        return resp
 
 
 class APIExecutor:
@@ -228,7 +228,7 @@ class APIExecutor:
 
         return response
 
-    async def async_req(
+    async def async_req(  # pragma: no cover
         self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds
     ):
         """Async sorğu atan funksiya

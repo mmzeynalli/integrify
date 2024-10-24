@@ -46,6 +46,9 @@ testcov: test
 	@poetry run coverage html
 	@echo "building coverage lcov"
 	@poetry run coverage lcov
+
+.PHONY: testcov-badge ## Generate badge after tests
+testcov-badge:
 	@poetry run coverage-badge -o coverage.svg
 
 lang=az
@@ -107,5 +110,9 @@ new-integration:
 	touch src/integrify/${name}/__init__.py src/integrify/${name}/client.py src/integrify/${name}/handlers.py src/integrify/${name}/env.py
 	mkdir src/integrify/${name}/schemas
 	touch src/integrify/${name}/schemas/__init__.py src/integrify/${name}/schemas/request.py src/integrify/${name}/schemas/response.py;
+	
 	mkdir tests/${name}
 	touch tests/${name}/__init__.py tests/${name}/conftest.py tests/${name}/mocks.py
+
+	mkdir docs/${lang}/docs/${name}
+	touch docs/${lang}/docs/${name}/about.md docs/${lang}/docs/${name}/api-reference.md
