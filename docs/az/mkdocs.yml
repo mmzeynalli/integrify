@@ -79,7 +79,7 @@ nav:
           - API Referansı: "epoint/api-reference.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
-    - Kod Arxitekturası: "rmkdocesources/code-architecture.md"
+    - Kod Arxitekturası: "resources/code-architecture.md"
 
 markdown_extensions:
   - codehilite:
