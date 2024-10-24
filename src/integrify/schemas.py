@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -23,7 +23,7 @@ class APIResponse(BaseModel, Generic[ResponseType]):
     """Cavab sorğusunun body-si"""
 
     @field_validator('body', mode='before')
-    def convert_to_dict(cls, v: str | bytes) -> dict:
+    def convert_to_dict(cls, v: Union[str, bytes]) -> dict:
         """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir."""
         import json
 

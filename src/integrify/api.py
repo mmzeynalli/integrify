@@ -1,4 +1,4 @@
-from typing import Any, Callable, Coroutine, Optional
+from typing import Any, Callable, Coroutine, Optional, Union
 from urllib.parse import urljoin
 
 import httpx
@@ -157,7 +157,10 @@ class APIPayloadHandler:
         data = {**pre_data, **self.handle_payload(*args, **kwds)}
         return self.post_handle_payload(data)
 
-    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType] | httpx.Response:
+    def handle_response(
+        self,
+        resp: httpx.Response,
+    ) -> Union[APIResponse[ResponseType], httpx.Response]:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
@@ -180,7 +183,7 @@ class APIExecutor:
         self.client_name = name
         self.logger = LOGGER_FUNCTION(name)
 
-        self.client: httpx.Client | httpx.AsyncClient
+        self.client: Union[httpx.Client, httpx.AsyncClient]
         """httpx sorğu client-i"""
 
         if sync:
@@ -193,7 +196,7 @@ class APIExecutor:
         self,
     ) -> Callable[
         [str, str, Optional['APIPayloadHandler'], Any],  # input args
-        APIResponse[ResponseType] | Coroutine[Any, Any, APIResponse[ResponseType]],  # output
+        Union[APIResponse[ResponseType], Coroutine[Any, Any, APIResponse[ResponseType]]],  # output
     ]:
         """Sync/async request atan funksiyanı seçən attribute"""
         if self.sync:

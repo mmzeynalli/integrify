@@ -43,7 +43,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 pydantic = "^2.8.2"
 httpx = "^0.27.2"
 
