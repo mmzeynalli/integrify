@@ -207,7 +207,7 @@ class NewIntegrationClientClass(APIClient):
                 currency: Məzənnə.
             """
     
-NewIntegrationSyncRequest = NewIntegrationClientClass(sync=True)
+NewIntegrationRequest = NewIntegrationClientClass(sync=True)
 NewIntegrationAsyncRequest = NewIntegrationClientClass(sync=False)
 `````
 

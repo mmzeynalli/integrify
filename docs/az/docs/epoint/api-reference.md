@@ -7,8 +7,8 @@
     from integrify.epoint import EPointAsyncRequest
     ```
 
-::: integrify.epoint.EPointRequest
-::: integrify.epoint.EPointAsyncRequest
+::: integrify.epoint.client.EPointRequest
+::: integrify.epoint.client.EPointAsyncRequest
 
 ???+ note
 
