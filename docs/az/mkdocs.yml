@@ -54,7 +54,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [src]
+          paths: [../../src]
           options:
             show_root_heading: true
             show_source: false
@@ -79,7 +79,7 @@ nav:
           - API Referansı: "epoint/api-reference.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
-    - Kod Arxitekturası: "resources/code-architecture.md"
+    - Kod Arxitekturası: "rmkdocesources/code-architecture.md"
 
 markdown_extensions:
   - codehilite:
