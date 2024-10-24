@@ -80,6 +80,7 @@ nav:
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"
+    - API Reference: "resources/api-reference.md"
 
 markdown_extensions:
   - codehilite:

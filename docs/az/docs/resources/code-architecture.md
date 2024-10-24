@@ -83,7 +83,6 @@ Yeni inteqrasiya əlavə etmək istəyirsinizsə, zəhmət olmazsa [bu mərhəl�
 Mövcud fayl strukturunu mimikləyə və ya sadəcə `make new-integration name=new_integration` kommandını icra edə bilərsiniz. Gözlənilən struktur budur:
 
 ```text
-
 ├── src
 |   └── integrify
 |       ├── __init__.py
@@ -112,10 +111,9 @@ Mövcud fayl strukturunu mimikləyə və ya sadəcə `make new-integration name=
 
 İlk öncə istifadə edəcəyiniz API-ləri (endpoint) bir enum constantları kimi yığın. Əgər mühit dəyişənləri oxunmalıdırsa, onu da `env.py` faylında edin. Başqa ümumi və mühitlik bir hissə varsa, bir fayl atında toplanmalıdır.
 
-
 ### 2. Handler-lər { #handlers }
 
-Növbəti olaraq, handler-ləri yazmağınız məsləhət görülür. Hər bir sorğu üçün, göndərilən (`schemas/request.py`) və qəbul edilən (`schemas/response.py`) datanın schema-sını yazın. 
+Növbəti olaraq, handler-ləri yazmağınız məsləhət görülür. Hər bir sorğu üçün, göndərilən (`schemas/request.py`) və qəbul edilən (`schemas/response.py`) datanın schema-sını yazın.
 
 ???+ warning
 

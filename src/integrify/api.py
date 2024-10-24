@@ -58,7 +58,7 @@ class APIClient:
         self.default_handler = handler_class()
 
     def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']):
-        """Yeni endpoint əlavə etmə funksiyası
+        """Endpoint-ə handler əlavə etmək method-u
 
         Args:
             route_name: Funksionallığın adı (məs., `pay`, `refund` və s.)
@@ -116,7 +116,7 @@ class APIPayloadHandler:
         əlavə datanı lazımdırsa (bütün sorğularda eyni olan data), bu funksiyadan
         istifadə edə bilərsiniz.
 
-        Misal üçün: Bax [`EPointRequestClass`][integrify.epoint.client.EPointRequestClass]
+        Misal üçün: Bax [`EPointClientClass`][integrify.epoint.client.EPointClientClass]
         """
         pass  # pragma: no cover
 
@@ -136,7 +136,7 @@ class APIPayloadHandler:
         """Sorğunun payload-ının post-processing-i. Əgər sorğu göndərməmişdən qabaq
         son datanın üzərinə əlavələr lazımdırsa, bu funksiyadan istifadə edə bilərsiniz.
 
-        Misal üçün: Bax [`EPointRequestClass`][integrify.epoint.client.EPointRequestClass]
+        Misal üçün: Bax [`EPointClientClass`][integrify.epoint.client.EPointClientClass]
 
         Args:
             data: `pre_handle_payload` və `handle_payload` funksiyalarından yaradılmış data.
@@ -146,7 +146,7 @@ class APIPayloadHandler:
     def handle_request(self, *args, **kwds):
         """Sorğu üçün payload-u hazırlayan funksiya. Üç mərhələ icra edir,
         və bu mərhələlər override oluna bilər. (Misal üçün:
-        Bax [`EPointRequestClass`][integrify.epoint.client.EPointRequestClass])
+        Bax [`EPointClientClass`][integrify.epoint.client.EPointClientClass])
 
         1. Pre-processing
         2. Payload hazırlama
