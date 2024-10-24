@@ -1,4 +1,4 @@
-from typing import Any, Callable, Coroutine, Optional, Union
+from typing import Any, Callable, Coroutine, Optional, Type, Union
 from urllib.parse import urljoin
 
 import httpx
@@ -49,7 +49,7 @@ class APIClient:
         """
         self.urls[route_name] = {'url': url, 'verb': verb}
 
-    def set_default_handler(self, handler_class: type['APIPayloadHandler']):
+    def set_default_handler(self, handler_class: Type['APIPayloadHandler']):
         """Sorğulara default handler setter-i
 
         Args:
@@ -57,7 +57,7 @@ class APIClient:
         """
         self.default_handler = handler_class()
 
-    def add_handler(self, route_name: str, handler_class: type['APIPayloadHandler']):
+    def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']):
         """Yeni endpoint əlavə etmə funksiyası
 
         Args:
@@ -95,8 +95,8 @@ class APIPayloadHandler:
 
     def __init__(
         self,
-        req_model: Optional[type[PayloadBaseModel]] = None,
-        resp_model: Optional[type[ResponseType]] = None,
+        req_model: Optional[Type[PayloadBaseModel]] = None,
+        resp_model: Optional[Type[ResponseType]] = None,
     ):
         """
         Args:

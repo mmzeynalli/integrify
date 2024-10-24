@@ -1,5 +1,6 @@
 import base64
 import json
+from typing import Type
 
 import httpx
 
@@ -31,7 +32,7 @@ from integrify.schemas import APIResponse, PayloadBaseModel
 
 
 class BasePayloadHandler(APIPayloadHandler):
-    def __init__(self, req_model: type[PayloadBaseModel], resp_model: type[ResponseType]):
+    def __init__(self, req_model: Type[PayloadBaseModel], resp_model: Type[ResponseType]):
         super().__init__(req_model, resp_model)
 
     def pre_handle_payload(self, *args, **kwds):
