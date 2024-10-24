@@ -2,5 +2,5 @@
 publish = "site"
 command = """
 pip3 install mkdocs-material mkdocstrings[python] &&
-make docs
+mkdocs build -f docs/az/mkdocs.yml --strict
 """
