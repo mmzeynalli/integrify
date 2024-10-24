@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Integrify
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Miradil
+    family-names: Zeynalli
+    email: miradil.zeynalli@gmail.com
+  - given-names: Vahid
+    family-names: Hasanzada
+    email: vahidzhe@gmail.com
+repository-code: 'https://github.com/mmzeynalli/integrify'
+url: 'https://integrify.mmzeynalli.dev/'
+abstract: >-
+  Integrify is a request library that eases the API
+  integrations.
+keywords:
+  - integrify
+license: GPL-3.0-or-later

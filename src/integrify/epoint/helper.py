@@ -13,7 +13,7 @@ __all__ = ['generate_signature', 'decode_callback_data']
 if sys.version_info >= (3, 9):
     _sha1 = partial(sha1, usedforsecurity=False)
 else:
-    _sha1 = sha1
+    _sha1 = sha1  # pragma: no cover
 
 
 def generate_signature(data: str) -> str:
