@@ -132,7 +132,7 @@ class APIPayloadHandler:
 
         raise NotImplementedError
 
-    def post_handle_payload(self, data):
+    def post_handle_payload(self, data: Any):
         """Sorğunun payload-ının post-processing-i. Əgər sorğu göndərməmişdən qabaq
         son datanın üzərinə əlavələr lazımdırsa, bu funksiyadan istifadə edə bilərsiniz.
 
