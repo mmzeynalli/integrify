@@ -16,7 +16,7 @@ EPOINT_LOGGER_NAME: str = os.getenv('EPOINT_LOGGER_NAME', 'epoint')
 
 if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
     warn(
-        'EPOINT_PUBLIC_KEY/EPOINT_PRIVATE_KEY mühit dəyişənlərinə dəyər verməsəniz'
+        'EPOINT_PUBLIC_KEY/EPOINT_PRIVATE_KEY mühit dəyişənlərinə dəyər verməsəniz '
         'sorğular çalışmayacaq!'
     )
 
@@ -24,8 +24,8 @@ if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
 class API(str, Enum):
     PAY: Literal['/api/1/request'] = '/api/1/request'
     GET_STATUS: Literal['/api/1/get-status'] = '/api/1/get-status'
-    CARD_REGISTRATION: Literal['/api/1/card-registration'] = '/api/1/card-registration'
-    PAY_WITH_CARD: Literal['/api/1/execute-pay'] = '/api/1/execute-pay'
+    SAVE_CARD: Literal['/api/1/card-registration'] = '/api/1/card-registration'
+    PAY_WITH_SAVED_CARD: Literal['/api/1/execute-pay'] = '/api/1/execute-pay'
     PAY_AND_SAVE_CARD: Literal['/api/1/card-registration-with-pay'] = (
         '/api/1/card-registration-with-pay'
     )
@@ -46,4 +46,5 @@ __all__ = [
     'EPOINT_SUCCESS_REDIRECT_URL',
     'EPOINT_FAILED_REDIRECT_URL',
     'EPOINT_LOGGER_NAME',
+    'API',
 ]

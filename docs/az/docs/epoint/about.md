@@ -8,7 +8,7 @@
 
     Sorğular uğurlu və ya uğursuz olduqda, spesifik URL-ə yönləndirmək istəyirsinizsə, bu dəyişənlərə də mühit levelində dəyər verin: `EPOINT_SUCCESS_REDIRECT_URL`, `EPOINT_FAILED_REDIRECT_URL`
 
-## Rəsmi Dokumentasiya (v1.0.3)
+## Rəsmi Dokumentasiya (v1.0.3) { #official-documentation }
 
 [Azərbaycanca](https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20az.pdf)
 
@@ -16,7 +16,7 @@
 
 [Rusca](https://epointbucket.s3.eu-central-1.amazonaws.com/files/instructions/API%20Epoint%20ru.pdf)
 
-## Sorğular listi
+## Sorğular listi { #list-of-requests }
 
 | Sorğu metodu                | Məqsəd                                                               |                EPoint API                 |  Callback-ə sorğu atılır  |
 | :-------------------------- | :------------------------------------------------------------------- | :---------------------------------------: | :-----------------------: |
@@ -31,7 +31,7 @@
 | `split_pay_with_saved_card` | Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə |        `/api/1/split-execute-pay`         |            :x:            |
 | `split_pay_and_save_card`   | Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlamaq  | `/api/1/split-card-registration-with-pay` | :fontawesome-solid-check: |
 
-## Callback Sorğusu
+## Callback Sorğusu { #callback-request }
 
 Bəzi sorğular müştəri məlumat daxil etdikdən və arxa fonda bank işləmləri bitdikdən sonra, tranzaksiya haqqında məlumat sizin EPoint dashboard-da qeyd etdiyiniz `callback` URL-ə POST sorğusu göndərilir. Data siz adətən sorğu göndərdiyiniz formatda gəlir:
 
@@ -64,7 +64,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 
 ---
 
-## Callback Data formatı
+## Callback Data formatı { #callback-data-format }
 
 Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz fərqlənə bilər. `DecodedCallbackDataSchema` bütün bu dataları özündə cəmləsə də, hansı fieldlərin gəlməyəcəyini (yəni, decode-dan sonra `None` olacağını) bilmək yaxşı olar. Ümumilikdə, mümkün olacaq datalar bunlardır:
 

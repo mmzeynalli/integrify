@@ -1,6 +1,7 @@
 [build]
+base = "docs/az"
 publish = "site"
 command = """
-pip3 install mkdocs-material mkdocstrings[python] &&
-mkdocs build -d site
+pip3 install mkdocs-material mkdocstrings[python] mkdocs-panzoom-plugin &&
+mkdocs build --strict
 """

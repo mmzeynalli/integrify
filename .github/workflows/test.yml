@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**.py'
   pull_request:
     types:
       - opened
       - synchronize
+    paths:
+      - '**.py'
   schedule:
     # cron every week on monday
     - cron: "0 0 * * 1"

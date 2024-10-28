@@ -34,7 +34,7 @@
 
 ---
 
-## Əsas özəlliklər
+## Əsas özəlliklər { #main-features }
 
 - Kitabxana həm sync, həm də async sorğu dəyişimini dəstəkləyir.
 - Kitabaxanadakı bütün sinif və funksiyalar tamamilə dokumentləşdirilib.
@@ -43,7 +43,7 @@
 
 ---
 
-## Kitabxananın yüklənməsi
+## Kitabxananın yüklənməsi { #installation }
 
 <div class="termy">
 
@@ -53,7 +53,7 @@ $ pip install integrify
 
 </div>
 
-## İstifadəsi
+## İstifadəsi { #usage }
 
 Məsələn, EPoint üçün sorğuları istifadə etmək istərsək:
 
@@ -70,15 +70,15 @@ print(resp.ok, resp.body)
 ### Async
 
 ```python
-from integrify.epoint.asyncio import EPointRequest
+from integrify.epoint import EPointAsyncRequest
 
 # Async main loop artıq başlamışdır
-resp = await EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
+resp = await EPointAsyncRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
 print(resp.ok, resp.body)
 
 ```
 
-### Sorğu cavabı
+### Sorğu cavabı { #request-response }
 
 Yuxarıdakı sorğuların (və ya istənilən sorğunun) cavab formatı `ApiResponse` class-ıdır:
 
@@ -98,9 +98,9 @@ class ApiResponse:
 ```
 
 
-## Dəstəklənən API inteqrasiyaları
+## Dəstəklənən API inteqrasiyaları  { #supported-integrations }
 
-| Servis  |            Əsas sorğular             |            Bütün sorğular            | Dokumentləşdirilmə | Link                                                                       |
-| ------- | :----------------------------------: | :----------------------------------: | ------------------ | -------------------------------------------------------------------------- |
-| EPoint  |          :heavy_check_mark:          | ![loading](assets/spinner-solid.svg) | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint) |
-| Payriff | ![loading](assets/spinner-solid.svg) | ![loading](assets/spinner-solid.svg) | Tam                | ![loading](assets/spinner-solid.svg)                                       |
+| Servis  |                                             Əsas sorğular                                             |                                            Bütün sorğular                                             | Dokumentləşdirilmə | Link                                                                                                  |
+| ------- | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | ------------------ | ----------------------------------------------------------------------------------------------------- |
+| EPoint  |                                          :heavy_check_mark:                                           | ![loading](https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/assets/spinner-solid.svg) | Tam                | [Docs](https://github.com/mmzeynalli/integrify/tree/main/integrify/epoint)                            |
+| Payriff | ![loading](https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/assets/spinner-solid.svg) | Tam                | ![loading](https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/assets/spinner-solid.svg) |
