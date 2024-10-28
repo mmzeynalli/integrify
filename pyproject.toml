@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "integrify"
 packages = [{include = "integrify", from="src"}]
-version = "2.0.0"
+version = "2.0.1"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 license = "GPL-3.0-or-later"
 authors = [
