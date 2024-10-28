@@ -124,7 +124,7 @@ Növbəti olaraq, handler-ləri yazmağınız məsləhət görülür. Hər bir s
     def pay(amount: Decimal, currency: str)
     ```
 
-    onda bu request üçün schema:
+    onda bu request üçün schema-dakı field-lərin ardıcıllığı:
 
     ```python
     class PaySchema(BaseModel):
@@ -132,14 +132,14 @@ Növbəti olaraq, handler-ləri yazmağınız məsləhət görülür. Hər bir s
         currency: str
     ```
 
-    olmalıdır. Əks halda, data qarışa bilər. Daha ətraflı anlamaq üçün, 
-    `integrify.schemas.PayloadBaseModel`-ini araşdırın.
+    olmalıdır. Əks halda, uinput data validation qarışa bilər, çünki, pozisional arqumentlərlər də işləyirik. 
+    Daha ətraflı anlamaq üçün, [`PayloadBaseModel`][integrify.schemas.PayloadBaseModel]-ini araşdırın.
 
 Request və response handler-lər hazır olduqdan sonra, hər API üçün bir handler yazıb, bu yazdığınız request və response schema-larını orda qeyd edin.
 
-Nəzərə alın ki, əgər hər sorğu üçün, pre və ya post processing lazımdırsa, bunu schemalarda etmək əvəzinə, `pre_handle_payload` və `post_handle_payload` funksiyalarını override etməklə eyni nəticəni əldə edə bilərsiniz. Misal üçün, EPoint-in handler-lərini nəzərdən keçirin.
+Nəzərə alın ki, əgər hər sorğu üçün, pre və ya post processing lazımdırsa, bunu schemalarda etmək əvəzinə, [`pre_handle_payload`][integrify.api.APIPayloadHandler.pre_handle_payload] və [`post_handle_payload`][integrify.api.APIPayloadHandler.post_handle_payload] funksiyalarını override etməklə eyni nəticəni əldə edə bilərsiniz. Misal üçün, EPoint-in handler-lərini nəzərdən keçirin.
 
-### 2. API Klient { #api-client }
+### 3. API Klient { #api-client }
 
 Bütün handler-lər hazır olduqdan sonra, yeni APIClient class-ı yaradıb, hər şeyi register etməlisiniz. Bir inteqrasiya üçün bir endpoint belə register olunur:
 
@@ -161,7 +161,7 @@ class NewIntegrationClientClass(APIClient):
     faylına import edəsiniz. Bu user-in istifadəsini asanlaşdırır; hər dəfə class-ı yaratmaq yerinə hazır sizin obyekti 
     istifadə edir.
 
-### 3. Type-hinted funksiyalar { #type-hinted-functions }
+### 4. Type-hinted funksiyalar { #type-hinted-functions }
 
 Bu hissənin kodun işləməsinə heç bir təsiri olmasa da, ən vacib hissələrdən biri hesab olunur. Nəzərə alın ki, bizim API klientlərin heç biri funksiya implement etmir; əvəzinə `__getattribute__` dunder metodu funksiyanın adından istifadə edərək, lazımı API və handler-ləri tapır. Ona görə də `function1` adlandırılması vacibdir, çünki mövcud olmayan funksiyanın adıdır.
 
@@ -209,11 +209,11 @@ NewIntegrationRequest = NewIntegrationClientClass(sync=True)
 NewIntegrationAsyncRequest = NewIntegrationClientClass(sync=False)
 `````
 
-### 4. Testlər { #tests }
+### 5. Testlər { #tests }
 
 Testsiz, əlbəttə ki, olmaz) Test üçün, `pytest` istifadə olunur. `conftest.py` faylında, əsas fixture-ləri əlavə edin. `mocks.py` faylı isə, mock response fixture-ləri üçün nəzərdə tutulub. Ondan sonra, testlər üçün fayllar yaradıb, orada testlərinizi yazın. Test coverage-dən istifadə edərək, nəzərdən qaçırdığınız hissələri də görə bilərsiniz.
 
-### 5. Dokumentasiya { #documentation }
+### 6. Dokumentasiya { #documentation }
 
 Kodun development-ini və testini bitirdikdən sonra, dokumentasiya yazmaq lazım olur. İlk mərhələdəki əməliyyatı icra etmişdinizsə, sizin üçün avtomatik markdown faylları da yaradılmışdır. `about.md` faylında inteqrasiya haqqında ümumi məlumat, orijinal dokumentasiyanın linklərini paylaşmağınız məsləhət görülür. Funksionallıqların və dəstəyini yazdığınız endpointləri də qeyd edin. Kodunuz bütün API-ləri istifadə etməyə bilər; bu halda, sadəcə bunu dokumentasiyada bilidirin.
 

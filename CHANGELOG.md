@@ -1,3 +1,13 @@
+## v2.0.0
+
+[GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.0.0)
+
+### What's Changed
+
+#### Fixes
+
+* Changed the whole structure and released a new version with better handling of requests and responses.
+
 ## v1.0.3 (2024-10-07)
 
 [GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v1.0.3)

@@ -36,6 +36,6 @@ class PayloadBaseModel(BaseModel):
         """Verilən `*args` və `**kwds` (və ya `**kwargs`) parametrlərini birləşdirərək
         Pydantic validasiyası edən funksiya. Positional arqumentlər üçün (`*args`) Pydantic
         modelindəki field-lərin ardıcıllığı və çağırılan funksiyada parametrlərinin ardıcıllığı
-        EYNİ OLMALIDIR, əks halda, bu metod yarasızdır.
+        EYNİ OLMALIDIR, əks halda, bu method yararsızdır.
         """
         return cls.model_validate({**{k: v for k, v in zip(cls.model_fields.keys(), args)}, **kwds})

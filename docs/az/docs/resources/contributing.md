@@ -25,14 +25,14 @@ Bug qeyd etdikdə, istifadə etdiyiniz əməliyyat sistemi və kitabxananın ver
 ### İnstallasiya və quraşdırılma  { #installation }
 
 ```bash
-# Clone your fork and cd into the repo directory
+# Proyekti klonlayın və həmin qovluğa keçin
 git clone git@github.com:<your username>/integrify.git
 cd integrify
 
 # Poetry yükləyin (https://python-poetry.org/docs/#installation)
 curl -sSL https://install.python-poetry.org | python3 -
 
-# Install pydantic, dependencies, test dependencies and doc dependencies
+# Bütün dependency-ləri yükləyin
 make install
 ```
 
@@ -109,7 +109,7 @@ Docstring-lərdə misal (example) göstərə bilərsiniz. Bu misal tam işlənə
 
 ### Dokumentasiya { #documentation-style }
 
-Ümumiyyətlə, dokumentasiya əlçatan üslubda yazılmalıdır. Oxunması və başa düşülməsi asan olmalı və qısa və konkret olmalıdır.
+Ümumiyyətlə, dokumentasiya əlçatan üslubda yazılmalıdır. Oxunması və başa düşülməsi asan olmalı, qısa və konkret olmalıdır.
 
 Kod nümunələri əlavə etməyiniz şiddətlə tövsiyyə olunur, lakin qısa və sadə saxlanılmalıdır. Bununla belə, hər bir kod nümunəsi tam, müstəqil və işlək olmalıdır. (Bunu necə edəcəyinizə əmin deyilsinizsə, kömək istəyin!).
 

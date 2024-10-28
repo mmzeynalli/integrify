@@ -70,10 +70,10 @@ print(resp.ok, resp.body)
 ### Async
 
 ```python
-from integrify.epoint.asyncio import EPointRequest
+from integrify.epoint import EPointAsyncRequest
 
 # Async main loop artıq başlamışdır
-resp = await EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
+resp = await EPointAsyncRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
 print(resp.ok, resp.body)
 
 ```
