@@ -48,6 +48,9 @@ repo_url: https://github.com/mmzeynalli/integrify
 
 plugins:
   - search
+  - social:
+    cards_layout_options:
+      logo: assets/integrify.png
   - panzoom:
       full_screen: True
   - mkdocstrings:
