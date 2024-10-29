@@ -66,7 +66,7 @@ secure:
 	poetry run bandit -r integrify --config pyproject.toml
 
 .PHONY: all  ## Run the standard set of checks performed in CI
-all: lint testcov
+all: format lint testcov
 
 .PHONY: clean  ## Clear local caches and build artifacts
 clean:

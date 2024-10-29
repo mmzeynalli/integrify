@@ -73,7 +73,7 @@ coverage = [
 coverage-badge = "^1.1.2"
 
 [tool.poetry.group.docs.dependencies]
-mkdocs-material = "^9.5.36"
+mkdocs-material = {extras = ["imaging"], version = "^9.5.36"} 
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 mkdocs-panzoom-plugin = "^0.1.3"
 

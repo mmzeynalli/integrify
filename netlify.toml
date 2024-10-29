@@ -2,6 +2,7 @@
 base = "docs/az"
 publish = "site"
 command = """
-pip3 install mkdocs-material mkdocstrings[python] mkdocs-panzoom-plugin &&
-mkdocs build --strict
+curl -sSL https://install.python-poetry.org | python3 - &&
+poetry install --only docs &&
+make docs
 """
