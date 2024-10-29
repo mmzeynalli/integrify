@@ -2,7 +2,8 @@
 base = "docs/az"
 publish = "site"
 command = """
-curl -sSL https://install.python-poetry.org | python3 - &&
+pip3 install -q poetry &&
+poetry config virtualenvs.in-project true &&
 poetry install --only docs &&
 make docs
 """
