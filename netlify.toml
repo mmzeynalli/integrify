@@ -2,6 +2,8 @@
 base = "docs/az"
 publish = "site"
 command = """
-pip3 install mkdocs-material mkdocstrings[python] mkdocs-panzoom-plugin &&
-mkdocs build --strict
+pip3 install -q poetry &&
+poetry config virtualenvs.in-project true &&
+poetry install --only docs &&
+poetry run mkdocs build --strict
 """

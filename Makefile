@@ -66,7 +66,7 @@ secure:
 	poetry run bandit -r integrify --config pyproject.toml
 
 .PHONY: all  ## Run the standard set of checks performed in CI
-all: lint testcov
+all: format lint testcov
 
 .PHONY: clean  ## Clear local caches and build artifacts
 clean:
@@ -74,7 +74,9 @@ ifeq ($(OS),Windows_NT)
 	del /s /q __pycache__
 	del /s /q *.pyc *.pyo
 	del /s /q *~ .*~
+	del /s /q site
 	del /s /q .cache
+	del /s /q .mypy_cache
 	del /s /q .pytest_cache
 	del /s /q .ruff_cache
 	del /s /q htmlcov
@@ -85,14 +87,17 @@ ifeq ($(OS),Windows_NT)
 	del /s /q site
 	del /s /q docs\_build
 	del /s /q coverage.xml
+	del /s /q coverage.lcov
 else
 	rm -rf `find . -name __pycache__`
 	rm -f `find . -type f -name '*.py[co]'`
 	rm -f `find . -type f -name '*~'`
 	rm -f `find . -type f -name '.*~'`
+	rm -rf `find . -name site`
 	rm -rf .cache
 	rm -rf .pytest_cache
 	rm -rf .ruff_cache
+	rm -rf .mypy_cache	
 	rm -rf htmlcov
 	rm -rf *.egg-info
 	rm -f .coverage
@@ -102,6 +107,7 @@ else
 	rm -rf site
 	rm -rf docs/_build
 	rm -rf coverage.xml
+	rm -rf coverage.lcov
 endif
 
 .PHONY: new-integration  ## Create new integration folder
