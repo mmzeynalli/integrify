@@ -5,6 +5,5 @@ command = """
 pip3 install -q poetry &&
 poetry config virtualenvs.in-project true &&
 poetry install --only docs &&
-make clean &&
-make docs
+poetry run mkdocs build -f docs/az/mkdocs.yml --strict
 """
