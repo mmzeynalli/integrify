@@ -10,7 +10,14 @@
     ```
 
 ::: integrify.epoint.client.EPointRequest
+    handler: python
+    options:
+      separate_signature: true
+
 ::: integrify.epoint.client.EPointAsyncRequest
+    handler: python
+    options:
+      separate_signature: true
 
 ???+ note
 
@@ -20,6 +27,7 @@
 ::: integrify.epoint.client.EPointClientClass
     handler: python
     options:
+      separate_signature: true
       members:
         - pay
         - get_transaction_status

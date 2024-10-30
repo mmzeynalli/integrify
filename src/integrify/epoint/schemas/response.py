@@ -1,8 +1,7 @@
 from decimal import Decimal
 from typing import Optional
-from urllib.parse import parse_qsl
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, field_validator
 
 from integrify.epoint.schemas.parts import (
     Code,
@@ -95,29 +94,3 @@ class TransactionStatusResponseSchema(BaseWithCodeSchema):
 class SplitPayWithSavedCardResponseSchema(BaseResponseSchema):
     split_amount: Optional[Decimal] = None
     """İkinci istifadəçi üçün ödəniş məbləği."""
-
-
-#########################################################################
-class CallbackDataSchema(BaseModel):
-    data: str
-    signature: str
-
-    @model_validator(mode='before')
-    @classmethod
-    def convert_str_to_dict(cls, data: bytes) -> dict:
-        return dict(parse_qsl(data.decode()))
-
-
-class DecodedCallbackDataSchema(BaseWithCodeSchema):
-    order_id: Optional[str] = None
-    """Tətbiqinizdə unikal əməliyyat ID"""
-
-    card_id: Optional[str] = None
-    """Ödənişləri yerinə yetirmək üçün istifadə edilməsi
-    lazım olan unikal kart identifikatoru"""
-
-    split_amount: Optional[Decimal] = None
-    """İkinci istifadəçi üçün ödəniş məbləği."""
-
-    other_attr: Optional[str] = None
-    """Əlavə göndərdiyiniz seçimlər"""

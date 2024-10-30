@@ -88,12 +88,13 @@ class EPointClientClass(APIClient):
                 EPointRequest.pay(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
                 ```
 
-            **Cavab formatı**: `RedirectUrlResponseSchema`
+            **Cavab formatı**: [`RedirectUrlResponseSchema`][integrify.epoint.schemas.response.RedirectUrlResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
             APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id`
-            ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
+            ilə [`DecodedCallbackDataSchema`][integrify.epoint.schemas.callback.DecodedCallbackDataSchema]
+            formatında məlumat gəlir.
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
@@ -120,12 +121,12 @@ class EPointClientClass(APIClient):
                 EPointRequest.get_transaction_status(transaction_id='texxxxxx')
                 ```
 
-            Cavab formatı: `TransactionStatusResponseSchema`
+            Cavab formatı: [`TransactionStatusResponseSchema`][integrify.epoint.schemas.response.TransactionStatusResponseSchema]
 
             Args:
                 transaction_id: EPoint tərəfindən verilmiş tranzaksiya IDsi.
                                 Adətən `te` prefiksi ilə olur.
-            """
+            """  # noqa: E501
 
         def save_card(self) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş olmadan kartı yadda saxlamaq sorğusu
@@ -139,13 +140,14 @@ class EPointClientClass(APIClient):
                 EPointRequest.save_card()
                 ```
 
-            Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
+            Cavab formatı: [`RedirectUrlWithCardIdResponseSchema`][integrify.epoint.schemas.response.RedirectUrlWithCardIdResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir.
             Müştəri həmin URLə daxil olub, kart məlumatlarını uğurlu qeyd etdikdən sonra,
             backend callback APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur,
-            və eyni `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
-            """
+            və eyni `card_id` ilə [`DecodedCallbackDataSchema`][integrify.epoint.schemas.callback.DecodedCallbackDataSchema]
+            formatında məlumat gəlir.
+            """  # noqa: E501
 
         def pay_with_saved_card(
             self,
@@ -165,7 +167,7 @@ class EPointClientClass(APIClient):
                 EPointRequest.pay_with_saved_card(amount=100, currency='AZN', order_id='12345678', card_id='cexxxxxx')
                 ```
 
-            Cavab formatı: `BaseResponseSchema`
+            Cavab formatı: [`BaseResponseSchema`][integrify.epoint.schemas.response.BaseResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
             cavab gəlir, və ödənişin statusu birbaşa qayıdır: heç bir callback sorğusu gəlmir.
@@ -195,12 +197,13 @@ class EPointClientClass(APIClient):
                 EPointRequest.pay_and_save_card(amount=100, currency='AZN', order_id='12345678', description='Ödəniş')
                 ```
 
-            Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
+            Cavab formatı:  [`RedirectUrlWithCardIdResponseSchema`][integrify.epoint.schemas.response.RedirectUrlWithCardIdResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` və `card_id` gəlir. Müştəri həmin URLə
             daxil olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
             APIsinə (EPoint dashboard-ında qeyd etdiyiniz) sorğu daxil olur, və eyni `order_id` və
-            `card_id` ilə `DecodedCallbackDataSchema` formatında məlumat gəlir.
+            `card_id` ilə [`DecodedCallbackDataSchema`][integrify.epoint.schemas.callback.DecodedCallbackDataSchema]
+            formatında məlumat gəlir.
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
@@ -228,7 +231,7 @@ class EPointClientClass(APIClient):
                 EPointRequest.payout(amount=100, currency='AZN', order_id='12345678', card_id='cexxxxxx', description='Ödəniş')
                 ```
 
-            Cavab sorğu formatı: `BaseResponseSchema`
+            Cavab sorğu formatı: [`BaseResponseSchema`][integrify.epoint.schemas.response.BaseResponseSchema]
 
             Bu sorğunu göndərdikdə, əməliyyat Epoint xidməti tərəfindən işləndikdən və bankdan ödəniş
             statusu alındıqdan sonra cavab `BaseResponseSchema` formatında qayıdacaqdır
@@ -262,7 +265,7 @@ class EPointClientClass(APIClient):
                 EPointRequest.refund(transaction_id='texxxxxx', currency='AZN', amount=50)
                 ```
 
-            Cavab formatı: `MinimalResponseSchema`
+            Cavab formatı: [`MinimalResponseSchema`][integrify.epoint.schemas.response.MinimalResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq `status` və `message` gəlir.
             Heç bir callback sorğusu göndərilmir.
@@ -273,7 +276,7 @@ class EPointClientClass(APIClient):
                 currency: Ödəniş məzənnəsi. Mümkün dəyərlər: AZN
                 amount: Ödəniş məbləği. Məbləğin göndərilməsi yarımçıq geri-qaytarma hesab olunur,
                         əks halda tam geri-qaytarma baş verəcəkdir.
-            """
+            """  # noqa: E501
 
         def split_pay(
             self,
@@ -296,7 +299,7 @@ class EPointClientClass(APIClient):
                 EPointRequest.split_pay(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
                 ```
 
-            Cavab formatı: `RedirectUrlResponseSchema`
+            Cavab formatı: [`RedirectUrlResponseSchema`][integrify.epoint.schemas.response.RedirectUrlResponseSchema]
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
@@ -330,7 +333,7 @@ class EPointClientClass(APIClient):
                 EPointRequest.split_pay_with_saved_card(amount=100, currency='AZN', order_id='123456789', card_id='cexxxxxx', split_user_id='epoint_user_id', split_amount=50, description='split payment')
                 ```
 
-            Cavab formatı: `SplitPayWithSavedCardResponseSchema`
+            Cavab formatı: [`SplitPayWithSavedCardResponseSchema`][integrify.epoint.schemas.response.SplitPayWithSavedCardResponseSchema]
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
@@ -362,7 +365,7 @@ class EPointClientClass(APIClient):
                 EPointRequest.split_pay_and_save_card(amount=100, currency='AZN', order_id='123456789', split_user_id='epoint_user_id', split_amount=50, description='split payment')
                 ```
 
-            Cavab formatı: `RedirectUrlWithCardIdResponseSchema`
+            Cavab formatı: [`RedirectUrlWithCardIdResponseSchema`][integrify.epoint.schemas.response.RedirectUrlWithCardIdResponseSchema]
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
