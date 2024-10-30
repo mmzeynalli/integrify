@@ -5,8 +5,8 @@
     <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.</em>
 </p>
 <p align="center">
-<a href="https://github.com/mmzeynalli/integrify/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
-    <img src="https://github.com/mmzeynalli/integrify/workflows/Test/badge.svg?event=push&branch=master" alt="Test">
+<a href="https://github.com/mmzeynalli/integrify/actions/workflows/test.yml" target="_blank">
+    <img src="https://github.com/mmzeynalli/integrify/actions/workflows/test.yml/badge.svg?branch=main" alt="Test">
 </a>
 <a href="https://pypi.org/project/integrify" target="_blank">
   <img src="https://img.shields.io/pypi/v/integrify?color=%2334D058&label=pypi%20package" alt="Package version">
