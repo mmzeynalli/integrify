@@ -71,6 +71,7 @@ coverage = [
     { version = "7.6.1", python = "3.8" }
 ]
 coverage-badge = "^1.1.2"
+smokeshow = "^0.4.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = {extras = ["imaging"], version = "^9.5.36"} 
