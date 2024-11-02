@@ -124,6 +124,11 @@ exclude_also = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+fail_under = 95
+
+[tool.coverage.run]
+source = ["src/"]
+
 
 [tool.bandit]
 skips = []
