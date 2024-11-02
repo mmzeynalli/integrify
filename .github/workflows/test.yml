@@ -92,10 +92,11 @@ jobs:
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
+      - run: mkdir coverage
       - name: Run tests
         run: |
           source $VENV
-          pytest -s
+          make testcov
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
