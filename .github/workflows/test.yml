@@ -147,6 +147,12 @@ jobs:
       - name: Install project
         run: poetry install --no-interaction --only main,gh
       #----------------------------------------------
+      - name: Get coverage files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          path: coverage
+          merge-multiple: true
       - run: ls -la coverage
       - run: coverage combine coverage
       - run: coverage report
