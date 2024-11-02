@@ -63,7 +63,7 @@ make format
 # https://github.com/astral-sh/ruff
 
 make
-# Bu kommand öz içində bir neçə başqa kommandı icra edir (`test`, `testcov` and `lint`)
+# Bu kommand öz içində bir neçə başqa kommandı icra edir (`test` və `lint`)
 ```
 
 ### Yeni dokumentasiyanı generasiya edin

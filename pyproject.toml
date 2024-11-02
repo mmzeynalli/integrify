@@ -125,7 +125,6 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
 ]
 fail_under = 95
-source = ["src/"]
 
 [tool.coverage.run]
 source = ["src/"]
