@@ -81,6 +81,9 @@ coverage = [
 mkdocs-material = {extras = ["imaging"], version = "^9.5.36"} 
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 mkdocs-panzoom-plugin = "^0.1.3"
+griffe-pydantic =  [
+    { version = "^1.0.0", python = ">=3.9" },
+]
 
 [tool.ruff]
 target-version = "py38"
@@ -120,6 +123,20 @@ exclude_also = [
     "if TYPE_CHECKING:",
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
+]
+fail_under = 95
+
+[tool.coverage.run]
+source = ['src']
+branch = true
+relative_files = true
+context = '${CONTEXT}'
+
+[tool.coverage.paths]
+source = [
+    'src/',
+    '/Users/runner/work/interify/interify/src/',
+    'D:\a\integrify\integrify\src',
 ]
 
 [tool.bandit]

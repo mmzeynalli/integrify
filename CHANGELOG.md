@@ -1,4 +1,4 @@
-## v2.0.1
+## v2.0.1 (2024-10-28)
 
 [GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.0.0)
 
@@ -20,7 +20,7 @@
 
 * Replaced `StrEnum` with `str, Enum` to be python <3.11 friendly.
 
-## v1.0.1 (2024-09-08)
+## v1.0.1 (2024-09-28)
 
 ### What's Changed
 

@@ -4,6 +4,6 @@ publish = "site"
 command = """
 pip3 install -q poetry &&
 poetry config virtualenvs.in-project true &&
-poetry install --only docs &&
+poetry install --only main,docs &&
 poetry run mkdocs build --strict
 """

@@ -92,10 +92,11 @@ jobs:
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
+      - run: mkdir coverage
       - name: Run tests
         run: |
           source $VENV
-          pytest -s
+          make test
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
@@ -108,6 +109,9 @@ jobs:
   coverage-combine:
     needs: [test]
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Dump GitHub context
         env:
@@ -133,23 +137,22 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: cov-comb-venv-${{ hashFiles('pyproject.toml') }}
+          key: venv-Linux-3.9-${{ hashFiles('pyproject.toml') }}
       #----------------------------------------------
-      # install dependencies if cache does not exist
-      #----------------------------------------------
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --only main,gh
-      #----------------------------------------------
-      # install your root project, if required
-      #----------------------------------------------
-      - name: Install project
-        run: poetry install --no-interaction --only main,gh
-      #----------------------------------------------
+      - name: Get coverage files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          path: coverage
+          merge-multiple: true
       - run: ls -la coverage
-      - run: coverage combine coverage
-      - run: coverage report
-      - run: coverage html --title "Coverage for ${{ github.sha }}"
+      - run: pwd
+      - run: ls -la src/integrify
+      - run: export PYTHONPATH=./src
+      - run: rm -rf .pytest_cache
+      - run: poetry run coverage combine coverage
+      - run: poetry run coverage report
+      - run: poetry run coverage html --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
         uses: actions/upload-artifact@v4
         with:
