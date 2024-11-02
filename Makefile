@@ -40,17 +40,6 @@ type-check: .poetry
 test: .poetry
 	poetry run coverage run -m pytest --durations=10
 
-.PHONY: testcov  ## Run tests and generate a coverage report
-testcov: test
-	@echo "building coverage html"
-	@poetry run coverage html
-	@echo "building coverage lcov"
-	@poetry run coverage lcov
-
-.PHONY: testcov-badge ## Generate badge after tests
-testcov-badge:
-	@poetry run coverage-badge -o coverage.svg
-
 lang=az
 
 .PHONY: docs  ## Generate the docs
@@ -66,7 +55,7 @@ secure:
 	poetry run bandit -r integrify --config pyproject.toml
 
 .PHONY: all  ## Run the standard set of checks performed in CI
-all: format lint testcov
+all: format lint test
 
 .PHONY: clean  ## Clear local caches and build artifacts
 clean:

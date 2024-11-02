@@ -124,6 +124,20 @@ exclude_also = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+fail_under = 95
+
+[tool.coverage.run]
+source = ['src']
+branch = true
+relative_files = true
+context = '${CONTEXT}'
+
+[tool.coverage.paths]
+source = [
+    'src/',
+    '/Users/runner/work/interify/interify/src/',
+    'D:\a\integrify\integrify\src',
+]
 
 [tool.bandit]
 skips = []
