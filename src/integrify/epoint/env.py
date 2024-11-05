@@ -14,7 +14,7 @@ EPOINT_FAILED_REDIRECT_URL: Optional[str] = os.getenv('EPOINT_FAILED_REDIRECT_UR
 EPOINT_LOGGER_NAME: str = os.getenv('EPOINT_LOGGER_NAME', 'epoint')
 
 
-if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
+if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:  # pragma: no cover
     warn(
         'EPOINT_PUBLIC_KEY/EPOINT_PRIVATE_KEY mühit dəyişənlərinə dəyər verməsəniz '
         'sorğular çalışmayacaq!'
@@ -22,6 +22,10 @@ if not EPOINT_PUBLIC_KEY or not EPOINT_PRIVATE_KEY:
 
 
 class API(str, Enum):
+    """Endpoint constant-ları"""
+
+    BASE_URL: Literal['https://epoint.az'] = 'https://epoint.az'
+
     PAY: Literal['/api/1/request'] = '/api/1/request'
     GET_STATUS: Literal['/api/1/get-status'] = '/api/1/get-status'
     SAVE_CARD: Literal['/api/1/card-registration'] = '/api/1/card-registration'

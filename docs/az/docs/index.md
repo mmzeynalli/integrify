@@ -100,7 +100,6 @@ class ApiResponse:
     """Cavab sorğusunun body-si"""
 ```
 
-
 ## Dəstəklənən API inteqrasiyaları  { #supported-integrations }
 
 | Servis      |                                                 Əsas sorğular                                                 |                                                Bütün sorğular                                                 | Dokumentləşdirilmə                                                                                            | Link                                                                                                          | Əsas developer                                    |

@@ -15,14 +15,16 @@ class APIClient:
     def __init__(
         self,
         name: str,
-        base_url: str,
+        base_url: Optional[str] = None,
         default_handler: Optional['APIPayloadHandler'] = None,
         sync: bool = True,
     ):
         """
         Args:
             name: Klient adı. Logging üçün istifadə olunur.
-            base_url: API-lərin əsas (kök) url-i
+            base_url: API-lərin əsas (kök) url-i. Əgər bir neçə base_url varsa, bu field-i
+                boş saxlayıb, hər endpoint-ə uyğun base_url-i `add_url` funksiyasında
+                verin. (bax. Azericard)
             default_handler: default API handler. Bu handler əgər hər hansı bir API-yə
                 handler register olunmadıqda istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
@@ -39,7 +41,7 @@ class APIClient:
         self.handlers: dict[str, APIPayloadHandler] = {}
         """API sorğularının payload (request və response) handler-lərının mapping-i"""
 
-    def add_url(self, route_name: str, url: str, verb: str):
+    def add_url(self, route_name: str, url: str, verb: str, base_url: Optional[str] = None):
         """Yeni endpoint əlavə etmə funksiyası
 
         Args:
@@ -48,6 +50,11 @@ class APIClient:
             verb: Endpoint metodunun (`POST`, `GET`, və s.)
         """
         self.urls[route_name] = {'url': url, 'verb': verb}
+
+        # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə, endpointləri
+        # `base_url` ilə əlavə etmək lazımdır.
+        if base_url:
+            self.urls[route_name]['base_url'] = base_url
 
     def set_default_handler(self, handler_class: Type['APIPayloadHandler']):
         """Sorğulara default handler setter-i
@@ -82,7 +89,8 @@ class APIClient:
 
         # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
         # taparaq, sorğunu icra edirik.
-        url = urljoin(self.base_url, self.urls[name]['url'])
+        base_url = self.base_url or self.urls[name]['base_url']
+        url = urljoin(base_url, self.urls[name]['url'])
         verb = self.urls[name]['verb']
         handler = self.handlers.get(name, self.default_handler)
 
