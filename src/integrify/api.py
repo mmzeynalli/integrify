@@ -24,7 +24,7 @@ class APIClient:
             name: Klient adı. Logging üçün istifadə olunur.
             base_url: API-lərin əsas (kök) url-i. Əgər bir neçə base_url varsa, bu field-i
                 boş saxlayıb, hər endpoint-ə uyğun base_url-i `add_url` funksiyasında
-                verin. (bax. Azericard)
+                verin. (bax: AzeriCard)
             default_handler: default API handler. Bu handler əgər hər hansı bir API-yə
                 handler register olunmadıqda istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.

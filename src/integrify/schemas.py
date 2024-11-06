@@ -1,8 +1,14 @@
+from enum import Enum
 from typing import Generic, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
 ResponseType = TypeVar('ResponseType', bound=BaseModel)
+
+
+class Environment(str, Enum):
+    TEST = 'test'
+    PROD = 'prod'
 
 
 class APIResponse(BaseModel, Generic[ResponseType]):
