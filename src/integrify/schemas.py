@@ -1,8 +1,14 @@
-from typing import Generic, TypeVar, Union
+from enum import Enum
+from typing import ClassVar, Generic, Set, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
 ResponseType = TypeVar('ResponseType', bound=BaseModel)
+
+
+class Environment(str, Enum):
+    TEST = 'test'
+    PROD = 'prod'
 
 
 class APIResponse(BaseModel, Generic[ResponseType]):
@@ -31,6 +37,8 @@ class APIResponse(BaseModel, Generic[ResponseType]):
 
 
 class PayloadBaseModel(BaseModel):
+    URL_PARAM_FIELDS: ClassVar[Set[str]] = set()
+
     @classmethod
     def from_args(cls, *args, **kwds):
         """Verilən `*args` və `**kwds` (və ya `**kwargs`) parametrlərini birləşdirərək

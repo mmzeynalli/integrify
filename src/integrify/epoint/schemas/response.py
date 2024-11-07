@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, field_validator
 
-from integrify.epoint.schemas.parts import (
+from integrify.epoint.schemas.enums import (
     Code,
     TransactionStatus,
     TransactionStatusExtended,

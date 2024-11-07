@@ -1,6 +1,6 @@
 from httpx import Response
 from integrify.epoint.client import EPointClientClass
-from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
+from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 from pytest_mock import MockerFixture
 
 from tests.epoint.mocks import MESSAGE_TRANSACTION_FAIL
