@@ -1,4 +1,4 @@
-from typing import ClassVar, Generic, TypeVar, Union
+from typing import ClassVar, Generic, Set, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -31,7 +31,7 @@ class APIResponse(BaseModel, Generic[ResponseType]):
 
 
 class PayloadBaseModel(BaseModel):
-    URL_PARAM_FIELDS: ClassVar[set[str]] = set()
+    URL_PARAM_FIELDS: ClassVar[Set[str]] = set()
 
     @classmethod
     def from_args(cls, *args, **kwds):
