@@ -7,4 +7,4 @@ EN: https://brawny-airport-7ca.notion.site/Kapital-bank-E-commerce-API-Documenta
 from .client import KapitalAsyncRequest, KapitalClientClass, KapitalRequest
 from .env import VERSION
 
-__all__ = ["KapitalAsyncRequest", "KapitalClientClass", "KapitalRequest", "VERSION"]
+__all__ = ['KapitalAsyncRequest', 'KapitalClientClass', 'KapitalRequest', 'VERSION']
