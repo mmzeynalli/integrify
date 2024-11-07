@@ -277,8 +277,8 @@ class APIExecutor:
 
         response = await self.client.request(verb, url, data=data, headers=headers)
 
-        if not response.is_success:
-            self.logger.error(  # pragma: no cover
+        if not response.is_success:  # pragma: no cover
+            self.logger.error(
                 f'{self.client_name} request to {url} failed. '
                 f'Status code was {response.status_code}. '
                 f'Content => {response.content.decode()}'

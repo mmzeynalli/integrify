@@ -71,8 +71,12 @@ def test_missing_request_handler_input(
         api_client.add_url('test', 'url', 'GET')
         api_client.add_handler('test', Handler)
 
-        with pytest.raises(NotImplementedError):
-            api_client.test(data1='data1')
+        # Should not give exception
+        api_client.test(data1='data1')
+
+        # Should give an exception
+        with pytest.raises(AssertionError):
+            api_client.test('data1')
 
 
 def test_missing_response_handler_input(
