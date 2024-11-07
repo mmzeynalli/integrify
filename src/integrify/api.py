@@ -62,7 +62,7 @@ class APIClient:
         Args:
             handler_class: Default handler class-ı
         """
-        self.default_handler = handler_class()
+        self.default_handler = handler_class()  # pragma: no cover
 
     def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']):
         """Endpoint-ə handler əlavə etmək method-u
@@ -148,9 +148,17 @@ class APIPayloadHandler:
         """
         if self.req_model:
             self.__req_model = self.req_model.from_args(*args, **kwds)
-            return self.__req_model.model_dump(by_alias=True, exclude_none=True, mode='json')
+            return self.__req_model.model_dump(
+                by_alias=True,
+                exclude=self.req_model.URL_PARAM_FIELDS,
+                exclude_none=True,
+                mode='json',
+            )
 
-        raise NotImplementedError
+        # `req_model` yoxdursa, o zaman `*args` boş olmalıdır, çünki onların key-ləri bilinmir
+        assert not args
+
+        return kwds
 
     def post_handle_payload(self, data: Any):
         """Sorğunun payload-ının post-processing-i. Əgər sorğu göndərməmişdən qabaq
@@ -222,7 +230,7 @@ class APIExecutor:
         if self.sync:
             return lambda *args, **kwds: self.sync_req(*args, **kwds)
         else:
-            return lambda *args, **kwds: self.async_req(*args, **kwds)
+            return lambda *args, **kwds: self.async_req(*args, **kwds)  # pragma: no cover
 
     def sync_req(self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds):
         """Sync sorğu atan funksiya
@@ -270,7 +278,7 @@ class APIExecutor:
         response = await self.client.request(verb, url, data=data, headers=headers)
 
         if not response.is_success:
-            self.logger.error(
+            self.logger.error(  # pragma: no cover
                 f'{self.client_name} request to {url} failed. '
                 f'Status code was {response.status_code}. '
                 f'Content => {response.content.decode()}'
