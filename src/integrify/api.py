@@ -104,7 +104,21 @@ class APIPayloadHandler:
             resp_model: Sorğunun cavabının payload model-i
         """
         self.req_model = req_model
+        self.__req_model: Optional[PayloadBaseModel] = None  # initialized pydantic model
         self.resp_model = resp_model
+
+    def set_urlparams(self, url: str):
+        if not (self.req_model and self.__req_model):
+            return url
+
+        return url.format(
+            **self.__req_model.model_dump(
+                by_alias=True,
+                include=self.req_model.URL_PARAM_FIELDS,
+                exclude_none=True,
+                mode='json',
+            )
+        )
 
     @property
     def headers(self):
@@ -125,10 +139,8 @@ class APIPayloadHandler:
         `self.req_model` qeyd edilməyibsə, bu funksiya override olunmalıdır (!).
         """
         if self.req_model:
-            return self.req_model.from_args(*args, **kwds).model_dump(
-                exclude_none=True,
-                mode='json',  # TODO: Maybe serialize Decimal in different way
-            )
+            self.__req_model = self.req_model.from_args(*args, **kwds)
+            return self.__req_model.model_dump(by_alias=True, exclude_none=True, mode='json')
 
         raise NotImplementedError
 
@@ -216,8 +228,9 @@ class APIExecutor:
 
         data = handler.handle_request(*args, **kwds) if handler else None
         headers = handler.headers if handler else None
+        full_url = handler.set_urlparams(url) if handler else url
 
-        response = self.client.request(verb, url, data=data, headers=headers)
+        response = self.client.request(verb, full_url, data=data, headers=headers)
 
         if not response.is_success:
             self.logger.error(

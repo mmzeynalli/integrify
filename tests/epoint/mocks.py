@@ -1,6 +1,6 @@
 import pytest
 from httpx import Response
-from integrify.epoint.schemas.parts import TransactionStatus, TransactionStatusExtended
+from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 from pytest_mock import MockerFixture
 
 MESSAGE_SUCCESS = 'Təsdiq edildi'
