@@ -48,7 +48,8 @@ class KapitalClientClass(APIClient):
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
-            APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir.
+            APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. ID-dən istifadə edərək
+            ödənişin detallarını əldə edə bilərsiniz.
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
