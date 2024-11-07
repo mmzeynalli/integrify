@@ -33,9 +33,7 @@ class CreateOrderPayloadHandler(BasePayloadHandler):
             exclude_none=True, by_alias=True, mode='json'
         )
 
-    def handle_request(self, *args, **kwds):
-        pre_data = self.pre_handle_payload(*args, **kwds) or {}
-        data = {**pre_data, **self.handle_payload(*args, **kwds)}
+    def post_handle_payload(self, data):
         return json.dumps(data)
 
     def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
