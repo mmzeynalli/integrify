@@ -9,13 +9,14 @@ from integrify.kapital.env import (
     KAPITAL_USERNAME,
 )
 from integrify.kapital.schemas.request import (
-    CreateOrderDetails,
     CreateOrderRequestSchema,
+    RefundOrderRequestSchema,
 )
 from integrify.kapital.schemas.response import (
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
     OrderInformationResponseSchema,
+    RefundOrderResponseSchema,
 )
 
 
@@ -32,10 +33,8 @@ class BasePayloadHandler(APIPayloadHandler):
 
 class CreateOrderPayloadHandler(BasePayloadHandler):
     def handle_payload(self, *args, **kwds):
-        order_details = CreateOrderDetails.from_args(*args, **kwds)
-        return CreateOrderRequestSchema(order=order_details).model_dump(
-            exclude_none=True, by_alias=True, mode='json'
-        )
+        order = CreateOrderRequestSchema.from_args(*args, **kwds)
+        return {'order': order.model_dump(exclude_none=True, mode='json')}
 
     def post_handle_payload(self, data):
         return json.dumps(data)
@@ -91,6 +90,34 @@ class DetailedOrderInformationPayloadHandler(OrderInformationPayloadHandler):
             api_resp.ok = True
             api_resp.body = DetailedOrderInformationResponseSchema.model_validate(
                 resp.json().get('order', {}), from_attributes=True
+            )
+        else:
+            api_resp.ok = False
+
+        return api_resp  # type: ignore[return-value]
+
+
+class RefundOrderPayloadHandler(BasePayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        self.order_id = kwds.get('order_id') or args[0]
+        amount = kwds.get('amount') or args[1]
+
+        order = RefundOrderRequestSchema(amount=amount)
+        return {'tran': order.model_dump(exclude_none=True, mode='json')}
+
+    def post_handle_payload(self, data):
+        return json.dumps(data)
+
+    def set_urlparams(self, url: str):
+        return url.format(order_id=self.order_id)
+
+    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        api_resp: APIResponse[RefundOrderResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
+
+        if resp.status_code == 200:
+            api_resp.ok = True
+            api_resp.body = RefundOrderResponseSchema.model_validate(
+                resp.json().get('tran', {}), from_attributes=True
             )
         else:
             api_resp.ok = False

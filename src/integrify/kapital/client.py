@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, Any, Optional
-from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, APIResponse
 from integrify.kapital import env
@@ -7,11 +6,13 @@ from integrify.kapital.handlers import (
     CreateOrderPayloadHandler,
     DetailedOrderInformationPayloadHandler,
     OrderInformationPayloadHandler,
+    RefundOrderPayloadHandler,
 )
 from integrify.kapital.schemas.response import (
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
     OrderInformationResponseSchema,
+    RefundOrderResponseSchema,
 )
 
 __all__ = ['KapitalClientClass']
@@ -30,11 +31,14 @@ class KapitalClientClass(APIClient):
         self.add_url('detailed_order_information', env.API.DETAILED_ORDER_INFORMATION, verb='GET')
         self.add_handler('detailed_order_information', DetailedOrderInformationPayloadHandler)
 
+        self.add_url('refund_order', env.API.REFUND_ORDER, verb='POST')
+        self.add_handler('refund_order', RefundOrderPayloadHandler)
+
     if TYPE_CHECKING:
 
         def create_order(
             self,
-            amount: Numeric,
+            amount: str,
             currency: str,
             description: Optional[str] = None,
             **extra: Any,
@@ -107,6 +111,35 @@ class KapitalClientClass(APIClient):
 
             Args:
                 order_id: Ödənişin ID-si.
+            """  # noqa: E501
+
+        def refund_order(
+            self,
+            order_id: str,
+            amount: str,
+            **extra: Any,
+        ) -> APIResponse[RefundOrderResponseSchema]:
+            """Geri ödəniş sorğusu
+
+            **Kapital** /api/order/{order_id}/exec-tran
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.refund_order(
+                order_id="123456",
+                amount=10.0,
+            )
+            ```
+
+            **Cavab formatı: [`RefundOrderResponseSchema`](integrify.kapital.schemas.response.RefundOrderResponseSchema)**
+
+            Bu sorğunu göndərdikdə, cavab olaraq geri ödənişin detallarını əldə edə bilərsiniz.
+
+            Args:
+                order_id: Ödənişin ID-si.
+                amount: Geri ödəniş miqdarı. Numerik dəyər.
             """  # noqa: E501
 
 

@@ -156,3 +156,17 @@ class DetailedOrderInformationResponseSchema(BaseModel):
     hppCofCapturePurposes: List[str]
     custAttrs: List[str]
     reportPubs: dict
+
+
+# RefundOrderPayloadHandler
+
+
+class Match(BaseModel):
+    tranActionId: str
+    ridByPmo: str
+
+
+class RefundOrderResponseSchema(BaseModel):
+    approvalCode: str
+    match: Match
+    pmoResultCode: str
