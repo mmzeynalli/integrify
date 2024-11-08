@@ -1,6 +1,6 @@
 import pytest
-from integrify.api import APIClient
 
+from integrify.api import APIClient
 from tests.mocks import *  # noqa: F403
 
 

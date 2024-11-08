@@ -1,7 +1,8 @@
 import pytest
 from httpx import Response
-from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 from pytest_mock import MockerFixture
+
+from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 
 MESSAGE_SUCCESS = 'Təsdiq edildi'
 MESSAGE_SERVER_ERROR = 'Signature did not match'

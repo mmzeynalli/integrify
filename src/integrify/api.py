@@ -51,8 +51,8 @@ class APIClient:
         """
         self.urls[route_name] = {'url': url, 'verb': verb}
 
-        # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə, endpointləri
-        # `base_url` ilə əlavə etmək lazımdır.
+        # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə,
+        # endpointləri, `base_url` ilə əlavə etmək lazımdır.
         if base_url:
             self.urls[route_name]['base_url'] = base_url
 
@@ -261,7 +261,12 @@ class APIExecutor:
         return response
 
     async def async_req(  # pragma: no cover
-        self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds
+        self,
+        url: str,
+        verb: str,
+        handler: Optional['APIPayloadHandler'],
+        *args,
+        **kwds,
     ):
         """Async sorğu atan funksiya
 
@@ -277,7 +282,7 @@ class APIExecutor:
 
         response = await self.client.request(verb, url, data=data, headers=headers)
 
-        if not response.is_success:  # pragma: no cover
+        if not response.is_success:
             self.logger.error(
                 f'{self.client_name} request to {url} failed. '
                 f'Status code was {response.status_code}. '
