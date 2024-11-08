@@ -23,6 +23,11 @@ if not KAPITAL_BASE_URL or not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
 class API(str, Enum):
     CREATE_ORDER: Literal['/api/order'] = '/api/order'
     ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
+    DETAILED_ORDER_INFORMATION: Literal[
+        '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'
+    ] = (  # noqa E501
+        '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
+    )
 
 
 __all__ = [

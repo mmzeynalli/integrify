@@ -14,6 +14,7 @@ from integrify.kapital.schemas.request import (
 )
 from integrify.kapital.schemas.response import (
     CreateOrderResponseSchema,
+    DetailedOrderInformationResponseSchema,
     OrderInformationResponseSchema,
 )
 
@@ -72,6 +73,23 @@ class OrderInformationPayloadHandler(BasePayloadHandler):
         if resp.status_code == 200:
             api_resp.ok = True
             api_resp.body = OrderInformationResponseSchema.model_validate(
+                resp.json().get('order', {}), from_attributes=True
+            )
+        else:
+            api_resp.ok = False
+
+        return api_resp  # type: ignore[return-value]
+
+
+class DetailedOrderInformationPayloadHandler(OrderInformationPayloadHandler):
+    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        api_resp: APIResponse[DetailedOrderInformationResponseSchema] = super(
+            BasePayloadHandler, self
+        ).handle_response(resp)  # type: ignore[assignment]
+
+        if resp.status_code == 200:
+            api_resp.ok = True
+            api_resp.body = DetailedOrderInformationResponseSchema.model_validate(
                 resp.json().get('order', {}), from_attributes=True
             )
         else:
