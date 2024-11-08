@@ -19,17 +19,11 @@ class KapitalClientClass(APIClient):
     def __init__(self, sync: bool = True):
         super().__init__('Kapital', env.KAPITAL_BASE_URL, None, sync)
 
-        self.add_url('create_order', env.API.CREATE_ORDER)
+        self.add_url('create_order', env.API.CREATE_ORDER, verb='POST')
         self.add_handler('create_order', CreateOrderPayloadHandler)
 
-        self.add_url('order_information', env.API.ORDER_INFORMATION)
+        self.add_url('order_information', env.API.ORDER_INFORMATION, verb='GET')
         self.add_handler('order_information', OrderInformationPayloadHandler)
-
-    def add_url(self, route_name, url):
-        if route_name == 'order_information':
-            return super().add_url(route_name, url, 'GET')
-
-        return super().add_url(route_name, url, 'POST')
 
     if TYPE_CHECKING:
 
