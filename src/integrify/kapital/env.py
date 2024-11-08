@@ -27,6 +27,14 @@ class API(str, Enum):
         '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     ] = '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     REFUND_ORDER: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
+    SAVE_CARD: Literal['/api/order'] = '/api/order'
+    CREATE_ORDER_AND_SAVE_CARD: Literal['/api/order'] = '/api/order'
+    FULL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
+        '/api/order/{order_id}/exec-tran'
+    )
+    PARTIAL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
+        '/api/order/{order_id}/exec-tran'
+    )
 
 
 __all__ = [

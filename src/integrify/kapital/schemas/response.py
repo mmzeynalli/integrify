@@ -31,6 +31,12 @@ class OrderInformationResponseSchema(BaseModel):
 # DetailedOrderInformationPayloadHandler
 
 
+class StoredToken(BaseModel):
+    id: int
+    cofProviderRid: Optional[str] = None
+    ridBycofp: Optional[str] = None
+
+
 class CardAuthentication(BaseModel):
     needCvv2: bool
     needTds: bool
@@ -108,7 +114,7 @@ class DetailedOrderType(BaseModel):
     title: str
     rid: str
     paymentMethods: List[str]
-    cardBrands: List[str]
+    cardBrands: Optional[List[str]] = None
     allowTdsAttempt: bool
     allowTdsCant: bool
     allowTdsChallenged: bool
@@ -137,6 +143,7 @@ class DetailedOrderInformationResponseSchema(BaseModel):
     srcCurrency: str
     dstAmount: Optional[float] = None
     dstCurrency: Optional[str] = None
+    storedTokens: Optional[List[StoredToken]] = None
     createTime: datetime
     finishTime: Optional[datetime] = None
     cvv2AuthStatus: str
@@ -170,3 +177,11 @@ class RefundOrderResponseSchema(BaseModel):
     approvalCode: str
     match: Match
     pmoResultCode: str
+
+
+class FullReverseOrderResponseSchema(RefundOrderResponseSchema):
+    approvalCode: str = Field(exclude=True)
+
+
+class PartialReverseOrderResponseSchema(FullReverseOrderResponseSchema):
+    pass

@@ -9,12 +9,17 @@ from integrify.kapital.env import (
     KAPITAL_USERNAME,
 )
 from integrify.kapital.schemas.request import (
+    CreateOrderAndSaveCardRequestSchema,
     CreateOrderRequestSchema,
+    FullReverseOrderRequestSchema,
+    PartialReverseOrderRequestSchema,
     RefundOrderRequestSchema,
+    SaveCardRequestSchema,
 )
 from integrify.kapital.schemas.response import (
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
+    FullReverseOrderResponseSchema,
     OrderInformationResponseSchema,
     RefundOrderResponseSchema,
 )
@@ -123,3 +128,48 @@ class RefundOrderPayloadHandler(BasePayloadHandler):
             api_resp.ok = False
 
         return api_resp  # type: ignore[return-value]
+
+
+class SaveCardPayloadHandler(CreateOrderPayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        order = SaveCardRequestSchema.from_args(*args, **kwds)
+        return {'order': order.model_dump(exclude_none=True, mode='json')}
+
+
+class CreateOrderAndSaveCardPayloadHandler(CreateOrderPayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        order = CreateOrderAndSaveCardRequestSchema.from_args(*args, **kwds)
+        return {'order': order.model_dump(exclude_none=True, mode='json')}
+
+
+class FullReverseOrderPayloadHandler(RefundOrderPayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        self.order_id = kwds.get('order_id') or args[0]
+        return {'tran': FullReverseOrderRequestSchema().model_dump(exclude_none=True, mode='json')}
+
+    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        api_resp: APIResponse[FullReverseOrderResponseSchema] = super(
+            BasePayloadHandler, self
+        ).handle_response(resp)  # type: ignore[assignment]
+
+        if resp.status_code == 200:
+            api_resp.ok = True
+            api_resp.body = FullReverseOrderResponseSchema.model_validate(
+                resp.json().get('tran', {}), from_attributes=True
+            )
+        else:
+            api_resp.ok = False
+
+        return api_resp  # type: ignore[return-value]
+
+
+class PartialReverseOrderPayloadHandler(FullReverseOrderPayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        self.order_id = kwds.get('order_id') or args[0]
+        amount = kwds.get('amount') or args[1]
+
+        return {
+            'tran': PartialReverseOrderRequestSchema(amount=amount).model_dump(
+                exclude_none=True, mode='json'
+            )
+        }

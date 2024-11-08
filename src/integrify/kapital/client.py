@@ -4,15 +4,21 @@ from typing import SupportsFloat as Numeric
 from integrify.api import APIClient, APIResponse
 from integrify.kapital import env
 from integrify.kapital.handlers import (
+    CreateOrderAndSaveCardPayloadHandler,
     CreateOrderPayloadHandler,
     DetailedOrderInformationPayloadHandler,
+    FullReverseOrderPayloadHandler,
     OrderInformationPayloadHandler,
+    PartialReverseOrderPayloadHandler,
     RefundOrderPayloadHandler,
+    SaveCardPayloadHandler,
 )
 from integrify.kapital.schemas.response import (
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
+    FullReverseOrderResponseSchema,
     OrderInformationResponseSchema,
+    PartialReverseOrderResponseSchema,
     RefundOrderResponseSchema,
 )
 
@@ -34,6 +40,22 @@ class KapitalClientClass(APIClient):
 
         self.add_url('refund_order', env.API.REFUND_ORDER, verb='POST')
         self.add_handler('refund_order', RefundOrderPayloadHandler)
+
+        self.add_url('save_card', env.API.SAVE_CARD, verb='POST')
+        self.add_handler('save_card', SaveCardPayloadHandler)
+
+        self.add_url(
+            'create_order_and_save_card',
+            env.API.CREATE_ORDER_AND_SAVE_CARD,
+            verb='POST',
+        )
+        self.add_handler('create_order_and_save_card', CreateOrderAndSaveCardPayloadHandler)
+
+        self.add_url('full_reverse_order', env.API.FULL_REVERSE_ORDER, verb='POST')
+        self.add_handler('full_reverse_order', FullReverseOrderPayloadHandler)
+
+        self.add_url('partial_reverse_order', env.API.PARTIAL_REVERSE_ORDER, verb='POST')
+        self.add_handler('partial_reverse_order', PartialReverseOrderPayloadHandler)
 
     if TYPE_CHECKING:
 
@@ -63,8 +85,8 @@ class KapitalClientClass(APIClient):
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
-            APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. ID-dən istifadə edərək
-            ödənişin detallarını əldə edə bilərsiniz.
+            APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. Ödənişin
+            detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
@@ -141,6 +163,122 @@ class KapitalClientClass(APIClient):
             Args:
                 order_id: Ödənişin ID-si.
                 amount: Geri ödəniş miqdarı. Numerik dəyər.
+            """  # noqa: E501
+
+        def save_card(
+            self,
+            amount: Numeric,
+            currency: str,
+            description: Optional[str] = None,
+            **extra: Any,
+        ) -> APIResponse[CreateOrderResponseSchema]:
+            """Kartı saxlamaq üçün ödəniş sorğusu
+
+            **Kapital** /api/order
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.save_card(
+                amount=1.0,
+                currency="AZN",
+                description="Test payment",
+            )
+            ```
+
+            **Cavab formatı: [`CreateOrderResponseSchema`][integrify.kapital.schemas.response.CreateOrderResponseSchema]**
+
+            Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
+            olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
+            APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. Ödənişin
+            detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
+            Həmin detallarda storedTokens key-i altındaki tokenləri saxlayaraq, sonrakı ödənişlərdə bu tokenləri
+            istifadə edə bilərsiniz.
+            """  # noqa: E501
+
+        def create_order_and_save_card(
+            self,
+            amount: Numeric,
+            currency: str,
+            description: Optional[str] = None,
+            **extra: Any,
+        ) -> APIResponse[CreateOrderResponseSchema]:
+            """Kartı saxlamaq və ödəniş etmək üçün ödəniş sorğusu
+
+            **Kapital** /api/order
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.pay_and_save_card(
+                amount=1.0,
+                currency="AZN",
+                description="Test payment",
+            )
+            ```
+
+            **Cavab formatı: [`CreateOrderResponseSchema`][integrify.kapital.schemas.response.CreateOrderResponseSchema]**
+
+            Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
+            olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
+            APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. Ödənişin
+            detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
+            Həmin detallarda storedTokens key-i altındaki tokenləri saxlayaraq, sonrakı ödənişlərdə bu tokenləri
+            istifadə edə bilərsiniz.
+            """  # noqa: E501
+
+        def full_reverse_order(
+            self,
+            order_id: str,
+            **extra: Any,
+        ) -> APIResponse[FullReverseOrderResponseSchema]:
+            """Ödənişi ləğv etmək üçün sorğu
+
+            **Kapital** /api/order/{order_id}/exec-tran
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.full_reverse_order(order_id="123456")
+            ```
+
+            **Cavab formatı: [`FullReverseOrderResponseSchema`](integrify.kapital.schemas.response.FullReverseOrderResponseSchema)**
+
+            Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
+            Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
+
+            Args:
+                order_id: Ödənişin ID-si.
+            """  # noqa: E501
+
+        def partial_reverse_order(
+            self,
+            order_id: str,
+            amount: Numeric,
+            **extra: Any,
+        ) -> APIResponse[PartialReverseOrderResponseSchema]:
+            """Ödənişin hissəsini ləğv etmək üçün sorğu
+
+            **Kapital** /api/order/{order_id}/exec-tran
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.partial_reverse_order(order_id="123456", amount=5.0)
+            ```
+
+            **Cavab formatı: [`PartialReverseOrderResponseSchema`](integrify.kapital.schemas.response.PartialReverseOrderResponseSchema)**
+
+            Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
+            Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
+
+            Args:
+                order_id: Ödənişin ID-si.
+                amount: Ləğv olunacaq miqdar. Numerik dəyər.
             """  # noqa: E501
 
 
