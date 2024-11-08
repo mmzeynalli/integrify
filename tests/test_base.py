@@ -102,9 +102,7 @@ def test_with_handlers(api_client: APIClient, test_ok_response, mocker: MockerFi
 
 
 def test_error_log(test_error_response, mocker: MockerFixture):
-    with (
-        mocker.patch('httpx.Client.request', return_value=test_error_response),
-    ):
+    with mocker.patch('httpx.Client.request', return_value=test_error_response):
         from integrify.api import APIClient
 
         api_client = APIClient('')
