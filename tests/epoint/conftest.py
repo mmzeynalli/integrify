@@ -1,7 +1,7 @@
 import pytest
-from integrify.epoint.client import EPointClientClass
 from pytest_mock import MockerFixture
 
+from integrify.epoint.client import EPointClientClass
 from tests import epoint
 from tests.epoint.mocks import *  # noqa: F403
 

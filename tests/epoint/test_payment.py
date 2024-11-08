@@ -1,7 +1,8 @@
 from httpx import Response
-from integrify.epoint.client import EPointClientClass
-from integrify.epoint.schemas.parts import TransactionStatus
 from pytest_mock import MockerFixture
+
+from integrify.epoint.client import EPointClientClass
+from integrify.epoint.schemas.enums import TransactionStatus
 
 
 def test_epoint_payment_request(
