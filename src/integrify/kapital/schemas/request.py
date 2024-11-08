@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import List, Optional
 
 from pydantic import Field
@@ -7,8 +8,7 @@ from integrify.schemas import PayloadBaseModel
 
 
 class CreateOrderRequestSchema(PayloadBaseModel):
-    # TODO: Update to decimal
-    amount: str
+    amount: Decimal
     currency: str
     description: str
     language: Optional[str] = env.KAPITAL_INTERFACE_LANG
@@ -18,7 +18,6 @@ class CreateOrderRequestSchema(PayloadBaseModel):
 
 
 class RefundOrderRequestSchema(PayloadBaseModel):
-    # TODO: Update to decimal
-    amount: str
+    amount: Decimal
     phase: str = Field(default='Single')
     type: str = Field(default='Refund')

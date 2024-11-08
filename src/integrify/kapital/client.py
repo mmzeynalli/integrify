@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Any, Optional
+from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, APIResponse
 from integrify.kapital import env
@@ -38,7 +39,7 @@ class KapitalClientClass(APIClient):
 
         def create_order(
             self,
-            amount: str,
+            amount: Numeric,
             currency: str,
             description: Optional[str] = None,
             **extra: Any,
@@ -116,7 +117,7 @@ class KapitalClientClass(APIClient):
         def refund_order(
             self,
             order_id: str,
-            amount: str,
+            amount: Numeric,
             **extra: Any,
         ) -> APIResponse[RefundOrderResponseSchema]:
             """Geri ödəniş sorğusu
