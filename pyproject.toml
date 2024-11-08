@@ -9,7 +9,7 @@ version = "2.0.1"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 license = "GPL-3.0-or-later"
 authors = [
-    "mmzeynalli <miradil.zeynalli@gmail.com>", 
+    "mmzeynalli <miradil.zeynalli@gmail.com>",
     "vahidzhe <vahidzhe@gmail.com>"
 ]
 readme = "README.md"
@@ -78,7 +78,7 @@ coverage = [
 
 
 [tool.poetry.group.docs.dependencies]
-mkdocs-material = {extras = ["imaging"], version = "^9.5.36"} 
+mkdocs-material = {extras = ["imaging"], version = "^9.5.36"}
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 mkdocs-panzoom-plugin = "^0.1.3"
 griffe-pydantic =  [
@@ -88,6 +88,7 @@ griffe-pydantic =  [
 [tool.ruff]
 target-version = "py38"
 line-length = 100
+src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = [

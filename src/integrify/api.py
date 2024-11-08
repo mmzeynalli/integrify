@@ -51,8 +51,8 @@ class APIClient:
         """
         self.urls[route_name] = {'url': url, 'verb': verb}
 
-        # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə, endpointləri
-        # `base_url` ilə əlavə etmək lazımdır.
+        # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə,
+        # endpointləri, `base_url` ilə əlavə etmək lazımdır. (bax. AzeriCard)
         if base_url:
             self.urls[route_name]['base_url'] = base_url
 
@@ -62,7 +62,7 @@ class APIClient:
         Args:
             handler_class: Default handler class-ı
         """
-        self.default_handler = handler_class()
+        self.default_handler = handler_class()  # pragma: no cover
 
     def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']):
         """Endpoint-ə handler əlavə etmək method-u
@@ -112,7 +112,21 @@ class APIPayloadHandler:
             resp_model: Sorğunun cavabının payload model-i
         """
         self.req_model = req_model
+        self.__req_model: Optional[PayloadBaseModel] = None  # initialized pydantic model
         self.resp_model = resp_model
+
+    def set_urlparams(self, url: str):
+        if not (self.req_model and self.__req_model):
+            return url
+
+        return url.format(
+            **self.__req_model.model_dump(
+                by_alias=True,
+                include=self.req_model.URL_PARAM_FIELDS,
+                exclude_none=True,
+                mode='json',
+            )
+        )
 
     @property
     def headers(self):
@@ -133,12 +147,18 @@ class APIPayloadHandler:
         `self.req_model` qeyd edilməyibsə, bu funksiya override olunmalıdır (!).
         """
         if self.req_model:
-            return self.req_model.from_args(*args, **kwds).model_dump(
+            self.__req_model = self.req_model.from_args(*args, **kwds)
+            return self.__req_model.model_dump(
+                by_alias=True,
+                exclude=self.req_model.URL_PARAM_FIELDS,
                 exclude_none=True,
-                mode='json',  # TODO: Maybe serialize Decimal in different way
+                mode='json',
             )
 
-        raise NotImplementedError
+        # `req_model` yoxdursa, o zaman `*args` boş olmalıdır, çünki onların key-ləri bilinmir
+        assert not args
+
+        return kwds
 
     def post_handle_payload(self, data: Any):
         """Sorğunun payload-ının post-processing-i. Əgər sorğu göndərməmişdən qabaq
@@ -210,7 +230,7 @@ class APIExecutor:
         if self.sync:
             return lambda *args, **kwds: self.sync_req(*args, **kwds)
         else:
-            return lambda *args, **kwds: self.async_req(*args, **kwds)
+            return lambda *args, **kwds: self.async_req(*args, **kwds)  # pragma: no cover
 
     def sync_req(self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds):
         """Sync sorğu atan funksiya
@@ -224,8 +244,9 @@ class APIExecutor:
 
         data = handler.handle_request(*args, **kwds) if handler else None
         headers = handler.headers if handler else None
+        full_url = handler.set_urlparams(url) if handler else url
 
-        response = self.client.request(verb, url, data=data, headers=headers)
+        response = self.client.request(verb, full_url, data=data, headers=headers)
 
         if not response.is_success:
             self.logger.error(
@@ -240,7 +261,12 @@ class APIExecutor:
         return response
 
     async def async_req(  # pragma: no cover
-        self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds
+        self,
+        url: str,
+        verb: str,
+        handler: Optional['APIPayloadHandler'],
+        *args,
+        **kwds,
     ):
         """Async sorğu atan funksiya
 
