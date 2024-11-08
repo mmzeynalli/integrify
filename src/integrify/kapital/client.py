@@ -3,8 +3,14 @@ from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, APIResponse
 from integrify.kapital import env
-from integrify.kapital.handlers import CreateOrderPayloadHandler
-from integrify.kapital.schemas.response import CreateOrderResponseSchema
+from integrify.kapital.handlers import (
+    CreateOrderPayloadHandler,
+    OrderInformationPayloadHandler,
+)
+from integrify.kapital.schemas.response import (
+    CreateOrderResponseSchema,
+    OrderInformationResponseSchema,
+)
 
 __all__ = ['KapitalClientClass']
 
@@ -16,8 +22,13 @@ class KapitalClientClass(APIClient):
         self.add_url('create_order', env.API.CREATE_ORDER)
         self.add_handler('create_order', CreateOrderPayloadHandler)
 
+        self.add_url('order_information', env.API.ORDER_INFORMATION)
+        self.add_handler('order_information', OrderInformationPayloadHandler)
+
     def add_url(self, route_name, url):
-        # TODO: Change this according to the method in future
+        if route_name == 'order_information':
+            return super().add_url(route_name, url, 'GET')
+
         return super().add_url(route_name, url, 'POST')
 
     if TYPE_CHECKING:
@@ -55,6 +66,26 @@ class KapitalClientClass(APIClient):
                 amount: Ödəniş miqdarı. Numerik dəyər.
                 currency: Ödənişin məzənnəsi. Mümkün dəyərlər: `["AZN", "USD"]`.
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
+            """  # noqa: E501
+
+        def order_information(self, order_id: str) -> APIResponse[OrderInformationResponseSchema]:
+            """Ödənişin detallarını əldə etmək üçün sorğu
+
+            **Kapital** /api/order/{order_id}
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.order_information(order_id="123456")
+            ```
+
+            **Cavab formatı: [`OrderInformationResponseSchema`][integrify.kapital.schemas.response.OrderInformationResponseSchema]**
+
+            Bu sorğunu göndərdikdə, cavab olaraq ödənişin detallarını əldə edə bilərsiniz.
+
+            Args:
+                order_id: Ödənişin ID-si.
             """  # noqa: E501
 
 

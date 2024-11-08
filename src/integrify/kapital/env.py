@@ -22,6 +22,7 @@ if not KAPITAL_BASE_URL or not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
 
 class API(str, Enum):
     CREATE_ORDER: Literal['/api/order'] = '/api/order'
+    ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
 
 
 __all__ = [

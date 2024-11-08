@@ -12,7 +12,10 @@ from integrify.kapital.schemas.request import (
     CreateOrderDetails,
     CreateOrderRequestSchema,
 )
-from integrify.kapital.schemas.response import CreateOrderResponseSchema
+from integrify.kapital.schemas.response import (
+    CreateOrderResponseSchema,
+    OrderInformationResponseSchema,
+)
 
 
 class BasePayloadHandler(APIPayloadHandler):
@@ -44,14 +47,32 @@ class CreateOrderPayloadHandler(BasePayloadHandler):
 
             data = resp.json().get('order', {})
 
-            user_response = CreateOrderResponseSchema(
+            api_resp.body = CreateOrderResponseSchema(
                 id=data['id'],
                 password=data['password'],
                 redirect_url=f"{data['hppUrl']}?id={data['id']}&password={data['password']}",
             )
+        else:
+            api_resp.ok = False
 
-            api_resp.body = CreateOrderResponseSchema.model_validate(
-                user_response, from_attributes=True
+        return api_resp  # type: ignore[return-value]
+
+
+class OrderInformationPayloadHandler(BasePayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        self.order_id = kwds.get('order_id') or args[0]
+        return {}
+
+    def set_urlparams(self, url: str):
+        return url.format(order_id=self.order_id)
+
+    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        api_resp: APIResponse[OrderInformationResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
+
+        if resp.status_code == 200:
+            api_resp.ok = True
+            api_resp.body = OrderInformationResponseSchema.model_validate(
+                resp.json().get('order', {}), from_attributes=True
             )
         else:
             api_resp.ok = False
