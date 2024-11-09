@@ -17,10 +17,19 @@ class CreateOrderRequestSchema(PayloadBaseModel):
     hppCofCapturePurposes: Optional[List[str]] = Field(default=['Cit'])
 
 
+class OrderInformationRequestSchema(PayloadBaseModel):
+    order_id: str
+
+    URL_PARAM_FIELDS = {'order_id'}
+
+
 class RefundOrderRequestSchema(PayloadBaseModel):
+    order_id: str
     amount: Decimal
     phase: str = Field(default='Single')
     type: str = Field(default='Refund')
+
+    URL_PARAM_FIELDS = {'order_id'}
 
 
 class SaveCardRequestSchema(CreateOrderRequestSchema):
@@ -35,16 +44,25 @@ class CreateOrderAndSaveCardRequestSchema(CreateOrderRequestSchema):
 
 
 class FullReverseOrderRequestSchema(PayloadBaseModel):
+    order_id: str
     phase: str = Field(default='Auth')
     voidKind: str = Field(default='Full')
 
+    URL_PARAM_FIELDS = {'order_id'}
+
 
 class ClearingOrderRequestSchema(PayloadBaseModel):
+    order_id: str
     amount: Decimal
     phase: str = Field(default='Clearing')
 
+    URL_PARAM_FIELDS = {'order_id'}
+
 
 class PartialReverseOrderRequestSchema(PayloadBaseModel):
+    order_id: str
     amount: Decimal
     phase: str = Field(default='Single')
     voidKind: str = Field(default='Partial')
+
+    URL_PARAM_FIELDS = {'order_id'}
