@@ -9,6 +9,7 @@ from integrify.kapital.env import (
     KAPITAL_USERNAME,
 )
 from integrify.kapital.schemas.request import (
+    ClearingOrderRequestSchema,
     CreateOrderAndSaveCardRequestSchema,
     CreateOrderRequestSchema,
     FullReverseOrderRequestSchema,
@@ -161,6 +162,18 @@ class FullReverseOrderPayloadHandler(RefundOrderPayloadHandler):
             api_resp.ok = False
 
         return api_resp  # type: ignore[return-value]
+
+
+class ClearingOrderPayloadHandler(FullReverseOrderPayloadHandler):
+    def handle_payload(self, *args, **kwds):
+        self.order_id = kwds.get('order_id') or args[0]
+        amount = kwds.get('amount') or args[1]
+
+        return {
+            'tran': ClearingOrderRequestSchema(amount=amount).model_dump(
+                exclude_none=True, mode='json'
+            )
+        }
 
 
 class PartialReverseOrderPayloadHandler(FullReverseOrderPayloadHandler):

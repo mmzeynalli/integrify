@@ -4,6 +4,11 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
+class ErrorResponseBodySchema(BaseModel):
+    errorCode: str
+    errorDescription: str
+
+
 class CreateOrderResponseSchema(BaseModel):
     id: int
     password: str
@@ -179,8 +184,13 @@ class RefundOrderResponseSchema(BaseModel):
     pmoResultCode: str
 
 
-class FullReverseOrderResponseSchema(RefundOrderResponseSchema):
-    approvalCode: str = Field(exclude=True)
+class FullReverseOrderResponseSchema(BaseModel):
+    match: Match
+    pmoResultCode: str
+
+
+class ClearingOrderResponseSchema(FullReverseOrderResponseSchema):
+    pass
 
 
 class PartialReverseOrderResponseSchema(FullReverseOrderResponseSchema):

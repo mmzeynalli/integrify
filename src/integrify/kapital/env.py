@@ -32,6 +32,7 @@ class API(str, Enum):
     FULL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
         '/api/order/{order_id}/exec-tran'
     )
+    CLEARING_ORDER: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
     PARTIAL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
         '/api/order/{order_id}/exec-tran'
     )

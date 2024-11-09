@@ -4,6 +4,7 @@ from typing import SupportsFloat as Numeric
 from integrify.api import APIClient, APIResponse
 from integrify.kapital import env
 from integrify.kapital.handlers import (
+    ClearingOrderPayloadHandler,
     CreateOrderAndSaveCardPayloadHandler,
     CreateOrderPayloadHandler,
     DetailedOrderInformationPayloadHandler,
@@ -14,6 +15,7 @@ from integrify.kapital.handlers import (
     SaveCardPayloadHandler,
 )
 from integrify.kapital.schemas.response import (
+    ClearingOrderResponseSchema,
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
     FullReverseOrderResponseSchema,
@@ -53,6 +55,9 @@ class KapitalClientClass(APIClient):
 
         self.add_url('full_reverse_order', env.API.FULL_REVERSE_ORDER, verb='POST')
         self.add_handler('full_reverse_order', FullReverseOrderPayloadHandler)
+
+        self.add_url('clearing_order', env.API.CLEARING_ORDER, verb='POST')
+        self.add_handler('clearing_order', ClearingOrderPayloadHandler)
 
         self.add_url('partial_reverse_order', env.API.PARTIAL_REVERSE_ORDER, verb='POST')
         self.add_handler('partial_reverse_order', PartialReverseOrderPayloadHandler)
@@ -254,6 +259,33 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
             """  # noqa: E501
 
+        def clearing_order(
+            self,
+            order_id: str,
+            amount: Numeric,
+            **extra: Any,
+        ) -> APIResponse[ClearingOrderResponseSchema]:
+            """Ödənişin təsdiq edilməsi üçün sorğu
+
+            **Kapital** /api/order/{order_id}/exec-tran
+
+            Example:
+            ```python
+            from integrify.kapital import KapitalRequest
+
+            KapitalRequest.clearing_order(order_id="123456")
+            ```
+
+            **Cavab formatı: [`ClearingOrderResponseSchema`](integrify.kapital.schemas.response.ClearingOrderResponseSchema)**
+
+            Bu sorğunu göndərdikdə, cavab olaraq ödənişin təsdiq edilməsi haqda məlumat əldə edə bilərsiniz.
+            Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
+            Preauthorization əməliyyatının ikinci mərhələsi üçün.
+
+            Args:
+                order_id: Ödənişin ID-si.
+            """  # noqa: E501
+
         def partial_reverse_order(
             self,
             order_id: str,
@@ -274,7 +306,8 @@ class KapitalClientClass(APIClient):
             **Cavab formatı: [`PartialReverseOrderResponseSchema`](integrify.kapital.schemas.response.PartialReverseOrderResponseSchema)**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
-            Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
+            Bu funksiyani clearing_order() funksiyası ilə təsdiq edilmiş ödənişlər üçün istifadə edə bilərsiniz.
+            İlkin məbləğdən az olan vəsaitləri qaytarmaq üçün istifadə olunur. Bir dəfə istifadə etmək olar.
 
             Args:
                 order_id: Ödənişin ID-si.

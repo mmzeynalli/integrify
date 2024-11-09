@@ -39,6 +39,11 @@ class FullReverseOrderRequestSchema(PayloadBaseModel):
     voidKind: str = Field(default='Full')
 
 
+class ClearingOrderRequestSchema(PayloadBaseModel):
+    amount: Decimal
+    phase: str = Field(default='Clearing')
+
+
 class PartialReverseOrderRequestSchema(PayloadBaseModel):
     amount: Decimal
     phase: str = Field(default='Single')
