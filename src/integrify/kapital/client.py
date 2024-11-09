@@ -15,6 +15,7 @@ from integrify.kapital.handlers import (
     SaveCardPayloadHandler,
 )
 from integrify.kapital.schemas.response import (
+    BaseResponseSchema,
     ClearingOrderResponseSchema,
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
@@ -70,7 +71,7 @@ class KapitalClientClass(APIClient):
             currency: str,
             description: Optional[str] = None,
             **extra: Any,
-        ) -> APIResponse[CreateOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Ödəniş sorğusu
 
             **Kapital** /api/order
@@ -86,7 +87,7 @@ class KapitalClientClass(APIClient):
             )
             ```
 
-            **Cavab formatı: [`CreateOrderResponseSchema`][integrify.kapital.schemas.response.CreateOrderResponseSchema]**
+            **Cavab formatı: [`BaseResponseSchema[CreateOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
@@ -99,7 +100,9 @@ class KapitalClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
-        def order_information(self, order_id: str) -> APIResponse[OrderInformationResponseSchema]:
+        def order_information(
+            self, order_id: str
+        ) -> APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]:
             """Ödənişin detallarını əldə etmək üçün sorğu
 
             **Kapital** /api/order/{order_id}
@@ -111,7 +114,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.order_information(order_id="123456")
             ```
 
-            **Cavab formatı: [`OrderInformationResponseSchema`][integrify.kapital.schemas.response.OrderInformationResponseSchema]**
+            **Cavab formatı: [`BaseResponseSchema[OrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödəniş haqda məlumat əldə edə bilərsiniz.
 
@@ -121,7 +124,7 @@ class KapitalClientClass(APIClient):
 
         def detailed_order_information(
             self, order_id: str
-        ) -> APIResponse[DetailedOrderInformationResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]:
             """Ödənişin detallarını əldə etmək üçün ətraflı sorğu
 
             **Kapital** /api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2
@@ -133,7 +136,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.detailed_order_information(order_id="123456")
             ```
 
-            **Cavab formatı: [`DetailedOrderInformationResponseSchema`][integrify.kapital.schemas.response.DetailedOrderInformationResponseSchema]**
+            **Cavab formatı: [`BaseResponseSchema[DetailedOrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin detallı məlumat əldə edə bilərsiniz.
 
@@ -146,7 +149,7 @@ class KapitalClientClass(APIClient):
             order_id: str,
             amount: Numeric,
             **extra: Any,
-        ) -> APIResponse[RefundOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[RefundOrderResponseSchema]]:
             """Geri ödəniş sorğusu
 
             **Kapital** /api/order/{order_id}/exec-tran
@@ -161,7 +164,7 @@ class KapitalClientClass(APIClient):
             )
             ```
 
-            **Cavab formatı: [`RefundOrderResponseSchema`](integrify.kapital.schemas.response.RefundOrderResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[RefundOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
 
             Bu sorğunu göndərdikdə, cavab olaraq geri ödənişin detallarını əldə edə bilərsiniz.
 
@@ -176,7 +179,7 @@ class KapitalClientClass(APIClient):
             currency: str,
             description: Optional[str] = None,
             **extra: Any,
-        ) -> APIResponse[CreateOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq üçün ödəniş sorğusu
 
             **Kapital** /api/order
@@ -192,7 +195,7 @@ class KapitalClientClass(APIClient):
             )
             ```
 
-            **Cavab formatı: [`CreateOrderResponseSchema`][integrify.kapital.schemas.response.CreateOrderResponseSchema]**
+            **Cavab formatı: [`BaseResponseSchema[CreateOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
@@ -208,7 +211,7 @@ class KapitalClientClass(APIClient):
             currency: str,
             description: Optional[str] = None,
             **extra: Any,
-        ) -> APIResponse[CreateOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq və ödəniş etmək üçün ödəniş sorğusu
 
             **Kapital** /api/order
@@ -224,7 +227,7 @@ class KapitalClientClass(APIClient):
             )
             ```
 
-            **Cavab formatı: [`CreateOrderResponseSchema`][integrify.kapital.schemas.response.CreateOrderResponseSchema]**
+            **Cavab formatı: [`BaseResponseSchema[CreateOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
@@ -238,7 +241,7 @@ class KapitalClientClass(APIClient):
             self,
             order_id: str,
             **extra: Any,
-        ) -> APIResponse[FullReverseOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[FullReverseOrderResponseSchema]]:
             """Ödənişi ləğv etmək üçün sorğu
 
             **Kapital** /api/order/{order_id}/exec-tran
@@ -250,7 +253,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.full_reverse_order(order_id="123456")
             ```
 
-            **Cavab formatı: [`FullReverseOrderResponseSchema`](integrify.kapital.schemas.response.FullReverseOrderResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[FullReverseOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
@@ -264,7 +267,7 @@ class KapitalClientClass(APIClient):
             order_id: str,
             amount: Numeric,
             **extra: Any,
-        ) -> APIResponse[ClearingOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[ClearingOrderResponseSchema]]:
             """Ödənişin təsdiq edilməsi üçün sorğu
 
             **Kapital** /api/order/{order_id}/exec-tran
@@ -276,7 +279,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.clearing_order(order_id="123456")
             ```
 
-            **Cavab formatı: [`ClearingOrderResponseSchema`](integrify.kapital.schemas.response.ClearingOrderResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[ClearingOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin təsdiq edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
@@ -291,7 +294,7 @@ class KapitalClientClass(APIClient):
             order_id: str,
             amount: Numeric,
             **extra: Any,
-        ) -> APIResponse[PartialReverseOrderResponseSchema]:
+        ) -> APIResponse[BaseResponseSchema[PartialReverseOrderResponseSchema]]:
             """Ödənişin hissəsini ləğv etmək üçün sorğu
 
             **Kapital** /api/order/{order_id}/exec-tran
@@ -303,7 +306,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.partial_reverse_order(order_id="123456", amount=5.0)
             ```
 
-            **Cavab formatı: [`PartialReverseOrderResponseSchema`](integrify.kapital.schemas.response.PartialReverseOrderResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[PartialReverseOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani clearing_order() funksiyası ilə təsdiq edilmiş ödənişlər üçün istifadə edə bilərsiniz.

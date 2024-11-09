@@ -1,12 +1,22 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Generic, List, Optional
 
 from pydantic import BaseModel, Field
+
+from integrify.schemas import ResponseType
 
 
 class ErrorResponseBodySchema(BaseModel):
     errorCode: str
     errorDescription: str
+
+
+class BaseResponseSchema(BaseModel, Generic[ResponseType]):
+    error: Optional[ErrorResponseBodySchema] = None
+    'The error response body.'
+
+    data: Optional[ResponseType] = None
+    'The data response body.'
 
 
 class CreateOrderResponseSchema(BaseModel):
@@ -45,12 +55,12 @@ class StoredToken(BaseModel):
 class CardAuthentication(BaseModel):
     needCvv2: bool
     needTds: bool
-    tranId: str
-    tdsDsTranId: str
-    timestamp: datetime
-    tdsProtocolVer: str
-    eci: str
-    tdsARes: str
+    tranId: Optional[str] = None
+    tdsDsTranId: Optional[str] = None
+    timestamp: Optional[datetime] = None
+    tdsProtocolVer: Optional[str] = None
+    eci: Optional[str] = None
+    tdsARes: Optional[str] = None
 
 
 class CardDetails(BaseModel):
