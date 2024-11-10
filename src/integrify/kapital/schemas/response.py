@@ -1,17 +1,18 @@
 from datetime import datetime
-from typing import Generic, List, Optional
+from typing import Dict, Generic, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from integrify.kapital.schemas.utils import BaseSchema
 from integrify.schemas import ResponseType
 
 
-class ErrorResponseBodySchema(BaseModel):
-    errorCode: str
-    errorDescription: str
+class ErrorResponseBodySchema(BaseSchema):
+    error_code: str
+    error_description: str
 
 
-class BaseResponseSchema(BaseModel, Generic[ResponseType]):
+class BaseResponseSchema(BaseSchema, Generic[ResponseType]):
     error: Optional[ErrorResponseBodySchema] = None
     'The error response body.'
 
@@ -19,7 +20,7 @@ class BaseResponseSchema(BaseModel, Generic[ResponseType]):
     'The data response body.'
 
 
-class CreateOrderResponseSchema(BaseModel):
+class CreateOrderResponseSchema(BaseSchema):
     id: int
     password: str
     redirect_url: str
@@ -28,175 +29,175 @@ class CreateOrderResponseSchema(BaseModel):
 # OrderInformationPayloadHandler
 
 
-class OrderType(BaseModel):
+class OrderType(BaseSchema):
     title: str
 
 
-class OrderInformationResponseSchema(BaseModel):
+class OrderInformationResponseSchema(BaseSchema):
     id: int
-    type_rid: str = Field(alias='typeRid')
+    type_rid: str
     status: str
-    last_status_login: str = Field(alias='lastStatusLogin')
+    last_status_login: str
     amount: float
     currency: str
-    create_time: str = Field(alias='createTime')
+    create_time: str
     type: OrderType
 
 
 # DetailedOrderInformationPayloadHandler
 
 
-class StoredToken(BaseModel):
+class StoredToken(BaseSchema):
     id: int
-    cofProviderRid: Optional[str] = None
-    ridBycofp: Optional[str] = None
+    cof_provider_rid: Optional[str] = None
+    rid_bycofp: Optional[str] = None
 
 
-class CardAuthentication(BaseModel):
-    needCvv2: bool
-    needTds: bool
-    tranId: Optional[str] = None
-    tdsDsTranId: Optional[str] = None
+class CardAuthentication(BaseSchema):
+    need_cvv2: bool
+    need_tds: bool
+    tran_id: Optional[str] = None
+    tds_ds_tran_id: Optional[str] = None
     timestamp: Optional[datetime] = None
-    tdsProtocolVer: Optional[str] = None
+    tds_protocol_ver: Optional[str] = None
     eci: Optional[str] = None
-    tdsARes: Optional[str] = None
+    tds_a_res: Optional[str] = None
 
 
-class CardDetails(BaseModel):
+class CardDetails(BaseSchema):
     authentication: CardAuthentication
     expiration: str
     brand: str
-    issuerRid: str
+    issuer_rid: str
 
 
-class SrcToken(BaseModel):
+class SrcToken(BaseSchema):
     id: int
-    paymentMethod: str
+    payment_method: str
     role: str
     status: str
-    regTime: datetime
-    entryMode: str
-    displayName: str
+    reg_time: datetime
+    entry_mode: str
+    display_name: str
     card: CardDetails
 
 
-class ConsumerDeviceBrowser(BaseModel):
-    userAgent: str
-    colorDepth: int
-    pixelRatio: float
+class ConsumerDeviceBrowser(BaseSchema):
+    user_agent: str
+    color_depth: int
+    pixel_ratio: float
     language: str
-    tzOffset: int
-    localStorage: bool
-    languageReplaced: bool
-    resolutionReplaced: bool
-    osReplaced: bool
-    browserReplaced: bool
-    screenW: int
-    screenH: int
-    screenAvailW: int
-    screenAvailH: int
+    tz_offset: int
+    local_storage: bool
+    language_replaced: bool
+    resolution_replaced: bool
+    os_replaced: bool
+    browser_replaced: bool
+    screen_w: int
+    screen_h: int
+    screen_avail_w: int
+    screen_avail_h: int
     platform: str
-    acceptHeader: str
+    accept_header: str
     ip: str
-    refUrl: str
-    javaEnabled: bool
-    jsEnabled: bool
+    ref_url: str
+    java_enabled: bool
+    js_enabled: bool
 
 
-class ConsumerDevice(BaseModel):
+class ConsumerDevice(BaseSchema):
     browser: ConsumerDeviceBrowser
 
 
-class BusinessAddress(BaseModel):
+class BusinessAddress(BaseSchema):
     country: str
-    countryA2: str
-    countryN3: int
+    country_a2: str
+    country_n3: int
 
 
-class Merchant(BaseModel):
+class Merchant(BaseSchema):
     id: int
     rid: str
     title: str
-    businessAddress: BusinessAddress
-    trustConsumerPhone: bool
+    business_address: BusinessAddress
+    trust_consumer_phone: bool
 
 
-class DetailedOrderType(BaseModel):
-    allowVoid: bool
-    hppTranPhase: str
-    secretLength: int
+class DetailedOrderType(BaseSchema):
+    allow_void: bool
+    hpp_tran_phase: str
+    secret_length: int
     title: str
     rid: str
-    paymentMethods: List[str]
-    cardBrands: Optional[List[str]] = None
-    allowTdsAttempt: bool
-    allowTdsCant: bool
-    allowTdsChallenged: bool
-    allowSurcharge: bool
-    allowTranTypes: List[str]
-    allowTranPhases: List[str]
-    allowAuthKinds: List[str]
-    allowCofStoreUsages: List[str]
-    orderClass: str
-    allowCVV2: bool
+    payment_methods: List[str]
+    card_brands: Optional[List[str]] = None
+    allow_tds_attempt: bool
+    allow_tds_cant: bool
+    allow_tds_challenged: bool
+    allow_surcharge: bool
+    allow_tran_types: List[str]
+    allow_tran_phases: List[str]
+    allow_auth_kinds: List[str]
+    allow_cof_store_usages: List[str]
+    order_class: str
+    allow_cvv2: bool = Field(alias='allowCVV2')
 
 
-class DetailedOrderInformationResponseSchema(BaseModel):
+class DetailedOrderInformationResponseSchema(BaseSchema):
     id: int
-    hppUrl: str
-    hppRedirectUrl: str
+    hpp_url: str
+    hpp_redirect_url: str
     password: str
     status: str
-    prevStatus: Optional[str] = None
-    lastStatusLogin: str
+    prev_status: Optional[str] = None
+    last_status_login: str
     amount: float
     currency: str
-    terminal: dict
-    srcAmount: float
-    srcAmountFull: float
-    srcCurrency: str
-    dstAmount: Optional[float] = None
-    dstCurrency: Optional[str] = None
-    storedTokens: Optional[List[StoredToken]] = None
-    createTime: datetime
-    finishTime: Optional[datetime] = None
-    cvv2AuthStatus: str
-    tdsV1AuthStatus: Optional[str] = None
-    tdsV2AuthStatus: Optional[str] = None
-    tdsServerUrl: Optional[str] = None
-    authorizedChargeAmount: float
-    clearedChargeAmount: float
-    clearedRefundAmount: float
+    terminal: Dict
+    src_amount: float
+    src_amount_full: float
+    src_currency: str
+    dst_amount: Optional[float] = None
+    dst_currency: Optional[str] = None
+    stored_tokens: Optional[List[StoredToken]] = None
+    create_time: datetime
+    finish_time: Optional[datetime] = None
+    cvv2_auth_status: str
+    tds_v1_auth_status: Optional[str] = None
+    tds_v2_auth_status: Optional[str] = None
+    tds_server_url: Optional[str] = None
+    authorized_charge_amount: float
+    cleared_charge_amount: float
+    cleared_refund_amount: float
     description: str
     language: str
-    srcToken: Optional[SrcToken] = None
-    consumerDevice: Optional[ConsumerDevice] = None
+    src_token: Optional[SrcToken] = None
+    consumer_device: Optional[ConsumerDevice] = None
     merchant: Merchant
-    initiationEnvKind: str
+    initiation_env_kind: str
     type: DetailedOrderType
-    hppCofCapturePurposes: List[str]
-    custAttrs: List[str]
-    reportPubs: dict
+    hpp_cof_capture_purposes: List[str]
+    cust_attrs: List[str]
+    report_pubs: Dict
 
 
 # RefundOrderPayloadHandler
 
 
-class Match(BaseModel):
-    tranActionId: str
-    ridByPmo: str
+class Match(BaseSchema):
+    tran_action_id: str
+    rid_by_pmo: str
 
 
-class RefundOrderResponseSchema(BaseModel):
-    approvalCode: str
+class RefundOrderResponseSchema(BaseSchema):
+    approval_code: str
     match: Match
-    pmoResultCode: str
+    pmo_result_code: str
 
 
-class FullReverseOrderResponseSchema(BaseModel):
+class FullReverseOrderResponseSchema(BaseSchema):
     match: Match
-    pmoResultCode: str
+    pmo_result_code: str
 
 
 class ClearingOrderResponseSchema(FullReverseOrderResponseSchema):

@@ -4,17 +4,18 @@ from typing import Dict, List, Optional
 from pydantic import Field
 
 from integrify.kapital import env
+from integrify.kapital.schemas.utils import BaseSchema
 from integrify.schemas import PayloadBaseModel
 
 
-class CreateOrderRequestSchema(PayloadBaseModel):
+class CreateOrderRequestSchema(PayloadBaseModel, BaseSchema):
     amount: Decimal
     currency: str
     description: str
     language: Optional[str] = env.KAPITAL_INTERFACE_LANG
-    hppRedirectUrl: Optional[str] = Field(default=env.KAPITAL_REDIRECT_URL)
-    typeRid: Optional[str] = Field(default='Order_SMS')
-    hppCofCapturePurposes: Optional[List[str]] = Field(default=['Cit'])
+    hpp_redirect_url: Optional[str] = Field(default=env.KAPITAL_REDIRECT_URL)
+    type_rid: Optional[str] = Field(default='Order_SMS')
+    hpp_cof_capture_purposes: Optional[List[str]] = Field(default=['Cit'])
 
 
 class OrderInformationRequestSchema(PayloadBaseModel):
@@ -33,20 +34,20 @@ class RefundOrderRequestSchema(PayloadBaseModel):
 
 
 class SaveCardRequestSchema(CreateOrderRequestSchema):
-    typeRid: Optional[str] = Field(default='Order_DMS')
-    hppCofCapturePurposes: Optional[List[str]] = Field(default=['Cit', 'Recurring'])
+    type_rid: Optional[str] = Field(default='Order_DMS')
+    hpp_cof_capture_purposes: Optional[List[str]] = Field(default=['Cit', 'Recurring'])
     aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
 
 
 class CreateOrderAndSaveCardRequestSchema(CreateOrderRequestSchema):
-    typeRid: Optional[str] = Field(default='Order_SMS')
+    type_rid: Optional[str] = Field(default='Order_SMS')
     aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
 
 
 class FullReverseOrderRequestSchema(PayloadBaseModel):
     order_id: str
     phase: str = Field(default='Auth')
-    voidKind: str = Field(default='Full')
+    void_kind: str = Field(default='Full', alias='voidKind')
 
     URL_PARAM_FIELDS = {'order_id'}
 
@@ -63,6 +64,6 @@ class PartialReverseOrderRequestSchema(PayloadBaseModel):
     order_id: str
     amount: Decimal
     phase: str = Field(default='Single')
-    voidKind: str = Field(default='Partial')
+    void_kind: str = Field(default='Partial', alias='voidKind')
 
     URL_PARAM_FIELDS = {'order_id'}

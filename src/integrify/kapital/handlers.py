@@ -102,7 +102,9 @@ class OrderInformationPayloadHandler(BasePayloadHandler):
 
 class DetailedOrderInformationPayloadHandler(OrderInformationPayloadHandler):
     def __init__(self):
-        super().__init__(OrderInformationRequestSchema, DetailedOrderInformationResponseSchema)
+        super(BasePayloadHandler, self).__init__(
+            OrderInformationRequestSchema, DetailedOrderInformationResponseSchema
+        )
 
 
 class RefundOrderPayloadHandler(BasePayloadHandler):
