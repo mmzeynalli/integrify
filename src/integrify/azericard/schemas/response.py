@@ -6,7 +6,7 @@ from integrify.azericard.schemas.common import AzeriCardDataSchema
 from integrify.azericard.schemas.enums import Action
 
 
-class AuthorazationResponseSchema(AzeriCardDataSchema):
+class AuthResponseSchema(AzeriCardDataSchema):
     action: Action
     """EGateway fəaliyyət kodu"""
 

@@ -1,3 +1,4 @@
+import string
 from typing import Any, Callable, Coroutine, Optional, Type, Union
 from urllib.parse import urljoin
 
@@ -117,6 +118,9 @@ class APIPayloadHandler:
 
     def set_urlparams(self, url: str):
         if not (self.req_model and self.__req_model):
+            if any(tup[1] for tup in string.Formatter().parse(url) if tup[1] is not None):
+                raise ValueError('URL should not expect any arguments')
+
             return url
 
         return url.format(

@@ -1,24 +1,25 @@
 import base64
-from typing import Optional
+import json
+from typing import NamedTuple, Optional
 
-from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, field_serializer
+from pydantic import AliasGenerator, ConfigDict, Field, field_serializer
 
 from integrify.azericard.schemas.common import AzeriCardDataSchema
 
 
-class MobilePhone(BaseModel):
+class MobilePhone(NamedTuple):
     cc: str
     subscriber: str
 
 
-class MInfo(BaseModel):
+class MInfo(NamedTuple):
     browserScreenHeight: str
     browserScreenWidth: str
     browserTZ: str
     mobilePhone: MobilePhone
 
 
-class AuthorazationRequestSchema(AzeriCardDataSchema):
+class AuthRequestSchema(AzeriCardDataSchema):
     model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
 
     desc: str = Field(min_length=1, max_length=50)
@@ -37,4 +38,4 @@ class AuthorazationRequestSchema(AzeriCardDataSchema):
         if not m_info:
             return None
 
-        return base64.b64encode(m_info.model_dump_json().encode()).decode()
+        return base64.b64encode(json.dumps(m_info._asdict()).encode()).decode()
