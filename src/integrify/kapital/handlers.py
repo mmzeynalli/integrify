@@ -12,12 +12,15 @@ from integrify.kapital.env import (
 from integrify.kapital.schemas.request import (
     ClearingOrderRequestSchema,
     CreateOrderAndSaveCardRequestSchema,
+    CreateOrderForPayWithSavedCardRequestSchema,
     CreateOrderRequestSchema,
+    ExecPayWithSavedCardRequestSchema,
     FullReverseOrderRequestSchema,
     OrderInformationRequestSchema,
     PartialReverseOrderRequestSchema,
     RefundOrderRequestSchema,
     SaveCardRequestSchema,
+    SetSrcTokenRequestSchema,
 )
 from integrify.kapital.schemas.response import (
     BaseResponseSchema,
@@ -25,10 +28,12 @@ from integrify.kapital.schemas.response import (
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
     ErrorResponseBodySchema,
+    ExecPayWithSavedCardResponseSchema,
     FullReverseOrderResponseSchema,
     OrderInformationResponseSchema,
     PartialReverseOrderResponseSchema,
     RefundOrderResponseSchema,
+    SetSrcTokenResponseSchema,
 )
 from integrify.schemas import PayloadBaseModel
 
@@ -152,3 +157,37 @@ class PartialReverseOrderPayloadHandler(FullReverseOrderPayloadHandler):
         super(BasePayloadHandler, self).__init__(
             PartialReverseOrderRequestSchema, PartialReverseOrderResponseSchema
         )
+
+
+class CreateOrderForPayWithSavedCardPayloadHandler(CreateOrderPayloadHandler):
+    def __init__(self):
+        super(BasePayloadHandler, self).__init__(
+            CreateOrderForPayWithSavedCardRequestSchema, BaseResponseSchema
+        )
+
+
+class SetSrcTokenPayloadHandler(BasePayloadHandler):
+    def __init__(self):
+        super().__init__(SetSrcTokenRequestSchema, SetSrcTokenResponseSchema)
+
+    def post_handle_payload(self, data):
+        return json.dumps(
+            {
+                'order': {'initiationEnvKind': 'Server'},
+                'token': {'storedId': data['token']},
+            }
+        )
+
+    def get_response_data(self, response_json: dict) -> dict:
+        return response_json.get('order', {})
+
+
+class ExecPayWithSavedCardPayloadHandler(BasePayloadHandler):
+    def __init__(self):
+        super().__init__(ExecPayWithSavedCardRequestSchema, ExecPayWithSavedCardResponseSchema)
+
+    def post_handle_payload(self, data):
+        return json.dumps({'tran': data})
+
+    def get_response_data(self, response_json: dict) -> dict:
+        return response_json.get('tran', {})

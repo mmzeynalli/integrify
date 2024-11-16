@@ -19,13 +19,13 @@ class CreateOrderRequestSchema(PayloadBaseModel, BaseSchema):
 
 
 class OrderInformationRequestSchema(PayloadBaseModel):
-    order_id: str
+    order_id: int
 
     URL_PARAM_FIELDS = {'order_id'}
 
 
 class RefundOrderRequestSchema(PayloadBaseModel):
-    order_id: str
+    order_id: int
     amount: Decimal
     phase: str = Field(default='Single')
     type: str = Field(default='Refund')
@@ -45,7 +45,7 @@ class CreateOrderAndSaveCardRequestSchema(CreateOrderRequestSchema):
 
 
 class FullReverseOrderRequestSchema(PayloadBaseModel):
-    order_id: str
+    order_id: int
     phase: str = Field(default='Auth')
     void_kind: str = Field(default='Full', alias='voidKind')
 
@@ -53,7 +53,7 @@ class FullReverseOrderRequestSchema(PayloadBaseModel):
 
 
 class ClearingOrderRequestSchema(PayloadBaseModel):
-    order_id: str
+    order_id: int
     amount: Decimal
     phase: str = Field(default='Clearing')
 
@@ -61,9 +61,33 @@ class ClearingOrderRequestSchema(PayloadBaseModel):
 
 
 class PartialReverseOrderRequestSchema(PayloadBaseModel):
-    order_id: str
+    order_id: int
     amount: Decimal
     phase: str = Field(default='Single')
     void_kind: str = Field(default='Partial', alias='voidKind')
 
     URL_PARAM_FIELDS = {'order_id'}
+
+
+class CreateOrderForPayWithSavedCardRequestSchema(CreateOrderRequestSchema):
+    type_rid: Optional[str] = Field(default='Order_REC')
+    hpp_redirect_url: None = None
+    hpp_cof_capture_purposes: None = None
+
+
+class SetSrcTokenRequestSchema(PayloadBaseModel):
+    token: int
+    order_id: int
+    password: str
+
+    URL_PARAM_FIELDS = {'order_id', 'password'}
+
+
+class ExecPayWithSavedCardRequestSchema(PayloadBaseModel):
+    amount: Decimal
+    order_id: int
+    password: str
+    phase: Optional[str] = Field(default='Single')
+    conditions: Optional[Dict[str, str]] = Field(default={'cofUsage': 'Cit'})
+
+    URL_PARAM_FIELDS = {'order_id', 'password'}

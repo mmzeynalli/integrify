@@ -6,23 +6,28 @@ from integrify.kapital import env
 from integrify.kapital.handlers import (
     ClearingOrderPayloadHandler,
     CreateOrderAndSaveCardPayloadHandler,
+    CreateOrderForPayWithSavedCardPayloadHandler,
     CreateOrderPayloadHandler,
     DetailedOrderInformationPayloadHandler,
+    ExecPayWithSavedCardPayloadHandler,
     FullReverseOrderPayloadHandler,
     OrderInformationPayloadHandler,
     PartialReverseOrderPayloadHandler,
     RefundOrderPayloadHandler,
     SaveCardPayloadHandler,
+    SetSrcTokenPayloadHandler,
 )
 from integrify.kapital.schemas.response import (
     BaseResponseSchema,
     ClearingOrderResponseSchema,
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
+    ExecPayWithSavedCardResponseSchema,
     FullReverseOrderResponseSchema,
     OrderInformationResponseSchema,
     PartialReverseOrderResponseSchema,
     RefundOrderResponseSchema,
+    SetSrcTokenResponseSchema,
 )
 
 __all__ = ['KapitalClientClass']
@@ -63,6 +68,43 @@ class KapitalClientClass(APIClient):
         self.add_url('partial_reverse_order', env.API.PARTIAL_REVERSE_ORDER, verb='POST')
         self.add_handler('partial_reverse_order', PartialReverseOrderPayloadHandler)
 
+        self.add_url(
+            'create_order_for_pay_with_saved_card',
+            env.API.CREATE_ORDER_FOR_PAY_WITH_SAVED_CARD,
+            verb='POST',
+        )
+        self.add_handler(
+            'create_order_for_pay_with_saved_card',
+            CreateOrderForPayWithSavedCardPayloadHandler,
+        )
+
+        self.add_url('set_src_token', env.API.SET_SRC_TOKEN, verb='POST')
+        self.add_handler('set_src_token', SetSrcTokenPayloadHandler)
+
+        self.add_url('exec_pay_with_saved_card', env.API.EXEC_PAY_WITH_SAVED_CARD, verb='POST')
+        self.add_handler('exec_pay_with_saved_card', ExecPayWithSavedCardPayloadHandler)
+
+    def pay_with_saved_card(
+        self,
+        token: int,
+        amount: Numeric,
+        currency: str,
+        description: Optional[str] = None,
+    ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
+        """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+        create_order_response = self.create_order_for_pay_with_saved_card(
+            amount=amount, currency=currency, description=description
+        )
+
+        assert create_order_response.body and create_order_response.body.data
+
+        order_id = create_order_response.body.data.id
+        password = create_order_response.body.data.password
+
+        self.set_src_token(token=token, order_id=order_id, password=password)
+
+        return self.exec_pay_with_saved_card(amount=amount, order_id=order_id, password=password)
+
     if TYPE_CHECKING:
 
         def create_order(
@@ -101,7 +143,7 @@ class KapitalClientClass(APIClient):
             """  # noqa: E501
 
         def order_information(
-            self, order_id: str
+            self, order_id: int
         ) -> APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]:
             """Ödənişin detallarını əldə etmək üçün sorğu
 
@@ -111,7 +153,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.order_information(order_id="123456")
+            KapitalRequest.order_information(order_id=123456)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[OrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
@@ -123,7 +165,7 @@ class KapitalClientClass(APIClient):
             """  # noqa: E501
 
         def detailed_order_information(
-            self, order_id: str
+            self, order_id: int
         ) -> APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]:
             """Ödənişin detallarını əldə etmək üçün ətraflı sorğu
 
@@ -133,7 +175,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.detailed_order_information(order_id="123456")
+            KapitalRequest.detailed_order_information(order_id=123456)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[DetailedOrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
@@ -146,7 +188,7 @@ class KapitalClientClass(APIClient):
 
         def refund_order(
             self,
-            order_id: str,
+            order_id: int,
             amount: Numeric,
             **extra: Any,
         ) -> APIResponse[BaseResponseSchema[RefundOrderResponseSchema]]:
@@ -159,7 +201,7 @@ class KapitalClientClass(APIClient):
             from integrify.kapital import KapitalRequest
 
             KapitalRequest.refund_order(
-                order_id="123456",
+                order_id=123456,
                 amount=10.0,
             )
             ```
@@ -239,7 +281,7 @@ class KapitalClientClass(APIClient):
 
         def full_reverse_order(
             self,
-            order_id: str,
+            order_id: int,
             **extra: Any,
         ) -> APIResponse[BaseResponseSchema[FullReverseOrderResponseSchema]]:
             """Ödənişi ləğv etmək üçün sorğu
@@ -250,7 +292,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.full_reverse_order(order_id="123456")
+            KapitalRequest.full_reverse_order(order_id=123456)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[FullReverseOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
@@ -264,7 +306,7 @@ class KapitalClientClass(APIClient):
 
         def clearing_order(
             self,
-            order_id: str,
+            order_id: int,
             amount: Numeric,
             **extra: Any,
         ) -> APIResponse[BaseResponseSchema[ClearingOrderResponseSchema]]:
@@ -276,7 +318,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.clearing_order(order_id="123456")
+            KapitalRequest.clearing_order(order_id=123456)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[ClearingOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
@@ -291,7 +333,7 @@ class KapitalClientClass(APIClient):
 
         def partial_reverse_order(
             self,
-            order_id: str,
+            order_id: int,
             amount: Numeric,
             **extra: Any,
         ) -> APIResponse[BaseResponseSchema[PartialReverseOrderResponseSchema]]:
@@ -303,7 +345,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.partial_reverse_order(order_id="123456", amount=5.0)
+            KapitalRequest.partial_reverse_order(order_id=123456, amount=5.0)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[PartialReverseOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
@@ -316,6 +358,25 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
                 amount: Ləğv olunacaq miqdar. Numerik dəyər.
             """  # noqa: E501
+
+        def create_order_for_pay_with_saved_card(
+            self,
+            amount: Numeric,
+            currency: str,
+            description: Optional[str] = None,
+            **extra: Any,
+        ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
+            """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+
+        def set_src_token(
+            self, token: int, order_id: int, password: str
+        ) -> APIResponse[BaseResponseSchema[SetSrcTokenResponseSchema]]:
+            """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+
+        def exec_pay_with_saved_card(
+            self, amount: Numeric, order_id: int, password: str
+        ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
+            """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
 
 
 KapitalRequest = KapitalClientClass(sync=True)

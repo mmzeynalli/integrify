@@ -65,10 +65,10 @@ class CardAuthentication(BaseSchema):
 
 
 class CardDetails(BaseSchema):
-    authentication: CardAuthentication
+    authentication: Optional[CardAuthentication] = None
     expiration: str
     brand: str
-    issuer_rid: str
+    issuer_rid: Optional[str] = None
 
 
 class SrcToken(BaseSchema):
@@ -77,7 +77,7 @@ class SrcToken(BaseSchema):
     role: str
     status: str
     reg_time: datetime
-    entry_mode: str
+    entry_mode: Optional[str] = None
     display_name: str
     card: CardDetails
 
@@ -205,4 +205,17 @@ class ClearingOrderResponseSchema(FullReverseOrderResponseSchema):
 
 
 class PartialReverseOrderResponseSchema(FullReverseOrderResponseSchema):
+    pass
+
+
+class SetSrcTokenResponseSchema(BaseSchema):
+    status: str
+    cvv2_auth_status: str = Field(alias='cvv2AuthStatus')
+    tds_v1_auth_status: str = Field(alias='tdsV1AuthStatus')
+    tds_v2_auth_status: str = Field(alias='tdsV2AuthStatus')
+    otp_aut_status: str
+    src_token: SrcToken
+
+
+class ExecPayWithSavedCardResponseSchema(RefundOrderResponseSchema):
     pass

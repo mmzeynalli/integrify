@@ -36,6 +36,13 @@ class API(str, Enum):
     PARTIAL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
         '/api/order/{order_id}/exec-tran'
     )
+    CREATE_ORDER_FOR_PAY_WITH_SAVED_CARD: Literal['/api/order'] = '/api/order'
+    SET_SRC_TOKEN: Literal['/api/order/{order_id}/set-src-token?password={password}'] = (
+        '/api/order/{order_id}/set-src-token?password={password}'
+    )
+    EXEC_PAY_WITH_SAVED_CARD: Literal['/api/order/{order_id}/exec-tran?password={password}'] = (
+        '/api/order/{order_id}/exec-tran?password={password}'
+    )
 
 
 __all__ = [
