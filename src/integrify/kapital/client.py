@@ -158,7 +158,7 @@ class KapitalClientClass(APIClient):
 
             **Cavab formatı: [`BaseResponseSchema[OrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
-            Bu sorğunu göndərdikdə, cavab olaraq ödəniş haqda məlumat əldə edə bilərsiniz.
+            Bu sorğunu göndərdikdə, cavab olaraq ödəniş haqda qısa məlumat əldə edə bilərsiniz.
 
             Args:
                 order_id: Ödənişin ID-si.
@@ -208,7 +208,8 @@ class KapitalClientClass(APIClient):
 
             **Cavab formatı: [`BaseResponseSchema[RefundOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
 
-            Bu sorğunu göndərdikdə, cavab olaraq geri ödənişin detallarını əldə edə bilərsiniz.
+            Bu sorğu ilə əvvəlki ödənişi geri ödəmək üçün istifadə edə bilərsiniz.
+            Cavab olaraq ödənişin detallarını əldə edə bilərsiniz.
 
             Args:
                 order_id: Ödənişin ID-si.
@@ -245,6 +246,8 @@ class KapitalClientClass(APIClient):
             detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
             Həmin detallarda storedTokens key-i altındaki tokenləri saxlayaraq, sonrakı ödənişlərdə bu tokenləri
             istifadə edə bilərsiniz.
+
+            `response.body.data.stored_tokens[0].id` ilə tokeni əldə edə bilərsiniz.
             """  # noqa: E501
 
         def create_order_and_save_card(
@@ -277,6 +280,8 @@ class KapitalClientClass(APIClient):
             detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
             Həmin detallarda storedTokens key-i altındaki tokenləri saxlayaraq, sonrakı ödənişlərdə bu tokenləri
             istifadə edə bilərsiniz.
+
+            `response.body.data.stored_tokens[0].id` ilə tokeni əldə edə bilərsiniz.
             """  # noqa: E501
 
         def full_reverse_order(
@@ -299,6 +304,7 @@ class KapitalClientClass(APIClient):
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
+            Kartın token-i saxladıqdan sonra həmin ödənişi qaytarmaq üçün istifade etmək olar.
 
             Args:
                 order_id: Ödənişin ID-si.
@@ -366,17 +372,53 @@ class KapitalClientClass(APIClient):
             description: Optional[str] = None,
             **extra: Any,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
-            """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+            """
+            Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
+
+            **Kapital** /api/order
+
+            Bu funksiya pay_with_saved_card() funksiyasında istifadə olunur.
+            Əsas məqsədi order_id və password dəyərlərini əldə etməkdir.
+
+            Args:
+                amount: Ödəniş miqdarı. Numerik dəyər.
+                currency: Ödənişin məzənnəsi. Mümkün dəyərlər: `["AZN", "USD"]`.
+                description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
+            """  # noqa: E501
 
         def set_src_token(
             self, token: int, order_id: int, password: str
         ) -> APIResponse[BaseResponseSchema[SetSrcTokenResponseSchema]]:
-            """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+            """
+            Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
+
+            **Kapital** /api/order/{order_id}/set-src-token?password={password}
+
+            Bu funksiya pay_with_saved_card() funksiyasında istifadə olunur.
+            Əsas məqsədi token-i həmin order üçün set etməkdir.
+
+            Args:
+                token: Kart tokeni.
+                order_id: Ödənişin ID-si.
+                password: Ödənişin passwordu.
+            """  # noqa: E501
 
         def exec_pay_with_saved_card(
             self, amount: Numeric, order_id: int, password: str
         ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
-            """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+            """
+            Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
+
+            **Kapital** /api/order/{order_id}/exec-tran?password={password}
+
+            Bu funksiya pay_with_saved_card() funksiyasında istifadə olunur.
+            Əsas məqsədi ödənişi təsdiq etməkdir.
+
+            Args:
+                amount: Ödəniş miqdarı. Numerik dəyər.
+                order_id: Ödənişin ID-si.
+                password: Ödənişin password
+            """  # noqa: E501
 
 
 KapitalRequest = KapitalClientClass(sync=True)
