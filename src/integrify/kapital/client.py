@@ -90,10 +90,32 @@ class KapitalClientClass(APIClient):
         amount: Numeric,
         currency: str,
         description: Optional[str] = None,
+        **extra: Any,
     ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
-        """Bu funksiya sadece KapitalClientClass daxilinde istifade olunur."""
+        """
+        Yadda saxlanmış kartdan ödəniş etmək üçün sorğu
+
+        **Kapital** /api/order
+
+        Example:
+        ```python
+        from integrify.kapital import KapitalRequest
+
+        KapitalRequest.pay_with_saved_card(123456, 1.0, "AZN", "Test payment")
+        ```
+
+        **Cavab formatı: [`BaseResponseSchema[ExecPayWithSavedCardResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
+
+        Bu sorğunu göndərdikdə, cavab olaraq ödənişin təsdiq edilməsi haqda məlumat əldə edə bilərsiniz.
+
+        Args:
+            token: Kart tokeni.
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Ödənişin məzənnəsi. Mümkün dəyərlər: `["AZN", "USD"]`.
+            description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
+        """  # noqa: E501
         create_order_response = self.create_order_for_pay_with_saved_card(
-            amount=amount, currency=currency, description=description
+            amount=amount, currency=currency, description=description, **extra
         )
 
         assert create_order_response.body and create_order_response.body.data
@@ -101,9 +123,11 @@ class KapitalClientClass(APIClient):
         order_id = create_order_response.body.data.id
         password = create_order_response.body.data.password
 
-        self.set_src_token(token=token, order_id=order_id, password=password)
+        self.set_src_token(token=token, order_id=order_id, password=password, **extra)
 
-        return self.exec_pay_with_saved_card(amount=amount, order_id=order_id, password=password)
+        return self.exec_pay_with_saved_card(
+            amount=amount, order_id=order_id, password=password, **extra
+        )
 
     if TYPE_CHECKING:
 
@@ -145,7 +169,7 @@ class KapitalClientClass(APIClient):
         def order_information(
             self, order_id: int
         ) -> APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]:
-            """Ödənişin detallarını əldə etmək üçün sorğu
+            """Ödəniş haqda qısa məlumat əldə etmək üçün sorğu
 
             **Kapital** /api/order/{order_id}
 
@@ -167,7 +191,7 @@ class KapitalClientClass(APIClient):
         def detailed_order_information(
             self, order_id: int
         ) -> APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]:
-            """Ödənişin detallarını əldə etmək üçün ətraflı sorğu
+            """Ödəniş haqda detallı məlumat əldə etmək üçün sorğu
 
             **Kapital** /api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2
 
@@ -387,7 +411,7 @@ class KapitalClientClass(APIClient):
             """  # noqa: E501
 
         def set_src_token(
-            self, token: int, order_id: int, password: str
+            self, token: int, order_id: int, password: str, **extra: Any
         ) -> APIResponse[BaseResponseSchema[SetSrcTokenResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
@@ -404,7 +428,7 @@ class KapitalClientClass(APIClient):
             """  # noqa: E501
 
         def exec_pay_with_saved_card(
-            self, amount: Numeric, order_id: int, password: str
+            self, amount: Numeric, order_id: int, password: str, **extra: Any
         ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!

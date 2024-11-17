@@ -89,6 +89,10 @@ nav:
             - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
       - Kapital:
           - Ümumi məlumat: "kapital/about.md"
+          - API Referansı:
+            - API Klient: "kapital/api-reference/client.md"
+            - Schemas:
+              - Response: "kapital/api-reference/response.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"
