@@ -14,10 +14,10 @@ class ErrorResponseBodySchema(BaseSchema):
 
 class BaseResponseSchema(BaseSchema, Generic[ResponseType]):
     error: Optional[ErrorResponseBodySchema] = None
-    'The error response body.'
+    """The error response body."""
 
     data: Optional[ResponseType] = None
-    'The data response body.'
+    """The data response body."""
 
 
 class CreateOrderResponseSchema(BaseSchema):
