@@ -87,6 +87,8 @@ nav:
               - Response: "epoint/api-reference/response.md"
               - Callback: "epoint/api-reference/callback.md"
             - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
+      - Kapital:
+          - Ümumi məlumat: "kapital/about.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"
