@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Literal, Optional
 from warnings import warn
 
-VERSION = '1.0.3'
+VERSION = '2024.10.19'
 
 KAPITAL_BASE_URL: str = os.getenv('KAPITAL_BASE_URL', '')
 KAPITAL_USERNAME: str = os.getenv('KAPITAL_USERNAME', '')
