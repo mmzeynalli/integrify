@@ -26,7 +26,7 @@ class CreateOrderResponseSchema(BaseSchema):
     redirect_url: str
 
 
-# OrderInformationPayloadHandler
+# Response schemas for OrderInformationPayloadHandler
 
 
 class OrderType(BaseSchema):
@@ -44,7 +44,7 @@ class OrderInformationResponseSchema(BaseSchema):
     type: OrderType
 
 
-# DetailedOrderInformationPayloadHandler
+# Response schemas for DetailedOrderInformationPayloadHandler
 
 
 class StoredToken(BaseSchema):
@@ -181,7 +181,7 @@ class DetailedOrderInformationResponseSchema(BaseSchema):
     report_pubs: Dict
 
 
-# RefundOrderPayloadHandler
+# Response schemas for RefundOrderPayloadHandler
 
 
 class Match(BaseSchema):
