@@ -52,6 +52,11 @@ class BasePayloadHandler(APIPayloadHandler):
         }
 
     def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        """
+        Bu funksiya API-dən gələn cavabı status koduna görə tənzimləyir.
+        Əgər status kodu 200-dürsə, gələn cavabı modelə uyğunlaşdırır və APIResponse obyektini qaytarır.
+        200-dən fərqli status kodu gələrsə, gələn cavabı modelə uyğunlaşdırır və error obyektini APIResponse obyektinə əlavə edir.
+        """  # noqa: E501
         api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)  # type: ignore[assignment]
 
         if resp.status_code == 200:
@@ -79,6 +84,12 @@ class CreateOrderPayloadHandler(BasePayloadHandler):
         return json.dumps({'order': data})
 
     def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+        """
+        Bu funksiya API-dən gələn cavabı status koduna görə tənzimləyir.
+        Əgər status kodu 200-dürsə, gələn cavabı modelə uyğunlaşdırır və APIResponse obyektini qaytarır.
+        Response-da gələn `order` obyektindən `id`, `password` və `hppUrl` dəyərlərini alaraq CreateOrderResponseSchema obyektini yaradır.
+        200-dən fərqli status kodu gələrsə, gələn cavabı modelə uyğunlaşdırır və error obyektini APIResponse obyektinə əlavə edir.
+        """  # noqa: E501
         api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)  # type: ignore[assignment]
 
         if resp.status_code == 200:
