@@ -39,7 +39,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'create_order',
-            env.API.CREATE_ORDER,
+            env.API.ORDER,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -47,7 +47,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'get_order_information',
-            env.API.GET_ORDER_INFORMATION,
+            env.API.GET_ORDER,
             verb='GET',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -55,7 +55,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'get_detailed_order_info',
-            env.API.GET_DETAILED_ORDER_INFO,
+            env.API.GET_DETAILED_ORDER,
             verb='GET',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -63,7 +63,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'refund_order',
-            env.API.REFUND_ORDER,
+            env.API.ORDER_EXECUTION,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -71,7 +71,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'save_card',
-            env.API.SAVE_CARD,
+            env.API.ORDER,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -79,7 +79,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'pay_and_save_card',
-            env.API.PAY_AND_SAVE_CARD,
+            env.API.ORDER,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -87,7 +87,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'full_reverse_order',
-            env.API.FULL_REVERSE_ORDER,
+            env.API.ORDER_EXECUTION,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -95,7 +95,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'clearing_order',
-            env.API.CLEARING_ORDER,
+            env.API.ORDER_EXECUTION,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -103,7 +103,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'partial_reverse_order',
-            env.API.PARTIAL_REVERSE_ORDER,
+            env.API.ORDER_EXECUTION,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -111,7 +111,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'order_with_saved_card',
-            env.API.ORDER_WITH_SAVED_CARD,
+            env.API.ORDER,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
@@ -122,7 +122,7 @@ class KapitalClientClass(APIClient):
 
         self.add_url(
             'link_card_token',
-            env.API.LINK_CARD_TOKEN,
+            env.API.ORDER_LINK_CARD_TOKEN,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
