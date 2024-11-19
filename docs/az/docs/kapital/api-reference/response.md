@@ -40,6 +40,6 @@
 
 ::: integrify.kapital.schemas.response.PartialReverseOrderResponseSchema
 
-::: integrify.kapital.schemas.response.SetSrcTokenResponseSchema
+::: integrify.kapital.schemas.response.LinkCardTokenResponseSchema
 
-::: integrify.kapital.schemas.response.ExecPayWithSavedCardResponseSchema
+::: integrify.kapital.schemas.response.ProcessPaymentWithSavedCardResponseSchema

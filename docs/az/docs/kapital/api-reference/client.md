@@ -30,11 +30,11 @@
       separate_signature: true
       members:
         - create_order
-        - order_information
+        - get_order_information
         - detailed_order_information
         - refund_order
         - save_card
-        - create_order_and_save_card
+        - pay_and_save_card
         - full_reverse_order
         - clearing_order
         - partial_reverse_order
