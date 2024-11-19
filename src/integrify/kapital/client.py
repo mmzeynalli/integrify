@@ -284,7 +284,7 @@ class KapitalClientClass(APIClient):
             )
             ```
 
-            **Cavab formatı: [`BaseResponseSchema[RefundOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[RefundOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğu ilə əvvəlki ödənişi geri ödəmək üçün istifadə edə bilərsiniz.
             Cavab olaraq ödənişin detallarını əldə edə bilərsiniz.
@@ -378,7 +378,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.full_reverse_order(order_id=123456)
             ```
 
-            **Cavab formatı: [`BaseResponseSchema[FullReverseOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[FullReverseOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
@@ -405,7 +405,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.clearing_order(order_id=123456)
             ```
 
-            **Cavab formatı: [`BaseResponseSchema[ClearingOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[ClearingOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin təsdiq edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani save_card() funksiyası ilə yaradılan ödənişlər üçün istifadə edə bilərsiniz.
@@ -432,7 +432,7 @@ class KapitalClientClass(APIClient):
             KapitalRequest.partial_reverse_order(order_id=123456, amount=5.0)
             ```
 
-            **Cavab formatı: [`BaseResponseSchema[PartialReverseOrderResponseSchema]`](integrify.kapital.schemas.response.BaseResponseSchema)**
+            **Cavab formatı: [`BaseResponseSchema[PartialReverseOrderResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
             Bu sorğunu göndərdikdə, cavab olaraq ödənişin ləğv edilməsi haqda məlumat əldə edə bilərsiniz.
             Bu funksiyani clearing_order() funksiyası ilə təsdiq edilmiş ödənişlər üçün istifadə edə bilərsiniz.
