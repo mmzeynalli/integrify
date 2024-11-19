@@ -5,29 +5,29 @@ from integrify.api import APIClient, APIResponse
 from integrify.kapital import env
 from integrify.kapital.handlers import (
     ClearingOrderPayloadHandler,
-    CreateOrderAndSaveCardPayloadHandler,
-    CreateOrderForPayWithSavedCardPayloadHandler,
     CreateOrderPayloadHandler,
     DetailedOrderInformationPayloadHandler,
-    ExecPayWithSavedCardPayloadHandler,
     FullReverseOrderPayloadHandler,
+    LinkCardTokenPayloadHandler,
     OrderInformationPayloadHandler,
+    OrderWithSavedCardPayloadHandler,
     PartialReverseOrderPayloadHandler,
+    PayAndSaveCardPayloadHandler,
+    ProcessPaymentWithSavedCardPayloadHandler,
     RefundOrderPayloadHandler,
     SaveCardPayloadHandler,
-    SetSrcTokenPayloadHandler,
 )
 from integrify.kapital.schemas.response import (
     BaseResponseSchema,
     ClearingOrderResponseSchema,
     CreateOrderResponseSchema,
     DetailedOrderInformationResponseSchema,
-    ExecPayWithSavedCardResponseSchema,
     FullReverseOrderResponseSchema,
+    LinkCardTokenResponseSchema,
     OrderInformationResponseSchema,
     PartialReverseOrderResponseSchema,
+    ProcessPaymentWithSavedCardResponseSchema,
     RefundOrderResponseSchema,
-    SetSrcTokenResponseSchema,
 )
 
 __all__ = ['KapitalClientClass']
@@ -83,7 +83,7 @@ class KapitalClientClass(APIClient):
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('pay_and_save_card', CreateOrderAndSaveCardPayloadHandler)
+        self.add_handler('pay_and_save_card', PayAndSaveCardPayloadHandler)
 
         self.add_url(
             'full_reverse_order',
@@ -117,7 +117,7 @@ class KapitalClientClass(APIClient):
         )
         self.add_handler(
             'order_with_saved_card',
-            CreateOrderForPayWithSavedCardPayloadHandler,
+            OrderWithSavedCardPayloadHandler,
         )
 
         self.add_url(
@@ -126,7 +126,7 @@ class KapitalClientClass(APIClient):
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('link_card_token', SetSrcTokenPayloadHandler)
+        self.add_handler('link_card_token', LinkCardTokenPayloadHandler)
 
         self.add_url(
             'process_payment_with_saved_card',
@@ -134,7 +134,9 @@ class KapitalClientClass(APIClient):
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('process_payment_with_saved_card', ExecPayWithSavedCardPayloadHandler)
+        self.add_handler(
+            'process_payment_with_saved_card', ProcessPaymentWithSavedCardPayloadHandler
+        )
 
     def pay_with_saved_card(
         self,
@@ -143,7 +145,7 @@ class KapitalClientClass(APIClient):
         currency: str,
         description: Optional[str] = None,
         **extra: Any,
-    ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
+    ) -> APIResponse[BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]]:
         """
         Yadda saxlanmış kartdan ödəniş etmək üçün sorğu
 
@@ -156,7 +158,7 @@ class KapitalClientClass(APIClient):
         KapitalRequest.pay_with_saved_card(123456, 1.0, "AZN", "Test payment")
         ```
 
-        **Cavab formatı: [`BaseResponseSchema[ExecPayWithSavedCardResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
+        **Cavab formatı: [`BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
 
         Bu sorğunu göndərdikdə, cavab olaraq ödənişin təsdiq edilməsi haqda məlumat əldə edə bilərsiniz.
 
@@ -464,7 +466,7 @@ class KapitalClientClass(APIClient):
 
         def link_card_token(
             self, token: int, order_id: int, password: str, **extra: Any
-        ) -> APIResponse[BaseResponseSchema[SetSrcTokenResponseSchema]]:
+        ) -> APIResponse[BaseResponseSchema[LinkCardTokenResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
 
@@ -481,7 +483,7 @@ class KapitalClientClass(APIClient):
 
         def process_payment_with_saved_card(
             self, amount: Numeric, order_id: int, password: str, **extra: Any
-        ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
+        ) -> APIResponse[BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
 

@@ -208,7 +208,7 @@ class PartialReverseOrderResponseSchema(FullReverseOrderResponseSchema):
     pass
 
 
-class SetSrcTokenResponseSchema(BaseSchema):
+class LinkCardTokenResponseSchema(BaseSchema):
     status: str
     cvv2_auth_status: str = Field(alias='cvv2AuthStatus')
     tds_v1_auth_status: str = Field(alias='tdsV1AuthStatus')
@@ -217,5 +217,5 @@ class SetSrcTokenResponseSchema(BaseSchema):
     src_token: SrcToken
 
 
-class ExecPayWithSavedCardResponseSchema(RefundOrderResponseSchema):
+class ProcessPaymentWithSavedCardResponseSchema(RefundOrderResponseSchema):
     pass

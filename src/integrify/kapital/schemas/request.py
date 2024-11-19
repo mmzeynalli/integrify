@@ -39,7 +39,7 @@ class SaveCardRequestSchema(CreateOrderRequestSchema):
     aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
 
 
-class CreateOrderAndSaveCardRequestSchema(CreateOrderRequestSchema):
+class PayAndSaveCardRequestSchema(CreateOrderRequestSchema):
     type_rid: Optional[str] = Field(default='Order_SMS')
     aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
 
@@ -69,13 +69,13 @@ class PartialReverseOrderRequestSchema(PayloadBaseModel):
     void_kind: str = Field(default='Partial', serialization_alias='voidKind')
 
 
-class CreateOrderForPayWithSavedCardRequestSchema(CreateOrderRequestSchema):
+class OrderWithSavedCardRequestSchema(CreateOrderRequestSchema):
     type_rid: Optional[str] = Field(default='Order_REC')
     hpp_redirect_url: None = None
     hpp_cof_capture_purposes: None = None
 
 
-class SetSrcTokenRequestSchema(PayloadBaseModel):
+class LinkCardTokenRequestSchema(PayloadBaseModel):
     URL_PARAM_FIELDS = {'order_id', 'password'}
 
     token: int
@@ -83,7 +83,7 @@ class SetSrcTokenRequestSchema(PayloadBaseModel):
     password: str
 
 
-class ExecPayWithSavedCardRequestSchema(PayloadBaseModel):
+class ProcessPaymentWithSavedCardRequestSchema(PayloadBaseModel):
     URL_PARAM_FIELDS = {'order_id', 'password'}
 
     amount: Decimal
