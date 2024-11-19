@@ -28,7 +28,7 @@ class API(str, Enum):
         'https://e-commerce.kapitalbank.az'
     )
 
-    PAY: Literal['/api/order'] = '/api/order'
+    CREATE_ORDER: Literal['/api/order'] = '/api/order'
     GET_ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
     DETAILED_ORDER_INFORMATION: Literal[
         '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
