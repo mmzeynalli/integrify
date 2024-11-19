@@ -31,7 +31,7 @@
       members:
         - create_order
         - get_order_information
-        - detailed_order_information
+        - get_detailed_order_info
         - refund_order
         - save_card
         - pay_and_save_card
