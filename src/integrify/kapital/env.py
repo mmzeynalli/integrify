@@ -28,23 +28,13 @@ class API(str, Enum):
         'https://e-commerce.kapitalbank.az'
     )
 
-    CREATE_ORDER: Literal['/api/order'] = '/api/order'
-    GET_ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
-    GET_DETAILED_ORDER_INFO: Literal[
+    ORDER: Literal['/api/order'] = '/api/order'
+    GET_ORDER: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
+    GET_DETAILED_ORDER: Literal[
         '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     ] = '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
-    REFUND_ORDER: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
-    SAVE_CARD: Literal['/api/order'] = '/api/order'
-    PAY_AND_SAVE_CARD: Literal['/api/order'] = '/api/order'
-    FULL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
-        '/api/order/{order_id}/exec-tran'
-    )
-    CLEARING_ORDER: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
-    PARTIAL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
-        '/api/order/{order_id}/exec-tran'
-    )
-    ORDER_WITH_SAVED_CARD: Literal['/api/order'] = '/api/order'
-    LINK_CARD_TOKEN: Literal['/api/order/{order_id}/set-src-token?password={password}'] = (
+    ORDER_EXECUTION: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
+    ORDER_LINK_CARD_TOKEN: Literal['/api/order/{order_id}/set-src-token?password={password}'] = (
         '/api/order/{order_id}/set-src-token?password={password}'
     )
     PROCESS_PAYMENT_WITH_SAVED_CARD: Literal[
