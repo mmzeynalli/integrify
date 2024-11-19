@@ -3,9 +3,11 @@ from enum import Enum
 from typing import Literal, Optional
 from warnings import warn
 
+from integrify.schemas import Environment
+
 VERSION = '2024.10.19'
 
-KAPITAL_BASE_URL: str = os.getenv('KAPITAL_BASE_URL', '')
+KAPITAL_ENV: str = os.getenv('KAPITAL_ENV', Environment.TEST)
 KAPITAL_USERNAME: str = os.getenv('KAPITAL_USERNAME', '')
 KAPITAL_PASSWORD: str = os.getenv('KAPITAL_PASSWORD', '')
 
@@ -13,7 +15,7 @@ KAPITAL_INTERFACE_LANG: str = os.getenv('KAPITAL_INTERFACE_LANG', 'az')
 KAPITAL_REDIRECT_URL: Optional[str] = os.getenv('KAPITAL_REDIRECT_URL')
 
 
-if not KAPITAL_BASE_URL or not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
+if not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
     warn(
         'KAPITAL_BASE_URL/KAPITAL_USERNAME/KAPITAL_PASSWORD mühit dəyişənlərinə dəyər verməsəniz '
         'sorğular çalışmayacaq!'
@@ -21,6 +23,11 @@ if not KAPITAL_BASE_URL or not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
 
 
 class API(str, Enum):
+    TEST_BASE_URL: Literal['https://txpgtst.kapitalbank.az'] = 'https://txpgtst.kapitalbank.az'
+    PROD_BASE_URL: Literal['https://e-commerce.kapitalbank.az'] = (
+        'https://e-commerce.kapitalbank.az'
+    )
+
     CREATE_ORDER: Literal['/api/order'] = '/api/order'
     ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
     DETAILED_ORDER_INFORMATION: Literal[
@@ -44,10 +51,13 @@ class API(str, Enum):
         '/api/order/{order_id}/exec-tran?password={password}'
     )
 
+    @classmethod
+    def get_base_url(cls, env: str):
+        return cls.PROD_BASE_URL if env == Environment.PROD else cls.TEST_BASE_URL
+
 
 __all__ = [
     'VERSION',
-    'KAPITAL_BASE_URL',
     'KAPITAL_USERNAME',
     'KAPITAL_PASSWORD',
     'KAPITAL_INTERFACE_LANG',
