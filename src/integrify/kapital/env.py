@@ -30,7 +30,7 @@ class API(str, Enum):
 
     CREATE_ORDER: Literal['/api/order'] = '/api/order'
     GET_ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
-    DETAILED_ORDER_INFORMATION: Literal[
+    GET_DETAILED_ORDER_INFO: Literal[
         '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     ] = '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     REFUND_ORDER: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'

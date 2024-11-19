@@ -54,12 +54,12 @@ class KapitalClientClass(APIClient):
         self.add_handler('get_order_information', OrderInformationPayloadHandler)
 
         self.add_url(
-            'detailed_order_information',
-            env.API.DETAILED_ORDER_INFORMATION,
+            'get_detailed_order_info',
+            env.API.GET_DETAILED_ORDER_INFO,
             verb='GET',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('detailed_order_information', DetailedOrderInformationPayloadHandler)
+        self.add_handler('get_detailed_order_info', DetailedOrderInformationPayloadHandler)
 
         self.add_url(
             'refund_order',
@@ -212,7 +212,7 @@ class KapitalClientClass(APIClient):
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
             APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. Ödənişin
-            detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
+            detallarını get_detailed_order_info() funksiyandan istifadə edərək əldə edə bilərsiz.
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
@@ -242,7 +242,7 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
             """  # noqa: E501
 
-        def detailed_order_information(
+        def get_detailed_order_info(
             self, order_id: int
         ) -> APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]:
             """Ödəniş haqda detallı məlumat əldə etmək üçün sorğu
@@ -253,7 +253,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.detailed_order_information(order_id=123456)
+            KapitalRequest.get_detailed_order_info(order_id=123456)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[DetailedOrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
@@ -321,7 +321,7 @@ class KapitalClientClass(APIClient):
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
             APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. Ödənişin
-            detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
+            detallarını get_detailed_order_info() funksiyandan istifadə edərək əldə edə bilərsiz.
             Həmin detallarda storedTokens key-i altındaki tokenləri saxlayaraq, sonrakı ödənişlərdə bu tokenləri
             istifadə edə bilərsiniz.
 
@@ -355,7 +355,7 @@ class KapitalClientClass(APIClient):
             Bu sorğunu göndərdikdə, cavab olaraq `redirect_url` gəlir. Müştəri həmin URLə daxil
             olub, kart məlumatlarını daxil edib, uğurlu ödəniş etdikdən sonra, backend callback
             APIsinə "{callback_url}/?ID={id}&STATUS={status}" formatında sorğusu göndərilir. Ödənişin
-            detallarını detailed_order_information() funksiyandan istifadə edərək əldə edə bilərsiz.
+            detallarını get_detailed_order_info() funksiyandan istifadə edərək əldə edə bilərsiz.
             Həmin detallarda storedTokens key-i altındaki tokenləri saxlayaraq, sonrakı ödənişlərdə bu tokenləri
             istifadə edə bilərsiniz.
 
