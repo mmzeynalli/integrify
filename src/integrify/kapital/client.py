@@ -38,12 +38,12 @@ class KapitalClientClass(APIClient):
         super().__init__(name='Kapital', sync=sync)
 
         self.add_url(
-            'pay',
-            env.API.PAY,
+            'create_order',
+            env.API.CREATE_ORDER,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('pay', CreateOrderPayloadHandler)
+        self.add_handler('create_order', CreateOrderPayloadHandler)
 
         self.add_url(
             'get_order_information',
@@ -183,7 +183,7 @@ class KapitalClientClass(APIClient):
 
     if TYPE_CHECKING:
 
-        def pay(
+        def create_order(
             self,
             amount: Numeric,
             currency: str,
@@ -198,7 +198,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.pay(
+            KapitalRequest.create_order(
                 amount=10.0,
                 currency="AZN",
                 description="Test payment",
