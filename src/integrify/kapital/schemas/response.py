@@ -146,7 +146,7 @@ class DetailedOrderType(BaseSchema):
 class DetailedOrderInformationResponseSchema(BaseSchema):
     id: int
     hpp_url: str
-    hpp_redirect_url: str
+    hpp_redirect_url: Optional[str] = None
     password: str
     status: str
     prev_status: Optional[str] = None
