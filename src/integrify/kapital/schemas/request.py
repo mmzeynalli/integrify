@@ -49,7 +49,7 @@ class FullReverseOrderRequestSchema(PayloadBaseModel):
 
     order_id: int
     phase: str = Field(default='Auth')
-    void_kind: str = Field(default='Full', alias='voidKind')
+    void_kind: str = Field(default='Full', serialization_alias='voidKind')
 
 
 class ClearingOrderRequestSchema(PayloadBaseModel):
@@ -66,7 +66,7 @@ class PartialReverseOrderRequestSchema(PayloadBaseModel):
     order_id: int
     amount: Decimal
     phase: str = Field(default='Single')
-    void_kind: str = Field(default='Partial', alias='voidKind')
+    void_kind: str = Field(default='Partial', serialization_alias='voidKind')
 
 
 class CreateOrderForPayWithSavedCardRequestSchema(CreateOrderRequestSchema):
