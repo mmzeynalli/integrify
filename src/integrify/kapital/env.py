@@ -28,14 +28,14 @@ class API(str, Enum):
         'https://e-commerce.kapitalbank.az'
     )
 
-    CREATE_ORDER: Literal['/api/order'] = '/api/order'
-    ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
+    PAY: Literal['/api/order'] = '/api/order'
+    GET_ORDER_INFORMATION: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
     DETAILED_ORDER_INFORMATION: Literal[
         '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     ] = '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
     REFUND_ORDER: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
     SAVE_CARD: Literal['/api/order'] = '/api/order'
-    CREATE_ORDER_AND_SAVE_CARD: Literal['/api/order'] = '/api/order'
+    PAY_AND_SAVE_CARD: Literal['/api/order'] = '/api/order'
     FULL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
         '/api/order/{order_id}/exec-tran'
     )
@@ -43,13 +43,13 @@ class API(str, Enum):
     PARTIAL_REVERSE_ORDER: Literal['/api/order/{order_id}/exec-tran'] = (
         '/api/order/{order_id}/exec-tran'
     )
-    CREATE_ORDER_FOR_PAY_WITH_SAVED_CARD: Literal['/api/order'] = '/api/order'
-    SET_SRC_TOKEN: Literal['/api/order/{order_id}/set-src-token?password={password}'] = (
+    ORDER_WITH_SAVED_CARD: Literal['/api/order'] = '/api/order'
+    LINK_CARD_TOKEN: Literal['/api/order/{order_id}/set-src-token?password={password}'] = (
         '/api/order/{order_id}/set-src-token?password={password}'
     )
-    EXEC_PAY_WITH_SAVED_CARD: Literal['/api/order/{order_id}/exec-tran?password={password}'] = (
+    PROCESS_PAYMENT_WITH_SAVED_CARD: Literal[
         '/api/order/{order_id}/exec-tran?password={password}'
-    )
+    ] = '/api/order/{order_id}/exec-tran?password={password}'
 
     @classmethod
     def get_base_url(cls, env: str):

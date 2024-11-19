@@ -38,20 +38,20 @@ class KapitalClientClass(APIClient):
         super().__init__(name='Kapital', sync=sync)
 
         self.add_url(
-            'create_order',
-            env.API.CREATE_ORDER,
+            'pay',
+            env.API.PAY,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('create_order', CreateOrderPayloadHandler)
+        self.add_handler('pay', CreateOrderPayloadHandler)
 
         self.add_url(
-            'order_information',
-            env.API.ORDER_INFORMATION,
+            'get_order_information',
+            env.API.GET_ORDER_INFORMATION,
             verb='GET',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('order_information', OrderInformationPayloadHandler)
+        self.add_handler('get_order_information', OrderInformationPayloadHandler)
 
         self.add_url(
             'detailed_order_information',
@@ -78,12 +78,12 @@ class KapitalClientClass(APIClient):
         self.add_handler('save_card', SaveCardPayloadHandler)
 
         self.add_url(
-            'create_order_and_save_card',
-            env.API.CREATE_ORDER_AND_SAVE_CARD,
+            'pay_and_save_card',
+            env.API.PAY_AND_SAVE_CARD,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('create_order_and_save_card', CreateOrderAndSaveCardPayloadHandler)
+        self.add_handler('pay_and_save_card', CreateOrderAndSaveCardPayloadHandler)
 
         self.add_url(
             'full_reverse_order',
@@ -110,31 +110,31 @@ class KapitalClientClass(APIClient):
         self.add_handler('partial_reverse_order', PartialReverseOrderPayloadHandler)
 
         self.add_url(
-            'create_order_for_pay_with_saved_card',
-            env.API.CREATE_ORDER_FOR_PAY_WITH_SAVED_CARD,
+            'order_with_saved_card',
+            env.API.ORDER_WITH_SAVED_CARD,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
         self.add_handler(
-            'create_order_for_pay_with_saved_card',
+            'order_with_saved_card',
             CreateOrderForPayWithSavedCardPayloadHandler,
         )
 
         self.add_url(
-            'set_src_token',
-            env.API.SET_SRC_TOKEN,
+            'link_card_token',
+            env.API.LINK_CARD_TOKEN,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('set_src_token', SetSrcTokenPayloadHandler)
+        self.add_handler('link_card_token', SetSrcTokenPayloadHandler)
 
         self.add_url(
-            'exec_pay_with_saved_card',
-            env.API.EXEC_PAY_WITH_SAVED_CARD,
+            'process_payment_with_saved_card',
+            env.API.PROCESS_PAYMENT_WITH_SAVED_CARD,
             verb='POST',
             base_url=env.API.get_base_url(env.KAPITAL_ENV),
         )
-        self.add_handler('exec_pay_with_saved_card', ExecPayWithSavedCardPayloadHandler)
+        self.add_handler('process_payment_with_saved_card', ExecPayWithSavedCardPayloadHandler)
 
     def pay_with_saved_card(
         self,
@@ -166,24 +166,24 @@ class KapitalClientClass(APIClient):
             currency: Ödənişin məzənnəsi. Mümkün dəyərlər: `["AZN", "USD"]`.
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        create_order_response = self.create_order_for_pay_with_saved_card(
+        order_response = self.order_with_saved_card(
             amount=amount, currency=currency, description=description, **extra
         )
 
-        assert create_order_response.body and create_order_response.body.data
+        assert order_response.body and order_response.body.data
 
-        order_id = create_order_response.body.data.id
-        password = create_order_response.body.data.password
+        order_id = order_response.body.data.id
+        password = order_response.body.data.password
 
-        self.set_src_token(token=token, order_id=order_id, password=password, **extra)
+        self.link_card_token(token=token, order_id=order_id, password=password, **extra)
 
-        return self.exec_pay_with_saved_card(
+        return self.process_payment_with_saved_card(
             amount=amount, order_id=order_id, password=password, **extra
         )
 
     if TYPE_CHECKING:
 
-        def create_order(
+        def pay(
             self,
             amount: Numeric,
             currency: str,
@@ -198,7 +198,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.create_order(
+            KapitalRequest.pay(
                 amount=10.0,
                 currency="AZN",
                 description="Test payment",
@@ -218,7 +218,7 @@ class KapitalClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
-        def order_information(
+        def get_order_information(
             self, order_id: int
         ) -> APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]:
             """Ödəniş haqda qısa məlumat əldə etmək üçün sorğu
@@ -229,7 +229,7 @@ class KapitalClientClass(APIClient):
             ```python
             from integrify.kapital import KapitalRequest
 
-            KapitalRequest.order_information(order_id=123456)
+            KapitalRequest.get_order_information(order_id=123456)
             ```
 
             **Cavab formatı: [`BaseResponseSchema[OrderInformationResponseSchema]`][integrify.kapital.schemas.response.BaseResponseSchema]**
@@ -326,7 +326,7 @@ class KapitalClientClass(APIClient):
             `response.body.data.stored_tokens[0].id` ilə tokeni əldə edə bilərsiniz.
             """  # noqa: E501
 
-        def create_order_and_save_card(
+        def pay_and_save_card(
             self,
             amount: Numeric,
             currency: str,
@@ -441,7 +441,7 @@ class KapitalClientClass(APIClient):
                 amount: Ləğv olunacaq miqdar. Numerik dəyər.
             """  # noqa: E501
 
-        def create_order_for_pay_with_saved_card(
+        def order_with_saved_card(
             self,
             amount: Numeric,
             currency: str,
@@ -462,7 +462,7 @@ class KapitalClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
-        def set_src_token(
+        def link_card_token(
             self, token: int, order_id: int, password: str, **extra: Any
         ) -> APIResponse[BaseResponseSchema[SetSrcTokenResponseSchema]]:
             """
@@ -479,7 +479,7 @@ class KapitalClientClass(APIClient):
                 password: Ödənişin passwordu.
             """  # noqa: E501
 
-        def exec_pay_with_saved_card(
+        def process_payment_with_saved_card(
             self, amount: Numeric, order_id: int, password: str, **extra: Any
         ) -> APIResponse[BaseResponseSchema[ExecPayWithSavedCardResponseSchema]]:
             """
