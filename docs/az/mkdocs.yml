@@ -93,6 +93,7 @@ nav:
             - API Klient: "kapital/api-reference/client.md"
             - Schemas:
               - Response: "kapital/api-reference/response.md"
+              - Utils: "kapital/api-reference/utils.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"
