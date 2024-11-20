@@ -1,5 +1,6 @@
 import base64
 import json
+from functools import cached_property
 from typing import Optional, Type
 
 import httpx
@@ -43,14 +44,12 @@ class BasePayloadHandler(APIPayloadHandler):
         self,
         req_model: Type[PayloadBaseModel],
         resp_model: Type[ResponseType],
-        req_data_key: Optional[str] = None,
-        resp_data_key: Optional[str] = None,
+        data_key: Optional[str] = None,
     ):
         super().__init__(req_model, resp_model)
-        self.req_data_key = req_data_key
-        self.resp_data_key = resp_data_key
+        self.data_key = data_key
 
-    @property
+    @cached_property
     def headers(self):
         credentials = f'{KAPITAL_USERNAME}:{KAPITAL_PASSWORD}'
         encoded_credentials = base64.b64encode(credentials.encode()).decode()
@@ -60,8 +59,8 @@ class BasePayloadHandler(APIPayloadHandler):
         }
 
     def post_handle_payload(self, data):
-        if self.req_data_key:
-            return json.dumps({self.req_data_key: data})
+        if self.data_key:
+            return json.dumps({self.data_key: data})
 
         return json.dumps(data)
 
@@ -88,51 +87,18 @@ class BasePayloadHandler(APIPayloadHandler):
         return api_resp  # type: ignore[return-value]
 
     def get_response_data(self, response_json: dict) -> dict:
-        if not self.resp_data_key:
+        if not self.data_key:
             raise NotImplementedError("Subclasses must define 'response_data_key'")
 
-        return response_json.get(self.resp_data_key, {})
+        return response_json.get(self.data_key, {})
 
 
-class BaseOrderPayloadHandler(BasePayloadHandler):
-    def __init__(
-        self,
-        req_model: Type[PayloadBaseModel],
-        resp_model: Type[ResponseType],
-        req_data_key: Optional[str] = None,
-        resp_data_key: Optional[str] = None,
-    ):
-        super().__init__(req_model, resp_model, req_data_key, resp_data_key)
-
-    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
-        """
-        CreateOrderPayloadHandler üçün xüsusi funksiya.
-        Bu funksiyada response-da gelen order id ve password-dan istifadə edərək redirect_url yaradılır.
-        """  # noqa: E501
-        api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)  # type: ignore[assignment]
-
-        if resp.status_code == 200:
-            data = resp.json().get('order', {})
-
-            api_resp.body.data = CreateOrderResponseSchema(
-                id=data['id'],
-                password=data['password'],
-                redirect_url=f"{data['hppUrl']}?id={data['id']}&password={data['password']}",
-            )
-        else:
-            api_resp.body.error = ErrorResponseBodySchema.model_validate(
-                resp.json(), from_attributes=True
-            )
-
-        return api_resp  # type: ignore[return-value]
-
-
-class CreateOrderPayloadHandler(BaseOrderPayloadHandler):
+class CreateOrderPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(
             CreateOrderRequestSchema,
-            BaseResponseSchema,
-            req_data_key='order',
+            CreateOrderResponseSchema,
+            data_key='order',
         )
 
 
@@ -141,7 +107,7 @@ class OrderInformationPayloadHandler(BasePayloadHandler):
         super().__init__(
             OrderInformationRequestSchema,
             OrderInformationResponseSchema,
-            resp_data_key='order',
+            data_key='order',
         )
 
     def post_handle_payload(self, data):
@@ -153,7 +119,7 @@ class DetailedOrderInformationPayloadHandler(BasePayloadHandler):
         super().__init__(
             OrderInformationRequestSchema,
             DetailedOrderInformationResponseSchema,
-            resp_data_key='order',
+            data_key='order',
         )
 
     def post_handle_payload(self, data):
@@ -165,26 +131,25 @@ class RefundOrderPayloadHandler(BasePayloadHandler):
         super().__init__(
             RefundOrderRequestSchema,
             RefundOrderResponseSchema,
-            req_data_key='tran',
-            resp_data_key='tran',
+            data_key='tran',
         )
 
 
-class SaveCardPayloadHandler(BaseOrderPayloadHandler):
+class SaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(
             SaveCardRequestSchema,
-            BaseResponseSchema,
-            req_data_key='order',
+            CreateOrderResponseSchema,
+            data_key='order',
         )
 
 
-class PayAndSaveCardPayloadHandler(BaseOrderPayloadHandler):
+class PayAndSaveCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(
             PayAndSaveCardRequestSchema,
-            BaseResponseSchema,
-            req_data_key='order',
+            CreateOrderResponseSchema,
+            data_key='order',
         )
 
 
@@ -193,8 +158,7 @@ class FullReverseOrderPayloadHandler(BasePayloadHandler):
         super().__init__(
             FullReverseOrderRequestSchema,
             FullReverseOrderResponseSchema,
-            req_data_key='tran',
-            resp_data_key='tran',
+            data_key='tran',
         )
 
 
@@ -203,8 +167,7 @@ class ClearingOrderPayloadHandler(BasePayloadHandler):
         super().__init__(
             ClearingOrderRequestSchema,
             ClearingOrderResponseSchema,
-            req_data_key='tran',
-            resp_data_key='tran',
+            data_key='tran',
         )
 
 
@@ -213,17 +176,16 @@ class PartialReverseOrderPayloadHandler(BasePayloadHandler):
         super().__init__(
             PartialReverseOrderRequestSchema,
             PartialReverseOrderResponseSchema,
-            req_data_key='tran',
-            resp_data_key='tran',
+            data_key='tran',
         )
 
 
-class OrderWithSavedCardPayloadHandler(BaseOrderPayloadHandler):
+class OrderWithSavedCardPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(
             OrderWithSavedCardRequestSchema,
-            BaseResponseSchema,
-            req_data_key='order',
+            CreateOrderResponseSchema,
+            data_key='order',
         )
 
 
@@ -232,7 +194,7 @@ class LinkCardTokenPayloadHandler(BasePayloadHandler):
         super().__init__(
             LinkCardTokenRequestSchema,
             LinkCardTokenResponseSchema,
-            resp_data_key='order',
+            data_key='order',
         )
 
     def post_handle_payload(self, data):
@@ -249,6 +211,5 @@ class ProcessPaymentWithSavedCardPayloadHandler(BasePayloadHandler):
         super().__init__(
             ProcessPaymentWithSavedCardRequestSchema,
             ProcessPaymentWithSavedCardResponseSchema,
-            req_data_key='tran',
-            resp_data_key='tran',
+            data_key='tran',
         )

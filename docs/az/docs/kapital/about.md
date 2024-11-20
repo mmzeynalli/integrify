@@ -1,7 +1,8 @@
 # Kapital
 
 ???+ warning
-    Bu sorğulardan istifadə etmək üçün, bu dəyərləri "environment variable"-larına əlavə etməlisiniz: `KAPITAL_BASE_URL`, `KAPITAL_USERNAME`, `KAPITAL_PASSWORD`
+    Bu sorğulardan istifadə etmək üçün, bu dəyərləri "environment variable"-larına əlavə etməlisiniz: `KAPITAL_USERNAME`, `KAPITAL_PASSWORD`
+    Əlave olaraq `KAPITAL_ENV` dəyişənini də təyin etməlisiniz. Əgər default olaraq saxlasaz test mühitindən istifadə edəcəksiniz. Əks halda, `prod` dəyərini təyin etməlisiniz.
 
     Test mühitində işləmək üçün, aşağıdakı dəyərləri istifadə edə bilərsiniz: `https://txpgtst.kapitalbank.az`, `TerminalSys/kapital`, `kapital123`
 

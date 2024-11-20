@@ -149,7 +149,7 @@ class KapitalClientClass(APIClient):
         """
         Yadda saxlanmış kartdan ödəniş etmək üçün sorğu
 
-        **Kapital** /api/order
+        **Endpoint** /api/order
 
         Example:
         ```python
@@ -194,7 +194,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Ödəniş sorğusu
 
-            **Kapital** /api/order
+            **Endpoint** /api/order
 
             Example:
             ```python
@@ -225,7 +225,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]:
             """Ödəniş haqda qısa məlumat əldə etmək üçün sorğu
 
-            **Kapital** /api/order/{order_id}
+            **Endpoint** /api/order/{order_id}
 
             Example:
             ```python
@@ -247,7 +247,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]:
             """Ödəniş haqda detallı məlumat əldə etmək üçün sorğu
 
-            **Kapital** /api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2
+            **Endpoint** /api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2
 
             Example:
             ```python
@@ -272,7 +272,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[RefundOrderResponseSchema]]:
             """Geri ödəniş sorğusu
 
-            **Kapital** /api/order/{order_id}/exec-tran
+            **Endpoint** /api/order/{order_id}/exec-tran
 
             Example:
             ```python
@@ -303,7 +303,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq üçün ödəniş sorğusu
 
-            **Kapital** /api/order
+            **Endpoint** /api/order
 
             Example:
             ```python
@@ -337,7 +337,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq və ödəniş etmək üçün ödəniş sorğusu
 
-            **Kapital** /api/order
+            **Endpoint** /api/order
 
             Example:
             ```python
@@ -369,7 +369,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[FullReverseOrderResponseSchema]]:
             """Ödənişi ləğv etmək üçün sorğu
 
-            **Kapital** /api/order/{order_id}/exec-tran
+            **Endpoint** /api/order/{order_id}/exec-tran
 
             Example:
             ```python
@@ -396,7 +396,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[ClearingOrderResponseSchema]]:
             """Ödənişin təsdiq edilməsi üçün sorğu
 
-            **Kapital** /api/order/{order_id}/exec-tran
+            **Endpoint** /api/order/{order_id}/exec-tran
 
             Example:
             ```python
@@ -423,7 +423,7 @@ class KapitalClientClass(APIClient):
         ) -> APIResponse[BaseResponseSchema[PartialReverseOrderResponseSchema]]:
             """Ödənişin hissəsini ləğv etmək üçün sorğu
 
-            **Kapital** /api/order/{order_id}/exec-tran
+            **Endpoint** /api/order/{order_id}/exec-tran
 
             Example:
             ```python
@@ -453,7 +453,7 @@ class KapitalClientClass(APIClient):
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
 
-            **Kapital** /api/order
+            **Endpoint** /api/order
 
             Bu funksiya pay_with_saved_card() funksiyasında istifadə olunur.
             Əsas məqsədi order_id və password dəyərlərini əldə etməkdir.
@@ -470,7 +470,7 @@ class KapitalClientClass(APIClient):
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
 
-            **Kapital** /api/order/{order_id}/set-src-token?password={password}
+            **Endpoint** /api/order/{order_id}/set-src-token?password={password}
 
             Bu funksiya pay_with_saved_card() funksiyasında istifadə olunur.
             Əsas məqsədi token-i həmin order üçün set etməkdir.
@@ -487,7 +487,7 @@ class KapitalClientClass(APIClient):
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
 
-            **Kapital** /api/order/{order_id}/exec-tran?password={password}
+            **Endpoint** /api/order/{order_id}/exec-tran?password={password}
 
             Bu funksiya pay_with_saved_card() funksiyasında istifadə olunur.
             Əsas məqsədi ödənişi təsdiq etməkdir.
