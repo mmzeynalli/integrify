@@ -17,7 +17,7 @@ KAPITAL_REDIRECT_URL: Optional[str] = os.getenv('KAPITAL_REDIRECT_URL')
 
 if not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
     warn(
-        'KAPITAL_BASE_URL/KAPITAL_USERNAME/KAPITAL_PASSWORD mühit dəyişənlərinə dəyər verməsəniz '
+        'KAPITAL_USERNAME/KAPITAL_PASSWORD mühit dəyişənlərinə dəyər verməsəniz '
         'sorğular çalışmayacaq!'
     )
 
