@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Optional
 from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, APIResponse
@@ -144,7 +144,6 @@ class KapitalClientClass(APIClient):
         amount: Numeric,
         currency: str,
         description: Optional[str] = None,
-        **extra: Any,
     ) -> APIResponse[BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]]:
         """
         Yadda saxlanmış kartdan ödəniş etmək üçün sorğu
@@ -169,7 +168,9 @@ class KapitalClientClass(APIClient):
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
         order_response = self.order_with_saved_card(
-            amount=amount, currency=currency, description=description, **extra
+            amount=amount,
+            currency=currency,
+            description=description,
         )
 
         assert order_response.body and order_response.body.data
@@ -177,10 +178,16 @@ class KapitalClientClass(APIClient):
         order_id = order_response.body.data.id
         password = order_response.body.data.password
 
-        self.link_card_token(token=token, order_id=order_id, password=password, **extra)
+        self.link_card_token(
+            token=token,
+            order_id=order_id,
+            password=password,
+        )
 
         return self.process_payment_with_saved_card(
-            amount=amount, order_id=order_id, password=password, **extra
+            amount=amount,
+            order_id=order_id,
+            password=password,
         )
 
     if TYPE_CHECKING:
@@ -190,7 +197,6 @@ class KapitalClientClass(APIClient):
             amount: Numeric,
             currency: str,
             description: Optional[str] = None,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Ödəniş sorğusu
 
@@ -268,7 +274,6 @@ class KapitalClientClass(APIClient):
             self,
             order_id: int,
             amount: Numeric,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[RefundOrderResponseSchema]]:
             """Geri ödəniş sorğusu
 
@@ -299,7 +304,6 @@ class KapitalClientClass(APIClient):
             amount: Numeric,
             currency: str,
             description: Optional[str] = None,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq üçün ödəniş sorğusu
 
@@ -333,7 +337,6 @@ class KapitalClientClass(APIClient):
             amount: Numeric,
             currency: str,
             description: Optional[str] = None,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq və ödəniş etmək üçün ödəniş sorğusu
 
@@ -365,7 +368,6 @@ class KapitalClientClass(APIClient):
         def full_reverse_order(
             self,
             order_id: int,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[FullReverseOrderResponseSchema]]:
             """Ödənişi ləğv etmək üçün sorğu
 
@@ -392,7 +394,6 @@ class KapitalClientClass(APIClient):
             self,
             order_id: int,
             amount: Numeric,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[ClearingOrderResponseSchema]]:
             """Ödənişin təsdiq edilməsi üçün sorğu
 
@@ -419,7 +420,6 @@ class KapitalClientClass(APIClient):
             self,
             order_id: int,
             amount: Numeric,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[PartialReverseOrderResponseSchema]]:
             """Ödənişin hissəsini ləğv etmək üçün sorğu
 
@@ -448,7 +448,6 @@ class KapitalClientClass(APIClient):
             amount: Numeric,
             currency: str,
             description: Optional[str] = None,
-            **extra: Any,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
@@ -465,7 +464,10 @@ class KapitalClientClass(APIClient):
             """  # noqa: E501
 
         def link_card_token(
-            self, token: int, order_id: int, password: str, **extra: Any
+            self,
+            token: int,
+            order_id: int,
+            password: str,
         ) -> APIResponse[BaseResponseSchema[LinkCardTokenResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
@@ -482,7 +484,10 @@ class KapitalClientClass(APIClient):
             """  # noqa: E501
 
         def process_payment_with_saved_card(
-            self, amount: Numeric, order_id: int, password: str, **extra: Any
+            self,
+            amount: Numeric,
+            order_id: int,
+            password: str,
         ) -> APIResponse[BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!
