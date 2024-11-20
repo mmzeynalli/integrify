@@ -1,55 +1,9 @@
 from datetime import datetime
-from typing import Dict, Generic, List, Optional
+from typing import Dict, List, Optional
 
-from pydantic import Field, computed_field
+from pydantic import Field
 
 from integrify.kapital.schemas.utils import BaseSchema
-from integrify.schemas import ResponseType
-
-
-class ErrorResponseBodySchema(BaseSchema):
-    error_code: str
-    error_description: str
-
-
-class BaseResponseSchema(BaseSchema, Generic[ResponseType]):
-    error: Optional[ErrorResponseBodySchema] = None
-    """The error response body."""
-
-    data: Optional[ResponseType] = None
-    """The data response body."""
-
-
-class CreateOrderResponseSchema(BaseSchema):
-    id: int
-    password: str
-    hpp_url: str
-
-    @computed_field(return_type=str)  # type: ignore[prop-decorator]
-    @property
-    def redirect_url(self) -> str:
-        return f'{self.hpp_url}?id={self.id}&password={self.password}'
-
-
-# Response schemas for OrderInformationPayloadHandler
-
-
-class OrderType(BaseSchema):
-    title: str
-
-
-class OrderInformationResponseSchema(BaseSchema):
-    id: int
-    type_rid: str
-    status: str
-    last_status_login: str
-    amount: float
-    currency: str
-    create_time: str
-    type: OrderType
-
-
-# Response schemas for DetailedOrderInformationPayloadHandler
 
 
 class StoredToken(BaseSchema):
@@ -184,43 +138,3 @@ class DetailedOrderInformationResponseSchema(BaseSchema):
     hpp_cof_capture_purposes: List[str]
     cust_attrs: List[str]
     report_pubs: Dict
-
-
-# Response schemas for RefundOrderPayloadHandler
-
-
-class Match(BaseSchema):
-    tran_action_id: str
-    rid_by_pmo: str
-
-
-class RefundOrderResponseSchema(BaseSchema):
-    approval_code: str
-    match: Match
-    pmo_result_code: str
-
-
-class FullReverseOrderResponseSchema(BaseSchema):
-    match: Match
-    pmo_result_code: str
-
-
-class ClearingOrderResponseSchema(FullReverseOrderResponseSchema):
-    pass
-
-
-class PartialReverseOrderResponseSchema(FullReverseOrderResponseSchema):
-    pass
-
-
-class LinkCardTokenResponseSchema(BaseSchema):
-    status: str
-    cvv2_auth_status: str = Field(alias='cvv2AuthStatus')
-    tds_v1_auth_status: str = Field(alias='tdsV1AuthStatus')
-    tds_v2_auth_status: str = Field(alias='tdsV2AuthStatus')
-    otp_aut_status: str
-    src_token: SrcToken
-
-
-class ProcessPaymentWithSavedCardResponseSchema(RefundOrderResponseSchema):
-    pass
