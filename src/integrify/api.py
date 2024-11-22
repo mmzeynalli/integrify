@@ -192,26 +192,29 @@ class APIPayloadHandler:
     def handle_response(
         self,
         resp: httpx.Response,
-    ) -> Union[APIResponse[ResponseType], httpx.Response]:
+    ) -> Union[APIResponse[ResponseType], APIResponse[dict]]:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
         if self.resp_model:
             return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)  # type: ignore[name-defined]
 
-        return resp
+        return APIResponse[dict].model_validate(resp, from_attributes=True)
 
 
 class APIExecutor:
     """API sorgularını icra edən class"""
 
-    def __init__(self, name: str, sync: bool = True):
+    def __init__(self, name: str, sync: bool = True, dry: bool = False):
         """
         Args:
             name: API klientin adı. Logging üçün istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
+            dry: Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq.
+                    Debug üçün istifadə edilə bilər. Həmçinin AzeriCard-da istifadə olunur.
         """
         self.sync = sync
+        self.dry = dry
         self.client_name = name
         self.logger = LOGGER_FUNCTION(name)
 

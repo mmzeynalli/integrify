@@ -7,9 +7,10 @@ class TrType(str, Enum):
     ACCEPT_REQUEST = '21'
     RETURN_REQUEST = '22'
     CANCEL_REQUEST = '24'
+    REQUEST_STATUS = '90'
 
 
-class Action(str, Enum):
+class Action(int, Enum):
     TRANSACTION_SUCCESS = 0
     """Tranzaksiya uğurla tamamlandı"""
 

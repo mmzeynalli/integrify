@@ -1,30 +1,70 @@
 import base64
+import hashlib
+import hmac
 import json
-from typing import NamedTuple, Optional
+from typing import ClassVar, Literal, Optional, Set, TypedDict
 
-from pydantic import AliasGenerator, ConfigDict, Field, field_serializer
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, computed_field, field_serializer
 
-from integrify.azericard.schemas.common import AzeriCardDataSchema
+from integrify.azericard import env
+from integrify.azericard.schemas.common import (
+    AzeriCardMinimalDataSchema,
+    AzeriCardMinimalWithAmountDataSchema,
+)
+from integrify.azericard.schemas.enums import TrType
 
 
-class MobilePhone(NamedTuple):
+class BaseRequestSchema(BaseModel):
+    PSIGN_FIELDS: ClassVar[Set[str]]
+    model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
+
+    @computed_field
+    def p_sign(self) -> Optional[str]:
+        if not self.PSIGN_FIELDS:
+            return None
+
+        with open(env.AZERICARD_KEY_FILE_PATH) as key_file:
+            key = key_file.read()
+
+        mac_source = self.generate_mac_source()
+        return hmac.new(key.encode('utf-8'), mac_source.encode('utf-8'), hashlib.sha256).hexdigest()
+
+    def generate_mac_source(self):
+        source = ''
+        for field in self.PSIGN_FIELDS:
+            val = getattr(self, field)
+            assert val
+            source += str(len(val)) + str(val)
+
+        return source
+
+
+class MobilePhone(TypedDict):
     cc: str
     subscriber: str
 
 
-class MInfo(NamedTuple):
+class MInfo(TypedDict):
     browserScreenHeight: str
     browserScreenWidth: str
     browserTZ: str
     mobilePhone: MobilePhone
 
 
-class AuthRequestSchema(AzeriCardDataSchema):
-    model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
+class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
+    PSIGN_FIELDS: ClassVar[Set[str]] = {
+        'amount',
+        'currency',
+        'terminal',
+        'trtype',
+        'timestamp',
+        'nonce',
+        'merch_url',
+    }
 
-    desc: str = Field(min_length=1, max_length=50)
-    merch_name: str = Field(min_length=1, max_length=50)
-    merch_url: str = Field(min_length=1, max_length=250)
+    desc: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)
+    merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)
+    merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)
     email: Optional[str] = Field(..., max_length=80)
     country: Optional[str] = Field(..., max_length=2)
     merch_gmt: Optional[str] = Field(..., min_length=1, max_length=5)
@@ -38,4 +78,42 @@ class AuthRequestSchema(AzeriCardDataSchema):
         if not m_info:
             return None
 
-        return base64.b64encode(json.dumps(m_info._asdict()).encode()).decode()
+        return base64.b64encode(json.dumps(m_info).encode()).decode()
+
+
+class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
+    PSIGN_FIELDS: ClassVar[Set[str]] = {
+        'amount',
+        'currency',
+        'terminal',
+        'trtype',
+        'order',
+        'rrn',
+        'int_ref',
+    }
+
+    rrn: str = Field(min_length=12, max_length=12)
+    """Müştəri bankının axtarış istinad nömrəsi (ISO-8583 Sahə 37)"""
+
+    int_ref: str = Field(min_length=1, max_length=128)
+    """Elektron ticarət şlüzünün daxili istinad nömrəsi"""
+
+
+class PayAndSaveCardRequestSchema(AuthRequestSchema):
+    token_action: Literal['REGISTER']
+
+
+class PayWithSavedCardRequestSchema(AuthRequestSchema):
+    token: str = Field(min_length=28, max_length=28)
+
+
+class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataSchema):
+    PSIGN_FIELDS: ClassVar[Set[str]] = {
+        'order',
+        'terminal',
+        'trtype',
+        'timestamp',
+        'nonce',
+    }
+    tran_trtype: TrType = Field(min_length=1, max_length=2)
+    trtype: Literal[TrType.REQUEST_STATUS]
