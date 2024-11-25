@@ -82,9 +82,9 @@ def test_missing_response_handler_input(
         api_client.add_url('test', 'url', 'GET')
         api_client.add_handler('test', Handler)
         resp = api_client.test(data1='data1')
-        assert isinstance(resp, Response)
-        assert resp.json()['data1'] == 'data1'
-        assert resp.json()['data2'] == 'data2'
+        assert isinstance(resp.body, dict)
+        assert resp.body['data1'] == 'data1'
+        assert resp.body['data2'] == 'data2'
 
 
 def test_with_handlers(api_client: APIClient, test_ok_response, mocker: MockerFixture):
