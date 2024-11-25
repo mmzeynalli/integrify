@@ -3,7 +3,7 @@ from typing import ClassVar, Generic, Set, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
-ResponseType = TypeVar('ResponseType', bound=BaseModel)
+ResponseType = TypeVar('ResponseType', bound=Union[BaseModel, dict])
 
 
 class Environment(str, Enum):
