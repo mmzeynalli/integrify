@@ -63,9 +63,8 @@ class EPointClientClass(APIClient):
         self.add_url('split_pay_and_save_card', env.API.SPLIT_PAY_AND_SAVE_CARD)
         self.add_handler('split_pay_and_save_card', SplitPayAndSaveCardPayloadHandler)
 
-    def add_url(self, route_name: str, url: str):  # type: ignore[override]
-        # All Epoint requests are POST
-        return super().add_url(route_name, url, 'POST')
+    def add_url(self, route_name, url, verb='POST', base_url=None):
+        return super().add_url(route_name, url, verb, base_url)
 
     if TYPE_CHECKING:
 

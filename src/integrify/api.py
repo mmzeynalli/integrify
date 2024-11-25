@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel, ResponseType
+from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 
 
 class APIClient:
@@ -106,7 +106,7 @@ class APIPayloadHandler:
     def __init__(
         self,
         req_model: Optional[Type[PayloadBaseModel]] = None,
-        resp_model: Optional[Type[ResponseType]] = None,
+        resp_model: Optional[Type[_ResponseT]] = None,
     ):
         """
         Args:
@@ -202,7 +202,7 @@ class APIPayloadHandler:
     def handle_response(
         self,
         resp: httpx.Response,
-    ) -> Union[APIResponse[ResponseType], APIResponse[dict]]:
+    ) -> Union[APIResponse[_ResponseT], APIResponse[dict]]:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
@@ -241,13 +241,13 @@ class APIExecutor:
         self,
     ) -> Callable[
         [str, str, Optional['APIPayloadHandler'], Any],  # input args
-        Union[APIResponse[ResponseType], Coroutine[Any, Any, APIResponse[ResponseType]]],  # output
+        Union[APIResponse[_ResponseT], Coroutine[Any, Any, APIResponse[_ResponseT]]],  # output
     ]:
         """Sync/async request atan funksiyanı seçən attribute"""
         if self.sync:
-            return lambda *args, **kwds: self.sync_req(*args, **kwds)
-        else:
-            return lambda *args, **kwds: self.async_req(*args, **kwds)  # pragma: no cover
+            return self.sync_req
+
+        return self.async_req  # pragma: no cover
 
     def sync_req(self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds):
         """Sync sorğu atan funksiya
@@ -265,6 +265,7 @@ class APIExecutor:
 
         if self.dry:
             req_type = handler.req_model if handler and handler.req_model else Optional[dict]
+
             return APIResponse[req_type](  # type: ignore[valid-type]
                 ok=True,
                 status_code=200,
@@ -282,9 +283,11 @@ class APIExecutor:
 
         if not response.is_success:
             self.logger.error(
-                f'{self.client_name} request to {url} failed. '
-                f'Status code was {response.status_code}. '
-                f'Content => {response.content.decode()}'
+                '%s request to %s failed. Status code was %d. Content => %s',
+                self.client_name,
+                url,
+                response.status_code,
+                response.content.decode(),
             )
 
         if handler:
@@ -331,9 +334,11 @@ class APIExecutor:
 
         if not response.is_success:
             self.logger.error(
-                f'{self.client_name} request to {url} failed. '
-                f'Status code was {response.status_code}. '
-                f'Content => {response.content.decode()}'
+                '%s request to %s failed. Status code was %d. Content => %s',
+                self.client_name,
+                url,
+                response.status_code,
+                response.content.decode(),
             )
 
         if handler:
