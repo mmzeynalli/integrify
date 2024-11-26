@@ -62,9 +62,12 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
         'merch_url',
     }
 
-    desc: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)
-    merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)
-    merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)
+    # Next three fields can be set either through
+    # functions or environment, but they MUST be set
+    desc: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)  # type: ignore[assignment]
+    merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)  # type: ignore[assignment]
+    merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)  # type: ignore[assignment]
+
     email: Optional[str] = Field(..., max_length=80)
     country: Optional[str] = Field(..., max_length=2)
     merch_gmt: Optional[str] = Field(..., min_length=1, max_length=5)
