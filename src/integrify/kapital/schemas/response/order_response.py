@@ -8,7 +8,7 @@ class CreateOrderResponseSchema(BaseSchema):
     password: str
     hpp_url: str
 
-    @computed_field(return_type=str)  # type: ignore[prop-decorator]
+    @computed_field()  # type: ignore[prop-decorator]
     @property
     def redirect_url(self) -> str:
         return f'{self.hpp_url}?id={self.id}&password={self.password}'
