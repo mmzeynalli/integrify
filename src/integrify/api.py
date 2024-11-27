@@ -125,7 +125,7 @@ class APIPayloadHandler:
         Args:
             url: Format olunmalı url
         """
-        if not (self.req_model and self.__req_model):
+        if not (self.req_model and self.req_model.URL_PARAM_FIELDS and self.__req_model):
             if any(tup[1] for tup in string.Formatter().parse(url) if tup[1] is not None):
                 raise ValueError('URL should not expect any arguments')
 

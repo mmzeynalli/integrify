@@ -14,6 +14,10 @@ class RequestSchema(PayloadBaseModel):
     data1: str
 
 
+class RequestWithURLParamSchema(RequestSchema):
+    URL_PARAM_FIELDS = {'data1'}
+
+
 class ResponseSchema(BaseModel):
     data1: str
     data2: str
@@ -113,6 +117,39 @@ def test_error_log(test_error_response, mocker: MockerFixture):
 
             assert mock.call_count
             assert not resp.is_success
+
+
+def test_url_formatting_ok(api_client: APIClient, test_ok_response, mocker: MockerFixture):
+    class Handler(APIPayloadHandler):
+        def __init__(self):
+            super().__init__(RequestWithURLParamSchema, ResponseSchema)
+
+    with mocker.patch('httpx.Client.request', return_value=test_ok_response):
+        api_client.add_url('test', 'url?q={data1}', 'GET')
+        api_client.add_handler('test', Handler)
+        resp = api_client.test(data1='input1')
+        assert isinstance(resp.body, ResponseSchema)
+        assert resp.body.data1 == 'output1'
+        assert resp.body.data2 == 'output2'
+
+
+@pytest.mark.parametrize('req_schema', (RequestSchema, None))
+def test_url_formatting_fail_without_url_params(
+    api_client: APIClient,
+    test_ok_response,
+    mocker: MockerFixture,
+    req_schema,
+):
+    class Handler(APIPayloadHandler):
+        def __init__(self):
+            super().__init__(req_schema, ResponseSchema)
+
+    with mocker.patch('httpx.Client.request', return_value=test_ok_response), pytest.raises(
+        ValueError
+    ):
+        api_client.add_url('test', 'url?q={data1}', 'GET')
+        api_client.add_handler('test', Handler)
+        api_client.test(data1='input1')  # raises ValueError
 
 
 def test_dry_run_none(dry_api_client):
