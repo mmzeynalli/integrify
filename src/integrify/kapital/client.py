@@ -41,7 +41,7 @@ class KapitalClientClass(APIClient):
             'create_order',
             env.API.ORDER,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('create_order', CreateOrderPayloadHandler)
 
@@ -49,7 +49,7 @@ class KapitalClientClass(APIClient):
             'get_order_information',
             env.API.GET_ORDER,
             verb='GET',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('get_order_information', OrderInformationPayloadHandler)
 
@@ -57,7 +57,7 @@ class KapitalClientClass(APIClient):
             'get_detailed_order_info',
             env.API.GET_DETAILED_ORDER,
             verb='GET',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('get_detailed_order_info', DetailedOrderInformationPayloadHandler)
 
@@ -65,7 +65,7 @@ class KapitalClientClass(APIClient):
             'refund_order',
             env.API.ORDER_EXECUTION,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('refund_order', RefundOrderPayloadHandler)
 
@@ -73,7 +73,7 @@ class KapitalClientClass(APIClient):
             'save_card',
             env.API.ORDER,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('save_card', SaveCardPayloadHandler)
 
@@ -81,7 +81,7 @@ class KapitalClientClass(APIClient):
             'pay_and_save_card',
             env.API.ORDER,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('pay_and_save_card', PayAndSaveCardPayloadHandler)
 
@@ -89,7 +89,7 @@ class KapitalClientClass(APIClient):
             'full_reverse_order',
             env.API.ORDER_EXECUTION,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('full_reverse_order', FullReverseOrderPayloadHandler)
 
@@ -97,7 +97,7 @@ class KapitalClientClass(APIClient):
             'clearing_order',
             env.API.ORDER_EXECUTION,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('clearing_order', ClearingOrderPayloadHandler)
 
@@ -105,7 +105,7 @@ class KapitalClientClass(APIClient):
             'partial_reverse_order',
             env.API.ORDER_EXECUTION,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('partial_reverse_order', PartialReverseOrderPayloadHandler)
 
@@ -113,7 +113,7 @@ class KapitalClientClass(APIClient):
             'order_with_saved_card',
             env.API.ORDER,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler(
             'order_with_saved_card',
@@ -124,7 +124,7 @@ class KapitalClientClass(APIClient):
             'link_card_token',
             env.API.ORDER_LINK_CARD_TOKEN,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler('link_card_token', LinkCardTokenPayloadHandler)
 
@@ -132,7 +132,7 @@ class KapitalClientClass(APIClient):
             'process_payment_with_saved_card',
             env.API.PROCESS_PAYMENT_WITH_SAVED_CARD,
             verb='POST',
-            base_url=env.API.get_base_url(env.KAPITAL_ENV),
+            base_url=env.API.BASE_URL,
         )
         self.add_handler(
             'process_payment_with_saved_card', ProcessPaymentWithSavedCardPayloadHandler

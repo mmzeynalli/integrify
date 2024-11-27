@@ -27,6 +27,7 @@ class API(str, Enum):
     PROD_BASE_URL: Literal['https://e-commerce.kapitalbank.az'] = (
         'https://e-commerce.kapitalbank.az'
     )
+    BASE_URL = PROD_BASE_URL if KAPITAL_ENV == Environment.PROD else TEST_BASE_URL
 
     ORDER: Literal['/api/order'] = '/api/order'
     GET_ORDER: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
@@ -40,10 +41,6 @@ class API(str, Enum):
     PROCESS_PAYMENT_WITH_SAVED_CARD: Literal[
         '/api/order/{order_id}/exec-tran?password={password}'
     ] = '/api/order/{order_id}/exec-tran?password={password}'
-
-    @classmethod
-    def get_base_url(cls, env: str):
-        return cls.PROD_BASE_URL if env == Environment.PROD else cls.TEST_BASE_URL
 
 
 __all__ = [
