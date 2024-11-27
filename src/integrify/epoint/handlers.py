@@ -4,7 +4,7 @@ from typing import Type
 
 import httpx
 
-from integrify.api import APIPayloadHandler, _ResponseT
+from integrify.api import APIPayloadHandler
 from integrify.epoint import env
 from integrify.epoint.helper import generate_signature
 from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
@@ -28,7 +28,7 @@ from integrify.epoint.schemas.response import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
-from integrify.schemas import APIResponse, PayloadBaseModel
+from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 
 
 class BasePayloadHandler(APIPayloadHandler):

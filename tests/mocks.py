@@ -8,7 +8,7 @@ from tests.mocks import *  # noqa: F403
 def test_ok_response():
     return Response(
         status_code=200,
-        json={'data1': 'data1', 'data2': 'data2'},
+        json={'data1': 'output1', 'data2': 'output2'},
     )
 
 

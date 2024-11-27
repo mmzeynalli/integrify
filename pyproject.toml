@@ -122,6 +122,12 @@ disable = [
     'R0917'
 ]
 
+[tool.mypy]
+exclude = [
+    'tests/*'
+]
+plugins = ['pydantic.mypy']
+
 [tool.pytest.ini_options]
 pythonpath = ["src/"]
 filterwarnings = [

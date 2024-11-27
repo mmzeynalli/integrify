@@ -31,7 +31,7 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
 
     @field_validator('body', mode='before')
     @classmethod
-    def convert_to_dict(cls, v: Union[str, bytes]) -> dict:
+    def convert_to_dict(cls, v: Union[str, bytes]):
         """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir."""
         return json.loads(v)
 
