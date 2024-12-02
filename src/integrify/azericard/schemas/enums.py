@@ -1,13 +1,14 @@
 from enum import Enum
+from typing import Literal
 
 
 class TrType(str, Enum):
-    PRE_AUTHORAZATION = '0'
-    AUTHORAZATION = '1'
-    ACCEPT_REQUEST = '21'
-    RETURN_REQUEST = '22'
-    CANCEL_REQUEST = '24'
-    REQUEST_STATUS = '90'
+    PRE_AUTHORAZATION: Literal['0'] = '0'
+    AUTHORAZATION: Literal['1'] = '1'
+    ACCEPT_REQUEST: Literal['21'] = '21'
+    RETURN_REQUEST: Literal['22'] = '22'
+    CANCEL_REQUEST: Literal['24'] = '24'
+    REQUEST_STATUS: Literal['90'] = '90'
 
 
 class Action(int, Enum):

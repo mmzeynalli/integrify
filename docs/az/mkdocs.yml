@@ -79,7 +79,14 @@ plugins:
 nav:
   - Giriş: index.md
   - İnteqrasiya:
-      - EPoint: 
+      - AzeriCard:
+        - Ümumi məlumat: "azericard/about.md"
+        - API Referansı:
+            - API Klient: "azericard/api-reference/client.md"
+            - Schemas:
+              - Response: "azericard/api-reference/response.md"
+              - Callback: "azericard/api-reference/callback.md"
+      - EPoint:
           - Ümumi məlumat: "epoint/about.md"
           - API Referansı:
             - API Klient: "epoint/api-reference/client.md"

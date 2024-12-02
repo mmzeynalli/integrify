@@ -6,12 +6,12 @@ from integrify.azericard.schemas.request import (
     PayAndSaveCardRequestSchema,
     PayWithSavedCardRequestSchema,
 )
-from integrify.azericard.schemas.response import AuthResponseSchema
+from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
 
 
 class AuthPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(AuthRequestSchema, AuthResponseSchema)
+        super().__init__(AuthRequestSchema, None)
 
 
 class AuthConfirmPayloadHandler(APIPayloadHandler):
@@ -31,4 +31,8 @@ class PayWithSavedCardPayloadHandler(APIPayloadHandler):
 
 class GetTransactionStatusPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(GetTransactionStatusRequestSchema, None)
+        super().__init__(GetTransactionStatusRequestSchema, GetTransactionStatusResponseSchema)
+
+
+class RemitPayloadHandler(APIPayloadHandler):
+    pass

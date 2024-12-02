@@ -24,7 +24,7 @@ from integrify.epoint.schemas.response import (
     TransactionStatusResponseSchema,
 )
 
-__all__ = ['EPointClientClass']
+__all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 
 
 class EPointClientClass(APIClient):

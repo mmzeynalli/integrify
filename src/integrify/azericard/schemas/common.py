@@ -45,7 +45,7 @@ class AzeriCardMinimalDataSchema(BaseModel):
         return timestamp.strftime('%Y%m%d%H%M%S')
 
 
-class AzeriCardMinimalWithAmountDataSchema(BaseModel):
+class AzeriCardMinimalWithAmountDataSchema(AzeriCardMinimalDataSchema):
     amount: Decimal
     """Sifarişin ümumi məbləği"""
 
