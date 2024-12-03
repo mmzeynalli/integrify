@@ -5,12 +5,13 @@ from typing import Callable
 try:
     import logfire  # type: ignore[import-not-found]
 except ModuleNotFoundError:
-    logfire = None
+    logfire = None  # pylint: disable=C0103
+
 
 try:
     import loguru  # type: ignore[import-not-found]
 except ModuleNotFoundError:
-    loguru = None
+    loguru = None  # pylint: disable=C0103
 
 
 LOGGER: Callable = logging.getLogger

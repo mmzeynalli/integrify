@@ -1,10 +1,13 @@
+import json
+import string
+from functools import cached_property
 from typing import Any, Callable, Coroutine, Optional, Type, Union
 from urllib.parse import urljoin
 
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel, ResponseType
+from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 
 
 class APIClient:
@@ -18,6 +21,7 @@ class APIClient:
         base_url: Optional[str] = None,
         default_handler: Optional['APIPayloadHandler'] = None,
         sync: bool = True,
+        dry: bool = False,
     ):
         """
         Args:
@@ -32,7 +36,7 @@ class APIClient:
         self.base_url = base_url
         self.default_handler = default_handler or None
 
-        self.request_executor = APIExecutor(name=name, sync=sync)
+        self.request_executor = APIExecutor(name=name, sync=sync, dry=dry)
         """API sorğularını icra edən obyekt"""
 
         self.urls: dict[str, dict[str, str]] = {}
@@ -41,7 +45,7 @@ class APIClient:
         self.handlers: dict[str, APIPayloadHandler] = {}
         """API sorğularının payload (request və response) handler-lərının mapping-i"""
 
-    def add_url(self, route_name: str, url: str, verb: str, base_url: Optional[str] = None):
+    def add_url(self, route_name: str, url: str, verb: str, base_url: Optional[str] = None) -> None:
         """Yeni endpoint əlavə etmə funksiyası
 
         Args:
@@ -56,7 +60,7 @@ class APIClient:
         if base_url:
             self.urls[route_name]['base_url'] = base_url
 
-    def set_default_handler(self, handler_class: Type['APIPayloadHandler']):
+    def set_default_handler(self, handler_class: Type['APIPayloadHandler']) -> None:
         """Sorğulara default handler setter-i
 
         Args:
@@ -64,7 +68,7 @@ class APIClient:
         """
         self.default_handler = handler_class()  # pragma: no cover
 
-    def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']):
+    def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']) -> None:
         """Endpoint-ə handler əlavə etmək method-u
 
         Args:
@@ -104,7 +108,7 @@ class APIPayloadHandler:
     def __init__(
         self,
         req_model: Optional[Type[PayloadBaseModel]] = None,
-        resp_model: Optional[Type[ResponseType]] = None,
+        resp_model: Optional[Type[_ResponseT]] = None,
     ):
         """
         Args:
@@ -115,8 +119,16 @@ class APIPayloadHandler:
         self.__req_model: Optional[PayloadBaseModel] = None  # initialized pydantic model
         self.resp_model = resp_model
 
-    def set_urlparams(self, url: str):
-        if not (self.req_model and self.__req_model):
+    def set_urlparams(self, url: str) -> str:
+        """URL-in query-param-larını set etmək üçün funksiya (əgər varsa)
+
+        Args:
+            url: Format olunmalı url
+        """
+        if not (self.req_model and self.req_model.URL_PARAM_FIELDS and self.__req_model):
+            if any(tup[1] for tup in string.Formatter().parse(url) if tup[1] is not None):
+                raise ValueError('URL should not expect any arguments')
+
             return url
 
         return url.format(
@@ -129,8 +141,13 @@ class APIPayloadHandler:
         )
 
     @property
-    def headers(self):
+    def headers(self) -> dict:
         """Sorğunun header-ləri"""
+        return {}
+
+    @cached_property
+    def req_args(self) -> dict:
+        """Request funksiyası üçün əlavə parametrlər"""
         return {}
 
     def pre_handle_payload(self, *args, **kwds):
@@ -140,7 +157,6 @@ class APIPayloadHandler:
 
         Misal üçün: Bax [`EPointClientClass`][integrify.epoint.client.EPointClientClass]
         """
-        pass  # pragma: no cover
 
     def handle_payload(self, *args, **kwds):
         """Verilən argumentləri `self.req_model` formatında payload-a çevirən funksiya.
@@ -188,26 +204,29 @@ class APIPayloadHandler:
     def handle_response(
         self,
         resp: httpx.Response,
-    ) -> Union[APIResponse[ResponseType], httpx.Response]:
+    ) -> Union[APIResponse[_ResponseT], APIResponse[dict]]:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
         if self.resp_model:
             return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)  # type: ignore[name-defined]
 
-        return resp
+        return APIResponse[dict].model_validate(resp, from_attributes=True)
 
 
 class APIExecutor:
     """API sorgularını icra edən class"""
 
-    def __init__(self, name: str, sync: bool = True):
+    def __init__(self, name: str, sync: bool = True, dry: bool = False):
         """
         Args:
             name: API klientin adı. Logging üçün istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
+            dry: Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq üçün istifadə olunur.
+                    Debug üçün nəzərdə tutulub.
         """
         self.sync = sync
+        self.dry = dry
         self.client_name = name
         self.logger = LOGGER_FUNCTION(name)
 
@@ -224,15 +243,25 @@ class APIExecutor:
         self,
     ) -> Callable[
         [str, str, Optional['APIPayloadHandler'], Any],  # input args
-        Union[APIResponse[ResponseType], Coroutine[Any, Any, APIResponse[ResponseType]]],  # output
+        Union[
+            Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+            Coroutine[Any, Any, Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]],
+        ],  # output
     ]:
         """Sync/async request atan funksiyanı seçən attribute"""
         if self.sync:
-            return lambda *args, **kwds: self.sync_req(*args, **kwds)
-        else:
-            return lambda *args, **kwds: self.async_req(*args, **kwds)  # pragma: no cover
+            return self.sync_req
 
-    def sync_req(self, url: str, verb: str, handler: Optional['APIPayloadHandler'], *args, **kwds):
+        return self.async_req  # pragma: no cover
+
+    def sync_req(
+        self,
+        url: str,
+        verb: str,
+        handler: Optional['APIPayloadHandler'],
+        *args,
+        **kwds,
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
         """Sync sorğu atan funksiya
 
         Args:
@@ -246,13 +275,32 @@ class APIExecutor:
         headers = handler.headers if handler else None
         full_url = handler.set_urlparams(url) if handler else url
 
-        response = self.client.request(verb, full_url, data=data, headers=headers)
+        if self.dry:
+            _type = type(data)
+            _data = json.dumps(data)
+
+            return APIResponse[_type](  # type: ignore[valid-type, call-arg]
+                is_success=True,
+                status_code=200,
+                headers=headers or {},
+                content=_data,
+            )
+
+        response = self.client.request(
+            verb,
+            full_url,
+            data=data,
+            headers=headers,
+            **(handler.req_args if handler else {}),
+        )
 
         if not response.is_success:
             self.logger.error(
-                f'{self.client_name} request to {url} failed. '
-                f'Status code was {response.status_code}. '
-                f'Content => {response.content.decode()}'
+                '%s request to %s failed. Status code was %d. Content => %s',
+                self.client_name,
+                url,
+                response.status_code,
+                response.content.decode(),
             )
 
         if handler:
@@ -267,7 +315,7 @@ class APIExecutor:
         handler: Optional['APIPayloadHandler'],
         *args,
         **kwds,
-    ):
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
         """Async sorğu atan funksiya
 
         Args:
@@ -280,13 +328,32 @@ class APIExecutor:
         data = handler.handle_request(*args, **kwds) if handler else None
         headers = handler.headers if handler else None
 
-        response = await self.client.request(verb, url, data=data, headers=headers)
+        if self.dry:
+            _type = type(data)
+            _data = json.dumps(data)
+
+            return APIResponse[_type](  # type: ignore[valid-type, call-arg]
+                is_success=True,
+                status_code=200,
+                headers=headers or {},
+                content=_data,
+            )
+
+        response = await self.client.request(
+            verb,
+            url,
+            data=data,
+            headers=headers,
+            **(handler.req_args if handler else {}),
+        )
 
         if not response.is_success:
             self.logger.error(
-                f'{self.client_name} request to {url} failed. '
-                f'Status code was {response.status_code}. '
-                f'Content => {response.content.decode()}'
+                '%s request to %s failed. Status code was %d. Content => %s',
+                self.client_name,
+                url,
+                response.status_code,
+                response.content.decode(),
             )
 
         if handler:

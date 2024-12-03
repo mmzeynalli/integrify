@@ -75,7 +75,9 @@ coverage = [
     { version = "^7.6.3", python = ">=3.9" },
     { version = "7.6.1", python = "3.8" }
 ]
-
+pylint =  [
+    { version = "^3.3.1", python = ">=3.9" },
+]
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = {extras = ["imaging"], version = "^9.5.36"}
@@ -109,6 +111,22 @@ quote-style = "single"
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
+
+[tool.pylint.MASTER]
+ignore-paths = 'tests/'
+disable = [
+    'C0114',
+    'C0115',
+    'C0301',
+    'R0913',
+    'R0917'
+]
+
+[tool.mypy]
+exclude = [
+    'tests/*'
+]
+plugins = ['pydantic.mypy']
 
 [tool.pytest.ini_options]
 pythonpath = ["src/"]

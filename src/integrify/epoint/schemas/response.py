@@ -52,7 +52,7 @@ class BaseWithCodeSchema(BaseResponseSchema):
 
     @field_validator('code', mode='before')
     @classmethod
-    def code_to_msg(cls, v: Optional[str] = None):
+    def code_to_msg(cls, v: Optional[str] = None) -> Optional[str]:  # pylint: disable=C0116
         return Code[v] if v else None
 
 

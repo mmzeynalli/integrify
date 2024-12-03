@@ -31,6 +31,7 @@ format: .poetry
 lint: .poetry
 	poetry run ruff check
 	poetry run ruff format --check
+	poetry run pylint .
 
 .PHONY: type-check  ## Type-check python source files
 type-check: .poetry
