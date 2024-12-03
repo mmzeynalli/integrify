@@ -4,7 +4,7 @@ from typing import Type
 
 import httpx
 
-from integrify.api import APIPayloadHandler, ResponseType
+from integrify.api import APIPayloadHandler
 from integrify.epoint import env
 from integrify.epoint.helper import generate_signature
 from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
@@ -28,11 +28,11 @@ from integrify.epoint.schemas.response import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
-from integrify.schemas import APIResponse, PayloadBaseModel
+from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 
 
 class BasePayloadHandler(APIPayloadHandler):
-    def __init__(self, req_model: Type[PayloadBaseModel], resp_model: Type[ResponseType]):
+    def __init__(self, req_model: Type[PayloadBaseModel], resp_model: Type[_ResponseT]):
         super().__init__(req_model, resp_model)
 
     def pre_handle_payload(self, *args, **kwds):
@@ -48,7 +48,7 @@ class BasePayloadHandler(APIPayloadHandler):
             'signature': generate_signature(b64data),
         }
 
-    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+    def handle_response(self, resp: httpx.Response) -> APIResponse[_ResponseT]:
         api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
 
         # EPoint həmişə 200 qaytarır, error olsa belə

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Any, Optional
 from typing import SupportsFloat as Numeric
 
-from integrify.api import APIClient, APIResponse
+from integrify.api import APIClient
 from integrify.epoint import env
 from integrify.epoint.handlers import (
     GetTransactionStatusPayloadHandler,
@@ -23,6 +23,7 @@ from integrify.epoint.schemas.response import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
+from integrify.schemas import APIResponse
 
 __all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 
@@ -63,9 +64,14 @@ class EPointClientClass(APIClient):
         self.add_url('split_pay_and_save_card', env.API.SPLIT_PAY_AND_SAVE_CARD)
         self.add_handler('split_pay_and_save_card', SplitPayAndSaveCardPayloadHandler)
 
-    def add_url(self, route_name: str, url: str):  # type: ignore[override]
-        # All Epoint requests are POST
-        return super().add_url(route_name, url, 'POST')
+    def add_url(
+        self,
+        route_name: str,
+        url: str,
+        verb: str = 'POST',
+        base_url: Optional[str] = None,
+    ):
+        return super().add_url(route_name, url, verb, base_url)
 
     if TYPE_CHECKING:
 

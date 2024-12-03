@@ -35,6 +35,7 @@ class AzeriCardMinimalDataSchema(BaseModel):
     @field_validator('timestamp', mode='before')
     @classmethod
     def validate_timestamp(cls, val: datetime | str) -> datetime:
+        """İnput string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val
 
@@ -42,6 +43,7 @@ class AzeriCardMinimalDataSchema(BaseModel):
 
     @field_serializer('timestamp')
     def format_timestamp(self, timestamp: datetime) -> str:
+        """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
         return timestamp.strftime('%Y%m%d%H%M%S')
 
 

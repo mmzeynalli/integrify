@@ -62,6 +62,7 @@ class GetTransactionStatusResponseSchema(BaseModel):
     @field_validator('timestamp', 'date', mode='before')
     @classmethod
     def validate_timestamp(cls, val: datetime | str) -> datetime:
+        """İnput string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val
 

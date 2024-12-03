@@ -1,17 +1,18 @@
+import json
 from enum import Enum
-from typing import ClassVar, Generic, Set, TypeVar, Union
+from typing import ClassVar, Generic, Literal, Set, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
-ResponseType = TypeVar('ResponseType', bound=Union[BaseModel, dict])
+_ResponseT = TypeVar('_ResponseT', bound=Union[BaseModel, dict])
 
 
 class Environment(str, Enum):
-    TEST = 'test'
-    PROD = 'prod'
+    TEST: Literal['test'] = 'test'
+    PROD: Literal['prod'] = 'prod'
 
 
-class APIResponse(BaseModel, Generic[ResponseType]):
+class APIResponse(BaseModel, Generic[_ResponseT]):
     """Cavab sorğu base payload tipi. Generic tip-i qeyd etmıəklə
     sorğu cavabını validate edə bilərsiniz.
     """
@@ -25,14 +26,13 @@ class APIResponse(BaseModel, Generic[ResponseType]):
     headers: dict
     """Cavab sorğusunun header-i"""
 
-    body: ResponseType = Field(validation_alias='content')
+    body: _ResponseT = Field(validation_alias='content')
     """Cavab sorğusunun body-si"""
 
     @field_validator('body', mode='before')
-    def convert_to_dict(cls, v: Union[str, bytes]) -> dict:
+    @classmethod
+    def convert_to_dict(cls, v: Union[str, bytes]):
         """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir."""
-        import json
-
         return json.loads(v)
 
 
@@ -46,4 +46,4 @@ class PayloadBaseModel(BaseModel):
         modelindəki field-lərin ardıcıllığı və çağırılan funksiyada parametrlərinin ardıcıllığı
         EYNİ OLMALIDIR, əks halda, bu method yararsızdır.
         """
-        return cls.model_validate({**{k: v for k, v in zip(cls.model_fields.keys(), args)}, **kwds})
+        return cls.model_validate({**dict(zip(cls.model_fields.keys(), args)), **kwds})

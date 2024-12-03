@@ -20,16 +20,18 @@ class BaseRequestSchema(BaseModel):
 
     @computed_field
     def p_sign(self) -> Optional[str]:
+        """P_SIGN generasiyası"""
         if not self.PSIGN_FIELDS:
             return None
 
-        with open(env.AZERICARD_KEY_FILE_PATH) as key_file:
+        with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
             key = key_file.read()
 
         mac_source = self.generate_mac_source()
         return hmac.new(key.encode('utf-8'), mac_source.encode('utf-8'), hashlib.sha256).hexdigest()
 
     def generate_mac_source(self):
+        """P_SIGN üçün MAC source-un yaradılması"""
         source = ''
         for field in self.PSIGN_FIELDS:
             val = getattr(self, field)
@@ -78,6 +80,7 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
 
     @field_serializer('m_info')
     def serialize_minfo_to_b64(self, m_info: Optional[MInfo]):
+        """M_INFO dcit-ini base64 encodelaşdırılması"""
         if not m_info:
             return None
 

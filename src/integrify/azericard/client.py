@@ -25,41 +25,41 @@ class AzeriCardClientClass(APIClient):
 
         self.add_url(
             'auth',
-            env.MPI_API.AUTHORIZATION,
+            env.MpiAPI.AUTHORIZATION,
             'POST',
-            base_url=env.MPI_API.BASE_URL,
+            base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth', AuthPayloadHandler)
 
         self.add_url(
             'auth_resp',
-            env.MPI_API.AUTHORIZATION,
+            env.MpiAPI.AUTHORIZATION,
             'POST',
-            base_url=env.MPI_API.BASE_URL,
+            base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth_resp', AuthConfirmPayloadHandler)
 
         self.add_url(
             'auth_and_save_card',
-            env.MPI_API.SAVE_CARD,
+            env.MpiAPI.SAVE_CARD,
             'POST',
-            base_url=env.MPI_API.BASE_URL,
+            base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth_and_save_card', PayAndSavePayloadHandler)
 
         self.add_url(
             'auth_with_saved_card',
-            env.MPI_API.SAVE_CARD,
+            env.MpiAPI.SAVE_CARD,
             'POST',
-            base_url=env.MPI_API.BASE_URL,
+            base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth_with_saved_card', PayWithSavedCardPayloadHandler)
 
         self.add_url(
             'get_transaction_status',
-            env.MPI_API.AUTHORIZATION,
+            env.MpiAPI.AUTHORIZATION,
             'POST',
-            base_url=env.MPI_API.BASE_URL,
+            base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('get_transaction_status', GetTransactionStatusPayloadHandler)
 

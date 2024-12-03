@@ -10,17 +10,17 @@ VERSION = '2024.11.6'
 
 AZERICARD_MERCHANT_ID = os.getenv('AZERICARD_MERCHANT_ID', '')
 AZERICARD_KEY_FILE_PATH = os.getenv('AZERICARD_KEY_FILE_PATH', '')
-AZERICARD_ENV: str = os.getenv('AZERICARD_ENV', Environment.TEST)
+AZERICARD_ENV: str = os.getenv('AZERICARD_ENV', Environment.TEST)  # pylint: disable=invalid-envvar-default
 AZERICARD_MERCHANT_NAME = os.getenv('AZERICARD_MERCHANT_NAME', None)
 AZERICARD_MERCHANT_URL = os.getenv('AZERICARD_MERCHANT_URL', None)
 AZERICARD_CALLBACK_URL = os.getenv('AZERICARD_CALLBACK_URL', None)
 AZERICARD_INTERFACE_LANG = os.getenv('AZERICARD_INTERFACE_LANG', 'az')
 
 if not AZERICARD_KEY_FILE_PATH:
-    warn('AZERICARD_KEY_FILE_PATH mühit dəyişənlərinə' 'dəyər verməsəniz sorğular çalışmayacaq!')
+    warn('AZERICARD_KEY_FILE_PATH mühit dəyişənlərinə dəyər verməsəniz sorğular çalışmayacaq!')
 
 
-class MPI_API(str, Enum):
+class MpiAPI(str, Enum):
     """Endpoint constant-ları"""
 
     TEST_BASE_URL: Literal['https://testmpi.3dsecure.az'] = 'https://testmpi.3dsecure.az'
@@ -33,5 +33,5 @@ class MPI_API(str, Enum):
 
 __all__ = [
     'AZERICARD_MERCHANT_ID',
-    'MPI_API',
+    'MpiAPI',
 ]
