@@ -32,3 +32,14 @@ class Action(int, Enum):
 
     TRANSACTION_REPEAT_OF_UNRESPONDED = 8
     """Cavab verilmədən dayandırılmış əməliyyatın təkrarlanması"""
+
+
+class CardStatus(str, Enum):
+    ACTIVE: Literal['our_active'] = 'our_active'
+    """Kart AzeriCard database-indədir və aktiv statusa malikdir"""
+
+    INACTIVE: Literal['our_inactive'] = 'our_inactive'
+    """Kart AzeriCard database-indədir və və qeyri-aktiv statusa malikdir (bloklanmış/müddəti bitmiş və s.)"""  # noqa: E501
+
+    MISSING: Literal['foreign'] = 'foreign'
+    """Kart AzeriCard database-ində yoxdur"""

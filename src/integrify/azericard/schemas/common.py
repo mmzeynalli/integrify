@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_serializer, field_validator
+from pydantic import BaseModel, Field, computed_field, field_serializer, field_validator
 
 from integrify.azericard import env
 from integrify.azericard.schemas.enums import TrType
@@ -24,18 +24,17 @@ class AzeriCardMinimalDataSchema(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.now, min_length=14, max_length=14)
     """GMT-də e-ticarət şlüzünün vaxt damğası:: YYYYMMDDHHMMSS"""
 
-    nonce: str = Field(
-        default_factory=lambda: f'{random.getrandbits(128):0>16X}',
-        min_length=1,
-        max_length=64,
-    )
-    """E-Commerce Gateway qeyri-dəyərlidir. Hexadecimal formatda 8-32
-    təsadüfi baytla doldurulacaq. MAC istifadə edildikdə mövcud olacaq."""
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def nonce(self) -> str:
+        """E-Commerce Gateway qeyri-dəyərlidir. Hexadecimal formatda 8-32
+        təsadüfi baytla doldurulacaq. MAC istifadə edildikdə mövcud olacaq."""
+        return f'{random.getrandbits(128):0>16X}'
 
     @field_validator('timestamp', mode='before')
     @classmethod
     def validate_timestamp(cls, val: datetime | str) -> datetime:
-        """İnput string dəyərdirsə, datetime obyektinə çevirən funksiya"""
+        """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val
 

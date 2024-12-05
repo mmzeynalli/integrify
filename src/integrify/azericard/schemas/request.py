@@ -2,9 +2,19 @@ import base64
 import hashlib
 import hmac
 import json
+from datetime import datetime
+from decimal import Decimal
+from hashlib import md5
 from typing import ClassVar, Literal, Optional, Set, TypedDict
 
-from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, computed_field, field_serializer
+from pydantic import (
+    AliasGenerator,
+    ConfigDict,
+    Field,
+    computed_field,
+    field_serializer,
+)
+from pydantic.alias_generators import to_pascal
 
 from integrify.azericard import env
 from integrify.azericard.schemas.common import (
@@ -12,9 +22,10 @@ from integrify.azericard.schemas.common import (
     AzeriCardMinimalWithAmountDataSchema,
 )
 from integrify.azericard.schemas.enums import TrType
+from integrify.schemas import PayloadBaseModel
 
 
-class BaseRequestSchema(BaseModel):
+class BaseRequestSchema(PayloadBaseModel):
     PSIGN_FIELDS: ClassVar[Set[str]]
     model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
 
@@ -86,6 +97,27 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
 
         return base64.b64encode(json.dumps(m_info).encode()).decode()
 
+    @classmethod
+    def get_input_fields(cls):
+        return [
+            'amount',
+            'currency',
+            'order',
+            'desc',
+            'trtype',
+            'name',
+            'merch_name',
+            'merch_url',
+            'terminal',
+            'email',
+            'country',
+            'merch_gmt',
+            'backref',
+            'timestamp',
+            'lang',
+            'm_info',
+        ]
+
 
 class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
     PSIGN_FIELDS: ClassVar[Set[str]] = {
@@ -104,6 +136,19 @@ class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountData
     int_ref: str = Field(min_length=1, max_length=128)
     """Elektron ticarət şlüzünün daxili istinad nömrəsi"""
 
+    @classmethod
+    def get_input_fields(cls):
+        return [
+            'amount',
+            'currency',
+            'order',
+            'rrn',
+            'int_ref',
+            'trtype',
+            'terminal',
+            'timestamp',
+        ]
+
 
 class PayAndSaveCardRequestSchema(AuthRequestSchema):
     token_action: Literal['REGISTER']
@@ -111,6 +156,28 @@ class PayAndSaveCardRequestSchema(AuthRequestSchema):
 
 class PayWithSavedCardRequestSchema(AuthRequestSchema):
     token: str = Field(min_length=28, max_length=28)
+
+    @classmethod
+    def get_input_fields(cls):
+        return [
+            'amount',
+            'currency',
+            'order',
+            'desc',
+            'trtype',
+            'name',
+            'token',
+            'merch_name',
+            'merch_url',
+            'terminal',
+            'email',
+            'country',
+            'merch_gmt',
+            'backref',
+            'timestamp',
+            'lang',
+            'm_info',
+        ]
 
 
 class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataSchema):
@@ -123,3 +190,59 @@ class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataS
     }
     tran_trtype: TrType = Field(min_length=1, max_length=2)
     trtype: Literal[TrType.REQUEST_STATUS]
+
+    @classmethod
+    def get_input_fields(cls):
+        return ['tran_trtype', 'order', 'terminal', 'timestamp']
+
+
+class BaseTransferRequestSchema(PayloadBaseModel):
+    model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=to_pascal))
+
+    merchant: str = Field(min_length=1, max_length=16)
+    """Şirkət adı"""
+
+    srn: str = Field(min_length=1, max_length=12)
+    """Tərəfinizdən unikal əməliyyat nömrəsi"""
+
+    amount: Decimal
+    """Ödəniş məbləği"""
+
+    cur: str = Field(min_length=3, max_length=3)
+    """Ödəniş valyutasının 3 rəqəmli kodu (AZN - 944)"""
+
+
+class StartTransferRequestSchema(BaseTransferRequestSchema):
+    receiver_credentials: str = Field(max_length=151)
+    """İstifadəçinin tam adı"""
+
+    redirect_link: str = Field(max_length=12)
+    """Əməliyyatın sonunda müştərini yönləndirmək istədiyiniz keçid"""
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def signature(self):
+        """Yaradılmış data üçün signature generasiyası"""
+        with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
+            key = key_file.read()
+
+        return md5(
+            str(
+                self.merchant
+                + self.srn
+                + str(self.amount)
+                + self.cur
+                + self.receiver_credentials
+                + self.redirect_link
+                + key
+            ).encode('utf-8')
+        )
+
+
+class ConfirmTransferRequestSchema(BaseTransferRequestSchema):
+    timestamp: datetime = Field(default_factory=datetime.now, min_length=14, max_length=14)
+
+    @field_serializer('timestamp')
+    def format_timestamp(self, timestamp: datetime) -> str:
+        """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
+        return timestamp.strftime('%Y%m%d%H%M%S')

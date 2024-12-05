@@ -1,16 +1,20 @@
+from datetime import datetime
+from decimal import Decimal
+from hashlib import md5
 from typing import Optional
 
-from pydantic import AliasGenerator, BaseModel, ConfigDict, Field
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic.alias_generators import to_pascal
+from typing_extensions import Self
 
+from integrify.azericard import env
 from integrify.azericard.schemas.common import AzeriCardMinimalWithAmountDataSchema
-from integrify.azericard.schemas.enums import Action
+from integrify.azericard.schemas.enums import Action, CardStatus
 
 
-class BaseCallbackSchema(BaseModel):
+class AuthCallbackSchema(AzeriCardMinimalWithAmountDataSchema):
     model_config = ConfigDict(alias_generator=AliasGenerator(validation_alias=str.upper))
 
-
-class AuthResponseSchema(BaseCallbackSchema, AzeriCardMinimalWithAmountDataSchema):
     action: Action
     """EGateway fəaliyyət kodu"""
 
@@ -31,9 +35,82 @@ class AuthResponseSchema(BaseCallbackSchema, AzeriCardMinimalWithAmountDataSchem
     """16-lıq formatda Merchant MAC"""
 
 
-class AuthResponseWithCardDataSchema(AuthResponseSchema):
+class AuthCallbackWithCardDataSchema(AuthCallbackSchema):
     card: Optional[str]
     """Masklanmış kart nömrəsi"""
 
     token: Optional[str]
     """Saxlanılacaq kartın TOKEN parametri"""
+
+
+class TransferCallbackSchema(BaseModel):
+    model_config = ConfigDict(alias_generator=AliasGenerator(validation_alias=to_pascal))
+
+    operation_id: str = Field(min_length=16, max_length=20)
+    """AzeriCard tərəfindən verilmiş unikal əməliyyat nömrəsi"""
+
+    srn: str = Field(min_length=1, max_length=12, validation_alias='SRN')
+    """Tərəfinizdən unikal əməliyyat nömrəsi"""
+
+    amount: Decimal
+    """Müraciətdən gələn məbləğ"""
+
+    cur: str
+    """Sorğunun valyutası yalnız 944 (AZN) olmalıdır"""
+
+    card_status: CardStatus
+    """Azericard tərəfində istifadəçi kartı statusu"""
+
+    receiver_pan: str = Field(min_length=16, max_length=16, validation_alias='ReceiverPAN')
+    """Maskalı kart nömrəsi"""
+
+    status: str
+    """Cari tranzaksiya statusu (məsələn, "pending")"""
+
+    timestamp: datetime
+    """Cavab vaxtı"""
+
+    rc: str = Field(validation_alias='Response Code')
+    """Cavab kodu"""
+
+    message: str
+    """Cavab mesajı"""
+
+    signature: str
+    """Hesablanmış dəyər MD5(Bütün sahələr birləşdirilib + Açar)"""
+
+    @field_validator('timestamp', mode='before')
+    @classmethod
+    def validate_timestamp(cls, val: datetime | str) -> datetime:
+        """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
+        if isinstance(val, datetime):
+            return val
+
+        return datetime.strptime(val, '%Y%m%d%H%M%S')
+
+    @model_validator(mode='after')
+    def validate_signature(self) -> Self:
+        """AzeriCard-dan gələn signature-ni təsdiqləmə funksiyası"""
+        with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
+            key = key_file.read()
+
+        calc_signature = md5(
+            str(
+                self.operation_id
+                + self.srn
+                + str(self.amount)
+                + self.cur
+                + self.card_status
+                + self.receiver_pan
+                + self.status
+                + self.timestamp.strftime('%Y%m%d%H%M%S')
+                + self.rc
+                + self.message
+                + key
+            ).encode('utf-8')
+        )
+
+        if calc_signature != self.signature:
+            raise ValueError('Signature does not match!')
+
+        return self
