@@ -23,8 +23,8 @@ __all__ = ['AzeriCardAsyncRequest', 'AzeriCardClientClass', 'AzeriCardRequest']
 class AzeriCardClientClass(APIClient):
     """AzeriCard sorğular üçün baza class"""
 
-    def __init__(self, sync: bool = True):
-        super().__init__('AzeriCard', sync=sync)
+    def __init__(self, sync: bool = True, dry: bool = False):
+        super().__init__('AzeriCard', sync=sync, dry=dry)
 
         self.add_url('auth', env.MpiAPI.AUTHORIZATION, 'POST', base_url=env.MpiAPI.BASE_URL)
         self.add_handler('auth', AuthPayloadHandler)

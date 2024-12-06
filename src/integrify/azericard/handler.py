@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from integrify.api import APIPayloadHandler
 from integrify.azericard.schemas.request import (
     AuthConfirmRequestSchema,
@@ -14,6 +16,11 @@ from integrify.azericard.schemas.response import GetTransactionStatusResponseSch
 class AuthPayloadHandler(APIPayloadHandler):
     def __init__(self):
         super().__init__(AuthRequestSchema, None)
+
+    @cached_property
+    def req_args(self) -> dict:
+        """Request funksiyası üçün əlavə parametrlər"""
+        return {'follow_redirects': False}
 
 
 class AuthConfirmPayloadHandler(APIPayloadHandler):

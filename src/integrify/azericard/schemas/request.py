@@ -47,7 +47,7 @@ class BaseRequestSchema(PayloadBaseModel):
         for field in self.PSIGN_FIELDS:
             val = getattr(self, field)
             assert val
-            source += str(len(val)) + str(val)
+            source += str(len(str(val))) + str(val)
 
         return source
 
@@ -81,12 +81,12 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
     merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)  # type: ignore[assignment]
     merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)  # type: ignore[assignment]
 
-    email: Optional[str] = Field(..., max_length=80)
-    country: Optional[str] = Field(..., max_length=2)
-    merch_gmt: Optional[str] = Field(..., min_length=1, max_length=5)
-    backref: str = Field(min_length=1, max_length=250)
-    lang: str = Field(min_length=2, max_length=2)
-    name: str = Field(min_length=2, max_length=45)
+    email: Optional[str] = Field(None, max_length=80)
+    country: Optional[str] = Field(None, max_length=2)
+    merch_gmt: Optional[str] = Field(None, min_length=1, max_length=5)
+    backref: str = Field(default=env.AZERICARD_CALLBACK_URL, min_length=1, max_length=250)  # type: ignore[assignment]
+    lang: str = Field(default=env.AZERICARD_INTERFACE_LANG, min_length=2, max_length=2)
+    name: Optional[str] = Field(None, min_length=2, max_length=45)
     m_info: Optional[MInfo] = None
 
     @field_serializer('m_info')
@@ -221,21 +221,25 @@ class StartTransferRequestSchema(BaseTransferRequestSchema):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def signature(self):
+    def signature(self) -> str:
         """Yaradılmış data üçün signature generasiyası"""
         with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
             key = key_file.read()
 
-        return md5(
-            str(
-                self.merchant
-                + self.srn
-                + str(self.amount)
-                + self.cur
-                + self.receiver_credentials
-                + self.redirect_link
-                + key
-            ).encode('utf-8')
+        return (
+            md5(
+                str(
+                    self.merchant
+                    + self.srn
+                    + str(self.amount)
+                    + self.cur
+                    + self.receiver_credentials
+                    + self.redirect_link
+                    + key
+                ).encode('utf-8')
+            )
+            .digest()
+            .decode()
         )
 
 

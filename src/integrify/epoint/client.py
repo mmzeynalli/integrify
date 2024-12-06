@@ -31,8 +31,8 @@ __all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 class EPointClientClass(APIClient):
     """EPoint sorğular üçün baza class"""
 
-    def __init__(self, sync: bool = True):
-        super().__init__('EPoint', env.API.BASE_URL, None, sync)
+    def __init__(self, sync: bool = True, dry: bool = False):
+        super().__init__('EPoint', env.API.BASE_URL, sync=sync, dry=dry)
 
         self.add_url('pay', env.API.PAY)
         self.add_handler('pay', PaymentPayloadHandler)
