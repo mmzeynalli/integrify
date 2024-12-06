@@ -105,7 +105,6 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
             'order',
             'desc',
             'trtype',
-            'name',
             'merch_name',
             'merch_url',
             'terminal',
@@ -115,6 +114,7 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
             'backref',
             'timestamp',
             'lang',
+            'name',
             'm_info',
         ]
 
@@ -165,7 +165,6 @@ class PayWithSavedCardRequestSchema(AuthRequestSchema):
             'order',
             'desc',
             'trtype',
-            'name',
             'token',
             'merch_name',
             'merch_url',
@@ -176,6 +175,7 @@ class PayWithSavedCardRequestSchema(AuthRequestSchema):
             'backref',
             'timestamp',
             'lang',
+            'name',
             'm_info',
         ]
 

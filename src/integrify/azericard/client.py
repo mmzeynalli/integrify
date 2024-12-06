@@ -72,7 +72,6 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            name: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -82,6 +81,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ):
             """Ödəniş sorğusu
@@ -102,7 +102,6 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -112,6 +111,7 @@ class AzeriCardClientClass(APIClient):
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
@@ -128,7 +128,6 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            name: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -138,6 +137,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ):
             """Ödəniş və kartı yadda saxlama sorğusu
@@ -160,7 +160,6 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -170,6 +169,7 @@ class AzeriCardClientClass(APIClient):
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
     else:
@@ -185,7 +185,6 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            name: str,
             card_token: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
@@ -196,6 +195,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ):
             """Yadda saxlanılmış kartla ödəniş sorğusu
@@ -216,7 +216,6 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 card_token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -227,6 +226,7 @@ class AzeriCardClientClass(APIClient):
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
@@ -243,7 +243,6 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            name: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -253,6 +252,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ):
             """Pul Bloklama/Dondurma sorğusu.
@@ -279,7 +279,6 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -289,6 +288,7 @@ class AzeriCardClientClass(APIClient):
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
     else:
@@ -304,7 +304,6 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            name: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -314,6 +313,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ):
             """Pul bloklama/dondurma və kartı yadda saxlama sorğusu
@@ -340,7 +340,6 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -350,6 +349,7 @@ class AzeriCardClientClass(APIClient):
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
     else:
@@ -365,7 +365,6 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            name: str,
             card_token: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
@@ -376,6 +375,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ):
             """Yadda saxlanılmış kartdan pulu bloklama/dondurma sorğusu
@@ -402,7 +402,6 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 card_token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -413,6 +412,7 @@ class AzeriCardClientClass(APIClient):
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
     else:
@@ -552,7 +552,6 @@ class AzeriCardClientClass(APIClient):
             order: str,
             desc: str,
             trtype: TrType,
-            name: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -562,6 +561,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ) -> APIResponse:
             """Ümumi Ödəniş/Pul Dondurma/Dondurulmanı tamamlama sorğusu
@@ -584,15 +584,15 @@ class AzeriCardClientClass(APIClient):
                 desc: Ödənişin təsviri/açıqlaması
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
                 merch_url: Satıcının web site URL-i
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID
+                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
                 country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
                 merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
                 lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
@@ -637,7 +637,6 @@ class AzeriCardClientClass(APIClient):
             order: str,
             desc: str,
             trtype: TrType,
-            name: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -647,6 +646,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ) -> APIResponse[dict]:
             """Ümumi kartı saxlayaraq ödəniş sorğusu
@@ -671,12 +671,12 @@ class AzeriCardClientClass(APIClient):
                 merch_url: Satıcının web site URL-i
                 trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
                 country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
                 merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                lang: Dil seçimi
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+                lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
@@ -687,7 +687,6 @@ class AzeriCardClientClass(APIClient):
             order: str,
             desc: str,
             trtype: TrType,
-            name: str,
             token: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
@@ -698,6 +697,7 @@ class AzeriCardClientClass(APIClient):
             backref: Optional[str] = None,
             timestamp: Optional[datetime] = None,
             lang: Optional[str] = None,
+            name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
         ) -> APIResponse[dict]:
             """Ümumi saxlanmış kart ilə Authurization sorğusu
@@ -722,13 +722,13 @@ class AzeriCardClientClass(APIClient):
                 merch_url: Satıcının web site URL-i
                 trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL
-                name: Müştərinin adı (kartda göstərildiyi kimi)
                 token: Yadda saxlanılmış kartın ID-si
                 email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
                 country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
                 merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                lang: Dil seçimi
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+                lang: Dil seçimi
+                name: Müştərinin adı (kartda göstərildiyi kimi)
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 

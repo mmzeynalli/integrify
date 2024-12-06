@@ -1,4 +1,4 @@
-# EPoint klientinin API Reference-i
+# AzeriCard klientinin API Reference-i
 
 ???+ note
 
@@ -39,6 +39,7 @@
         - reverse_blocked_payment
         - cancel_blocked_payment
         - get_transaction_status
-        - remit
+        - start_transfer
+        - confirm_transfer
         - auth
         - auth_response

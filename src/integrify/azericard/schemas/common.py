@@ -1,9 +1,8 @@
 import random
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 
-from pydantic import BaseModel, Field, computed_field, field_serializer, field_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 from integrify.azericard import env
 from integrify.azericard.schemas.enums import TrType
@@ -14,7 +13,7 @@ class AzeriCardMinimalDataSchema(BaseModel):
     """Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur,
     terminal id üçün bir gün ərzində unikal olmalıdır"""
 
-    terminal: Optional[str] = env.AZERICARD_MERCHANT_ID
+    terminal: str = Field(default=env.AZERICARD_MERCHANT_ID)
     """Bank tərəfindən təyin edilmiş Merchant Terminal ID"""
 
     trtype: TrType = Field(min_length=1, max_length=2)
@@ -22,14 +21,15 @@ class AzeriCardMinimalDataSchema(BaseModel):
     Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)"""
 
     timestamp: datetime = Field(default_factory=datetime.now, min_length=14, max_length=14)
-    """GMT-də e-ticarət şlüzünün vaxt damğası:: YYYYMMDDHHMMSS"""
+    """GMT-də e-ticarət şlüzünün vaxt damğası: YYYYMMDDHHMMSS"""
 
-    @computed_field  # type: ignore[prop-decorator]
-    @property
-    def nonce(self) -> str:
-        """E-Commerce Gateway qeyri-dəyərlidir. Hexadecimal formatda 8-32
-        təsadüfi baytla doldurulacaq. MAC istifadə edildikdə mövcud olacaq."""
-        return f'{random.getrandbits(128):0>16X}'
+    nonce: str = Field(
+        default_factory=lambda: f'{random.getrandbits(128):0>16X}',
+        min_length=8,
+        max_length=32,
+    )
+    """E-Commerce Gateway qeyri-dəyərlidir. Hexadecimal formatda 8-32
+    təsadüfi baytla doldurulacaq. MAC istifadə edildikdə mövcud olacaq."""
 
     @field_validator('timestamp', mode='before')
     @classmethod
