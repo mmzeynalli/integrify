@@ -4,6 +4,7 @@ import pytest
 
 from integrify.kapital.client import KapitalClientClass
 from tests import kapital
+from tests.kapital.mocks import *  # noqa: F403
 
 
 @pytest.fixture(autouse=True, scope='session')
