@@ -19,7 +19,7 @@ class APIClient:
         self,
         name: str,
         base_url: Optional[str] = None,
-        default_handler: Optional["APIPayloadHandler"] = None,
+        default_handler: Optional['APIPayloadHandler'] = None,
         sync: bool = True,
         dry: bool = False,
     ):
@@ -45,9 +45,7 @@ class APIClient:
         self.handlers: dict[str, APIPayloadHandler] = {}
         """API sorğularının payload (request və response) handler-lərının mapping-i"""
 
-    def add_url(
-        self, route_name: str, url: str, verb: str, base_url: Optional[str] = None
-    ) -> None:
+    def add_url(self, route_name: str, url: str, verb: str, base_url: Optional[str] = None) -> None:
         """Yeni endpoint əlavə etmə funksiyası
 
         Args:
@@ -55,14 +53,14 @@ class APIClient:
             url: Endpoint url-i
             verb: Endpoint metodunun (`POST`, `GET`, və s.)
         """
-        self.urls[route_name] = {"url": url, "verb": verb}
+        self.urls[route_name] = {'url': url, 'verb': verb}
 
         # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə,
         # endpointləri, `base_url` ilə əlavə etmək lazımdır.
         if base_url:
-            self.urls[route_name]["base_url"] = base_url
+            self.urls[route_name]['base_url'] = base_url
 
-    def set_default_handler(self, handler_class: Type["APIPayloadHandler"]) -> None:
+    def set_default_handler(self, handler_class: Type['APIPayloadHandler']) -> None:
         """Sorğulara default handler setter-i
 
         Args:
@@ -70,9 +68,7 @@ class APIClient:
         """
         self.default_handler = handler_class()  # pragma: no cover
 
-    def add_handler(
-        self, route_name: str, handler_class: Type["APIPayloadHandler"]
-    ) -> None:
+    def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']) -> None:
         """Endpoint-ə handler əlavə etmək method-u
 
         Args:
@@ -97,9 +93,9 @@ class APIClient:
 
         # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
         # taparaq, sorğunu icra edirik.
-        base_url = self.base_url or self.urls[name]["base_url"]
-        url = urljoin(base_url, self.urls[name]["url"])
-        verb = self.urls[name]["verb"]
+        base_url = self.base_url or self.urls[name]['base_url']
+        url = urljoin(base_url, self.urls[name]['url'])
+        verb = self.urls[name]['verb']
         handler = self.handlers.get(name, self.default_handler)
 
         func = self.request_executor.request_function
@@ -120,9 +116,7 @@ class APIPayloadHandler:
             resp_model: Sorğunun cavabının payload model-i
         """
         self.req_model = req_model
-        self.__req_model: Optional[PayloadBaseModel] = (
-            None  # initialized pydantic model
-        )
+        self.__req_model: Optional[PayloadBaseModel] = None  # initialized pydantic model
         self.resp_model = resp_model
 
     def set_urlparams(self, url: str) -> str:
@@ -131,13 +125,9 @@ class APIPayloadHandler:
         Args:
             url: Format olunmalı url
         """
-        if not (
-            self.req_model and self.req_model.URL_PARAM_FIELDS and self.__req_model
-        ):
-            if any(
-                tup[1] for tup in string.Formatter().parse(url) if tup[1] is not None
-            ):
-                raise ValueError("URL should not expect any arguments")
+        if not (self.req_model and self.req_model.URL_PARAM_FIELDS and self.__req_model):
+            if any(tup[1] for tup in string.Formatter().parse(url) if tup[1] is not None):
+                raise ValueError('URL should not expect any arguments')
 
             return url
 
@@ -146,7 +136,7 @@ class APIPayloadHandler:
                 by_alias=True,
                 include=self.req_model.URL_PARAM_FIELDS,
                 exclude_none=True,
-                mode="json",
+                mode='json',
             )
         )
 
@@ -178,7 +168,7 @@ class APIPayloadHandler:
                 by_alias=True,
                 exclude=self.req_model.URL_PARAM_FIELDS,
                 exclude_none=True,
-                mode="json",
+                mode='json',
             )
 
         # `req_model` yoxdursa, o zaman `*args` boş olmalıdır, çünki onların key-ləri bilinmir
@@ -252,7 +242,7 @@ class APIExecutor:
     def request_function(
         self,
     ) -> Callable[
-        [str, str, Optional["APIPayloadHandler"], Any],  # input args
+        [str, str, Optional['APIPayloadHandler'], Any],  # input args
         Union[
             Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
             Coroutine[
@@ -272,7 +262,7 @@ class APIExecutor:
         self,
         url: str,
         verb: str,
-        handler: Optional["APIPayloadHandler"],
+        handler: Optional['APIPayloadHandler'],
         *args,
         **kwds,
     ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
@@ -310,7 +300,7 @@ class APIExecutor:
 
         if not response.is_success:
             self.logger.error(
-                "%s request to %s failed. Status code was %d. Content => %s",
+                '%s request to %s failed. Status code was %d. Content => %s',
                 self.client_name,
                 url,
                 response.status_code,
@@ -326,7 +316,7 @@ class APIExecutor:
         self,
         url: str,
         verb: str,
-        handler: Optional["APIPayloadHandler"],
+        handler: Optional['APIPayloadHandler'],
         *args,
         **kwds,
     ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
@@ -363,7 +353,7 @@ class APIExecutor:
 
         if not response.is_success:
             self.logger.error(
-                "%s request to %s failed. Status code was %d. Content => %s",
+                '%s request to %s failed. Status code was %d. Content => %s',
                 self.client_name,
                 url,
                 response.status_code,

@@ -1,7 +1,7 @@
 from typing import Generic, Optional
 
 from integrify.kapital.schemas.utils import BaseSchema
-from integrify.schemas import ResponseType
+from integrify.schemas import _ResponseT
 
 
 class ErrorResponseBodySchema(BaseSchema):
@@ -9,9 +9,9 @@ class ErrorResponseBodySchema(BaseSchema):
     error_description: str
 
 
-class BaseResponseSchema(BaseSchema, Generic[ResponseType]):
+class BaseResponseSchema(BaseSchema, Generic[_ResponseT]):
     error: Optional[ErrorResponseBodySchema] = None
     """The error response body."""
 
-    data: Optional[ResponseType] = None
+    data: Optional[_ResponseT] = None
     """The data response body."""

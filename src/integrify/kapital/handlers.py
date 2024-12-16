@@ -5,7 +5,7 @@ from typing import Optional, Type
 
 import httpx
 
-from integrify.api import APIPayloadHandler, APIResponse, ResponseType
+from integrify.api import APIPayloadHandler, APIResponse, _ResponseT
 from integrify.kapital.env import (
     KAPITAL_PASSWORD,
     KAPITAL_USERNAME,
@@ -43,7 +43,7 @@ class BasePayloadHandler(APIPayloadHandler):
     def __init__(
         self,
         req_model: Type[PayloadBaseModel],
-        resp_model: Type[ResponseType],
+        resp_model: Type[_ResponseT],
         data_key: Optional[str] = None,
     ):
         super().__init__(req_model, resp_model)
@@ -64,7 +64,7 @@ class BasePayloadHandler(APIPayloadHandler):
 
         return json.dumps(data)
 
-    def handle_response(self, resp: httpx.Response) -> APIResponse[ResponseType]:
+    def handle_response(self, resp: httpx.Response) -> APIResponse[_ResponseT]:
         """
         Bu funksiya API-dən gələn cavabı status koduna görə tənzimləyir.
         Əgər status kodu 200-dürsə, gələn cavabı modelə uyğunlaşdırır və APIResponse obyektini qaytarır.
@@ -76,7 +76,7 @@ class BasePayloadHandler(APIPayloadHandler):
         if resp.status_code == 200:
             if self.resp_model:
                 data = self.get_response_data(resp.json())
-                api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)
+                api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)  # type: ignore[attr-defined]
             else:
                 raise ValueError('Response model (`resp_model`) is not set for this handler.')
         else:
