@@ -6,7 +6,75 @@ from pytest_mock import MockerFixture
 
 
 @pytest.fixture(scope='package')
-def kapital_mock_refund_success_response(package_mocker: MockerFixture):
+def kapital_mock_create_order_response(package_mocker: MockerFixture):
+    return Response(
+        status_code=200,
+        json={
+            'order': {
+                'id': 1231,
+                'password': '1231231',
+                'hpp_url': 'https://txpgtst.kapitalbank.az',
+            }
+        },
+    )
+
+
+@pytest.fixture(scope='package')
+def kapital_mock_get_order_info_invalid_id_response(
+    package_mocker: MockerFixture,
+):
+    return Response(
+        status_code=500,
+        json={
+            'error_code': 'ServiceError',
+            'error_description': 'no order found',
+        },
+    )
+
+
+@pytest.fixture(scope='package')
+def kapital_mock_get_detail_order_info_invalid_id_response(
+    package_mocker: MockerFixture,
+):
+    return Response(
+        status_code=500,
+        json={
+            'error_code': 'ServiceError',
+            'error_description': 'no order found',
+        },
+    )
+
+
+@pytest.fixture(scope='package')
+def kapital_mock_save_card_response(package_mocker: MockerFixture):
+    return Response(
+        status_code=200,
+        json={
+            'order': {
+                'id': 1231,
+                'password': '1231231',
+                'hpp_url': 'https://txpgtst.kapitalbank.az',
+            }
+        },
+    )
+
+
+@pytest.fixture(scope='package')
+def kapital_mock_pay_and_save_card_response(package_mocker: MockerFixture):
+    return Response(
+        status_code=200,
+        json={
+            'order': {
+                'id': 1231,
+                'password': '1231231',
+                'hpp_url': 'https://txpgtst.kapitalbank.az',
+            }
+        },
+    )
+
+
+@pytest.fixture(scope='package')
+def kapital_mock_refund_response(package_mocker: MockerFixture):
     return Response(
         status_code=200,
         json={
@@ -23,7 +91,7 @@ def kapital_mock_refund_success_response(package_mocker: MockerFixture):
 
 
 @pytest.fixture(scope='package')
-def kapital_mock_full_reverse_success_response(package_mocker: MockerFixture):
+def kapital_mock_full_reverse_response(package_mocker: MockerFixture):
     return Response(
         status_code=200,
         json={
@@ -39,7 +107,7 @@ def kapital_mock_full_reverse_success_response(package_mocker: MockerFixture):
 
 
 @pytest.fixture(scope='package')
-def kapital_mock_clearing_success_response(package_mocker: MockerFixture):
+def kapital_mock_clearing_response(package_mocker: MockerFixture):
     return Response(
         status_code=200,
         json={
@@ -55,7 +123,7 @@ def kapital_mock_clearing_success_response(package_mocker: MockerFixture):
 
 
 @pytest.fixture(scope='package')
-def kapital_mock_partial_reverse_success_response(package_mocker: MockerFixture):
+def kapital_mock_partial_reverse_response(package_mocker: MockerFixture):
     return Response(
         status_code=200,
         json={
@@ -71,7 +139,7 @@ def kapital_mock_partial_reverse_success_response(package_mocker: MockerFixture)
 
 
 @pytest.fixture(scope='package')
-def kapital_mock_order_with_saved_card_success_response(package_mocker: MockerFixture):
+def kapital_mock_order_with_saved_card_response(package_mocker: MockerFixture):
     return Response(
         status_code=200,
         json={
@@ -85,7 +153,7 @@ def kapital_mock_order_with_saved_card_success_response(package_mocker: MockerFi
 
 
 @pytest.fixture(scope='package')
-def kapital_mock_link_card_token_success_response(package_mocker: MockerFixture):
+def kapital_mock_link_card_token_response(package_mocker: MockerFixture):
     return Response(
         status_code=200,
         json={

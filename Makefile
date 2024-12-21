@@ -41,6 +41,10 @@ type-check: .poetry
 test: .poetry
 	poetry run coverage run -m pytest --durations=10
 
+.PHONY: test-github  ## Run all tests except live tests
+test-github: .poetry
+	poetry run coverage run -m pytest -m "not live" --durations=10
+
 lang=az
 
 .PHONY: docs  ## Generate the docs
