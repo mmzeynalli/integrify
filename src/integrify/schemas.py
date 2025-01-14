@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import ClassVar, Generic, Set, TypeVar, Union
+from typing import ClassVar, Generic, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -37,7 +37,7 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
 
 
 class PayloadBaseModel(BaseModel):
-    URL_PARAM_FIELDS: ClassVar[Set[str]] = set()
+    URL_PARAM_FIELDS: ClassVar[set[str]] = set()
 
     @classmethod
     def from_args(cls, *args, **kwds):
