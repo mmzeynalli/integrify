@@ -1,7 +1,7 @@
 import json
 import string
 from functools import cached_property
-from typing import Any, Callable, Coroutine, Optional, Type, Union
+from typing import Any, Callable, Coroutine, Optional, Union
 from urllib.parse import urljoin
 
 import httpx
@@ -60,7 +60,7 @@ class APIClient:
         if base_url:
             self.urls[route_name]['base_url'] = base_url
 
-    def set_default_handler(self, handler_class: Type['APIPayloadHandler']) -> None:
+    def set_default_handler(self, handler_class: type['APIPayloadHandler']) -> None:
         """Sorğulara default handler setter-i
 
         Args:
@@ -68,7 +68,7 @@ class APIClient:
         """
         self.default_handler = handler_class()  # pragma: no cover
 
-    def add_handler(self, route_name: str, handler_class: Type['APIPayloadHandler']) -> None:
+    def add_handler(self, route_name: str, handler_class: type['APIPayloadHandler']) -> None:
         """Endpoint-ə handler əlavə etmək method-u
 
         Args:
@@ -107,8 +107,8 @@ class APIPayloadHandler:
 
     def __init__(
         self,
-        req_model: Optional[Type[PayloadBaseModel]] = None,
-        resp_model: Optional[Type[_ResponseT]] = None,
+        req_model: Optional[type[PayloadBaseModel]] = None,
+        resp_model: Optional[type[_ResponseT]] = None,
     ):
         """
         Args:
