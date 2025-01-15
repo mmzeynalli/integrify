@@ -3,6 +3,7 @@ from httpx import Response
 from pytest_mock import MockFixture
 
 from integrify.kapital.client import KapitalClientClass
+from integrify.kapital.schemas.enums import ErrorCode
 
 
 @pytest.mark.live
@@ -53,7 +54,7 @@ def test_get_order_information_invalid_id_request(
     assert resp.body.error is not None, 'Response error is None'
 
     assert resp.status_code == 500
-    assert resp.body.error.error_code == 'ServiceError'
+    assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
     assert resp.body.error.error_description == 'no order found'
 
 
@@ -70,7 +71,7 @@ def test_mock_get_order_information_invalid_id_request(
 
         assert resp.body.error is not None, 'Response error is None'
 
-        assert resp.body.error.error_code == 'ServiceError'
+        assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
         assert resp.body.error.error_description == 'no order found'
 
 
@@ -104,7 +105,7 @@ def test_get_detailed_order_information_invalid_id_request(
     assert resp.body.error is not None, 'Response error is None'
 
     assert resp.status_code == 500
-    assert resp.body.error.error_code == 'ServiceError'
+    assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
     assert resp.body.error.error_description == 'no order found'
 
 
@@ -121,7 +122,7 @@ def test_mock_get_detailed_order_information_invalid_id_request(
 
         assert resp.body.error is not None, 'Response error is None'
 
-        assert resp.body.error.error_code == 'ServiceError'
+        assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
         assert resp.body.error.error_description == 'no order found'
 
 
@@ -212,7 +213,7 @@ def test_refund_order_request(
         assert resp.body.data is not None, 'Response data is None'
 
         assert resp.body.data.approval_code == 'refund_123'
-        assert resp.body.data.pmo_result_code == '1000'
+        assert resp.body.data.pmo_result_code == 'No sharing'
 
 
 def test_full_reverse_order_request(
@@ -225,7 +226,7 @@ def test_full_reverse_order_request(
 
         assert resp.body.data is not None, 'Response data is None'
 
-        assert resp.body.data.pmo_result_code == '1000'
+        assert resp.body.data.pmo_result_code == 'No sharing'
         assert resp.body.data.match.rid_by_pmo == '123'
 
 
@@ -239,7 +240,7 @@ def test_clearing_order_request(
 
         assert resp.body.data is not None, 'Response data is None'
 
-        assert resp.body.data.pmo_result_code == '1000'
+        assert resp.body.data.pmo_result_code == 'No sharing'
         assert resp.body.data.match.rid_by_pmo == '123'
 
 
@@ -256,7 +257,7 @@ def test_partial_reverse_order_request(
 
         assert resp.body.data is not None, 'Response data is None'
 
-        assert resp.body.data.pmo_result_code == '1000'
+        assert resp.body.data.pmo_result_code == 'No sharing'
         assert resp.body.data.match.rid_by_pmo == '123'
 
 

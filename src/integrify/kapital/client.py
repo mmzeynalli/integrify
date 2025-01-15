@@ -35,107 +35,52 @@ __all__ = ['KapitalClientClass']
 
 class KapitalClientClass(APIClient):
     def __init__(self, sync: bool = True):
-        super().__init__(name='Kapital', sync=sync)
+        super().__init__('Kapital', env.API.BASE_URL, sync=sync)
 
-        self.add_url(
-            'create_order',
-            env.API.ORDER,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('create_order', env.API.ORDER, verb='POST')
         self.add_handler('create_order', CreateOrderPayloadHandler)
 
-        self.add_url(
-            'get_order_information',
-            env.API.GET_ORDER,
-            verb='GET',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('get_order_information', env.API.GET_ORDER, verb='GET')
         self.add_handler('get_order_information', OrderInformationPayloadHandler)
 
-        self.add_url(
-            'get_detailed_order_info',
-            env.API.GET_DETAILED_ORDER,
-            verb='GET',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('get_detailed_order_info', env.API.GET_DETAILED_ORDER, verb='GET')
         self.add_handler('get_detailed_order_info', DetailedOrderInformationPayloadHandler)
 
-        self.add_url(
-            'refund_order',
-            env.API.ORDER_EXECUTION,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('refund_order', env.API.ORDER_EXECUTION, verb='POST')
         self.add_handler('refund_order', RefundOrderPayloadHandler)
 
-        self.add_url(
-            'save_card',
-            env.API.ORDER,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('save_card', env.API.ORDER, verb='POST')
         self.add_handler('save_card', SaveCardPayloadHandler)
 
-        self.add_url(
-            'pay_and_save_card',
-            env.API.ORDER,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('pay_and_save_card', env.API.ORDER, verb='POST')
         self.add_handler('pay_and_save_card', PayAndSaveCardPayloadHandler)
 
-        self.add_url(
-            'full_reverse_order',
-            env.API.ORDER_EXECUTION,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('full_reverse_order', env.API.ORDER_EXECUTION, verb='POST')
         self.add_handler('full_reverse_order', FullReverseOrderPayloadHandler)
 
-        self.add_url(
-            'clearing_order',
-            env.API.ORDER_EXECUTION,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('clearing_order', env.API.ORDER_EXECUTION, verb='POST')
         self.add_handler('clearing_order', ClearingOrderPayloadHandler)
 
-        self.add_url(
-            'partial_reverse_order',
-            env.API.ORDER_EXECUTION,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('partial_reverse_order', env.API.ORDER_EXECUTION, verb='POST')
         self.add_handler('partial_reverse_order', PartialReverseOrderPayloadHandler)
 
-        self.add_url(
-            'order_with_saved_card',
-            env.API.ORDER,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('order_with_saved_card', env.API.ORDER, verb='POST')
         self.add_handler(
             'order_with_saved_card',
             OrderWithSavedCardPayloadHandler,
         )
 
-        self.add_url(
-            'link_card_token',
-            env.API.ORDER_LINK_CARD_TOKEN,
-            verb='POST',
-            base_url=env.API.BASE_URL,
-        )
+        self.add_url('link_card_token', env.API.ORDER_LINK_CARD_TOKEN, verb='POST')
         self.add_handler('link_card_token', LinkCardTokenPayloadHandler)
 
         self.add_url(
             'process_payment_with_saved_card',
             env.API.PROCESS_PAYMENT_WITH_SAVED_CARD,
             verb='POST',
-            base_url=env.API.BASE_URL,
         )
         self.add_handler(
-            'process_payment_with_saved_card', ProcessPaymentWithSavedCardPayloadHandler
+            'process_payment_with_saved_card',
+            ProcessPaymentWithSavedCardPayloadHandler,
         )
 
     def pay_with_saved_card(
@@ -167,7 +112,7 @@ class KapitalClientClass(APIClient):
             currency: Ödənişin məzənnəsi. Mümkün dəyərlər: `["AZN", "USD"]`.
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        order_response = self.order_with_saved_card(
+        order_response = self.order_with_saved_card(  # pylint: disable=assignment-from-no-return
             amount=amount,
             currency=currency,
             description=description,

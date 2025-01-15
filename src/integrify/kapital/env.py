@@ -7,7 +7,7 @@ from integrify.schemas import Environment
 
 VERSION = '2024.10.19'
 
-KAPITAL_ENV: str = os.getenv('KAPITAL_ENV', Environment.TEST)
+KAPITAL_ENV: str = os.getenv('KAPITAL_ENV', Environment.TEST.value)
 KAPITAL_USERNAME: str = os.getenv('KAPITAL_USERNAME', '')
 KAPITAL_PASSWORD: str = os.getenv('KAPITAL_PASSWORD', '')
 

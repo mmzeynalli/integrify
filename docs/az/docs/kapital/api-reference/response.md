@@ -1,4 +1,4 @@
-# Main
+# Response Schemas
 
 ::: integrify.kapital.schemas.response.ErrorResponseBodySchema
 

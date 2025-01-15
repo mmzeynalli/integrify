@@ -74,11 +74,11 @@ class BasePayloadHandler(APIPayloadHandler):
         api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)  # type: ignore[assignment]
 
         if resp.status_code == 200:
-            if self.resp_model:
-                data = self.get_response_data(resp.json())
-                api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)  # type: ignore[attr-defined]
-            else:
-                raise ValueError('Response model (`resp_model`) is not set for this handler.')
+            if not self.resp_model:
+                raise ValueError('Response model is not set for this handler.')
+
+            data = self.get_response_data(resp.json())
+            api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)  # type: ignore[attr-defined]
         else:
             api_resp.body.error = ErrorResponseBodySchema.model_validate(
                 resp.json(), from_attributes=True
@@ -87,6 +87,7 @@ class BasePayloadHandler(APIPayloadHandler):
         return api_resp  # type: ignore[return-value]
 
     def get_response_data(self, response_json: dict) -> dict:
+        """`self.data_key` varsa, o key-dəki datanı götürmək"""
         if not self.data_key:
             raise NotImplementedError("Subclasses must define 'response_data_key'")
 

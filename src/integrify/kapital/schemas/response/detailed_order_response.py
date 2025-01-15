@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 
 from pydantic import Field
 
+from integrify.kapital.schemas.enums import TransactionStatus
 from integrify.kapital.schemas.utils import BaseSchema
 
 
@@ -107,7 +108,7 @@ class DetailedOrderInformationResponseSchema(BaseSchema):
     hpp_url: str
     hpp_redirect_url: Optional[str] = None
     password: str
-    status: str
+    status: TransactionStatus
     prev_status: Optional[str] = None
     last_status_login: str
     amount: float

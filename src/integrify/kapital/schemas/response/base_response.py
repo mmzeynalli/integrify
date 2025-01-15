@@ -1,11 +1,12 @@
 from typing import Generic, Optional
 
+from integrify.kapital.schemas.enums import ErrorCode
 from integrify.kapital.schemas.utils import BaseSchema
 from integrify.schemas import _ResponseT
 
 
 class ErrorResponseBodySchema(BaseSchema):
-    error_code: str
+    error_code: ErrorCode
     error_description: str
 
 

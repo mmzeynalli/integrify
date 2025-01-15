@@ -79,7 +79,7 @@ plugins:
 nav:
   - Giriş: index.md
   - İnteqrasiya:
-      - EPoint: 
+      - EPoint:
           - Ümumi məlumat: "epoint/about.md"
           - API Referansı:
             - API Klient: "epoint/api-reference/client.md"
@@ -87,13 +87,13 @@ nav:
               - Response: "epoint/api-reference/response.md"
               - Callback: "epoint/api-reference/callback.md"
             - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
-      - Kapital:
+      - KapitalBank:
           - Ümumi məlumat: "kapital/about.md"
           - API Referansı:
             - API Klient: "kapital/api-reference/client.md"
             - Schemas:
               - Response: "kapital/api-reference/response.md"
-              - Utils: "kapital/api-reference/utils.md"
+              - Utils & Enums: "kapital/api-reference/utils.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"
