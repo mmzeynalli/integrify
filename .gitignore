@@ -166,3 +166,4 @@ cython_debug/
 test.py
 *.lcov
 site
+.aider*
