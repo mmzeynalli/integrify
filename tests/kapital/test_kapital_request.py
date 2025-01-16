@@ -54,7 +54,7 @@ def test_get_order_information_invalid_id_request(
     assert resp.body.error is not None, 'Response error is None'
 
     assert resp.status_code == 500
-    assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
+    assert resp.body.error.error_code == ErrorCode.SERVICE_ERROR
     assert resp.body.error.error_description == 'no order found'
 
 
@@ -71,7 +71,7 @@ def test_mock_get_order_information_invalid_id_request(
 
         assert resp.body.error is not None, 'Response error is None'
 
-        assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
+        assert resp.body.error.error_code == ErrorCode.SERVICE_ERROR
         assert resp.body.error.error_description == 'no order found'
 
 
@@ -105,7 +105,7 @@ def test_get_detailed_order_information_invalid_id_request(
     assert resp.body.error is not None, 'Response error is None'
 
     assert resp.status_code == 500
-    assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
+    assert resp.body.error.error_code == ErrorCode.SERVICE_ERROR
     assert resp.body.error.error_description == 'no order found'
 
 
@@ -122,7 +122,7 @@ def test_mock_get_detailed_order_information_invalid_id_request(
 
         assert resp.body.error is not None, 'Response error is None'
 
-        assert resp.body.error.error_code == ErrorCode.INVALID_REQUEST
+        assert resp.body.error.error_code == ErrorCode.SERVICE_ERROR
         assert resp.body.error.error_description == 'no order found'
 
 

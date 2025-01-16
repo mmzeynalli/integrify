@@ -25,7 +25,7 @@ def kapital_mock_get_order_info_invalid_id_response():
     return Response(
         status_code=500,
         json={
-            'error_code': ErrorCode.INVALID_REQUEST,
+            'error_code': ErrorCode.SERVICE_ERROR,
             'error_description': 'no order found',
         },
     )
@@ -36,7 +36,7 @@ def kapital_mock_get_detail_order_info_invalid_id_response():
     return Response(
         status_code=500,
         json={
-            'error_code': ErrorCode.INVALID_REQUEST,
+            'error_code': ErrorCode.SERVICE_ERROR,
             'error_description': 'no order found',
         },
     )

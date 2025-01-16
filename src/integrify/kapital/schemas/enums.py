@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class TransactionStatus(str, Enum):
-    BEING_PREPARED = 'Beingprepared'
+    BEING_PREPARED = 'Preparing'
     """Order is being prepared, no transactions have been executed on it yet."""
 
     CANCELLED = 'Cancelled'
@@ -20,10 +20,10 @@ class TransactionStatus(str, Enum):
     AUTHORIZED = 'Authorized'
     """Order has been authorized.(Authorization transaction is executed.)"""
 
-    PARTIALLY_PAID = 'Partiallypaid'
+    PARTIALLY_PAID = 'PartiallyPaid'
     """Order has been partially paid. (Clearing transaction is executed for the part of the order amount.)"""  # noqa: E501
 
-    FULLY_PAID = 'Fullypaid'
+    FULLY_PAID = 'FullyPaid'
     """Order has been fully paid. (Clearing transaction is executed for the full order amount (or several clearing transactions).)"""  # noqa: E501
 
     FUNDED = 'Funded'
@@ -120,6 +120,9 @@ class ErrorCode(str, Enum):
 
     SECRET_TRY_LIMIT_EXCEEDED = 'SecretTryLimit'
     """Secret try limit has been exceeded"""
+
+    SERVICE_ERROR = 'ServiceError'
+    """Service error"""
 
 
 PMO_RESULT_CODES = {
