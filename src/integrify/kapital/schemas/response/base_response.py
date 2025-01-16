@@ -8,6 +8,7 @@ from integrify.schemas import _ResponseT
 class ErrorResponseBodySchema(BaseSchema):
     error_code: ErrorCode
     error_description: str
+    error_details: Optional[dict] = None
 
 
 class BaseResponseSchema(BaseSchema, Generic[_ResponseT]):
