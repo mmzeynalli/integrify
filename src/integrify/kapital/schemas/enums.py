@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class TransactionStatus(str, Enum):
-    BEING_PREPARED = 'Being prepared'
+    BEING_PREPARED = 'Beingprepared'
     """Order is being prepared, no transactions have been executed on it yet."""
 
     CANCELLED = 'Cancelled'
@@ -20,10 +20,10 @@ class TransactionStatus(str, Enum):
     AUTHORIZED = 'Authorized'
     """Order has been authorized.(Authorization transaction is executed.)"""
 
-    PARTIALLY_PAID = 'Partially paid'
+    PARTIALLY_PAID = 'Partiallypaid'
     """Order has been partially paid. (Clearing transaction is executed for the part of the order amount.)"""  # noqa: E501
 
-    FULLY_PAID = 'Fully paid'
+    FULLY_PAID = 'Fullypaid'
     """Order has been fully paid. (Clearing transaction is executed for the full order amount (or several clearing transactions).)"""  # noqa: E501
 
     FUNDED = 'Funded'
