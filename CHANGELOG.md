@@ -1,6 +1,20 @@
+## v2.1.0 (2025-01-17)
+
+[GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.1.0)
+
+### What's Changed
+
+#### Support
+
+* Dropped support for Python3.8
+
+#### New integrations
+
+* Added KapitalBank integration
+
 ## v2.0.1 (2024-10-28)
 
-[GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.0.0)
+[GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.0.1)
 
 ### What's Changed
 
