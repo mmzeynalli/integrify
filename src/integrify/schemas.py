@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import ClassVar, Generic, List, Literal, Set, TypeVar, Union
+from typing import ClassVar, Generic, Literal, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -37,10 +37,10 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
 
 
 class PayloadBaseModel(BaseModel):
-    URL_PARAM_FIELDS: ClassVar[Set[str]] = set()
+    URL_PARAM_FIELDS: ClassVar[set[str]] = set()
 
     @classmethod
-    def get_input_fields(cls) -> List[str]:
+    def get_input_fields(cls) -> list[str]:
         """Modelin field-lərinin listini almaq"""
         return list(cls.model_fields.keys())
 

@@ -1,6 +1,5 @@
 import pytest
 from httpx import Response
-from pytest_mock import MockerFixture
 
 from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 
@@ -10,7 +9,7 @@ MESSAGE_TRANSACTION_FAIL = 'Kartda kifayət qədər balans yoxdur'
 
 
 @pytest.fixture(scope='package')
-def epoint_mock_get_transaction_status_success_response(package_mocker: MockerFixture):
+def epoint_mock_get_transaction_status_success_response():
     return Response(
         status_code=200,
         json={
