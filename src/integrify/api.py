@@ -245,7 +245,11 @@ class APIExecutor:
         [str, str, Optional['APIPayloadHandler'], Any],  # input args
         Union[
             Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
-            Coroutine[Any, Any, Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]],
+            Coroutine[
+                Any,
+                Any,
+                Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+            ],
         ],  # output
     ]:
         """Sync/async request atan funksiyanı seçən attribute"""

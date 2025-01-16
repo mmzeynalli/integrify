@@ -94,7 +94,7 @@ jobs:
       - name: Run tests
         run: |
           source $VENV
-          make test
+          make test-github
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
