@@ -71,17 +71,20 @@ class BasePayloadHandler(APIPayloadHandler):
         200-dən fərqli status kodu gələrsə, gələn cavabı modelə uyğunlaşdırır və error obyektini APIResponse obyektinə əlavə edir.
         """  # noqa: E501
 
-        api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)  # type: ignore[assignment]
+        api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)
 
         if resp.status_code == 200:
             if not self.resp_model:
                 raise ValueError('Response model is not set for this handler.')
 
             data = self.get_response_data(resp.json())
-            api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)  # type: ignore[attr-defined]
+
+            assert isinstance(self.resp_model, PayloadBaseModel)
+            api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)
         else:
             api_resp.body.error = ErrorResponseBodySchema.model_validate(
-                resp.json(), from_attributes=True
+                resp.json(),
+                from_attributes=True,
             )
 
         return api_resp  # type: ignore[return-value]

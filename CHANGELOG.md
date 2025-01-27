@@ -4,13 +4,17 @@
 
 ### What's Changed
 
-#### Support
-
-* Dropped support for Python3.8
-
 #### New integrations
 
 * Added KapitalBank integration
+
+#### Fixes
+
+* Added dry-run functionality per request class
+
+#### Support
+
+* Dropped support for Python3.8
 
 ## v2.0.1 (2024-10-28)
 

@@ -1,6 +1,6 @@
-import json
 from unittest.mock import patch
 
+import httpx
 import pytest
 from httpx import Response
 from pydantic import BaseModel
@@ -74,14 +74,14 @@ def test_missing_request_handler_input(
             api_client.test('data1')
 
 
-def test_missing_response_handler_input(
+def test_default_response_handler_input(
     api_client: APIClient,
     test_ok_response,
     mocker: MockerFixture,
 ):
     class Handler(APIPayloadHandler):
         def __init__(self):
-            super().__init__(RequestSchema, None)
+            super().__init__(req_model=RequestSchema)
 
     with mocker.patch('httpx.Client.request', return_value=test_ok_response):
         api_client.add_url('test', 'url', 'GET')
@@ -90,6 +90,24 @@ def test_missing_response_handler_input(
         assert isinstance(resp.body, dict)
         assert resp.body['data1'] == 'output1'
         assert resp.body['data2'] == 'output2'
+
+
+def test_none_response_handler_input(
+    api_client: APIClient,
+    test_ok_response,
+    mocker: MockerFixture,
+):
+    class Handler(APIPayloadHandler):
+        def __init__(self):
+            super().__init__(req_model=RequestSchema, resp_model=None)
+
+    with mocker.patch('httpx.Client.request', return_value=test_ok_response):
+        api_client.add_url('test', 'url', 'GET')
+        api_client.add_handler('test', Handler)
+        resp = api_client.test(data1='input1')
+        assert isinstance(resp, httpx.Response)
+        assert resp.json()['data1'] == 'output1'
+        assert resp.json()['data2'] == 'output2'
 
 
 def test_with_handlers(api_client: APIClient, test_ok_response, mocker: MockerFixture):
@@ -144,8 +162,9 @@ def test_url_formatting_fail_without_url_params(
         def __init__(self):
             super().__init__(req_schema, ResponseSchema)
 
-    with mocker.patch('httpx.Client.request', return_value=test_ok_response), pytest.raises(
-        ValueError
+    with (
+        mocker.patch('httpx.Client.request', return_value=test_ok_response),
+        pytest.raises(ValueError),
     ):
         api_client.add_url('test', 'url?q={data1}', 'GET')
         api_client.add_handler('test', Handler)
@@ -155,7 +174,8 @@ def test_url_formatting_fail_without_url_params(
 def test_dry_run_none(dry_api_client):
     dry_api_client.add_url('test', 'url', 'GET')
     resp = dry_api_client.test()
-    assert isinstance(resp.body, type(None))
+    assert isinstance(resp.body, dict)
+    assert 'url' in resp.body
 
 
 def test_dry_run_json(dry_api_client):
@@ -168,18 +188,3 @@ def test_dry_run_json(dry_api_client):
     resp = dry_api_client.test(data1='input1')
     assert isinstance(resp.body, dict)
     assert resp.body['data1'] == 'input1'
-
-
-def test_dry_run_dumped_json(dry_api_client):
-    class Handler(APIPayloadHandler):
-        def __init__(self):
-            super().__init__(RequestSchema, ResponseSchema)
-
-        def post_handle_payload(self, data):
-            return json.dumps(data)
-
-    dry_api_client.add_url('test', 'url', 'GET')
-    dry_api_client.add_handler('test', Handler)
-    resp = dry_api_client.test(data1='input1')
-    assert isinstance(resp.body, str)
-    assert resp.body == '{"data1": "input1"}'
