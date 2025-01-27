@@ -4,6 +4,7 @@ from functools import cached_property
 from typing import Optional, Type
 
 import httpx
+from pydantic import BaseModel
 
 from integrify.api import APIPayloadHandler, APIResponse, _ResponseT
 from integrify.kapital.env import (
@@ -79,7 +80,7 @@ class BasePayloadHandler(APIPayloadHandler):
 
             data = self.get_response_data(resp.json())
 
-            assert isinstance(self.resp_model, PayloadBaseModel)
+            assert issubclass(self.resp_model, BaseModel)
             api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)
         else:
             api_resp.body.error = ErrorResponseBodySchema.model_validate(
