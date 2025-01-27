@@ -1,3 +1,17 @@
+## v2.1.1 (2025-01-27)
+
+[GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.1.1)
+
+### What's Changed
+
+#### Additions
+
+* Added dry-run functionality per request
+
+#### Fixes
+
+* Fixed API url generation for async requests
+
 ## v2.1.0 (2025-01-17)
 
 [GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.1.0)
