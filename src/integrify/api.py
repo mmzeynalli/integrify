@@ -34,7 +34,7 @@ class APIClient:
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
         """
         self.base_url = base_url
-        self.default_handler = default_handler or None
+        self.default_handler = default_handler or APIPayloadHandler(None, None)
 
         self.request_executor = APIExecutor(name=name, sync=sync, dry=dry)
         """API sorğularını icra edən obyekt"""
@@ -108,16 +108,19 @@ class APIPayloadHandler:
     def __init__(
         self,
         req_model: Optional[type[PayloadBaseModel]] = None,
-        resp_model: Optional[type[_ResponseT]] = None,
+        resp_model: Union[type[_ResponseT], type[dict], None] = dict,
+        dry: bool = False,
     ):
         """
         Args:
             req_model: Sorğunun payload model-i
             resp_model: Sorğunun cavabının payload model-i
+            dry: Simulasiya bool-u: True olarsa, sorğu göndərilmir, göndərilən data qaytarılır
         """
         self.req_model = req_model
         self.__req_model: Optional[PayloadBaseModel] = None  # initialized pydantic model
         self.resp_model = resp_model
+        self.dry = dry
 
     def set_urlparams(self, url: str) -> str:
         """URL-in query-param-larını set etmək üçün funksiya (əgər varsa)
@@ -140,7 +143,7 @@ class APIPayloadHandler:
             )
         )
 
-    @property
+    @cached_property
     def headers(self) -> dict:
         """Sorğunun header-ləri"""
         return {}
@@ -204,14 +207,14 @@ class APIPayloadHandler:
     def handle_response(
         self,
         resp: httpx.Response,
-    ) -> Union[APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[APIResponse[_ResponseT], APIResponse[dict], httpx.Response]:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
-        if self.resp_model:
-            return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)  # type: ignore[name-defined]
+        if not self.resp_model:
+            return resp
 
-        return APIResponse[dict].model_validate(resp, from_attributes=True)
+        return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)  # type: ignore[name-defined]
 
 
 class APIExecutor:
@@ -242,7 +245,7 @@ class APIExecutor:
     def request_function(
         self,
     ) -> Callable[
-        [str, str, Optional['APIPayloadHandler'], Any],  # input args
+        [str, str, APIPayloadHandler, Any],  # input args
         Union[
             Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
             Coroutine[
@@ -262,7 +265,7 @@ class APIExecutor:
         self,
         url: str,
         verb: str,
-        handler: Optional['APIPayloadHandler'],
+        handler: APIPayloadHandler,
         *args,
         **kwds,
     ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
@@ -275,19 +278,16 @@ class APIExecutor:
         """
         assert isinstance(self.client, httpx.Client)
 
-        data = handler.handle_request(*args, **kwds) if handler else None
-        headers = handler.headers if handler else None
-        full_url = handler.set_urlparams(url) if handler else url
+        data = handler.handle_request(*args, **kwds)
+        headers = handler.headers
+        full_url = handler.set_urlparams(url)
 
-        if self.dry:
-            _type = type(data)
-            _data = json.dumps(data)
-
-            return APIResponse[_type](  # type: ignore[valid-type, call-arg]
+        if self.dry or handler.dry:
+            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
                 is_success=True,
                 status_code=200,
                 headers=headers or {},
-                content=_data,
+                content=json.dumps({**data, 'url': full_url}),
             )
 
         response = self.client.request(
@@ -295,7 +295,7 @@ class APIExecutor:
             full_url,
             data=data,
             headers=headers,
-            **(handler.req_args if handler else {}),
+            **handler.req_args,
         )
 
         if not response.is_success:
@@ -307,16 +307,13 @@ class APIExecutor:
                 response.content.decode(),
             )
 
-        if handler:
-            return handler.handle_response(response)
-
-        return response
+        return handler.handle_response(response)
 
     async def async_req(  # pragma: no cover
         self,
         url: str,
         verb: str,
-        handler: Optional['APIPayloadHandler'],
+        handler: APIPayloadHandler,
         *args,
         **kwds,
     ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
@@ -329,26 +326,24 @@ class APIExecutor:
         """
         assert isinstance(self.client, httpx.AsyncClient)
 
-        data = handler.handle_request(*args, **kwds) if handler else None
-        headers = handler.headers if handler else None
+        data = handler.handle_request(*args, **kwds)
+        headers = handler.headers
+        full_url = handler.set_urlparams(url)
 
-        if self.dry:
-            _type = type(data)
-            _data = json.dumps(data)
-
-            return APIResponse[_type](  # type: ignore[valid-type, call-arg]
+        if self.dry:  # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
+            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
                 is_success=True,
                 status_code=200,
                 headers=headers or {},
-                content=_data,
+                content=json.dumps({**data, 'url': full_url}),
             )
 
         response = await self.client.request(
             verb,
-            url,
+            full_url,
             data=data,
             headers=headers,
-            **(handler.req_args if handler else {}),
+            **handler.req_args,
         )
 
         if not response.is_success:
@@ -360,7 +355,4 @@ class APIExecutor:
                 response.content.decode(),
             )
 
-        if handler:
-            return handler.handle_response(response)
-
-        return response
+        return handler.handle_response(response)
