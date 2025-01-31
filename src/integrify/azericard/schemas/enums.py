@@ -10,6 +10,9 @@ class TrType(str, Enum):
     CANCEL_REQUEST: Literal['24'] = '24'
     REQUEST_STATUS: Literal['90'] = '90'
 
+    def __str__(self):
+        return self.value
+
 
 class Action(int, Enum):
     TRANSACTION_SUCCESS = 0

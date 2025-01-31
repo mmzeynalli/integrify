@@ -1,53 +1,63 @@
-from functools import cached_property
+from typing import Optional, Union
 
 from integrify.api import APIPayloadHandler
 from integrify.azericard.schemas.request import (
+    AuthAndSaveCardRequestSchema,
     AuthConfirmRequestSchema,
     AuthRequestSchema,
+    AuthWithSavedCardRequestSchema,
     ConfirmTransferRequestSchema,
     GetTransactionStatusRequestSchema,
-    PayAndSaveCardRequestSchema,
-    PayWithSavedCardRequestSchema,
     StartTransferRequestSchema,
 )
 from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
+from integrify.schemas import PayloadBaseModel, _ResponseT
 
 
-class AuthPayloadHandler(APIPayloadHandler):
+class BaseAzericardPayloadHandler(APIPayloadHandler):
+    def __init__(
+        self,
+        req_model: Optional[type[PayloadBaseModel]] = None,
+        resp_model: Union[type[_ResponseT], type[dict], None] = dict,
+        dry: bool = True,
+    ):
+        super().__init__(req_model, resp_model, dry)
+
+
+class AuthPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(AuthRequestSchema, None)
-
-    @cached_property
-    def req_args(self) -> dict:
-        """Request funksiyası üçün əlavə parametrlər"""
-        return {'follow_redirects': False}
+        super().__init__(req_model=AuthRequestSchema)
 
 
-class AuthConfirmPayloadHandler(APIPayloadHandler):
+class AuthConfirmPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(AuthConfirmRequestSchema, None)
+        super().__init__(req_model=AuthConfirmRequestSchema)
 
 
-class PayAndSavePayloadHandler(APIPayloadHandler):
+class AuthAndSavePayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(PayAndSaveCardRequestSchema, None)
+        super().__init__(req_model=AuthAndSaveCardRequestSchema)
 
 
-class PayWithSavedCardPayloadHandler(APIPayloadHandler):
+class AuthWithSavedCardPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(PayWithSavedCardRequestSchema, None)
+        super().__init__(req_model=AuthWithSavedCardRequestSchema)
 
 
-class GetTransactionStatusPayloadHandler(APIPayloadHandler):
+class GetTransactionStatusPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(GetTransactionStatusRequestSchema, GetTransactionStatusResponseSchema)
+        super().__init__(
+            GetTransactionStatusRequestSchema,
+            GetTransactionStatusResponseSchema,
+            dry=False,
+        )
 
 
-class StartTransferPayloadHandler(APIPayloadHandler):
+class StartTransferPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(StartTransferRequestSchema, None)
+        super().__init__(req_model=StartTransferRequestSchema)
 
 
-class ConfirmTransactionPayloadHandler(APIPayloadHandler):
+class ConfirmTransactionPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(ConfirmTransferRequestSchema, None)
+        super().__init__(req_model=ConfirmTransferRequestSchema)

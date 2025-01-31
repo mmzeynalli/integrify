@@ -287,7 +287,15 @@ class APIExecutor:
                 is_success=True,
                 status_code=200,
                 headers=headers or {},
-                content=json.dumps({**data, 'url': full_url}),
+                content=json.dumps(
+                    {
+                        'url': full_url,
+                        'verb': verb,
+                        'request_args': handler.req_args,
+                        'headers': headers,
+                        'data': data,
+                    }
+                ),
             )
 
         response = self.client.request(
@@ -335,7 +343,15 @@ class APIExecutor:
                 is_success=True,
                 status_code=200,
                 headers=headers or {},
-                content=json.dumps({**data, 'url': full_url}),
+                content=json.dumps(
+                    {
+                        'url': full_url,
+                        'verb': verb,
+                        'request_args': handler.req_args,
+                        'headers': headers,
+                        'data': data,
+                    }
+                ),
             )
 
         response = await self.client.request(

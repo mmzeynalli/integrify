@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import ClassVar, Literal, Optional, Set, TypedDict
+from typing import ClassVar, Literal, Optional, TypedDict
 
 from pydantic import (
     AliasGenerator,
@@ -26,7 +26,7 @@ from integrify.schemas import PayloadBaseModel
 
 
 class BaseRequestSchema(PayloadBaseModel):
-    PSIGN_FIELDS: ClassVar[Set[str]]
+    PSIGN_FIELDS: ClassVar[list[str]]
     model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
 
     @computed_field
@@ -46,8 +46,11 @@ class BaseRequestSchema(PayloadBaseModel):
         source = ''
         for field in self.PSIGN_FIELDS:
             val = getattr(self, field)
-            assert val
-            source += str(len(str(val))) + str(val)
+
+            if val:
+                source += str(len(str(val))) + str(val)
+            else:
+                source += '-'
 
         return source
 
@@ -65,7 +68,7 @@ class MInfo(TypedDict):
 
 
 class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
-    PSIGN_FIELDS: ClassVar[Set[str]] = {
+    PSIGN_FIELDS: ClassVar[list[str]] = [
         'amount',
         'currency',
         'terminal',
@@ -73,7 +76,7 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
         'timestamp',
         'nonce',
         'merch_url',
-    }
+    ]
 
     # Next three fields can be set either through
     # functions or environment, but they MUST be set
@@ -81,7 +84,7 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
     merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)  # type: ignore[assignment]
     merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)  # type: ignore[assignment]
 
-    email: Optional[str] = Field(None, max_length=80)
+    email: Optional[str] = Field(default=env.AZERICARD_MERCHANT_EMAIL, max_length=80)
     country: Optional[str] = Field(None, max_length=2)
     merch_gmt: Optional[str] = Field(None, min_length=1, max_length=5)
     backref: str = Field(default=env.AZERICARD_CALLBACK_URL, min_length=1, max_length=250)  # type: ignore[assignment]
@@ -120,7 +123,7 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
 
 
 class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
-    PSIGN_FIELDS: ClassVar[Set[str]] = {
+    PSIGN_FIELDS: ClassVar[list[str]] = [
         'amount',
         'currency',
         'terminal',
@@ -128,7 +131,7 @@ class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountData
         'order',
         'rrn',
         'int_ref',
-    }
+    ]
 
     rrn: str = Field(min_length=12, max_length=12)
     """Müştəri bankının axtarış istinad nömrəsi (ISO-8583 Sahə 37)"""
@@ -150,11 +153,11 @@ class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountData
         ]
 
 
-class PayAndSaveCardRequestSchema(AuthRequestSchema):
+class AuthAndSaveCardRequestSchema(AuthRequestSchema):
     token_action: Literal['REGISTER']
 
 
-class PayWithSavedCardRequestSchema(AuthRequestSchema):
+class AuthWithSavedCardRequestSchema(AuthRequestSchema):
     token: str = Field(min_length=28, max_length=28)
 
     @classmethod
@@ -181,13 +184,13 @@ class PayWithSavedCardRequestSchema(AuthRequestSchema):
 
 
 class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataSchema):
-    PSIGN_FIELDS: ClassVar[Set[str]] = {
+    PSIGN_FIELDS: ClassVar[list[str]] = [
         'order',
         'terminal',
         'trtype',
         'timestamp',
         'nonce',
-    }
+    ]
     tran_trtype: TrType = Field(min_length=1, max_length=2)
     trtype: Literal[TrType.REQUEST_STATUS]
 

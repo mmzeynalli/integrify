@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, field_serializer, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 from integrify.azericard import env
 from integrify.azericard.schemas.enums import TrType
@@ -13,14 +13,14 @@ class AzeriCardMinimalDataSchema(BaseModel):
     """Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur,
     terminal id üçün bir gün ərzində unikal olmalıdır"""
 
-    terminal: str = Field(default=env.AZERICARD_MERCHANT_ID)
+    terminal: str = Field(default=env.AZERICARD_MERCHANT_ID)  # type: ignore[assignment]
     """Bank tərəfindən təyin edilmiş Merchant Terminal ID"""
 
     trtype: TrType = Field(min_length=1, max_length=2)
     """Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),
     Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)"""
 
-    timestamp: datetime = Field(default_factory=datetime.now, min_length=14, max_length=14)
+    timestamp: str = Field(default_factory=datetime.now, validate_default=True)  # type: ignore[assignment]
     """GMT-də e-ticarət şlüzünün vaxt damğası: YYYYMMDDHHMMSS"""
 
     nonce: str = Field(
@@ -33,17 +33,12 @@ class AzeriCardMinimalDataSchema(BaseModel):
 
     @field_validator('timestamp', mode='before')
     @classmethod
-    def validate_timestamp(cls, val: datetime | str) -> datetime:
+    def validate_timestamp(cls, val: datetime | str) -> str:
         """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
-            return val
+            return val.strftime('%Y%m%d%H%M%S')
 
-        return datetime.strptime(val, '%Y%m%d%H%M%S')
-
-    @field_serializer('timestamp')
-    def format_timestamp(self, timestamp: datetime) -> str:
-        """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
-        return timestamp.strftime('%Y%m%d%H%M%S')
+        return val
 
 
 class AzeriCardMinimalWithAmountDataSchema(AzeriCardMinimalDataSchema):

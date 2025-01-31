@@ -1,5 +1,7 @@
 import ast
+import importlib.util
 import inspect
+import os
 
 from integrify.api import APIClient
 
@@ -34,9 +36,28 @@ def get_client_attributes(cls):
     return visitor.add_url_calls, visitor.functions
 
 
+def import_client_modules():
+    current_dir = os.path.join(os.getcwd(), 'src', 'integrify')
+    client_modules = {}
+    for folder in os.listdir(current_dir):
+        folder_path = os.path.join(current_dir, folder)
+        if os.path.isdir(folder_path):
+            client_file = os.path.join(folder_path, 'client.py')
+            if os.path.exists(client_file):
+                spec = importlib.util.spec_from_file_location(
+                    f'integrify.{folder}.client',
+                    client_file,
+                )
+                spec.loader.exec_module(importlib.util.module_from_spec(spec))
+    return client_modules
+
+
 def test_method_definitions():
+    import_client_modules()
     for cls in APIClient.__subclasses__():
         if inspect.isclass(cls):
             add_url_calls, methods = get_client_attributes(cls)
 
-            assert add_url_calls.issubset(methods)
+            assert add_url_calls.issubset(
+                methods
+            ), f'Class {cls.__name__} has missing add_url calls'

@@ -8,7 +8,7 @@ from integrify.schemas import Environment
 VERSION = '2024.11.6'
 
 
-AZERICARD_MERCHANT_ID = os.getenv('AZERICARD_MERCHANT_ID', '')
+AZERICARD_MERCHANT_ID = os.getenv('AZERICARD_MERCHANT_ID', None)
 """Bank tərəfindən təyin edilmiş Merchant Terminal ID"""
 
 AZERICARD_KEY_FILE_PATH = os.getenv('AZERICARD_KEY_FILE_PATH', '')
@@ -22,6 +22,9 @@ AZERICARD_MERCHANT_NAME = os.getenv('AZERICARD_MERCHANT_NAME', None)
 
 AZERICARD_MERCHANT_URL = os.getenv('AZERICARD_MERCHANT_URL', None)
 """Satıcının web site URL-ı"""
+
+AZERICARD_MERCHANT_EMAIL = os.getenv('AZERICARD_MERCHANT_EMAIL', None)
+"""Satıcının email ünvanı"""
 
 AZERICARD_CALLBACK_URL = os.getenv('AZERICARD_CALLBACK_URL', None)
 """Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL."""

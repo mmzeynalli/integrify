@@ -187,4 +187,4 @@ def test_dry_run_json(dry_api_client):
     dry_api_client.add_handler('test', Handler)
     resp = dry_api_client.test(data1='input1')
     assert isinstance(resp.body, dict)
-    assert resp.body['data1'] == 'input1'
+    assert resp.body['data']['data1'] == 'input1'

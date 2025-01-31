@@ -5,16 +5,24 @@ from typing import SupportsFloat as Numeric
 from integrify.api import APIClient, APIResponse
 from integrify.azericard import env
 from integrify.azericard.handler import (
+    AuthAndSavePayloadHandler,
     AuthConfirmPayloadHandler,
     AuthPayloadHandler,
+    AuthWithSavedCardPayloadHandler,
     ConfirmTransactionPayloadHandler,
     GetTransactionStatusPayloadHandler,
-    PayAndSavePayloadHandler,
-    PayWithSavedCardPayloadHandler,
     StartTransferPayloadHandler,
 )
 from integrify.azericard.schemas.enums import TrType
-from integrify.azericard.schemas.request import MInfo
+from integrify.azericard.schemas.request import (
+    AuthAndSaveCardRequestSchema,
+    AuthConfirmRequestSchema,
+    AuthRequestSchema,
+    AuthWithSavedCardRequestSchema,
+    ConfirmTransferRequestSchema,
+    MInfo,
+    StartTransferRequestSchema,
+)
 from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
 
 __all__ = ['AzeriCardAsyncRequest', 'AzeriCardClientClass', 'AzeriCardRequest']
@@ -29,8 +37,13 @@ class AzeriCardClientClass(APIClient):
         self.add_url('auth', env.MpiAPI.AUTHORIZATION, 'POST', base_url=env.MpiAPI.BASE_URL)
         self.add_handler('auth', AuthPayloadHandler)
 
-        self.add_url('auth_resp', env.MpiAPI.AUTHORIZATION, 'POST', base_url=env.MpiAPI.BASE_URL)
-        self.add_handler('auth_resp', AuthConfirmPayloadHandler)
+        self.add_url(
+            'auth_response',
+            env.MpiAPI.AUTHORIZATION,
+            'POST',
+            base_url=env.MpiAPI.BASE_URL,
+        )
+        self.add_handler('auth_response', AuthConfirmPayloadHandler)
 
         self.add_url(
             'auth_and_save_card',
@@ -38,7 +51,7 @@ class AzeriCardClientClass(APIClient):
             'POST',
             base_url=env.MpiAPI.BASE_URL,
         )
-        self.add_handler('auth_and_save_card', PayAndSavePayloadHandler)
+        self.add_handler('auth_and_save_card', AuthAndSavePayloadHandler)
 
         self.add_url(
             'auth_with_saved_card',
@@ -46,7 +59,7 @@ class AzeriCardClientClass(APIClient):
             'POST',
             base_url=env.MpiAPI.BASE_URL,
         )
-        self.add_handler('auth_with_saved_card', PayWithSavedCardPayloadHandler)
+        self.add_handler('auth_with_saved_card', AuthWithSavedCardPayloadHandler)
 
         self.add_url(
             'get_transaction_status',
@@ -62,8 +75,6 @@ class AzeriCardClientClass(APIClient):
         self.add_url('confirm_transfer', env.MtAPI.TRANSFER_CONFIRM, 'POST', env.MtAPI.BASE_URL)
         self.add_handler('confirm_transfer', ConfirmTransactionPayloadHandler)
 
-    # Dokumentasiya üçün signature veririk, amma funksiyanın özü
-    # əsəs funksiyalara sadəcə parametr ötürür
     if TYPE_CHECKING:
 
         def pay(  # pylint: disable=duplicate-code
@@ -83,7 +94,7 @@ class AzeriCardClientClass(APIClient):
             lang: Optional[str] = None,
             name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
-        ):
+        ) -> APIResponse[AuthRequestSchema]:
             """Ödəniş sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
@@ -139,7 +150,7 @@ class AzeriCardClientClass(APIClient):
             lang: Optional[str] = None,
             name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
-        ):
+        ) -> AuthAndSaveCardRequestSchema:
             """Ödəniş və kartı yadda saxlama sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
@@ -563,7 +574,7 @@ class AzeriCardClientClass(APIClient):
             lang: Optional[str] = None,
             name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
-        ) -> APIResponse:
+        ) -> APIResponse[AuthRequestSchema]:
             """Ümumi Ödəniş/Pul Dondurma/Dondurulmanı tamamlama sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
@@ -606,7 +617,7 @@ class AzeriCardClientClass(APIClient):
             trtype: TrType,
             terminal: Optional[str] = None,
             timestamp: Optional[datetime] = None,
-        ) -> APIResponse[dict]:
+        ) -> APIResponse[AuthConfirmRequestSchema]:
             """PreAuthorization sorğusuna cavab sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
@@ -648,7 +659,7 @@ class AzeriCardClientClass(APIClient):
             lang: Optional[str] = None,
             name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
-        ) -> APIResponse[dict]:
+        ) -> APIResponse[AuthAndSaveCardRequestSchema]:
             """Ümumi kartı saxlayaraq ödəniş sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
@@ -699,7 +710,7 @@ class AzeriCardClientClass(APIClient):
             lang: Optional[str] = None,
             name: Optional[str] = None,
             m_info: Optional[MInfo] = None,
-        ) -> APIResponse[dict]:
+        ) -> APIResponse[AuthWithSavedCardRequestSchema]:
             """Ümumi saxlanmış kart ilə Authurization sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
@@ -767,7 +778,7 @@ class AzeriCardClientClass(APIClient):
             cur: str,
             receiver_credentials: str,
             redirect_link: str,
-        ):
+        ) -> APIResponse[StartTransferRequestSchema]:
             """User-ə ödəniş etmək sorğusu
 
             **Endpoint:** *https://testmt.3dsecure.az/payment/view*
@@ -797,7 +808,7 @@ class AzeriCardClientClass(APIClient):
             amount: Numeric,
             cur: str,
             timestamp: Optional[datetime] = None,
-        ):
+        ) -> APIResponse[ConfirmTransferRequestSchema]:
             """User-ə ödənişi təsdiqləmək sorğusu
 
             **Endpoint:** *https://testmt.3dsecure.az/api/confirm*

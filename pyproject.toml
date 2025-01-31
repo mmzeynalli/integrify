@@ -66,6 +66,7 @@ ptpython = "^3.0.29"
 bandit = "^1.7.10"
 coverage = "^7.6.3"
 pylint = "^3.3.1"
+time-machine = "^2.16.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = {extras = ["imaging"], version = "^9.5.36"}
