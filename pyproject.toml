@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "integrify"
 packages = [{include = "integrify", from="src"}]
-version = "2.1.1"
+version = "2.2.0"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 license = "GPL-3.0-or-later"
 authors = [
@@ -55,6 +55,7 @@ pytest = "^8.1.1"
 pytest-mock = "^3.14.0"
 smokeshow = "^0.4.0"
 coverage =  "^7.6.3"
+time-machine = "^2.16.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
