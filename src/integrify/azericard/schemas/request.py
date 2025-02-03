@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import ClassVar, Literal, Optional, TypedDict
+from typing import ClassVar, Literal, Optional, TypedDict, Union
 
 from pydantic import (
     AliasGenerator,
@@ -250,7 +250,7 @@ class ConfirmTransferRequestSchema(BaseTransferRequestSchema):
     timestamp: str = Field(default_factory=datetime.now, validate_default=True)  # type: ignore[assignment]
 
     @field_serializer('timestamp')
-    def format_timestamp(self, timestamp: datetime | str) -> str:
+    def format_timestamp(self, timestamp: Union[datetime, str]) -> str:
         """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
 
         if isinstance(timestamp, datetime):

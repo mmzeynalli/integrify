@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 from decimal import Decimal
+from typing import Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -33,7 +34,7 @@ class AzeriCardMinimalDataSchema(BaseModel):
 
     @field_validator('timestamp', mode='before')
     @classmethod
-    def validate_timestamp(cls, val: datetime | str) -> str:
+    def validate_timestamp(cls, val: Union[datetime, str]) -> str:
         """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val.strftime('%Y%m%d%H%M%S')

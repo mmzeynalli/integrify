@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic.alias_generators import to_pascal
@@ -81,7 +81,7 @@ class TransferCallbackSchema(BaseModel):
 
     @field_validator('timestamp', mode='before')
     @classmethod
-    def validate_timestamp(cls, val: datetime | str) -> datetime:
+    def validate_timestamp(cls, val: Union[datetime, str]) -> datetime:
         """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val

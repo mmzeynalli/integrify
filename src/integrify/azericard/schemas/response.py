@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+from typing import Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -61,7 +62,7 @@ class GetTransactionStatusResponseSchema(BaseModel):
 
     @field_validator('timestamp', 'date', mode='before')
     @classmethod
-    def validate_timestamp(cls, val: datetime | str) -> datetime:
+    def validate_timestamp(cls, val: Union[datetime, str]) -> datetime:
         """İnput string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val
