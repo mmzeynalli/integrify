@@ -247,9 +247,13 @@ class StartTransferRequestSchema(BaseTransferRequestSchema):
 
 
 class ConfirmTransferRequestSchema(BaseTransferRequestSchema):
-    timestamp: datetime = Field(default_factory=datetime.now, min_length=14, max_length=14)
+    timestamp: str = Field(default_factory=datetime.now, validate_default=True)  # type: ignore[assignment]
 
     @field_serializer('timestamp')
-    def format_timestamp(self, timestamp: datetime) -> str:
+    def format_timestamp(self, timestamp: datetime | str) -> str:
         """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
-        return timestamp.strftime('%Y%m%d%H%M%S')
+
+        if isinstance(timestamp, datetime):
+            return timestamp.strftime('%Y%m%d%H%M%S')
+
+        return timestamp

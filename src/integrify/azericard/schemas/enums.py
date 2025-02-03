@@ -15,25 +15,25 @@ class TrType(str, Enum):
 
 
 class Action(int, Enum):
-    TRANSACTION_SUCCESS = 0
+    TRANSACTION_SUCCESS: Literal[0] = 0
     """Tranzaksiya uğurla tamamlandı"""
 
-    TRANSACTION_DUPLICATE = 1
+    TRANSACTION_DUPLICATE: Literal[1] = 1
     """Duplikat əməliyyat aşkar edildi"""
 
-    TRANSACTION_CANCELLED = 2
+    TRANSACTION_CANCELLED: Literal[2] = 2
     """Tranzaksiya rədd edildi"""
 
-    TRANSACTION_PROCESSING_ERROR = 3
+    TRANSACTION_PROCESSING_ERROR: Literal[3] = 3
     """Tranzaksiya emal xətası"""
 
-    TRANSACTION_REPEAT_OF_CANCELLED = 6
+    TRANSACTION_REPEAT_OF_CANCELLED: Literal[6] = 6
     """İmtina edilmiş əməliyyatın təkrarlanması"""
 
-    TRANSACTION_REPEAT_OF_UNAPPROVED = 7
+    TRANSACTION_REPEAT_OF_UNAPPROVED: Literal[7] = 7
     """Doğrulama xətası ilə əməliyyatın təkrarlanması"""
 
-    TRANSACTION_REPEAT_OF_UNRESPONDED = 8
+    TRANSACTION_REPEAT_OF_UNRESPONDED: Literal[8] = 8
     """Cavab verilmədən dayandırılmış əməliyyatın təkrarlanması"""
 
 
