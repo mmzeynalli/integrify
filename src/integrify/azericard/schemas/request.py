@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import ClassVar, Literal, Optional, TypedDict, Union
+from typing import ClassVar, Literal, Optional, Union
 
 from pydantic import (
     AliasGenerator,
@@ -15,6 +15,7 @@ from pydantic import (
     field_serializer,
 )
 from pydantic.alias_generators import to_pascal
+from typing_extensions import TypedDict
 
 from integrify.azericard import env
 from integrify.azericard.schemas.common import (
