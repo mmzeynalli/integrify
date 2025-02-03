@@ -83,7 +83,8 @@ class KapitalClientClass(APIClient):
             ProcessPaymentWithSavedCardPayloadHandler,
         )
 
-    def pay_with_saved_card(
+    # All other endpoints were tested separately
+    def pay_with_saved_card(  # pragma: no cover
         self,
         token: int,
         amount: Numeric,

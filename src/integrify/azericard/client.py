@@ -196,7 +196,7 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            card_token: str,
+            token: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -227,7 +227,7 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                card_token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
+                token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -376,7 +376,7 @@ class AzeriCardClientClass(APIClient):
             currency: str,
             order: str,
             desc: str,
-            card_token: str,
+            token: str,
             merch_name: Optional[str] = None,
             merch_url: Optional[str] = None,
             terminal: Optional[str] = None,
@@ -413,7 +413,7 @@ class AzeriCardClientClass(APIClient):
                 currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
-                card_token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
+                token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.

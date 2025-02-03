@@ -13,6 +13,7 @@ from pydantic import (
     Field,
     computed_field,
     field_serializer,
+    field_validator,
 )
 from pydantic.alias_generators import to_pascal
 from typing_extensions import TypedDict
@@ -34,7 +35,7 @@ class BaseRequestSchema(PayloadBaseModel):
     def p_sign(self) -> Optional[str]:
         """P_SIGN generasiyası"""
         if not self.PSIGN_FIELDS:
-            return None
+            return None  # pragma: no cover
 
         with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
             key = key_file.read()
@@ -51,7 +52,8 @@ class BaseRequestSchema(PayloadBaseModel):
             if val:
                 source += str(len(str(val))) + str(val)
             else:
-                source += '-'
+                # So far, no case can reach this state
+                source += '-'  # pragma: no cover
 
         return source
 
@@ -155,7 +157,7 @@ class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountData
 
 
 class AuthAndSaveCardRequestSchema(AuthRequestSchema):
-    token_action: Literal['REGISTER']
+    token_action: Literal['REGISTER'] = 'REGISTER'
 
 
 class AuthWithSavedCardRequestSchema(AuthRequestSchema):
@@ -193,7 +195,7 @@ class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataS
         'nonce',
     ]
     tran_trtype: TrType = Field(min_length=1, max_length=2)
-    trtype: Literal[TrType.REQUEST_STATUS]
+    trtype: Literal[TrType.REQUEST_STATUS] = TrType.REQUEST_STATUS
 
     @classmethod
     def get_input_fields(cls):
@@ -230,28 +232,25 @@ class StartTransferRequestSchema(BaseTransferRequestSchema):
         with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
             key = key_file.read()
 
-        return (
-            md5(
-                str(
-                    self.merchant
-                    + self.srn
-                    + str(self.amount)
-                    + self.cur
-                    + self.receiver_credentials
-                    + self.redirect_link
-                    + key
-                ).encode('utf-8')
-            )
-            .digest()
-            .decode()
-        )
+        return md5(
+            str(
+                self.merchant
+                + self.srn
+                + str(self.amount)
+                + self.cur
+                + self.receiver_credentials
+                + self.redirect_link
+                + key
+            ).encode('utf-8')
+        ).hexdigest()
 
 
 class ConfirmTransferRequestSchema(BaseTransferRequestSchema):
     timestamp: str = Field(default_factory=datetime.now, validate_default=True)  # type: ignore[assignment]
 
-    @field_serializer('timestamp')
-    def format_timestamp(self, timestamp: Union[datetime, str]) -> str:
+    @field_validator('timestamp', mode='before')
+    @classmethod
+    def format_timestamp(cls, timestamp: Union[datetime, str]) -> str:
         """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
 
         if isinstance(timestamp, datetime):

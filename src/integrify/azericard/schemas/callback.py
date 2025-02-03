@@ -46,7 +46,7 @@ class AuthCallbackWithCardDataSchema(AuthCallbackSchema):
 class TransferCallbackSchema(BaseModel):
     model_config = ConfigDict(alias_generator=AliasGenerator(validation_alias=to_pascal))
 
-    operation_id: str = Field(min_length=16, max_length=20)
+    operation_id: str = Field(min_length=16, max_length=20, validation_alias='OperationID')
     """AzeriCard tərəfindən verilmiş unikal əməliyyat nömrəsi"""
 
     srn: str = Field(min_length=1, max_length=12, validation_alias='SRN')
@@ -108,9 +108,8 @@ class TransferCallbackSchema(BaseModel):
                 + self.message
                 + key
             ).encode('utf-8')
-        )
+        ).hexdigest()
 
-        if calc_signature != self.signature:
-            raise ValueError('Signature does not match!')
+        assert calc_signature == self.signature, 'Signature does not match!'
 
         return self

@@ -1,6 +1,9 @@
+from contextlib import nullcontext as does_not_raise
 from typing import TYPE_CHECKING
 
+import pytest
 import time_machine
+from pydantic_core import ValidationError
 from pytest_mock import MockerFixture
 
 if TYPE_CHECKING:
@@ -16,6 +19,12 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
             '12345678',  # order
             desc='test',
             country='AZ',
+            m_info={
+                'browserScreenHeight': '1080',
+                'browserScreenWidth': '1920',
+                'browserTZ': '4',
+                'mobilePhone': {'cc': '994', 'subscriber': '5555555555'},
+            },
         )
 
         assert (
@@ -40,3 +49,29 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
     assert form.startswith(
         '<form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">'
     )
+
+
+@pytest.mark.parametrize(
+    'amount,exception',
+    [(1, does_not_raise()), (2, pytest.raises(ValidationError))],
+)
+def test_signature_verification(amount, exception):
+    from integrify.azericard.schemas.callback import TransferCallbackSchema
+    from integrify.azericard.schemas.enums import CardStatus
+
+    with exception:
+        TransferCallbackSchema.model_validate(
+            {
+                'OperationID': '1234567890123456',
+                'SRN': '1234567890',
+                'Amount': amount,
+                'Cur': '944',
+                'CardStatus': CardStatus.ACTIVE,
+                'ReceiverPAN': '0123456789012345',
+                'Status': 'pending',
+                'Timestamp': '20250403020100',
+                'Response Code': '0000',
+                'Message': 'Success',
+                'Signature': '4b6aecd7afddbe4197d461cb126541fd',
+            }
+        ).model_dump()

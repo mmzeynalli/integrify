@@ -4,6 +4,8 @@ import os
 import pytest
 from pytest_mock import MockerFixture
 
+from .mocks import *  # noqa: F403
+
 
 @pytest.fixture(scope='package')
 def azericard_set_env():
