@@ -1,8 +1,9 @@
 import json
 from enum import Enum
-from typing import Any, ClassVar, Generic, Literal, TypedDict, TypeVar, Union
+from typing import Any, ClassVar, Generic, Literal, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
+from typing_extensions import TypedDict
 
 _ResponseT = TypeVar('_ResponseT', bound=Union[BaseModel, dict])
 
