@@ -5,18 +5,19 @@ import json
 from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import ClassVar, Literal, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, TypedDict, Union
 
 from pydantic import (
     AliasGenerator,
     ConfigDict,
     Field,
+    ValidationInfo,
     computed_field,
     field_serializer,
     field_validator,
 )
 from pydantic.alias_generators import to_pascal
-from typing_extensions import TypedDict
+from pydantic_core import PydanticUndefined
 
 from integrify.azericard import env
 from integrify.azericard.schemas.common import (
@@ -56,6 +57,20 @@ class BaseRequestSchema(PayloadBaseModel):
                 source += '-'  # pragma: no cover
 
         return source
+
+    @field_validator('*', mode='before')
+    @classmethod
+    def set_if_none(cls, v: Any, info: ValidationInfo):
+        """If `None` is set, return default value for that field"""
+        if (
+            info.field_name
+            and not cls.model_fields[info.field_name].is_required()
+            and cls.model_fields[info.field_name].get_default() is not PydanticUndefined
+            and v is None
+        ):
+            return cls.model_fields[info.field_name].get_default()
+
+        return v
 
 
 class MobilePhone(TypedDict):

@@ -28,13 +28,13 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
         )
 
         assert (
-            req.body['data']['P_SIGN']
+            req['data']['P_SIGN']
             == 'a6870b8b80540304b3100997db51ec8add1727ed9feff9ea79f06d99399dedb4'
         )
 
 
 def test_html_form(azericard_client: 'AzeriCardClientClass'):
-    from integrify.azericard.utils import json_to_html_form
+    from integrify.azericard.helpers import json_to_html_form
 
     req = azericard_client.pay(
         amount=1,
@@ -44,7 +44,7 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
         country='AZ',
     )
 
-    form = json_to_html_form(req.body)
+    form = json_to_html_form(req)
 
     assert form.startswith(
         '<form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">'

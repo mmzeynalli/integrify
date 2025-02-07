@@ -34,8 +34,12 @@ class AzeriCardMinimalDataSchema(BaseModel):
 
     @field_validator('timestamp', mode='before')
     @classmethod
-    def validate_timestamp(cls, val: Union[datetime, str]) -> str:
+    def validate_timestamp(cls, val: Union[datetime, str, None]) -> str:
         """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
+
+        if val is None:
+            return datetime.now().strftime('%Y%m%d%H%M%S')
+
         if isinstance(val, datetime):
             return val.strftime('%Y%m%d%H%M%S')
 

@@ -86,6 +86,8 @@ nav:
             - Schemas:
               - Response: "azericard/api-reference/response.md"
               - Callback: "azericard/api-reference/callback.md"
+              - Common: "azericard/api-reference/common-schemas.md"
+              - Helpers: "azericard/api-reference/helper-functions.md"
       - EPoint:
           - Ümumi məlumat: "epoint/about.md"
           - API Referansı:

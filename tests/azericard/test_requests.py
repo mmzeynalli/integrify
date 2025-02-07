@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 def test_pay_and_save_card(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.pay_and_save_card(amount=1, currency='944', order='12345678')
+    azericard_client.pay_and_save_card(amount=1, currency='944', order='12345678', desc='desc')
 
 
 def test_pay_with_saved_card(azericard_client: 'AzeriCardClientClass'):
@@ -21,11 +21,11 @@ def test_pay_with_saved_card(azericard_client: 'AzeriCardClientClass'):
 
 
 def test_block(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.block(amount=1, currency='944', order='12345678')
+    azericard_client.block(amount=1, currency='944', order='12345678', desc='desc')
 
 
 def test_block_and_save_card(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.block_and_save_card(amount=1, currency='944', order='12345678')
+    azericard_client.block_and_save_card(amount=1, currency='944', order='12345678', desc='desc')
 
 
 def test_block_with_saved_card(azericard_client: 'AzeriCardClientClass'):

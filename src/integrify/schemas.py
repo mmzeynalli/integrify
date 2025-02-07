@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import ClassVar, Generic, Literal, TypeVar, Union
+from typing import Any, ClassVar, Generic, Literal, TypedDict, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -34,6 +34,25 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
     def convert_to_dict(cls, v: Union[str, bytes]):
         """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir."""
         return json.loads(v)
+
+
+class DryResponse(TypedDict):
+    """Dry-run sorğularının `return` tipi"""
+
+    url: str
+    """Sorğu göndəriləcək url"""
+
+    verb: str
+    """Sorğu metodu (GET, POST və s.)"""
+
+    headers: dict[str, str]
+    """Sorğu header-ləri"""
+
+    data: dict[str, Any]
+    """Sorğu data-sı (body-si)"""
+
+    request_args: dict[str, Any]
+    """httpx.request funksiyasına ötürülən parametrlər"""
 
 
 class PayloadBaseModel(BaseModel):

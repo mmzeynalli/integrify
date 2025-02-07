@@ -35,6 +35,27 @@
 | [`start_transfer`][integrify.azericard.client.AzeriCardClientClass.start_transfer]                 | Müştəriyə pul köçürülmə prosesinin başladılması      |         `https://mt.azericard.com/payment/view`          |
 | [`confirm_transfer`][integrify.azericard.client.AzeriCardClientClass.confirm_transfer]             | Müştəriyə pul köçürülmə prosesini təsdiqləmə         |          `https://mt.azericard.com/api/confirm`          |
 
+### Sorğu göndərmək axını { #request-flow }
+
+Nəzərə alsaq ki, Azericard form submission qəbul edərək, sizə redirectsiz səhifəni açır, form-u backend-dən submit etmık mümkün deyil, məhz front tərəfdən olmalıdır. Ona görə, başqa inteqrasiyalardan fərqli olaraq, Azericard-da kitabxana sorğu atmır, form-da göndərilməli olan data-nı qaytarır. Format JSON olsa da, köməkçi funksiyadan istifadə edərək, HTML formu alın, front-a response kimi göndərə bilərsiniz:
+
+```python
+from integrify.azericard.client import AzericardClient
+from integrify.azericard.helpers import json_to_html_form
+
+req = AzericardClient.pay(
+    amount=1,
+    currency='944',
+    order='12345678',
+    desc='test',
+    country='AZ',
+)
+
+form = json_to_html_form(req)
+print(form)  # <form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">
+             #   <input type="hidden" name="ORDER" value="12345678"> ...
+```
+
 ## Callback Sorğusu { #callback-request }
 
 Bəzi sorğular müştəri məlumat daxil etdikdən və arxa fonda bank işləmləri bitdikdən sonra, tranzaksiya haqqında məlumat sizin mühit dəyişənində (və ya sorğuda) qeyd etdiyiniz callback URL-ə POST sorğusu göndərilir. Hər datada PSIGN field-i vardır ki, sizin server tərəfindən scamming-in qarşısını almaq üçün düzgün olub-olmadığını yoxlamalısınız.
@@ -80,17 +101,17 @@ Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz f
 
 Sorğudan asılı olaraq, bu data-lar callback-də **GƏLMİR** (yəni, avtomatik `None` dəyəri alır):
 
-| Sorğu metodu                                                                                     | Məqsəd          |
-| :----------------------------------------------------------------------------------------------- | :-------------- |
-| [`pay`][integrify.azericard.client.AzeriCardClientClass.pay]                                     | `card`, `token` |
-| [`pay_and_save_card`][integrify.azericard.client.AzeriCardClientClass.pay_and_save_card]         | -               |
-| [`pay_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]     | -               |
-| [`block`][integrify.azericard.client.AzeriCardClientClass.block]                                 | `card`, `token` |
-| [`block_and_save_card`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card]     | -               |
-| [`block_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]   | -               |
-| [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block]                | `card`, `token` |
-| [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card] | `card`, `token` |
-| [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]  | `card`, `token` |
+| Sorğu metodu                                                                                     | `None` field-lər |
+| :----------------------------------------------------------------------------------------------- | :--------------- |
+| [`pay`][integrify.azericard.client.AzeriCardClientClass.pay]                                     | `card`, `token`  |
+| [`pay_and_save_card`][integrify.azericard.client.AzeriCardClientClass.pay_and_save_card]         | -                |
+| [`pay_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]     | -                |
+| [`block`][integrify.azericard.client.AzeriCardClientClass.block]                                 | `card`, `token`  |
+| [`block_and_save_card`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card]     | -                |
+| [`block_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]   | -                |
+| [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block]                | `card`, `token`  |
+| [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card] | `card`, `token`  |
+| [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]  | `card`, `token`  |
 
 > **Qeyd**
 >

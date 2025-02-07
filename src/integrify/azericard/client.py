@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime  # pylint: disable=unused-argument
 from typing import TYPE_CHECKING, Optional
 from typing import SupportsFloat as Numeric
 
+# pylint: disable=unused-argument
 from integrify.api import APIClient, APIResponse
 from integrify.azericard import env
 from integrify.azericard.handler import (
@@ -14,18 +15,9 @@ from integrify.azericard.handler import (
     StartTransferPayloadHandler,
 )
 from integrify.azericard.schemas.enums import TrType
-from integrify.azericard.schemas.request import (
-    AuthAndSaveCardRequestSchema,
-    AuthConfirmRequestSchema,
-    AuthRequestSchema,
-    AuthWithSavedCardRequestSchema,
-    ConfirmTransferRequestSchema,
-    MInfo,
-    StartTransferRequestSchema,
-)
+from integrify.azericard.schemas.request import MInfo  # pylint: disable=unused-argument
 from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
-
-__all__ = ['AzeriCardAsyncRequest', 'AzeriCardClientClass', 'AzeriCardRequest']
+from integrify.schemas import DryResponse
 
 
 class AzeriCardClientClass(APIClient):
@@ -75,506 +67,478 @@ class AzeriCardClientClass(APIClient):
         self.add_url('confirm_transfer', env.MtAPI.TRANSFER_CONFIRM, 'POST', env.MtAPI.BASE_URL)
         self.add_handler('confirm_transfer', ConfirmTransactionPayloadHandler)
 
-    if TYPE_CHECKING:
-
-        def pay(  # pylint: disable=duplicate-code
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ) -> APIResponse[AuthRequestSchema]:
-            """Ödəniş sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.pay(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
-                ```
-
-            **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                desc: Ödənişin təsviri/açıqlaması
-                merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-                country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-                merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-                lang: Dil seçimi
-                name: Müştərinin adı (kartda göstərildiyi kimi)
-                m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-            """  # noqa: E501
-
-    else:
-
-        def pay(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth(*args, trtype=TrType.AUTHORAZATION, **kwds)
-
-    if TYPE_CHECKING:
-
-        def pay_and_save_card(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ) -> AuthAndSaveCardRequestSchema:
-            """Ödəniş və kartı yadda saxlama sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
-                ```
-
-            **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-            Saxlamalı olduğunuz kartın ID-si də callback-də gəlir.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                desc: Ödənişin təsviri/açıqlaması
-                merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-                country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-                merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-                lang: Dil seçimi
-                name: Müştərinin adı (kartda göstərildiyi kimi)
-                m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-            """  # noqa: E501
-    else:
-
-        def pay_and_save_card(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_and_save_card(*args, trtype=TrType.AUTHORAZATION, **kwds)
-
-    if TYPE_CHECKING:
-
-        def pay_with_saved_card(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
-            token: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ):
-            """Yadda saxlanılmış kartla ödəniş sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
-                ```
-
-            **Cavab formatı**: Callback sorğu baş verir
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                desc: Ödənişin təsviri/açıqlaması
-                token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
-                merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-                country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-                merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-                lang: Dil seçimi
-                name: Müştərinin adı (kartda göstərildiyi kimi)
-                m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-            """  # noqa: E501
-
-    else:
-
-        def pay_with_saved_card(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_with_saved_card(*args, trtype=TrType.AUTHORAZATION, **kwds)
-
-    if TYPE_CHECKING:
-
-        def block(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ):
-            """Pul Bloklama/Dondurma sorğusu.
-
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.block(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
-                ```
-
-            **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-            Bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
-            [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
-            [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
-            [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
-            tranzaksiyanı bitirməlisiniz.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                desc: Ödənişin təsviri/açıqlaması
-                merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-                country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-                merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-                lang: Dil seçimi
-                name: Müştərinin adı (kartda göstərildiyi kimi)
-                m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-            """  # noqa: E501
-    else:
-
-        def block(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth(*args, trtype=TrType.PRE_AUTHORAZATION, **kwds)
-
-    if TYPE_CHECKING:
-
-        def block_and_save_card(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ):
-            """Pul bloklama/dondurma və kartı yadda saxlama sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.block_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
-                ```
-
-            **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-            Saxlamalı olduğunuz kartın ID-si də callback-də gəlir. Həmçinin, bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
-            [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
-            [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
-            [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
-            tranzaksiyanı bitirməlisiniz.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                desc: Ödənişin təsviri/açıqlaması
-                merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-                country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-                merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-                lang: Dil seçimi
-                name: Müştərinin adı (kartda göstərildiyi kimi)
-                m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-            """  # noqa: E501
-    else:
-
-        def block_and_save_card(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_and_save_card(*args, trtype=TrType.PRE_AUTHORAZATION, **kwds)
-
-    if TYPE_CHECKING:
-
-        def block_with_saved_card(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
-            token: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ):
-            """Yadda saxlanılmış kartdan pulu bloklama/dondurma sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.block_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
-                ```
-
-            **Cavab formatı**: Callback sorğu baş verir
-
-            Bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
-            [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
-            [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
-            [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
-            tranzaksiyanı bitirməlisiniz.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                desc: Ödənişin təsviri/açıqlaması
-                token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
-                merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-                country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-                merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-                backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-                lang: Dil seçimi
-                name: Müştərinin adı (kartda göstərildiyi kimi)
-                m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-            """  # noqa: E501
-    else:
-
-        def block_with_saved_card(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_with_saved_card(*args, trtype=TrType.PRE_AUTHORAZATION, **kwds)
-
-    if TYPE_CHECKING:
-
-        def accept_blocked_payment(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            rrn: str,
-            int_ref: str,
-            terminal: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-        ):
-            """Blok olunmuş məbləği qəbul etmək sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.accept_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
-                ```
-
-            **Cavab formatı**: Callback sorğu baş verir
-
-            Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
-            sonra, ödənişi qəbul etmək üçün gönmdərmək lazımdır
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
-                int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            """  # noqa: E501
-    else:
-
-        def accept_blocked_payment(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_response(*args, trtype=TrType.ACCEPT_REQUEST, **kwds)
-
-    if TYPE_CHECKING:
-
-        def reverse_blocked_payment(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            rrn: str,
-            int_ref: str,
-            terminal: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-        ):
-            """Blok olunmuş məbləği qəbul ETMƏMƏK (online) sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.reverse_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
-                ```
-
-            **Cavab formatı**: Callback sorğu baş verir
-
-            Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
-            sonra, ödənişi qəbul ETMƏMƏK üçün gönmdərmək lazımdır.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
-                int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            """  # noqa: E501
-    else:
-
-        def reverse_blocked_payment(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_response(*args, trtype=TrType.RETURN_REQUEST, **kwds)
-
-    if TYPE_CHECKING:
-
-        def cancel_blocked_payment(
-            self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            rrn: str,
-            int_ref: str,
-            terminal: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-        ):
-            """Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu
-
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-            Example:
-                ```python
-                from integrify.azericard import AzeriCardRequest
-
-                AzeriCardRequest.cancel_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
-                ```
-
-            **Cavab formatı**: Callback sorğu baş verir
-
-            Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
-            sonra, ödənişi qəbul ETMƏMƏK üçün gönmdərmək lazımdır.
-
-            Args:
-                amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
-                order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-                rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
-                int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
-                timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            """  # noqa: E501
-    else:
-
-        def cancel_blocked_payment(self, *args, **kwds):  # pylint: disable=missing-function-docstring
-            return self.auth_response(*args, trtype=TrType.CANCEL_REQUEST, **kwds)
+    # arguments are given for sake of type-hinting. None is needed to NOT SEND unset variables
+    # to pydantic model in order to trigger default values.
+    def pay(  # pylint: disable=duplicate-code
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        desc: str,  # pylint: disable=unused-argument
+        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        email: Optional[str] = None,  # pylint: disable=unused-argument
+        country: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+        backref: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        lang: Optional[str] = None,  # pylint: disable=unused-argument
+        name: Optional[str] = None,  # pylint: disable=unused-argument
+        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+    ) -> DryResponse:
+        """Ödəniş sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.pay(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            ```
+
+        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            desc: Ödənişin təsviri/açıqlaması
+            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
+            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
+            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
+            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            lang: Dil seçimi
+            name: Müştərinin adı (kartda göstərildiyi kimi)
+            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
+        """  # noqa: E501
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth(trtype=TrType.AUTHORAZATION, **kwds)
+
+    def pay_and_save_card(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        desc: str,  # pylint: disable=unused-argument
+        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        email: Optional[str] = None,  # pylint: disable=unused-argument
+        country: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+        backref: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        lang: Optional[str] = None,  # pylint: disable=unused-argument
+        name: Optional[str] = None,  # pylint: disable=unused-argument
+        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+    ) -> DryResponse:
+        """Ödəniş və kartı yadda saxlama sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            ```
+
+        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
+
+        Saxlamalı olduğunuz kartın ID-si də callback-də gəlir.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            desc: Ödənişin təsviri/açıqlaması
+            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
+            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
+            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
+            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            lang: Dil seçimi
+            name: Müştərinin adı (kartda göstərildiyi kimi)
+            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_and_save_card(trtype=TrType.AUTHORAZATION, **kwds)
+
+    def pay_with_saved_card(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        desc: str,  # pylint: disable=unused-argument
+        token: str,  # pylint: disable=unused-argument
+        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        email: Optional[str] = None,  # pylint: disable=unused-argument
+        country: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+        backref: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        lang: Optional[str] = None,  # pylint: disable=unused-argument
+        name: Optional[str] = None,  # pylint: disable=unused-argument
+        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+    ):
+        """Yadda saxlanılmış kartla ödəniş sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+            ```
+
+        **Cavab formatı**: Callback sorğu baş verir
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            desc: Ödənişin təsviri/açıqlaması
+            token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
+            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
+            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
+            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
+            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            lang: Dil seçimi
+            name: Müştərinin adı (kartda göstərildiyi kimi)
+            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_with_saved_card(trtype=TrType.AUTHORAZATION, **kwds)
+
+    def block(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        desc: str,  # pylint: disable=unused-argument
+        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        email: Optional[str] = None,  # pylint: disable=unused-argument
+        country: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+        backref: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        lang: Optional[str] = None,  # pylint: disable=unused-argument
+        name: Optional[str] = None,  # pylint: disable=unused-argument
+        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+    ):
+        """Pul Bloklama/Dondurma sorğusu.
+
+        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.block(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            ```
+
+        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
+
+        Bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
+        [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
+        [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
+        [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
+        tranzaksiyanı bitirməlisiniz.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            desc: Ödənişin təsviri/açıqlaması
+            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
+            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
+            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
+            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            lang: Dil seçimi
+            name: Müştərinin adı (kartda göstərildiyi kimi)
+            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth(trtype=TrType.PRE_AUTHORAZATION, **kwds)
+
+    def block_and_save_card(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        desc: str,  # pylint: disable=unused-argument
+        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        email: Optional[str] = None,  # pylint: disable=unused-argument
+        country: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+        backref: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        lang: Optional[str] = None,  # pylint: disable=unused-argument
+        name: Optional[str] = None,  # pylint: disable=unused-argument
+        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+    ):
+        """Pul bloklama/dondurma və kartı yadda saxlama sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.block_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            ```
+
+        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
+
+        Saxlamalı olduğunuz kartın ID-si də callback-də gəlir. Həmçinin, bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
+        [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
+        [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
+        [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
+        tranzaksiyanı bitirməlisiniz.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            desc: Ödənişin təsviri/açıqlaması
+            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
+            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
+            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
+            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            lang: Dil seçimi
+            name: Müştərinin adı (kartda göstərildiyi kimi)
+            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_and_save_card(trtype=TrType.PRE_AUTHORAZATION, **kwds)
+
+    def block_with_saved_card(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        desc: str,  # pylint: disable=unused-argument
+        token: str,  # pylint: disable=unused-argument
+        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        email: Optional[str] = None,  # pylint: disable=unused-argument
+        country: Optional[str] = None,  # pylint: disable=unused-argument
+        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+        backref: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        lang: Optional[str] = None,  # pylint: disable=unused-argument
+        name: Optional[str] = None,  # pylint: disable=unused-argument
+        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+    ):
+        """Yadda saxlanılmış kartdan pulu bloklama/dondurma sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.block_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+            ```
+
+        **Cavab formatı**: Callback sorğu baş verir
+
+        Bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
+        [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
+        [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
+        [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
+        tranzaksiyanı bitirməlisiniz.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            desc: Ödənişin təsviri/açıqlaması
+            token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
+            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
+            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
+            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
+            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            lang: Dil seçimi
+            name: Müştərinin adı (kartda göstərildiyi kimi)
+            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_with_saved_card(trtype=TrType.PRE_AUTHORAZATION, **kwds)
+
+    def accept_blocked_payment(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        rrn: str,  # pylint: disable=unused-argument
+        int_ref: str,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+    ):
+        """Blok olunmuş məbləği qəbul etmək sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.accept_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            ```
+
+        **Cavab formatı**: Callback sorğu baş verir
+
+        Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
+        sonra, ödənişi qəbul etmək üçün gönmdərmək lazımdır
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
+            int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_response(trtype=TrType.ACCEPT_REQUEST, **kwds)
+
+    def reverse_blocked_payment(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        rrn: str,  # pylint: disable=unused-argument
+        int_ref: str,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+    ):
+        """Blok olunmuş məbləği qəbul ETMƏMƏK (online) sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.reverse_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            ```
+
+        **Cavab formatı**: Callback sorğu baş verir
+
+        Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
+        sonra, ödənişi qəbul ETMƏMƏK üçün gönmdərmək lazımdır.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
+            int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_response(trtype=TrType.RETURN_REQUEST, **kwds)
+
+    def cancel_blocked_payment(
+        self,
+        amount: Numeric,  # pylint: disable=unused-argument
+        currency: str,  # pylint: disable=unused-argument
+        order: str,  # pylint: disable=unused-argument
+        rrn: str,  # pylint: disable=unused-argument
+        int_ref: str,  # pylint: disable=unused-argument
+        terminal: Optional[str] = None,  # pylint: disable=unused-argument
+        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+    ):
+        """Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu
+
+        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+
+        Example:
+            ```python
+            from integrify.azericard import AzeriCardRequest
+
+            AzeriCardRequest.cancel_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            ```
+
+        **Cavab formatı**: Callback sorğu baş verir
+
+        Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
+        sonra, ödənişi qəbul ETMƏMƏK üçün gönmdərmək lazımdır.
+
+        Args:
+            amount: Ödəniş miqdarı. Numerik dəyər.
+            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
+            rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
+            int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
+            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+        """  # noqa: E501
+
+        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        return self.auth_response(trtype=TrType.CANCEL_REQUEST, **kwds)
 
     if TYPE_CHECKING:
 
         def auth(
             self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
+            amount: Numeric,  # pylint: disable=unused-argument
+            currency: str,  # pylint: disable=unused-argument
+            order: str,  # pylint: disable=unused-argument
+            desc: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ) -> APIResponse[AuthRequestSchema]:
+            merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+            merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+            terminal: Optional[str] = None,  # pylint: disable=unused-argument
+            email: Optional[str] = None,  # pylint: disable=unused-argument
+            country: Optional[str] = None,  # pylint: disable=unused-argument
+            merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+            backref: Optional[str] = None,  # pylint: disable=unused-argument
+            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+            lang: Optional[str] = None,  # pylint: disable=unused-argument
+            name: Optional[str] = None,  # pylint: disable=unused-argument
+            m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        ) -> DryResponse:
             """Ümumi Ödəniş/Pul Dondurma/Dondurulmanı tamamlama sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
@@ -609,15 +573,15 @@ class AzeriCardClientClass(APIClient):
 
         def auth_response(
             self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            rrn: str,
-            int_ref: str,
+            amount: Numeric,  # pylint: disable=unused-argument
+            currency: str,  # pylint: disable=unused-argument
+            order: str,  # pylint: disable=unused-argument
+            rrn: str,  # pylint: disable=unused-argument
+            int_ref: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            terminal: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-        ) -> APIResponse[AuthConfirmRequestSchema]:
+            terminal: Optional[str] = None,  # pylint: disable=unused-argument
+            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        ) -> DryResponse:
             """PreAuthorization sorğusuna cavab sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
@@ -643,23 +607,23 @@ class AzeriCardClientClass(APIClient):
 
         def auth_and_save_card(
             self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
+            amount: Numeric,  # pylint: disable=unused-argument
+            currency: str,  # pylint: disable=unused-argument
+            order: str,  # pylint: disable=unused-argument
+            desc: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ) -> APIResponse[AuthAndSaveCardRequestSchema]:
+            merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+            merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+            terminal: Optional[str] = None,  # pylint: disable=unused-argument
+            email: Optional[str] = None,  # pylint: disable=unused-argument
+            country: Optional[str] = None,  # pylint: disable=unused-argument
+            merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+            backref: Optional[str] = None,  # pylint: disable=unused-argument
+            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+            lang: Optional[str] = None,  # pylint: disable=unused-argument
+            name: Optional[str] = None,  # pylint: disable=unused-argument
+            m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        ) -> DryResponse:
             """Ümumi kartı saxlayaraq ödəniş sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
@@ -693,24 +657,24 @@ class AzeriCardClientClass(APIClient):
 
         def auth_with_saved_card(
             self,
-            amount: Numeric,
-            currency: str,
-            order: str,
-            desc: str,
+            amount: Numeric,  # pylint: disable=unused-argument
+            currency: str,  # pylint: disable=unused-argument
+            order: str,  # pylint: disable=unused-argument
+            desc: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            token: str,
-            merch_name: Optional[str] = None,
-            merch_url: Optional[str] = None,
-            terminal: Optional[str] = None,
-            email: Optional[str] = None,
-            country: Optional[str] = None,
-            merch_gmt: Optional[str] = None,
-            backref: Optional[str] = None,
-            timestamp: Optional[datetime] = None,
-            lang: Optional[str] = None,
-            name: Optional[str] = None,
-            m_info: Optional[MInfo] = None,
-        ) -> APIResponse[AuthWithSavedCardRequestSchema]:
+            token: str,  # pylint: disable=unused-argument
+            merch_name: Optional[str] = None,  # pylint: disable=unused-argument
+            merch_url: Optional[str] = None,  # pylint: disable=unused-argument
+            terminal: Optional[str] = None,  # pylint: disable=unused-argument
+            email: Optional[str] = None,  # pylint: disable=unused-argument
+            country: Optional[str] = None,  # pylint: disable=unused-argument
+            merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
+            backref: Optional[str] = None,  # pylint: disable=unused-argument
+            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+            lang: Optional[str] = None,  # pylint: disable=unused-argument
+            name: Optional[str] = None,  # pylint: disable=unused-argument
+            m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        ) -> DryResponse:
             """Ümumi saxlanmış kart ilə Authurization sorğusu
 
             **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
@@ -746,9 +710,9 @@ class AzeriCardClientClass(APIClient):
         def get_transaction_status(
             self,
             tran_trtype: TrType,
-            order: str,
-            terminal: Optional[str],
-            timestamp: Optional[datetime],
+            order: str,  # pylint: disable=unused-argument
+            terminal: Optional[str],  # pylint: disable=unused-argument
+            timestamp: Optional[datetime],  # pylint: disable=unused-argument
         ) -> APIResponse[GetTransactionStatusResponseSchema]:
             """Bitmiş tranzaksiyanın statusunu alma sorğusu
 
@@ -772,13 +736,13 @@ class AzeriCardClientClass(APIClient):
 
         def start_transfer(
             self,
-            merchant: str,
-            srn: str,
-            amount: Numeric,
-            cur: str,
-            receiver_credentials: str,
-            redirect_link: str,
-        ) -> APIResponse[StartTransferRequestSchema]:
+            merchant: str,  # pylint: disable=unused-argument
+            srn: str,  # pylint: disable=unused-argument
+            amount: Numeric,  # pylint: disable=unused-argument
+            cur: str,  # pylint: disable=unused-argument
+            receiver_credentials: str,  # pylint: disable=unused-argument
+            redirect_link: str,  # pylint: disable=unused-argument
+        ) -> DryResponse:
             """User-ə ödəniş etmək sorğusu
 
             **Endpoint:** *https://testmt.3dsecure.az/payment/view*
@@ -803,12 +767,12 @@ class AzeriCardClientClass(APIClient):
 
         def confirm_transfer(
             self,
-            merchant: str,
-            srn: str,
-            amount: Numeric,
-            cur: str,
-            timestamp: Optional[datetime] = None,
-        ) -> APIResponse[ConfirmTransferRequestSchema]:
+            merchant: str,  # pylint: disable=unused-argument
+            srn: str,  # pylint: disable=unused-argument
+            amount: Numeric,  # pylint: disable=unused-argument
+            cur: str,  # pylint: disable=unused-argument
+            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        ) -> DryResponse:
             """User-ə ödənişi təsdiqləmək sorğusu
 
             **Endpoint:** *https://testmt.3dsecure.az/api/confirm*

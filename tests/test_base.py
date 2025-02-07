@@ -174,8 +174,9 @@ def test_url_formatting_fail_without_url_params(
 def test_dry_run_none(dry_api_client):
     dry_api_client.add_url('test', 'url', 'GET')
     resp = dry_api_client.test()
-    assert isinstance(resp.body, dict)
-    assert 'url' in resp.body
+    assert isinstance(resp, dict)
+    assert 'url' in resp
+    assert isinstance(resp['data'], dict)
 
 
 def test_dry_run_json(dry_api_client):
@@ -186,5 +187,5 @@ def test_dry_run_json(dry_api_client):
     dry_api_client.add_url('test', 'url', 'GET')
     dry_api_client.add_handler('test', Handler)
     resp = dry_api_client.test(data1='input1')
-    assert isinstance(resp.body, dict)
-    assert resp.body['data']['data1'] == 'input1'
+    assert isinstance(resp['data'], dict)
+    assert resp['data']['data1'] == 'input1'

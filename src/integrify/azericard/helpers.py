@@ -1,4 +1,7 @@
-def json_to_html_form(json_data: dict) -> str:
+from integrify.schemas import DryResponse
+
+
+def json_to_html_form(json_data: DryResponse) -> str:
     """AzeriCard-ə göndərilməli datanı HTML formuna çevirən funksiya"""
 
     url = json_data['url']

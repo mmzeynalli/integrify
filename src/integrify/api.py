@@ -1,4 +1,3 @@
-import json
 import string
 from functools import cached_property
 from typing import Any, Callable, Coroutine, Optional, Union
@@ -7,7 +6,7 @@ from urllib.parse import urljoin
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
+from integrify.schemas import APIResponse, DryResponse, PayloadBaseModel, _ResponseT
 
 
 class APIClient:
@@ -247,11 +246,11 @@ class APIExecutor:
     ) -> Callable[
         [str, str, APIPayloadHandler, Any],  # input args
         Union[
-            Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+            Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse],
             Coroutine[
                 Any,
                 Any,
-                Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+                Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse],
             ],
         ],  # output
     ]:
@@ -268,7 +267,7 @@ class APIExecutor:
         handler: APIPayloadHandler,
         *args,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse]:
         """Sync sorğu atan funksiya
 
         Args:
@@ -283,19 +282,12 @@ class APIExecutor:
         full_url = handler.set_urlparams(url)
 
         if self.dry or handler.dry:
-            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
-                is_success=True,
-                status_code=200,
-                headers=headers or {},
-                content=json.dumps(
-                    {
-                        'url': full_url,
-                        'verb': verb,
-                        'request_args': handler.req_args,
-                        'headers': headers,
-                        'data': data,
-                    }
-                ),
+            return DryResponse(
+                url=full_url,
+                verb=verb,
+                request_args=handler.req_args,
+                headers=headers,
+                data=data,
             )
 
         response = self.client.request(
@@ -324,7 +316,7 @@ class APIExecutor:
         handler: APIPayloadHandler,
         *args,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse]:
         """Async sorğu atan funksiya
 
         Args:
@@ -338,20 +330,13 @@ class APIExecutor:
         headers = handler.headers
         full_url = handler.set_urlparams(url)
 
-        if self.dry:  # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
-            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
-                is_success=True,
-                status_code=200,
-                headers=headers or {},
-                content=json.dumps(
-                    {
-                        'url': full_url,
-                        'verb': verb,
-                        'request_args': handler.req_args,
-                        'headers': headers,
-                        'data': data,
-                    }
-                ),
+        if self.dry or handler.dry:
+            return DryResponse(  # type: ignore[valid-type, call-arg]
+                url=full_url,
+                verb=verb,
+                request_args=handler.req_args,
+                headers=headers,
+                data=data,
             )
 
         response = await self.client.request(
