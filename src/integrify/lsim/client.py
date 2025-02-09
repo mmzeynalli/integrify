@@ -4,7 +4,12 @@ import httpx
 
 from integrify.api import APIClient
 from integrify.lsim import env
-from integrify.lsim.handlers import CheckBalancePayloadHandler, GetReportGetPayloadHandler
+from integrify.lsim.handlers import (
+    CheckBalancePayloadHandler,
+    GetReportGetPayloadHandler,
+    SendSMSGetPayloadHandler,
+    SendSMSPostPayloadHandler,
+)
 
 
 class LSIMClientClass(APIClient):
@@ -19,8 +24,10 @@ class LSIMClientClass(APIClient):
         super().__init__(name, base_url, default_handler, sync, dry)
 
         self.add_url('send_sms_get', env.API.SEND_SMS_GET, verb='GET')
+        self.add_handler('send_sms_get', SendSMSGetPayloadHandler)
 
         self.add_url('send_sms_post', env.API.SEND_SMS_POST, verb='POST')
+        self.add_handler('send_sms_post', SendSMSPostPayloadHandler)
 
         self.add_url('check_balance', env.API.CHECK_BALANCE, verb='GET')
         self.add_handler('check_balance', CheckBalancePayloadHandler)
@@ -32,7 +39,7 @@ class LSIMClientClass(APIClient):
 
     if TYPE_CHECKING:
 
-        def get_report_get(tranid: int, login: Optional[str] = None) -> httpx.Response:
+        def get_report_get(self, tranid: int, login: Optional[str] = None) -> httpx.Response:
             """Yadda saxlanılmış kartla ödəniş sorğusu
 
             **Endpoint:** */api/1/execute-pay*

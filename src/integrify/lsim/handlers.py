@@ -2,9 +2,15 @@ from integrify.api import APIPayloadHandler
 from integrify.lsim.schemas.request import (
     CheckBalanceRequestSchema,
     GetReportGetRequestSchema,
+    SendSMSGetRequestSchema,
     SendSMSPostRequestSchema,
 )
 from integrify.lsim.schemas.response import BaseResponseSchema
+
+
+class SendSMSGetPayloadHandler(APIPayloadHandler):
+    def __init__(self):
+        super().__init__(SendSMSGetRequestSchema, BaseResponseSchema)
 
 
 class SendSMSPostPayloadHandler(APIPayloadHandler):

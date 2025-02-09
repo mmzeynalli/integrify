@@ -1,10 +1,10 @@
 import os
 from enum import Enum
-from typing import Literal
+from typing import Literal, Optional
 
-LSIM_LOGIN: str = os.getenv('LSIM_LOGIN')
-LSIM_PASSWORD: str = os.getenv('LSIM_PASSWORD')
-LSIM_SENDER_NAME: str = os.getenv('LSIM_SENDER_NAME')
+LSIM_LOGIN: Optional[str] = os.getenv('LSIM_LOGIN')
+LSIM_PASSWORD: Optional[str] = os.getenv('LSIM_PASSWORD')
+LSIM_SENDER_NAME: Optional[str] = os.getenv('LSIM_SENDER_NAME')
 
 
 class API(str, Enum):

@@ -1,6 +1,4 @@
-from datetime import datetime
 from hashlib import md5
-from typing import ClassVar, Optional
 
 from pydantic import Field, computed_field
 
@@ -8,22 +6,21 @@ from integrify.lsim import env
 from integrify.schemas import PayloadBaseModel
 
 
-class SendSMSPostRequestSchema(PayloadBaseModel):
-    login: Optional[str] = env.LSIM_LOGIN
+class SendSMSGetRequestSchema(PayloadBaseModel):
+    login: str = Field(default=env.LSIM_LOGIN)  # type: ignore[assignment]
 
     msisdn: str  # phone number
 
     text: str
 
-    sender: Optional[str] = env.LSIM_SENDER_NAME
+    sender: str = Field(default=env.LSIM_SENDER_NAME)  # type: ignore[assignment]
 
-    scheduled: Optional[str] = Field(default='NOW')
-
-    unicode: Optional[bool] = False
+    unicode: bool = Field(default=False)
 
     @computed_field
     def key(self) -> str:
         """LSIM ucun key generasiyasi"""
+        assert env.LSIM_PASSWORD
         return md5(
             (
                 md5(env.LSIM_PASSWORD.encode()).hexdigest()
@@ -35,17 +32,21 @@ class SendSMSPostRequestSchema(PayloadBaseModel):
         ).hexdigest()
 
 
-class CheckBalanceRequestSchema(PayloadBaseModel):
-    URL_PARAM_FIELDS: ClassVar[set[str]] = {'login', 'key'}
+class SendSMSPostRequestSchema(SendSMSGetRequestSchema):
+    scheduled: str = Field(default='NOW')
 
-    login: Optional[str] = env.LSIM_LOGIN
+
+class CheckBalanceRequestSchema(PayloadBaseModel):
+    login: str = Field(default=env.LSIM_LOGIN)  # type: ignore[assignment]
 
     @computed_field
     def key(self) -> str:
         """LSIM ucun key generasiyasi"""
+        assert env.LSIM_PASSWORD
+
         return md5((md5(env.LSIM_PASSWORD.encode()).hexdigest() + self.login).encode()).hexdigest()
 
 
 class GetReportGetRequestSchema(PayloadBaseModel):
-    login: Optional[str] = env.LSIM_LOGIN
+    login: str = Field(default=env.LSIM_LOGIN)  # type: ignore[assignment]
     transid: int
