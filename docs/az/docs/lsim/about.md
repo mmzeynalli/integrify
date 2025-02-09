@@ -1,0 +1,1 @@
+# Bu LSIM ucun ilk dokumentasiya versiyasidir
