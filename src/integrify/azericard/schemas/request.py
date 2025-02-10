@@ -59,7 +59,7 @@ class BaseRequestSchema(PayloadBaseModel):
 
         return source
 
-    @field_validator('p_sign', mode='before')
+    @field_validator('*', mode='before')
     @classmethod
     def set_if_none(cls, v: Any, info: ValidationInfo):
         """If `None` is set, return default value for that field"""
