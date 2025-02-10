@@ -1,15 +1,16 @@
 import json
 from enum import Enum
-from typing import ClassVar, Generic, TypeVar, Union
+from typing import Any, ClassVar, Generic, Literal, TypeVar, Union
 
 from pydantic import BaseModel, Field, field_validator
+from typing_extensions import TypedDict
 
 _ResponseT = TypeVar('_ResponseT', bound=Union[BaseModel, dict])
 
 
 class Environment(str, Enum):
-    TEST = 'test'
-    PROD = 'prod'
+    TEST: Literal['test'] = 'test'
+    PROD: Literal['prod'] = 'prod'
 
 
 class APIResponse(BaseModel, Generic[_ResponseT]):
@@ -36,8 +37,32 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
         return json.loads(v)
 
 
+class DryResponse(TypedDict):
+    """Dry-run sorğularının `return` tipi"""
+
+    url: str
+    """Sorğu göndəriləcək url"""
+
+    verb: str
+    """Sorğu metodu (GET, POST və s.)"""
+
+    headers: dict[str, str]
+    """Sorğu header-ləri"""
+
+    data: dict[str, Any]
+    """Sorğu data-sı (body-si)"""
+
+    request_args: dict[str, Any]
+    """httpx.request funksiyasına ötürülən parametrlər"""
+
+
 class PayloadBaseModel(BaseModel):
     URL_PARAM_FIELDS: ClassVar[set[str]] = set()
+
+    @classmethod
+    def get_input_fields(cls) -> list[str]:
+        """Modelin field-lərinin listini almaq"""
+        return list(cls.model_fields.keys())
 
     @classmethod
     def from_args(cls, *args, **kwds):
@@ -46,4 +71,4 @@ class PayloadBaseModel(BaseModel):
         modelindəki field-lərin ardıcıllığı və çağırılan funksiyada parametrlərinin ardıcıllığı
         EYNİ OLMALIDIR, əks halda, bu method yararsızdır.
         """
-        return cls.model_validate({**dict(zip(cls.model_fields.keys(), args)), **kwds})
+        return cls.model_validate({**dict(zip(cls.get_input_fields(), args)), **kwds})

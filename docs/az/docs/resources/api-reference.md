@@ -37,6 +37,9 @@
 ::: integrify.schemas.APIResponse
     handler: python
 
+::: integrify.schemas.DryResponse
+    handler: python
+
 ::: integrify.schemas.PayloadBaseModel
     handler: python
     options:

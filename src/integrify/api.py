@@ -1,4 +1,3 @@
-import json
 import string
 from functools import cached_property
 from typing import Any, Callable, Coroutine, Optional, Union
@@ -7,7 +6,7 @@ from urllib.parse import urljoin
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
+from integrify.schemas import APIResponse, DryResponse, PayloadBaseModel, _ResponseT
 
 
 class APIClient:
@@ -28,7 +27,7 @@ class APIClient:
             name: Klient adı. Logging üçün istifadə olunur.
             base_url: API-lərin əsas (kök) url-i. Əgər bir neçə base_url varsa, bu field-i
                 boş saxlayıb, hər endpoint-ə uyğun base_url-i `add_url` funksiyasında
-                verin.
+                verin. (bax: AzeriCard)
             default_handler: default API handler. Bu handler əgər hər hansı bir API-yə
                 handler register olunmadıqda istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
@@ -56,7 +55,7 @@ class APIClient:
         self.urls[route_name] = {'url': url, 'verb': verb}
 
         # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə,
-        # endpointləri, `base_url` ilə əlavə etmək lazımdır.
+        # endpointləri, `base_url` ilə əlavə etmək lazımdır. (bax. AzeriCard)
         if base_url:
             self.urls[route_name]['base_url'] = base_url
 
@@ -247,11 +246,11 @@ class APIExecutor:
     ) -> Callable[
         [str, str, APIPayloadHandler, Any],  # input args
         Union[
-            Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+            Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse],
             Coroutine[
                 Any,
                 Any,
-                Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+                Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse],
             ],
         ],  # output
     ]:
@@ -268,7 +267,7 @@ class APIExecutor:
         handler: APIPayloadHandler,
         *args,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse]:
         """Sync sorğu atan funksiya
 
         Args:
@@ -283,11 +282,12 @@ class APIExecutor:
         full_url = handler.set_urlparams(url)
 
         if self.dry or handler.dry:
-            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
-                is_success=True,
-                status_code=200,
-                headers=headers or {},
-                content=json.dumps({**data, 'url': full_url}),
+            return DryResponse(
+                url=full_url,
+                verb=verb,
+                request_args=handler.req_args,
+                headers=headers,
+                data=data,
             )
 
         response = self.client.request(
@@ -316,7 +316,7 @@ class APIExecutor:
         handler: APIPayloadHandler,
         *args,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict], DryResponse]:
         """Async sorğu atan funksiya
 
         Args:
@@ -330,12 +330,13 @@ class APIExecutor:
         headers = handler.headers
         full_url = handler.set_urlparams(url)
 
-        if self.dry:  # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
-            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
-                is_success=True,
-                status_code=200,
-                headers=headers or {},
-                content=json.dumps({**data, 'url': full_url}),
+        if self.dry or handler.dry:
+            return DryResponse(  # type: ignore[valid-type, call-arg]
+                url=full_url,
+                verb=verb,
+                request_args=handler.req_args,
+                headers=headers,
+                data=data,
             )
 
         response = await self.client.request(

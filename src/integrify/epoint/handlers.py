@@ -5,7 +5,6 @@ import httpx
 
 from integrify.api import APIPayloadHandler
 from integrify.epoint import env
-from integrify.epoint.helper import generate_signature
 from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 from integrify.epoint.schemas.request import (
     GetTransactionStatusRequestSchema,
@@ -27,6 +26,7 @@ from integrify.epoint.schemas.response import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
+from integrify.epoint.utils import generate_signature
 from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 
 

@@ -1,5 +1,5 @@
-from integrify.epoint.helper import decode_callback_data
 from integrify.epoint.schemas.callback import CallbackDataSchema
+from integrify.epoint.utils import decode_callback_data
 
 
 def test_str_to_dict():

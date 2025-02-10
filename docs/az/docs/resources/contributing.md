@@ -68,7 +68,7 @@ make
 
 ### Yeni dokumentasiyanı generasiya edin
 
-Əgər dokumentasiyada (və ya funksiyalarda, klass definitionlarında və ya docstring-lərdə) dəyişiklik etmisinizsə, yeni dokumentasiya generasiya edin. 
+Əgər dokumentasiyada (və ya funksiyalarda, klass definitionlarında və ya docstring-lərdə) dəyişiklik etmisinizsə, yeni dokumentasiya generasiya edin.
 Dokumentasiya üçün `mkdocs-material` alətindən istifadə edirik.
 
 ```bash
