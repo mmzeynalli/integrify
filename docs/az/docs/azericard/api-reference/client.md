@@ -6,15 +6,15 @@
     bu importu edin və eyni-adlı funksiyaları `await` ilə çağırın:
 
     ```python
-    from integrify.azericard import AzeriCardAsyncRequest
+    from integrify.azericard import AzeriCardAsyncClient
     ```
 
-::: integrify.azericard.client.AzeriCardRequest
+::: integrify.azericard.client.AzeriCardClient
     handler: python
     options:
       separate_signature: true
 
-::: integrify.azericard.client.AzeriCardAsyncRequest
+::: integrify.azericard.client.AzeriCardAsyncClient
     handler: python
     options:
       separate_signature: true

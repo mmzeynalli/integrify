@@ -795,5 +795,5 @@ class AzeriCardClientClass(APIClient):
             """  # noqa: E501
 
 
-AzeriCardRequest = AzeriCardClientClass(sync=True)
-AzeriCardAsyncRequest = AzeriCardClientClass(sync=False)
+AzeriCardClient = AzeriCardClientClass(sync=True)
+AzeriCardAsyncClient = AzeriCardClientClass(sync=False)
