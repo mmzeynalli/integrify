@@ -7,23 +7,27 @@ from integrify.schemas import PayloadBaseModel
 
 
 class SendSMSGetRequestSchema(PayloadBaseModel):
-    login: str = Field(default=env.LSIM_LOGIN)  # type: ignore[assignment]
-
-    msisdn: str  # phone number
+    msisdn: str
+    """SMS göndəriləcək nömrə: ölkə kodu + operator kodu + nömrə: 99450XXXXXXX"""
 
     text: str
+    """Mesaj məzmunu"""
 
-    sender: str = Field(default=env.LSIM_SENDER_NAME)  # type: ignore[assignment]
-
-    unicode: bool = Field(default=False)
+    # Not required
+    login: str = env.LSIM_LOGIN  # type: ignore[assignment]
+    password: str = Field(default=env.LSIM_PASSWORD, exclude=True)  # type: ignore[assignment]
+    sender: str = env.LSIM_SENDER_NAME  # type: ignore[assignment]
+    """SMS göndərənin adı (LSIM tərəfindən təmin olunur)"""
+    unicode: bool = False
+    """Mesajın unicode olub/olmaması. Əgər mesajda unikod simvollar (`ə`, `ş`, `ü` və s.) istifadə
+    edirsizsə, `True` seçməlisiniz."""
 
     @computed_field
     def key(self) -> str:
         """LSIM ucun key generasiyasi"""
-        assert env.LSIM_PASSWORD
         return md5(
             (
-                md5(env.LSIM_PASSWORD.encode()).hexdigest()
+                md5(self.password.encode()).hexdigest()  # pylint: disable=no-member
                 + self.login
                 + self.text
                 + self.msisdn
@@ -33,20 +37,22 @@ class SendSMSGetRequestSchema(PayloadBaseModel):
 
 
 class SendSMSPostRequestSchema(SendSMSGetRequestSchema):
-    scheduled: str = Field(default='NOW')
+    scheduled: str = 'NOW'
 
 
 class CheckBalanceRequestSchema(PayloadBaseModel):
-    login: str = Field(default=env.LSIM_LOGIN)  # type: ignore[assignment]
+    login: str = env.LSIM_LOGIN  # type: ignore[assignment]
+    password: str = Field(default=env.LSIM_PASSWORD, exclude=True)  # type: ignore[assignment]
 
     @computed_field
     def key(self) -> str:
         """LSIM ucun key generasiyasi"""
-        assert env.LSIM_PASSWORD
-
-        return md5((md5(env.LSIM_PASSWORD.encode()).hexdigest() + self.login).encode()).hexdigest()
+        return md5((md5(self.password.encode()).hexdigest() + self.login).encode()).hexdigest()  # pylint: disable=no-member
 
 
-class GetReportGetRequestSchema(PayloadBaseModel):
-    login: str = Field(default=env.LSIM_LOGIN)  # type: ignore[assignment]
+class GetReportRequestSchema(PayloadBaseModel):
     transid: int
+
+    # Not required
+    login: str = env.LSIM_LOGIN  # type: ignore[assignment]
+    """Uğurlu SMS göndərildikdə alınan transaction id"""

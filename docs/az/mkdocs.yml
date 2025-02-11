@@ -79,21 +79,28 @@ plugins:
 nav:
   - Giriş: index.md
   - İnteqrasiya:
-      - EPoint:
-          - Ümumi məlumat: "epoint/about.md"
-          - API Referansı:
-            - API Klient: "epoint/api-reference/client.md"
-            - Schemas:
-              - Response: "epoint/api-reference/response.md"
-              - Callback: "epoint/api-reference/callback.md"
-            - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
-      - KapitalBank:
-          - Ümumi məlumat: "kapital/about.md"
-          - API Referansı:
-            - API Klient: "kapital/api-reference/client.md"
-            - Schemas:
-              - Response: "kapital/api-reference/response.md"
-              - Utils & Enums: "kapital/api-reference/utils.md"
+    - EPoint:
+      - Ümumi məlumat: "epoint/about.md"
+      - API Referansı:
+        - API Klient: "epoint/api-reference/client.md"
+        - Schemas:
+          - Response: "epoint/api-reference/response.md"
+          - Callback: "epoint/api-reference/callback.md"
+        - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
+    - KapitalBank:
+      - Ümumi məlumat: "kapital/about.md"
+      - API Referansı:
+        - API Klient: "kapital/api-reference/client.md"
+        - Schemas:
+          - Response: "kapital/api-reference/response.md"
+          - Utils & Enums: "kapital/api-reference/utils.md"
+    - LSIM:
+      - Ümumi məlumat: "lsim/about.md"
+      - API Referansı:
+        - API Klient: "lsim/api-reference/client.md"
+        - Schemas:
+          - Response: "lsim/api-reference/response.md"
+          - Enums: "lsim/api-reference/enums.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"

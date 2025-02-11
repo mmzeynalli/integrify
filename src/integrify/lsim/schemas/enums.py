@@ -3,6 +3,8 @@ from typing import Literal
 
 
 class Code(int, Enum):
+    """`error_code` field-inin dəyərləri."""
+
     IN_QUEUE: Literal[100] = 100
     DELIVERED: Literal[101] = 101
     UNDELIVERED: Literal[102] = 102

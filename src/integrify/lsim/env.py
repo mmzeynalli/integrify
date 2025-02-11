@@ -2,6 +2,8 @@ import os
 from enum import Enum
 from typing import Literal, Optional
 
+VERSION = '2024.11.22'
+
 LSIM_LOGIN: Optional[str] = os.getenv('LSIM_LOGIN')
 LSIM_PASSWORD: Optional[str] = os.getenv('LSIM_PASSWORD')
 LSIM_SENDER_NAME: Optional[str] = os.getenv('LSIM_SENDER_NAME')
