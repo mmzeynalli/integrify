@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, APIResponse
@@ -29,6 +29,7 @@ from integrify.kapital.schemas.response import (
     ProcessPaymentWithSavedCardResponseSchema,
     RefundOrderResponseSchema,
 )
+from integrify.utils import _UNSET, Unsettable
 
 __all__ = ['KapitalClientClass']
 
@@ -88,7 +89,7 @@ class KapitalClientClass(APIClient):
         token: int,
         amount: Numeric,
         currency: str,
-        description: Optional[str] = None,
+        description: Unsettable[str] = _UNSET,
     ) -> APIResponse[BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]]:
         """
         Yadda saxlanmış kartdan ödəniş etmək üçün sorğu
@@ -141,7 +142,7 @@ class KapitalClientClass(APIClient):
             self,
             amount: Numeric,
             currency: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Ödəniş sorğusu
 
@@ -248,7 +249,7 @@ class KapitalClientClass(APIClient):
             self,
             amount: Numeric,
             currency: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq üçün ödəniş sorğusu
 
@@ -281,7 +282,7 @@ class KapitalClientClass(APIClient):
             self,
             amount: Numeric,
             currency: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """Kartı saxlamaq və ödəniş etmək üçün ödəniş sorğusu
 
@@ -392,7 +393,7 @@ class KapitalClientClass(APIClient):
             self,
             amount: Numeric,
             currency: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]:
             """
             Bu funksiya sadece KapitalClientClass daxilinde istifade olunur!

@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Literal, Optional
 from warnings import warn
 
-from integrify.schemas import Environment
+from integrify.utils import Environment
 
 VERSION = '2024.10.19'
 
