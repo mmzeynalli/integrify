@@ -10,11 +10,7 @@ PYTHON_VERSIONS := 3.9 3.10 3.11 3.12 3.13
 
 .PHONY: install  ## Install the package, dependencies, and pre-commit for local development
 install: .uv .pre-commit
-	uv install
-
-.PHONY: install-main
-install-main: .uv .pre-commit
-	uv install
+	uv sync
 
 .PHONY: format  ## Auto-format python source files
 format: .uv
@@ -33,14 +29,6 @@ type-check: .uv
 
 .PHONY: test-live  ## Run all tests
 test-live: .uv
-	@for version in $(PYTHON_VERSIONS); do \
-	uv run coverage run -m pytest --durations=10
-	echo "Testing Python $${version}"; \
-		UV_PROJECT_ENVIRONMENT=.venv$${version//./} uv run --python $${version} coverage run -m pytest --durations=10; \
-	done
-
-.PHONY: test-local  ## Run all tests except live tests
-test-local: .uv
 ifeq ($(OS),Windows_NT)
 	@FOR %%v IN ($(PYTHON_VERSIONS)) DO \
 		uv venv --python %%v .venvs\%%v & \
@@ -49,6 +37,19 @@ else
 	for v in ${PYTHON_VERSIONS}; do \
 		uv venv --python $v .venvs/$v & \
 		uv run coverage run --data-file=coverage/.coverage.py$v -m pytest --durations=10; \
+	done
+endif
+
+.PHONY: test-local  ## Run all tests except live tests
+test-local: .uv
+ifeq ($(OS),Windows_NT)
+	@FOR %%v IN ($(PYTHON_VERSIONS)) DO \
+		uv venv --python %%v .venvs\%%v & \
+		uv run coverage run --data-file=coverage\.coverage.py%%v -m pytest -m "not live" --durations=10
+else
+	for v in ${PYTHON_VERSIONS}; do \
+		uv venv --python $v .venvs/$v & \
+		uv run coverage run --data-file=coverage/.coverage.py$v -m pytest -m "not live" --durations=10; \
 	done
 endif
 

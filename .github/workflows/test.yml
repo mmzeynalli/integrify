@@ -73,7 +73,7 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
-        run: uv sync --group main,gh
+        run: uv sync --group main gh
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
