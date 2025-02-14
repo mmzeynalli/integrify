@@ -10,7 +10,7 @@ PYTHON_VERSIONS := 3.9 3.10 3.11 3.12 3.13
 
 .PHONY: install  ## Install the package, dependencies, and pre-commit for local development
 install: .uv .pre-commit
-	uv sync
+	uv pip install -r pyproject.toml
 
 .PHONY: format  ## Auto-format python source files
 format: .uv
