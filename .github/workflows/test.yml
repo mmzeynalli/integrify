@@ -80,8 +80,8 @@ jobs:
       - run: mkdir coverage
       - name: Run tests
         run: |
-          source $VENV
-          make test-github
+          # source $VENV
+          uv run coverage run -m pytest -m "not live" --durations=10
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
