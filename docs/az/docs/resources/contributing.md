@@ -17,7 +17,7 @@ Bug qeyd etdikdə, istifadə etdiyiniz əməliyyat sistemi və kitabxananın ver
 
 ### Rekvizitlər { #requisites }
 
-* Python 3.9 və 3.12 arası istənilən versiya
+* Python 3.9 və 3.13 arası istənilən versiya
 * git
 * make
 * [Poetry](https://python-poetry.org/docs/#installation)

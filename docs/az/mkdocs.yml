@@ -47,34 +47,34 @@ repo_name: mmzeynalli/integrify
 repo_url: https://github.com/mmzeynalli/integrify
 
 plugins:
-  # - search
+  - search
   - social:
       cards_layout_options:
         logo: assets/integrify.png
-  # - panzoom:
-  #     full_screen: True
-  # - mkdocstrings:
-  #     default_handler: python
-  #     handlers:
-  #       python:
-  #         paths: [../../src]
-  #         options:
-  #           show_root_heading: true
-  #           show_source: false
-  #           show_if_no_docstring: true
-  #           inherited_members: true
-  #           members_order: source
-  #           # separate_signature: true
-  #           unwrap_annotated: true
-  #           filters:
-  #           - '!^_'
-  #           merge_init_into_class: true
-  #           docstring_section_style: spacy
-  #           signature_crossrefs: true
-  #           show_symbol_type_heading: true
-  #           show_symbol_type_toc: true
-  #           extensions:
-  #           - griffe_pydantic
+  - panzoom:
+      full_screen: True
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [../../src]
+          options:
+            show_root_heading: true
+            show_source: false
+            show_if_no_docstring: true
+            inherited_members: true
+            members_order: source
+            # separate_signature: true
+            unwrap_annotated: true
+            filters:
+            - '!^_'
+            merge_init_into_class: true
+            docstring_section_style: spacy
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            extensions:
+            - griffe_pydantic
 
 nav:
   - Giriş: index.md
@@ -99,38 +99,38 @@ nav:
     - Kod Arxitekturası: "resources/code-architecture.md"
     - API Referansı: "resources/api-reference.md"
 
-# markdown_extensions:
-#   - codehilite:
-#       guess_lang: false
-#   - admonition
-#   - pymdownx.details
-#   - pymdownx.highlight
-#   - pymdownx.tabbed
-#   - pymdownx.superfences
-#   - abbr
-#   - attr_list
-#   - footnotes
-#   - md_in_html
-#   - tables
-#   - toc:
-#       permalink: true
-#   - pymdownx.emoji:
-#       emoji_index: !!python/name:material.extensions.emoji.twemoji
-#       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-#   - pymdownx.betterem:
-#       smart_enable: all
-#   - pymdownx.caret
-#   - pymdownx.highlight:
-#       line_spans: __span
-#   - pymdownx.inlinehilite
-#   - pymdownx.keys
-#   - pymdownx.mark
-#   - pymdownx.superfences:
-#       custom_fences:
-#         - name: mermaid
-#           class: mermaid
-#           format: !!python/name:pymdownx.superfences.fence_code_format
-#   - pymdownx.tilde
+markdown_extensions:
+  - codehilite:
+      guess_lang: false
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - abbr
+  - attr_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.highlight:
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tilde
 
 extra:
   social:
