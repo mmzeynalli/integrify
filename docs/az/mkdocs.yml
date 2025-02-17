@@ -80,20 +80,20 @@ nav:
   - Giriş: index.md
   - İnteqrasiya:
       - EPoint:
-          - Ümumi məlumat: "epoint/about.md"
+          - Ümumi məlumat: "integrations/epoint/about.md"
           - API Referansı:
-            - API Klient: "epoint/api-reference/client.md"
+            - API Klient: "integrations/epoint/api-reference/client.md"
             - Schemas:
-              - Response: "epoint/api-reference/response.md"
-              - Callback: "epoint/api-reference/callback.md"
-            - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
+              - Response: "integrations/epoint/api-reference/response.md"
+              - Callback: "integrations/epoint/api-reference/callback.md"
+            - Köməkçi funksiyalar: "integrations/epoint/api-reference/helper-functions.md"
       - KapitalBank:
-          - Ümumi məlumat: "kapital/about.md"
+          - Ümumi məlumat: "integrations/kapital/about.md"
           - API Referansı:
-            - API Klient: "kapital/api-reference/client.md"
+            - API Klient: "integrations/kapital/api-reference/client.md"
             - Schemas:
-              - Response: "kapital/api-reference/response.md"
-              - Utils & Enums: "kapital/api-reference/utils.md"
+              - Response: "integrations/kapital/api-reference/response.md"
+              - Utils & Enums: "integrations/kapital/api-reference/utils.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"

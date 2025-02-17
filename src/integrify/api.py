@@ -154,7 +154,7 @@ class APIPayloadHandler:
     @cached_property
     def headers(self) -> dict:
         """Sorğunun header-ləri"""
-        return {}
+        return {'Content-Type': 'application/json'}
 
     @cached_property
     def req_args(self) -> dict:
@@ -298,13 +298,14 @@ class APIExecutor:
                 content=json.dumps({**data, 'url': full_url}),
             )
 
-        response = self.client.request(
-            verb,
-            full_url,
-            data=data,
-            headers=headers,
-            **handler.req_args,
-        )
+        request_kwds = {'headers': headers, **handler.req_args}
+
+        if verb == 'GET':
+            request_kwds['params'] = data
+        else:
+            request_kwds['data'] = data
+
+        response = self.client.request(verb, full_url, **request_kwds)
 
         if not response.is_success:
             self.logger.error(
@@ -346,13 +347,14 @@ class APIExecutor:
                 content=json.dumps({**data, 'url': full_url}),
             )
 
-        response = await self.client.request(
-            verb,
-            full_url,
-            data=data,
-            headers=headers,
-            **handler.req_args,
-        )
+        request_kwds = {'headers': headers, **handler.req_args}
+
+        if verb == 'GET':
+            request_kwds['params'] = data
+        else:
+            request_kwds['data'] = data
+
+        response = await self.client.request(verb, full_url, **request_kwds)
 
         if not response.is_success:
             self.logger.error(
