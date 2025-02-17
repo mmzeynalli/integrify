@@ -18,5 +18,18 @@ class BaseResponseSchema(BaseModel):
     obj: Optional[int] = -1
     """Sorğudan asılı olaraq, bu field-in mənası dəyişir."""
 
-    error_code: Code
+    error_code: Optional[Code] = None
     """Status kodu (həm uğurlu, həm xəta)"""
+
+
+class ReportGetResponseSchema(BaseModel):
+    error_code: Optional[Code] = None
+    """Status kodu (həm uğurlu, həm xəta)"""
+
+
+class ReportPostResponseSchema(BaseModel):
+    message: Optional[str] = None
+    """Xəta/uğur mesajı"""
+
+    delivery_status: Optional[str] = None
+    """SMS Statusu"""

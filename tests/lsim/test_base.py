@@ -1,26 +1,22 @@
 from typing import TYPE_CHECKING
 
-from pytest_mock import MockerFixture
+from integrify.lsim.schemas.enums import Code
+from tests.conftest import live
 
 if TYPE_CHECKING:
     from integrify.lsim.client import LSIMClientClass
 
 
-def test_send_sms_get(lsim_client: 'LSIMClientClass', mocker: MockerFixture):
-    lsim_client.send_sms_post(msisdn='994555779018', text='test')
-
-
-def test_send_sms_post(lsim_client: 'LSIMClientClass', mocker: MockerFixture):
-    lsim_client.send_sms_post(msisdn='994555779018', text='test')
-
-
+@live
 def test_check_balance(lsim_client: 'LSIMClientClass'):
-    lsim_client.check_balance()
+    assert lsim_client.check_balance().body.obj == 2
 
 
+@live
 def test_get_report_get(lsim_client: 'LSIMClientClass'):
-    lsim_client.get_report_post(tranid=1)
+    assert lsim_client.get_report_get(trans_id=2275731548).body.error_code == Code.DELIVERED
 
 
+@live
 def test_get_report_post(lsim_client: 'LSIMClientClass'):
-    lsim_client.get_report_post(tranid=1)
+    assert lsim_client.get_report_post(trans_id=2275813585).body.delivery_status == 'DELIVERED'

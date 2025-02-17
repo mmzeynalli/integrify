@@ -303,7 +303,7 @@ class APIExecutor:
         if verb == 'GET':
             request_kwds['params'] = data
         else:
-            request_kwds['data'] = data
+            request_kwds['json'] = data
 
         response = self.client.request(verb, full_url, **request_kwds)
 
@@ -352,7 +352,7 @@ class APIExecutor:
         if verb == 'GET':
             request_kwds['params'] = data
         else:
-            request_kwds['data'] = data
+            request_kwds['json'] = data
 
         response = await self.client.request(verb, full_url, **request_kwds)
 

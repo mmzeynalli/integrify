@@ -1,6 +1,6 @@
 import os
 from enum import Enum
-from typing import Literal, Optional
+from typing import Optional
 
 VERSION = '2024.11.22'
 
@@ -10,12 +10,12 @@ LSIM_SENDER_NAME: Optional[str] = os.getenv('LSIM_SENDER_NAME')
 
 
 class API(str, Enum):
-    BASE_URL: Literal['https://apps.lsim.az'] = 'https://apps.lsim.az'
+    BASE_URL = 'https://apps.lsim.az'
 
-    SEND_SMS_GET: Literal['/quicksms/v1/send'] = '/quicksms/v1/send'
-    SEND_SMS_POST: Literal['/quicksms/v1/smssender'] = '/quicksms/v1/smssender'
+    SEND_SMS_GET = '/quicksms/v1/send'
+    SEND_SMS_POST = '/quicksms/v1/smssender'
 
-    CHECK_BALANCE: Literal['/quicksms/v1/balance'] = '/quicksms/v1/balance'
+    CHECK_BALANCE = '/quicksms/v1/balance'
 
-    GET_REPORT_GET: Literal['/quicksms/v1/report'] = '/quicksms/v1/report'
-    GET_REPORT_POST: Literal['/quicksms/v1/smsreporter'] = '/quicksms/v1/smsreporter'
+    GET_REPORT_GET = '/quicksms/v1/report'
+    GET_REPORT_POST = '/quicksms/v1/smsreporter'

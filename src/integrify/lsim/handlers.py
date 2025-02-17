@@ -1,11 +1,16 @@
 from integrify.api import APIPayloadHandler
 from integrify.lsim.schemas.request import (
     CheckBalanceRequestSchema,
-    GetReportRequestSchema,
+    GetReportGetRequestSchema,
+    GetReportPostRequestSchema,
     SendSMSGetRequestSchema,
     SendSMSPostRequestSchema,
 )
-from integrify.lsim.schemas.response import BaseResponseSchema
+from integrify.lsim.schemas.response import (
+    BaseResponseSchema,
+    ReportGetResponseSchema,
+    ReportPostResponseSchema,
+)
 
 
 class SendSMSGetPayloadHandler(APIPayloadHandler):
@@ -23,6 +28,16 @@ class CheckBalancePayloadHandler(APIPayloadHandler):
         super().__init__(CheckBalanceRequestSchema, BaseResponseSchema)
 
 
-class GetReportPayloadHandler(APIPayloadHandler):
+class GetReportGetPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(GetReportRequestSchema, BaseResponseSchema)
+        super().__init__(GetReportGetRequestSchema, ReportGetResponseSchema)
+
+    def handle_response(self, resp):
+        data = resp.content.decode()
+        resp._content = f'{{"error_code": {data}}}'.encode()  # pylint: disable=protected-access
+        return super().handle_response(resp)
+
+
+class GetReportPostPayloadHandler(APIPayloadHandler):
+    def __init__(self):
+        super().__init__(GetReportPostRequestSchema, ReportPostResponseSchema)

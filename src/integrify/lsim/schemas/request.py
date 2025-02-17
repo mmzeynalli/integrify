@@ -14,8 +14,8 @@ class SendSMSGetRequestSchema(PayloadBaseModel):
     """Mesaj məzmunu"""
 
     # Not required
-    login: str = env.LSIM_LOGIN  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, exclude=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True, exclude=True)  # type: ignore[assignment]
     sender: str = env.LSIM_SENDER_NAME  # type: ignore[assignment]
     """SMS göndərənin adı (LSIM tərəfindən təmin olunur)"""
     unicode: bool = False
@@ -27,12 +27,13 @@ class SendSMSGetRequestSchema(PayloadBaseModel):
         """LSIM ucun key generasiyasi"""
         return md5(
             (
-                md5(self.password.encode()).hexdigest()  # pylint: disable=no-member
+                md5(self.password.encode(), usedforsecurity=False).hexdigest()  # pylint: disable=no-member
                 + self.login
                 + self.text
                 + self.msisdn
                 + self.sender
-            ).encode()
+            ).encode(),
+            usedforsecurity=False,
         ).hexdigest()
 
 
@@ -41,18 +42,26 @@ class SendSMSPostRequestSchema(SendSMSGetRequestSchema):
 
 
 class CheckBalanceRequestSchema(PayloadBaseModel):
-    login: str = env.LSIM_LOGIN  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, exclude=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True, exclude=True)  # type: ignore[assignment]
 
     @computed_field
     def key(self) -> str:
         """LSIM ucun key generasiyasi"""
-        return md5((md5(self.password.encode()).hexdigest() + self.login).encode()).hexdigest()  # pylint: disable=no-member
+        return md5(
+            (md5(self.password.encode(), usedforsecurity=False).hexdigest() + self.login).encode(),  # pylint: disable=no-member
+            usedforsecurity=False,
+        ).hexdigest()
 
 
-class GetReportRequestSchema(PayloadBaseModel):
-    transid: int
+class GetReportGetRequestSchema(PayloadBaseModel):
+    trans_id: int
+    """Uğurlu SMS göndərdikdə, yaradılan SMS ID-si"""
 
     # Not required
-    login: str = env.LSIM_LOGIN  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
     """Uğurlu SMS göndərildikdə alınan transaction id"""
+
+
+class GetReportPostRequestSchema(GetReportGetRequestSchema):
+    trans_id: int = Field(serialization_alias='transid')

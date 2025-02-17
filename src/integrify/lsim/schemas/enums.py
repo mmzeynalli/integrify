@@ -1,31 +1,30 @@
 from enum import Enum
-from typing import Literal
 
 
 class Code(int, Enum):
     """`error_code` field-inin dəyərləri."""
 
-    IN_QUEUE: Literal[100] = 100
-    DELIVERED: Literal[101] = 101
-    UNDELIVERED: Literal[102] = 102
-    EXPIRED: Literal[103] = 103
-    REJECTED: Literal[104] = 104
-    CANCELLED: Literal[105] = 105
-    ERROR: Literal[106] = 106
-    UNKNOWN: Literal[107] = 107
-    SENT: Literal[108] = 108
-    BLACK_LISTED: Literal[109] = 109
+    IN_QUEUE = 100
+    DELIVERED = 101
+    UNDELIVERED = 102
+    EXPIRED = 103
+    REJECTED = 104
+    CANCELLED = 105
+    ERROR = 106
+    UNKNOWN = 107
+    SENT = 108
+    BLACK_LISTED = 109
 
-    INVALID_KEY: Literal[-100] = -100
-    TOO_LONG_TEXT: Literal[-101] = -101
-    WRONG_NUMBER_FORMAT: Literal[-102] = -102
-    INVALID_SENDER_NAME: Literal[-103] = -103
-    INSUFFICIENT_BALANCE: Literal[-104] = -104
-    NUMBER_IN_BLACK_LIST: Literal[-105] = -105
-    INVALID_TRANSACTION_ID: Literal[-106] = -106
-    IP_ADDRESS_NOT_ALLOWED: Literal[-107] = -107
-    INVALID_HASH: Literal[-108] = -108
-    NO_HOST: Literal[-109] = -109
-    REPORTING_LIMIT_EXCEEDED: Literal[-110] = -110
+    INVALID_KEY = -100
+    TOO_LONG_TEXT = -101
+    WRONG_NUMBER_FORMAT = -102
+    INVALID_SENDER_NAME = -103
+    INSUFFICIENT_BALANCE = -104
+    NUMBER_IN_BLACK_LIST = -105
+    INVALID_TRANSACTION_ID = -106
+    IP_ADDRESS_NOT_ALLOWED = -107
+    INVALID_HASH = -108
+    NO_HOST = -109
+    REPORTING_LIMIT_EXCEEDED = -110
 
-    INTERNAL_ERROR: Literal[-500] = -500
+    INTERNAL_ERROR = -500

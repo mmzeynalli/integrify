@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
 
-import pytest
+from tests.conftest import live
 
 if TYPE_CHECKING:
     from integrify.lsim.client import LSIMClientClass
 
 
-@pytest.mark.live
+@live
 def test_flow_post(lsim_client: 'LSIMClientClass'):
     old_balance = lsim_client.check_balance().body.obj
 
@@ -21,7 +21,7 @@ def test_flow_post(lsim_client: 'LSIMClientClass'):
     lsim_client.get_report_post(tranid=tran_id)
 
 
-@pytest.mark.live
+@live
 def test_flow_get(lsim_client: 'LSIMClientClass'):
     old_balance = lsim_client.check_balance().body.obj
 

@@ -4,11 +4,16 @@ from integrify.api import APIClient
 from integrify.lsim import env
 from integrify.lsim.handlers import (
     CheckBalancePayloadHandler,
-    GetReportPayloadHandler,
+    GetReportGetPayloadHandler,
+    GetReportPostPayloadHandler,
     SendSMSGetPayloadHandler,
     SendSMSPostPayloadHandler,
 )
-from integrify.lsim.schemas.response import BaseResponseSchema
+from integrify.lsim.schemas.response import (
+    BaseResponseSchema,
+    ReportGetResponseSchema,
+    ReportPostResponseSchema,
+)
 from integrify.schemas import APIResponse
 
 
@@ -33,10 +38,10 @@ class LSIMClientClass(APIClient):
         self.add_handler('check_balance', CheckBalancePayloadHandler)
 
         self.add_url('get_report_get', env.API.GET_REPORT_GET, verb='GET')
-        self.add_handler('get_report_get', GetReportPayloadHandler)
+        self.add_handler('get_report_get', GetReportGetPayloadHandler)
 
         self.add_url('get_report_post', env.API.GET_REPORT_POST, verb='POST')
-        self.add_handler('get_report_post', GetReportPayloadHandler)
+        self.add_handler('get_report_post', GetReportPostPayloadHandler)
 
     if TYPE_CHECKING:
 
@@ -141,9 +146,9 @@ class LSIMClientClass(APIClient):
 
         def get_report_get(
             self,
-            tranid: int,
+            trans_id: int,
             login: Optional[str] = None,
-        ) -> APIResponse[BaseResponseSchema]:
+        ) -> APIResponse[ReportGetResponseSchema]:
             """Göndərilmiş SMS-in reportunu alan GET sorğusu
 
             **Endpoint:** */quicksms/v1/report*
@@ -152,21 +157,21 @@ class LSIMClientClass(APIClient):
                 ```python
                 from integrify.lsim import LSIMClient
 
-                LSIMClient.get_report_get(tranid=1)
+                LSIMClient.get_report_get(trans_id=1)
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.epoint.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`ReportGetResponseSchema`][integrify.lsim.schemas.response.ReportGetResponseSchema]
 
             Args:
-                tranid: Uğurlu SMS göndərildikdə alınan transaction id
+                trans_id: Uğurlu SMS göndərildikdə alınan transaction id
                 login: LSIM logininiz.  Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
         def get_report_post(
             self,
-            tranid: int,
+            trans_id: int,
             login: Optional[str] = None,
-        ) -> APIResponse[BaseResponseSchema]:
+        ) -> APIResponse[ReportPostResponseSchema]:
             """Göndərilmiş SMS-in reportunu alan POST sorğusu
 
             **Endpoint:** */quicksms/v1/smsreporter*
@@ -175,13 +180,13 @@ class LSIMClientClass(APIClient):
                 ```python
                 from integrify.lsim import LSIMClient
 
-                LSIMClient.get_report_post(tranid=1)
+                LSIMClient.get_report_post(trans_id=1)
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.epoint.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`ReportPostResponseSchema`][integrify.lsim.schemas.response.ReportPostResponseSchema]
 
             Args:
-                tranid: Uğurlu SMS göndərildikdə alınan transaction id
+                trans_id: Uğurlu SMS göndərildikdə alınan transaction id
                 login: LSIM logininiz.  Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 

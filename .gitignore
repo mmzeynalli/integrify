@@ -167,4 +167,3 @@ test.py
 *.lcov
 site
 .aider*
-.venvs/
