@@ -7,7 +7,8 @@ from urllib.parse import urljoin
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
+from integrify.schemas import APIResponse, PayloadBaseModel
+from integrify.utils import _UNSET, _ResponseT
 
 
 class APIClient:
@@ -91,15 +92,22 @@ class APIClient:
             if name not in self.urls:
                 raise
 
-        # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
-        # taparaq, sorğunu icra edirik.
-        base_url = self.base_url or self.urls[name]['base_url']
-        url = urljoin(base_url, self.urls[name]['url'])
-        verb = self.urls[name]['verb']
-        handler = self.handlers.get(name, self.default_handler)
+            # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
+            # taparaq, sorğunu icra edirik.
+            base_url = self.base_url or self.urls[name]['base_url']
+            url = urljoin(base_url, self.urls[name]['url'])
+            verb = self.urls[name]['verb']
+            handler = self.handlers.get(name, self.default_handler)
 
-        func = self.request_executor.request_function
-        return lambda *args, **kwds: func(url, verb, handler, *args, **kwds)
+            func = self.request_executor.request_function
+            return lambda *args, **kwds: func(
+                url,
+                verb,
+                handler,
+                # Exclude unset values, to trigger pydantic defaults
+                *(arg for arg in args if arg is not _UNSET),
+                **{k: v for k, v in kwds.items() if v is not _UNSET},
+            )
 
 
 class APIPayloadHandler:
@@ -146,7 +154,7 @@ class APIPayloadHandler:
     @cached_property
     def headers(self) -> dict:
         """Sorğunun header-ləri"""
-        return {}
+        return {'Content-Type': 'application/json'}
 
     @cached_property
     def req_args(self) -> dict:
@@ -290,13 +298,14 @@ class APIExecutor:
                 content=json.dumps({**data, 'url': full_url}),
             )
 
-        response = self.client.request(
-            verb,
-            full_url,
-            data=data,
-            headers=headers,
-            **handler.req_args,
-        )
+        request_kwds = {'headers': headers, **handler.req_args}
+
+        if verb == 'GET':
+            request_kwds['params'] = data
+        else:
+            request_kwds['data'] = data
+
+        response = self.client.request(verb, full_url, **request_kwds)
 
         if not response.is_success:
             self.logger.error(
@@ -338,13 +347,14 @@ class APIExecutor:
                 content=json.dumps({**data, 'url': full_url}),
             )
 
-        response = await self.client.request(
-            verb,
-            full_url,
-            data=data,
-            headers=headers,
-            **handler.req_args,
-        )
+        request_kwds = {'headers': headers, **handler.req_args}
+
+        if verb == 'GET':
+            request_kwds['params'] = data
+        else:
+            request_kwds['data'] = data
+
+        response = await self.client.request(verb, full_url, **request_kwds)
 
         if not response.is_success:
             self.logger.error(

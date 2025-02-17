@@ -79,28 +79,28 @@ plugins:
 nav:
   - Giriş: index.md
   - İnteqrasiya:
-    - EPoint:
-      - Ümumi məlumat: "epoint/about.md"
-      - API Referansı:
-        - API Klient: "epoint/api-reference/client.md"
-        - Schemas:
-          - Response: "epoint/api-reference/response.md"
-          - Callback: "epoint/api-reference/callback.md"
-        - Köməkçi funksiyalar: "epoint/api-reference/helper-functions.md"
-    - KapitalBank:
-      - Ümumi məlumat: "kapital/about.md"
-      - API Referansı:
-        - API Klient: "kapital/api-reference/client.md"
-        - Schemas:
-          - Response: "kapital/api-reference/response.md"
-          - Utils & Enums: "kapital/api-reference/utils.md"
-    - LSIM:
-      - Ümumi məlumat: "lsim/about.md"
-      - API Referansı:
-        - API Klient: "lsim/api-reference/client.md"
-        - Schemas:
-          - Response: "lsim/api-reference/response.md"
-          - Enums: "lsim/api-reference/enums.md"
+      - EPoint:
+          - Ümumi məlumat: "integrations/epoint/about.md"
+          - API Referansı:
+            - API Klient: "integrations/epoint/api-reference/client.md"
+            - Schemas:
+              - Response: "integrations/epoint/api-reference/response.md"
+              - Callback: "integrations/epoint/api-reference/callback.md"
+            - Köməkçi funksiyalar: "integrations/epoint/api-reference/helper-functions.md"
+      - KapitalBank:
+          - Ümumi məlumat: "integrations/kapital/about.md"
+          - API Referansı:
+            - API Klient: "integrations/kapital/api-reference/client.md"
+            - Schemas:
+              - Response: "integrations/kapital/api-reference/response.md"
+              - Utils & Enums: "integrations/kapital/api-reference/utils.md"
+      - LSIM:
+          - Ümumi məlumat: "integrations/lsim/about.md"
+          - API Referansı:
+            - API Klient: "integrations/lsim/api-reference/client.md"
+            - Schemas:
+              - Response: "integrations/lsim/api-reference/response.md"
+              - Enums: "integrations/lsim/api-reference/enums.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"

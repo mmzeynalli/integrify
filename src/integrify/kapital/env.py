@@ -1,9 +1,9 @@
 import os
 from enum import Enum
-from typing import Literal, Optional
+from typing import Optional
 from warnings import warn
 
-from integrify.schemas import Environment
+from integrify.utils import Environment
 
 VERSION = '2024.10.19'
 
@@ -23,24 +23,18 @@ if not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
 
 
 class API(str, Enum):
-    TEST_BASE_URL: Literal['https://txpgtst.kapitalbank.az'] = 'https://txpgtst.kapitalbank.az'
-    PROD_BASE_URL: Literal['https://e-commerce.kapitalbank.az'] = (
-        'https://e-commerce.kapitalbank.az'
-    )
+    TEST_BASE_URL = 'https://txpgtst.kapitalbank.az'
+    PROD_BASE_URL = 'https://e-commerce.kapitalbank.az'
     BASE_URL = PROD_BASE_URL if KAPITAL_ENV == Environment.PROD else TEST_BASE_URL
 
-    ORDER: Literal['/api/order'] = '/api/order'
-    GET_ORDER: Literal['/api/order/{order_id}'] = '/api/order/{order_id}'
-    GET_DETAILED_ORDER: Literal[
-        '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
-    ] = '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'  # noqa E501
-    ORDER_EXECUTION: Literal['/api/order/{order_id}/exec-tran'] = '/api/order/{order_id}/exec-tran'
-    ORDER_LINK_CARD_TOKEN: Literal['/api/order/{order_id}/set-src-token?password={password}'] = (
-        '/api/order/{order_id}/set-src-token?password={password}'
+    ORDER = '/api/order'
+    GET_ORDER = '/api/order/{order_id}'
+    GET_DETAILED_ORDER = (
+        '/api/order/{order_id}?&tranDetailLevel=2&tokenDetailLevel=2&orderDetailLevel=2'
     )
-    PROCESS_PAYMENT_WITH_SAVED_CARD: Literal[
-        '/api/order/{order_id}/exec-tran?password={password}'
-    ] = '/api/order/{order_id}/exec-tran?password={password}'
+    ORDER_EXECUTION = '/api/order/{order_id}/exec-tran'
+    ORDER_LINK_CARD_TOKEN = '/api/order/{order_id}/set-src-token?password={password}'  # nosec: B105
+    PROCESS_PAYMENT_WITH_SAVED_CARD = '/api/order/{order_id}/exec-tran?password={password}'
 
 
 __all__ = [
