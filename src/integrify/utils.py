@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypeVar, Union
+from typing import Literal, TypeVar, Union
 
 from pydantic import BaseModel
 
@@ -11,8 +11,8 @@ T = TypeVar('T')
 _UNSET = object()
 """Unset arguments"""
 
-Unsettable = Union[T, _UNSET]  # type: ignore[valid-type]
-UnsettableAndNone = Union[T, _UNSET, None]  # type: ignore[valid-type]
+Unsettable = Union[T, Literal[_UNSET]]  # type: ignore[valid-type]
+UnsettableAndNone = Union[T, Literal[_UNSET], None]  # type: ignore[valid-type]
 
 
 class Environment(str, Enum):
