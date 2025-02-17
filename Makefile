@@ -35,8 +35,8 @@ ifeq ($(OS),Windows_NT)
 		uv run coverage run --data-file=coverage\.coverage.py%%v -m pytest --durations=10
 else
 	for v in ${PYTHON_VERSIONS}; do \
-		uv venv --python $v .venvs/$v & \
-		uv run coverage run --data-file=coverage/.coverage.py$v -m pytest --durations=10; \
+		uv venv --python $$v .venvs/$$v & \
+		uv run coverage run --data-file=coverage/.coverage.py$$v -m pytest --durations=10; \
 	done
 endif
 
@@ -48,8 +48,8 @@ ifeq ($(OS),Windows_NT)
 		uv run coverage run --data-file=coverage\.coverage.py%%v -m pytest -m "not live" --durations=10
 else
 	for v in ${PYTHON_VERSIONS}; do \
-		uv venv --python $v .venvs/$v & \
-		uv run coverage run --data-file=coverage/.coverage.py$v -m pytest -m "not live" --durations=10; \
+		uv venv --python $$v .venvs/$$v & \
+		uv run coverage run --data-file=coverage/.coverage.py$$v -m pytest -m "not live" --durations=10; \
 	done
 endif
 
