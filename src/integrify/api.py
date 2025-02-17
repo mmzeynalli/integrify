@@ -7,7 +7,8 @@ from urllib.parse import urljoin
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
+from integrify.schemas import APIResponse, PayloadBaseModel
+from integrify.utils import _UNSET, _ResponseT
 
 
 class APIClient:
@@ -91,15 +92,22 @@ class APIClient:
             if name not in self.urls:
                 raise
 
-        # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
-        # taparaq, sorğunu icra edirik.
-        base_url = self.base_url or self.urls[name]['base_url']
-        url = urljoin(base_url, self.urls[name]['url'])
-        verb = self.urls[name]['verb']
-        handler = self.handlers.get(name, self.default_handler)
+            # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
+            # taparaq, sorğunu icra edirik.
+            base_url = self.base_url or self.urls[name]['base_url']
+            url = urljoin(base_url, self.urls[name]['url'])
+            verb = self.urls[name]['verb']
+            handler = self.handlers.get(name, self.default_handler)
 
-        func = self.request_executor.request_function
-        return lambda *args, **kwds: func(url, verb, handler, *args, **kwds)
+            func = self.request_executor.request_function
+            return lambda *args, **kwds: func(
+                url,
+                verb,
+                handler,
+                # Exclude unset values, to trigger pydantic defaults
+                *(arg for arg in args if arg is not _UNSET),
+                **{k: v for k, v in kwds.items() if v is not _UNSET},
+            )
 
 
 class APIPayloadHandler:

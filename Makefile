@@ -32,11 +32,12 @@ test-live: .uv
 ifeq ($(OS),Windows_NT)
 	@FOR %%v IN ($(PYTHON_VERSIONS)) DO \
 		uv venv --python %%v .venvs\%%v & \
-		uv run coverage run --data-file=coverage\.coverage.py%%v -m pytest --durations=10
+		set "VIRTUAL_ENV=.venvs\%%v" & \
+		uv run --active coverage run --data-file=coverage\.coverage.py%%v -m pytest --durations=10
 else
 	for v in ${PYTHON_VERSIONS}; do \
 		uv venv --python $$v .venvs/$$v & \
-		uv run coverage run --data-file=coverage/.coverage.py$$v -m pytest --durations=10; \
+		uv run --python .venvs/$$v/bin/python coverage run --data-file=coverage/.coverage.py$$v -m pytest --durations=10; \
 	done
 endif
 
@@ -45,11 +46,12 @@ test-local: .uv
 ifeq ($(OS),Windows_NT)
 	@FOR %%v IN ($(PYTHON_VERSIONS)) DO \
 		uv venv --python %%v .venvs\%%v & \
-		uv run coverage run --data-file=coverage\.coverage.py%%v -m pytest -m "not live" --durations=10
+		set "VIRTUAL_ENV=.venvs\%%v" & \
+		uv run --active coverage run --data-file=coverage\.coverage.py%%v -m pytest -m "not live" --durations=10
 else
 	for v in ${PYTHON_VERSIONS}; do \
 		uv venv --python $$v .venvs/$$v & \
-		uv run coverage run --data-file=coverage/.coverage.py$$v -m pytest -m "not live" --durations=10; \
+		VIRTUAL_ENV=.venvs/$$v uv run --active coverage run --data-file=coverage/.coverage.py$$v -m pytest -m "not live" --durations=10; \
 	done
 endif
 

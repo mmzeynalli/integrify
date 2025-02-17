@@ -24,6 +24,7 @@ from integrify.epoint.schemas.response import (
     TransactionStatusResponseSchema,
 )
 from integrify.schemas import APIResponse
+from integrify.utils import _UNSET, Unsettable
 
 __all__ = ['EPointClientClass']
 
@@ -80,7 +81,7 @@ class EPointClientClass(APIClient):
             amount: Numeric,
             currency: str,
             order_id: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
             **extra: Any,
         ) -> APIResponse[RedirectUrlResponseSchema]:
             """Ödəniş sorğusu
@@ -190,7 +191,7 @@ class EPointClientClass(APIClient):
             amount: Numeric,
             currency: str,
             order_id: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş və kartı yadda saxlama sorğusu
 
@@ -224,7 +225,7 @@ class EPointClientClass(APIClient):
             currency: str,
             order_id: str,
             card_id: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[BaseResponseSchema]:
             """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu
 
@@ -254,7 +255,7 @@ class EPointClientClass(APIClient):
             self,
             transaction_id: str,
             currency: str,
-            amount: Optional[Numeric] = None,
+            amount: Unsettable[Numeric],
         ) -> APIResponse[MinimalResponseSchema]:
             """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu
 
@@ -291,7 +292,7 @@ class EPointClientClass(APIClient):
             order_id: str,
             split_user_id: str,
             split_amount: Numeric,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
             **extra: Any,
         ) -> APIResponse[RedirectUrlResponseSchema]:
             """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu
@@ -326,7 +327,7 @@ class EPointClientClass(APIClient):
             card_id: str,
             split_user_id: str,
             split_amount: Numeric,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[SplitPayWithSavedCardResponseSchema]:
             """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu
 
@@ -358,7 +359,7 @@ class EPointClientClass(APIClient):
             order_id: str,
             split_user_id: str,
             split_amount: Numeric,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu
 
