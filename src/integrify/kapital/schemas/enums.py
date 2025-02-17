@@ -85,13 +85,13 @@ class ErrorCode(str, Enum):
     INVALID_USER_SESSION = 'InvalidUserSession'
     """Invalid user session"""
 
-    NEED_CHANGE_PASSWORD = 'NeedChangePwd'
+    NEED_CHANGE_PASSWORD = 'NeedChangePwd'  # nosec: B105
     """Need change password"""
 
     OPERATION_PROHIBITED = 'OperationProhibited'
     """Operation prohibited"""
 
-    PASSWORD_TRY_LIMIT_EXCEEDED = 'PwdTryLimitExceeded'
+    PASSWORD_TRY_LIMIT_EXCEEDED = 'PwdTryLimitExceeded'  # nosec: B105
     """Password try limit exceeded"""
 
     USER_SESSION_EXPIRED = 'UserSessionExpired'
@@ -103,7 +103,7 @@ class ErrorCode(str, Enum):
     COF_PROVIDER_UNREACHABLE = 'CofpUnreachable'
     """Can't reach CoF Provider"""
 
-    INVALID_TOKEN = 'InvalidToken'
+    INVALID_TOKEN = 'InvalidToken'  # nosec: B105
     """Invalid token"""
 
     INVALID_AUTH_STATUS = 'InvalidAutStatus'
@@ -115,10 +115,10 @@ class ErrorCode(str, Enum):
     INVALID_CONSUMER = 'InvalidConsumer'
     """Invalid consumer"""
 
-    INVALID_SECRET = 'InvalidSecret'
+    INVALID_SECRET = 'InvalidSecret'  # nosec: B105
     """Invalid secret code"""
 
-    SECRET_TRY_LIMIT_EXCEEDED = 'SecretTryLimit'
+    SECRET_TRY_LIMIT_EXCEEDED = 'SecretTryLimit'  # nosec: B105
     """Secret try limit has been exceeded"""
 
     SERVICE_ERROR = 'ServiceError'
