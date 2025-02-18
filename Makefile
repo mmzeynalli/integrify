@@ -32,7 +32,7 @@ test-live: .uv
 ifeq ($(OS),Windows_NT)
 	@FOR %%v IN ($(PYTHON_VERSIONS)) DO \
 		uv venv --python %%v .venvs\%%v & \
-		set "VIRTUAL_ENV=.venvs\%%v" & \
+		venvs\%%v\Scripts\activate & \
 		uv run --active coverage run --data-file=coverage\.coverage.py%%v -m pytest --live --durations=10
 else
 	for v in ${PYTHON_VERSIONS}; do \
@@ -45,17 +45,19 @@ test-local: .uv
 ifeq ($(OS),Windows_NT)
 	@FOR %%v IN ($(PYTHON_VERSIONS)) DO \
 		uv venv --python %%v .venvs\%%v & \
-		set "VIRTUAL_ENV=.venvs\%%v" & \
+		.venvs\%%v\Scripts\activate & \
+		uv sync --active & \
 		uv run --active coverage run --data-file=coverage\.coverage.py%%v -m pytest --durations=10
 else
 	for v in ${PYTHON_VERSIONS}; do \
-		uv run --python $$v coverage run --data-file=coverage/.coverage.py$$v -m pytest --durations=10; \
+		uv venv --python $$v .venvs/$$v & \
+		VIRTUAL_ENV=.venvs/$$v uv run --active coverage run --data-file=coverage/.coverage.py$$v -m pytest -m --durations=10; \
 	done
 endif
 
 .PHONY: test-github  ## Run test for one python version, as GA handles it
 test-github: .uv
-	uv run coverage run -m pytest --durations=10
+	uv run coverage run -m pytest --github --durations=10
 
 .PHONY: cov-report
 cov-report:
