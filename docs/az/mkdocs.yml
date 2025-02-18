@@ -94,6 +94,13 @@ nav:
             - Schemas:
               - Response: "integrations/kapital/api-reference/response.md"
               - Utils & Enums: "integrations/kapital/api-reference/utils.md"
+      - LSIM:
+          - Ümumi məlumat: "integrations/lsim/about.md"
+          - API Referansı:
+            - API Klient: "integrations/lsim/api-reference/client.md"
+            - Schemas:
+              - Response: "integrations/lsim/api-reference/response.md"
+              - Enums: "integrations/lsim/api-reference/enums.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"

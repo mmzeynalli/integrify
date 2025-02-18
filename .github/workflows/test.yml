@@ -50,6 +50,10 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
+      - name: Secrets -> env
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
       #----------------------------------------------
       #  -----  Checkout -----
       #----------------------------------------------
