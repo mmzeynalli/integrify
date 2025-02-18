@@ -3,10 +3,10 @@ from pytest_mock import MockFixture
 
 from integrify.kapital.client import KapitalClientClass
 from integrify.kapital.schemas.enums import ErrorCode
-from tests.conftest import github
+from tests.conftest import live
 
 
-@github
+@live
 def test_create_order_request(kapital_order):
     assert kapital_order.redirect_url.startswith('https://txpgtst.kapitalbank.az')
 
@@ -28,7 +28,7 @@ def test_mock_create_order_request(
         assert resp.body.data.redirect_url.startswith('https://txpgtst.kapitalbank.az')
 
 
-@github
+@live
 def test_get_order_information_request(
     kapital_order,
     kapital_client: KapitalClientClass,
@@ -45,7 +45,7 @@ def test_get_order_information_request(
     assert resp.body.data.status == 'Preparing'
 
 
-@github
+@live
 def test_get_order_information_invalid_id_request(
     kapital_client: KapitalClientClass,
 ):
@@ -75,7 +75,7 @@ def test_mock_get_order_information_invalid_id_request(
         assert resp.body.error.error_description == 'no order found'
 
 
-@github
+@live
 def test_get_detailed_order_information_request(
     kapital_order,
     kapital_client: KapitalClientClass,
@@ -96,7 +96,7 @@ def test_get_detailed_order_information_request(
     assert resp.body.data.hpp_redirect_url.startswith('https://txpgtst.kapitalbank.az')
 
 
-@github
+@live
 def test_get_detailed_order_information_invalid_id_request(
     kapital_client: KapitalClientClass,
 ):
@@ -126,7 +126,7 @@ def test_mock_get_detailed_order_information_invalid_id_request(
         assert resp.body.error.error_description == 'no order found'
 
 
-@github
+@live
 def test_save_card_request(
     kapital_client: KapitalClientClass,
 ):
@@ -164,7 +164,7 @@ def test_mock_save_card_request(
         assert resp.body.data.redirect_url.startswith('https://txpgtst.kapitalbank.az')
 
 
-@github
+@live
 def test_pay_and_save_card_request(
     kapital_client: KapitalClientClass,
 ):
