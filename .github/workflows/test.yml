@@ -45,9 +45,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Dump GitHub context
+      - name: Dump GitHub context and set env variables for tests
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
         run: echo "$GITHUB_CONTEXT"
 
       #----------------------------------------------
