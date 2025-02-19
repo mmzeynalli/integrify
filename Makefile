@@ -2,6 +2,12 @@
 # the `make` command will point at the `scripts/make` shell script.
 # This Makefile is just here to allow auto-completion in the terminal.
 
+args = $(foreach a,$($(subst -,_,$1)_args),$(if $(value $a),$a="$($a)"))
+
+_coverage_args = title
+_docs_serve_args = lang
+_new_integration_args = name
+
 actions = \
 	setup \
 	format \
@@ -20,4 +26,5 @@ actions = \
 
 .PHONY: $(actions)
 $(actions):
-	@uv run duty "$@" $(ARGS)
+	@uv run --no-sync duty $@ $(call args,_$@)
+

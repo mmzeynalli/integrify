@@ -620,6 +620,7 @@ docs = [
 ]
 gh = [
     { name = "coverage" },
+    { name = "duty" },
     { name = "pytest" },
     { name = "pytest-mock" },
     { name = "smokeshow" },
@@ -652,6 +653,7 @@ docs = [
 ]
 gh = [
     { name = "coverage", specifier = ">=7.6.3,<8" },
+    { name = "duty", specifier = ">=1.5.0" },
     { name = "pytest", specifier = ">=8.1.1,<9" },
     { name = "pytest-mock", specifier = ">=3.14.0,<4" },
     { name = "smokeshow", specifier = ">=0.4.0,<0.5" },

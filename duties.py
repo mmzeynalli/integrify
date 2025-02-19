@@ -15,6 +15,12 @@ SEP = os.sep
 
 DOCS_LANGS = ('az',)
 
+if os.name == 'nt':
+    import sys
+
+    sys.stdin.reconfigure(encoding='utf-8')  # type: ignore[union-attr]
+    sys.stdout.reconfigure(encoding='utf-8')  # type: ignore[union-attr]
+
 
 @contextmanager
 def environ(**kwargs: str) -> Iterator[None]:

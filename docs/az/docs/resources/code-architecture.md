@@ -80,7 +80,7 @@ Yeni inteqrasiya əlavə etmək istəyirsinizsə, zəhmət olmazsa [bu mərhəl�
 
 ### 0. File strukturu { #file-structure }
 
-Mövcud fayl strukturunu mimikləyə və ya sadəcə `make new-integration ARGS=new_integration` kommandını icra edə bilərsiniz. Gözlənilən struktur budur:
+Mövcud fayl strukturunu mimikləyə və ya sadəcə `make new-integration name=new_integration` kommandını icra edə bilərsiniz. Gözlənilən struktur budur:
 
 ```text
 ├── src

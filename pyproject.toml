@@ -54,6 +54,7 @@ gh = [
     "pytest-mock>=3.14.0,<4",
     "smokeshow>=0.4.0,<0.5",
     "coverage>=7.6.3,<8",
+    "duty>=1.5.0",
 ]
 dev = [
     "pytest>=8.1.1,<9",
