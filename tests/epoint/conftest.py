@@ -1,16 +1,7 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from integrify.epoint.client import EPointClientClass
-from tests import epoint
 from tests.epoint.mocks import *  # noqa: F403
-
-
-@pytest.fixture(autouse=True, scope='package')
-def epoint_setenv(package_mocker: MockerFixture):
-    package_mocker.patch('integrify.epoint.env.EPOINT_PUBLIC_KEY', epoint.EPOINT_PUBLIC_KEY)
-    package_mocker.patch('integrify.epoint.env.EPOINT_PRIVATE_KEY', epoint.EPOINT_PRIVATE_KEY)
-    yield
 
 
 @pytest.fixture(scope='function')
@@ -22,4 +13,6 @@ def epoint_set_wrong_env(mocker: MockerFixture):
 
 @pytest.fixture(scope='package')
 def epoint_client():
+    from integrify.epoint.client import EPointClientClass
+
     yield EPointClientClass()

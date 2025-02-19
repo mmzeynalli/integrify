@@ -4,5 +4,5 @@ publish = "site"
 command = """
 pip3 install uv &&
 uv export --only-group=docs | uv pip install --requirements=-
-uv run mkdocs build --strict
+uv run --no-sync mkdocs build --strict
 """
