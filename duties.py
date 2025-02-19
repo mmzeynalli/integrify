@@ -1,25 +1,19 @@
+"""Inspired from griffe-pydantic."""
+
 import os
 import shutil
-import subprocess
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Iterator
 
 from duty import context, duty, tools
 
 PYTHON_VERSIONS = os.getenv('PYTHON_VERSIONS', '3.9 3.10 3.11 3.12 3.13').split()
-CMD = 1 if os.getenv('SHELL') == 'cmd.exe' else 0
+
+SRC = ('.',)
 SEP = os.sep
 
-COMMANDS = {
-    'venv-activate': ['. .venvs/{py}/bin/activate', '.venvs\\{py}\\Scripts\\activate'],
-    'set-env': ['export', 'set'],
-}
-
-
-def shell(cmd: str, **kwargs: Any) -> None:
-    """Run a shell command."""
-    subprocess.run(cmd, shell=True, check=True, stderr=subprocess.STDOUT, **kwargs)  # noqa: S602
+DOCS_LANGS = ('az',)
 
 
 @contextmanager
@@ -68,68 +62,154 @@ def setup(ctx: context.Context) -> None:
 
 @duty
 def format(ctx: context.Context):
+    """Format the files."""
     ctx.run(
-        tools.ruff.check(*[], fix_only=True, exit_zero=True),
+        tools.ruff.check(*SRC, fix_only=True, exit_zero=True),
         title='Auto-fixing code',
     )
-    ctx.run(tools.ruff.format(*[]), title='Formatting code')
+    ctx.run(tools.ruff.format(*SRC), title='Formatting code')
 
 
 @duty
 def lint(ctx: context.Context):
-    pass
+    """Lint the files."""
+    ctx.run(
+        tools.ruff.check(*SRC),
+        title='Linting with ruff check',
+    )
+
+    ctx.run(
+        tools.ruff.format(*SRC, check=True),
+        title='Linting with ruff format',
+    )
+
+    ctx.run('pylint .', title='Linting with pylint')
 
 
 @duty
 def type_check(ctx: context.Context):
-    pass
+    """Type check the files."""
+    ctx.run(tools.mypy(*SRC), title='Type checking with mypy')
+
+
+def pytest(ctx: context.Context, **kwds):
+    """Helper function to run pytest"""
+    args = ' '.join(f'--{k} {v}' for k, v in kwds.items() if v is not None)
+    for ver in PYTHON_VERSIONS:
+        venv_path = Path(f'.venvs{SEP}{ver}')
+
+        with environ(VIRTUAL_ENV=str(venv_path)):
+            ctx.run(
+                'uv run --active coverage run --data-file=coverage/.coverage.py'
+                + ver
+                + ' -m pytest --durations=10 '
+                + args,
+                title=f'Running tests (python {ver})',
+            )
 
 
 @duty
 def test_live(ctx: context.Context):
-    pass
+    """Run tests with live environment (--live)"""
+    pytest(ctx, live=True)
 
 
 @duty
 def test_local(ctx: context.Context):
-    pass
+    """Run tests with local environment"""
+    pytest(ctx)
 
 
 @duty
 def test_github(ctx: context.Context):
-    pass
+    """Run tests with github environment (--github)"""
+    ctx.run(
+        'uv run coverage run -m pytest --durations=10 --github',
+        title='Running tests ',
+    )
 
 
 @duty
-def coverage(ctx: context.Context):
-    pass
+def coverage(ctx: context.Context, title: str = ''):
+    """Generate coverage report"""
+    ctx.run(tools.coverage.combine('coverage'))
+    ctx.run(tools.coverage.report(), capture=False)
+    ctx.run(tools.coverage.html(title=f'Coverage report {title}'))
 
 
 @duty
 def docs(ctx: context.Context):
-    ctx.run('mkdocs build', title='Building documentation')
+    """Build the documentation."""
+    for lang in DOCS_LANGS:
+        ctx.run(
+            tools.mkdocs.build(config_file=f'docs/{lang}/mkdocs.yml', strict=True),
+            title=f'Building documentation ({lang})',
+        )
 
 
 @duty
-def docs_serve(ctx: context.Context):
-    pass
+def docs_serve(ctx: context.Context, lang='az'):
+    """Serve the documentation."""
+    ctx.run(
+        tools.mkdocs.serve(config_file=f'docs/{lang}/mkdocs.yml', verbose=True),
+        title=f'Serving documentation ({lang})',
+    )
 
 
 @duty
 def secure(ctx: context.Context):
-    pass
+    """Run security checks with bandit."""
+    ctx.run('bandit -r src/integrify --config pyproject.toml', title='Running bandit')
 
 
 @duty(pre=['format', 'lint', 'test', 'docs'])
-def all(ctx: context.Context):
-    pass
+def all():
+    """Run all main tasks: format, lint, test, docs."""
 
 
 @duty
-def clean(ctx: context.Context):
-    pass
+def clean(ctx: context.Context):  # pylint: disable=unused-argument
+    """Delete build artifacts and cache files."""
+    print('Cleaning...')  # noqa: T201
+    paths_to_clean = ['htmlcov', 'coverage']
+    for path in paths_to_clean:
+        shutil.rmtree(path, ignore_errors=True)
+
+    cache_dirs = {'site', '.cache', '.pytest_cache', '.mypy_cache', '.ruff_cache', '__pycache__'}
+    for dirpath in Path('.').rglob('*/'):
+        if dirpath.parts[0] not in ('.venv', '.venvs') and dirpath.name in cache_dirs:
+            shutil.rmtree(dirpath, ignore_errors=True)
+
+    print('Done.')  # noqa: T201
 
 
 @duty
-def new_integration(ctx: context.Context):
-    pass
+def new_integration(ctx: context.Context, name: str):
+    # pylint: disable=all
+
+    """Create files for new integration."""
+    os.makedirs(f'src/integrify/{name}/schemas', exist_ok=True)
+    os.makedirs(f'tests/{name}', exist_ok=True)
+
+    for lang in DOCS_LANGS:
+        os.makedirs(f'docs/{lang}/docs/integrations/{name}', exist_ok=True)
+
+    # Create files in src/integrify/${name}
+    open(f'src/integrify/{name}/__init__.py', 'a').close()
+    open(f'src/integrify/{name}/client.py', 'a').close()
+    open(f'src/integrify/{name}/handlers.py', 'a').close()
+    open(f'src/integrify/{name}/env.py', 'a').close()
+
+    # Create files in src/integrify/${name}/schemas
+    open(f'src/integrify/{name}/schemas/__init__.py', 'a').close()
+    open(f'src/integrify/{name}/schemas/request.py', 'a').close()
+    open(f'src/integrify/{name}/schemas/response.py', 'a').close()
+
+    # Create files in tests/${name}
+    open(f'tests/{name}/__init__.py', 'a').close()
+    open(f'tests/{name}/conftest.py', 'a').close()
+    open(f'tests/{name}/mocks.py', 'a').close()
+
+    # Create files in docs/${lang}/docs/${name}
+    open(f'docs/{lang}/docs/integrations/{name}/about.md', 'a').close()
+    open(f'docs/{lang}/docs/integrations/{name}/api-reference.md', 'a').close()

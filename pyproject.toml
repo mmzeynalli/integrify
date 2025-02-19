@@ -93,7 +93,7 @@ include = ["src/integrify"]
 [tool.ruff]
 target-version = "py39"
 line-length = 100
-src = ["src", "tests"]
+src = ["src", "tests", "duties.py"]
 
 [tool.ruff.lint]
 select = [
