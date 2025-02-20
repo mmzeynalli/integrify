@@ -50,29 +50,29 @@ class PostaGuverciniClientClass(APIClient):
         ) -> APIResponse[SendSingleSMSResponseSchema]:
             """Tək SMS göndərilməsi
 
-            **Endpoint:** /api_json/v1/Sms/Send_1_N
+            **Endpoint:** */api_json/v1/Sms/Send_1_N*
 
             Example:
-            ```python
-            from integrify.postaguvercini import PostaGuverciniRequest
+                ```python
+                from integrify.postaguvercini import PostaGuverciniRequest
 
-            PostaGuverciniRequest.send_single_sms(
-                message="Test SMS",
-                receivers=["905320000000"],
-            )
-            ``
+                PostaGuverciniRequest.send_single_sms(
+                    message="Test SMS",
+                    receivers=["905320000000"],
+                )
+                ```
 
             **Cavab formatı**: [`SendSingleSMSResponseSchema`][integrify.postaguvercini.schemas.response.SendSingleSMSResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq SMS göndərilməsi haqqında məlumat gəlir.
 
             Args:
-                message (str): SMS mətnini göstərir. Boş ola bilməz.
-                receivers (List[str]): SMS qəbul edənləri göstərir. Boş ola bilməz.
-                send_date (Optional[str]): SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
-                expire_date (Optional[str]): Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
-                channel (Optional[str]): SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
-                originator (Optional[str]): Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istənildikdə istifadə ediləcək bir sahədir. Göndəriləcək məlumat müştəri xidmətləri nümayəndəsi tərəfindən veriləcək və 11 simvol dəyərindədir.
+                message: SMS mətnini göstərir. Boş ola bilməz.
+                receivers: SMS qəbul edənləri göstərir. Boş ola bilməz.
+                send_date: SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
+                expire_date: Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
+                channel: SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
+                originator: Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istənildikdə istifadə ediləcək bir sahədir. Göndəriləcək məlumat müştəri xidmətləri nümayəndəsi tərəfindən veriləcək və 11 simvol dəyərindədir.
             """  # noqa: E501
 
         def send_multiple_sms(
@@ -97,18 +97,18 @@ class PostaGuverciniClientClass(APIClient):
                     {"receiver": "905320000001", "message": "Test SMS 2"},
                 ],
             )
-            ``
+            ```
 
             **Cavab formatı**: [`SendMultipleSMSResponseSchema`][integrify.postaguvercini.schemas.response.SendMultipleSMSResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq SMS göndərilməsi haqqında məlumat gəlir.
 
             Args:
-                messages (List[dict]): SMS mətnini və qəbul edəni göstərir. Boş ola bilməz.
-                send_date (Optional[str]): SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
-                expire_date (Optional[str]): Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
-                channel (Optional[str]): SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
-                originator (Optional[str]): Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istən
+                messages: SMS mətnini və qəbul edəni göstərir. Boş ola bilməz.
+                send_date: SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
+                expire_date: Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
+                channel: SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
+                originator: Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istən
             """  # noqa: E501
 
         def status(self, message_ids: List[str]) -> APIResponse[StatusResponseSchema]:
@@ -121,14 +121,14 @@ class PostaGuverciniClientClass(APIClient):
             from integrify.postaguvercini import PostaGuverciniRequest
 
             PostaGuverciniRequest.status(message_ids=["123456"])
-            ``
+            ```
 
             **Cavab formatı**: [`StatusResponseSchema`][integrify.postaguvercini.schemas.response.StatusResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq SMS statusu haqqında məlumat gəlir.
 
             Args:
-                message_ids (List[str]): SMS mesajlarının ID-ləri. Boş ola bilməz.
+                message_ids: SMS mesajlarının ID-ləri. Boş ola bilməz.
             """  # noqa: E501
 
         def credit_balance(self) -> APIResponse[CreditBalanceResponseSchema]:
@@ -141,16 +141,13 @@ class PostaGuverciniClientClass(APIClient):
             from integrify.postaguvercini import PostaGuverciniRequest
 
             PostaGuverciniRequest.credit_balance()
-            ``
+            ```
 
             **Cavab formatı**: [`CreditBalanceResponseSchema`][integrify.postaguvercini.schemas.response.CreditBalanceResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq kredit balans məlumatı gəlir.
-
-            Args:
-                None
             """  # noqa: E501
 
 
-PostaGuverciniRequest = PostaGuverciniClientClass(sync=True)
-PostaGuverciniAsyncRequest = PostaGuverciniClientClass(sync=False)
+PostaGuverciniClient = PostaGuverciniClientClass(sync=True)
+PostaGuverciniAsyncClient = PostaGuverciniClientClass(sync=False)

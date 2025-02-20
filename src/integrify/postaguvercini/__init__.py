@@ -5,15 +5,15 @@ EN: https://www.poctgoyercini.com/api_json/swagger/ui/index
 """
 
 from .client import (
-    PostaGuverciniAsyncRequest,
+    PostaGuverciniAsyncClient,
+    PostaGuverciniClient,
     PostaGuverciniClientClass,
-    PostaGuverciniRequest,
 )
 from .env import VERSION
 
 __all__ = [
-    'PostaGuverciniAsyncRequest',
+    'PostaGuverciniAsyncClient',
     'PostaGuverciniClientClass',
-    'PostaGuverciniRequest',
+    'PostaGuverciniClient',
     'VERSION',
 ]
