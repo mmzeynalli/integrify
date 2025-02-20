@@ -61,9 +61,9 @@ class BasePayloadHandler(APIPayloadHandler):
 
     def post_handle_payload(self, data):
         if self.data_key:
-            return json.dumps({self.data_key: data})
+            return {self.data_key: data}
 
-        return json.dumps(data)
+        return data
 
     def handle_response(self, resp: httpx.Response) -> APIResponse[_ResponseT]:
         """

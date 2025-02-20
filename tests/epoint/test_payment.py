@@ -3,10 +3,11 @@ from pytest_mock import MockerFixture
 
 from integrify.epoint.client import EPointClientClass
 from integrify.epoint.schemas.enums import TransactionStatus
-from tests.conftest import github
+from tests.conftest import live
+from tests.epoint.conftest import requires_env
 
 
-@github
+@requires_env()
 def test_epoint_payment_request(epoint_client: EPointClientClass):
     resp = epoint_client.pay(
         amount=1,
@@ -19,7 +20,8 @@ def test_epoint_payment_request(epoint_client: EPointClientClass):
     assert resp.body.transaction
 
 
-@github
+@requires_env()
+@live
 def test_epoint_pay_with_saved_card_request(epoint_client: EPointClientClass):
     resp = epoint_client.pay_with_saved_card(
         amount=1,
@@ -31,12 +33,13 @@ def test_epoint_pay_with_saved_card_request(epoint_client: EPointClientClass):
     assert resp.body.transaction
 
 
-@github
+@requires_env()
 def test_epoint_pay_and_save_card_request(epoint_client: EPointClientClass):
     resp = epoint_client.pay_and_save_card(
         amount=1,
         currency='AZN',
         order_id='test',
+        description='test',
     )
 
     assert resp.body.status == TransactionStatus.SUCCESS

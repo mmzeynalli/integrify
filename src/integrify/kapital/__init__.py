@@ -1,7 +1,7 @@
 """
 Dokumentasiya:
 
-EN: https://brawny-airport-7ca.notion.site/Kapital-bank-E-commerce-API-Documentation-6dd6a228c40644e3bef034bca7845e3c
+AZ: https://pg.kapitalbank.az/docs
 
 Development and testing üçün test kartı məlumatları:
 PAN: 4169741330151778, ExpDate: 11/26, CVV: 119
