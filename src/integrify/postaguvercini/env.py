@@ -18,6 +18,8 @@ if not POSTA_GUVERCINI_USERNAME or not POSTA_GUVERCINI_PASSWORD:
 class API(str, Enum):
     BASE_URL = 'https://www.poctgoyercini.com'
 
+    SEND_SINGLE_SMS = '/api_json/v1/Sms/Send_1_N'
+    SEND_MULTIPLE_SMS = '/api_json/v1/Sms/Send_N_N'
     CREDIT_BALANCE = '/api_json/v1/Sms/CreditBalance'
 
 
