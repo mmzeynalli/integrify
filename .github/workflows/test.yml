@@ -86,7 +86,6 @@ jobs:
       - run: mkdir coverage
       - name: Run tests
         run: |
-          # source $VENV
           make test-github
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
@@ -133,9 +132,7 @@ jobs:
           path: coverage
           merge-multiple: true
       - run: ls -la coverage
-      - run: uv run coverage combine coverage
-      - run: uv run coverage report
-      - run: uv run coverage html --title "Coverage for ${{ github.sha }}"
+      - run: make coverage title=${{ github.sha }}
       - name: Store coverage HTML
         uses: actions/upload-artifact@v4
         with:
