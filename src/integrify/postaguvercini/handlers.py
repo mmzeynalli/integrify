@@ -4,12 +4,14 @@ from integrify.postaguvercini.schemas.request import (
     CreditBalanceRequestSchema,
     SendMultipleSMSRequestSchema,
     SendSingleSMSRequestSchema,
+    StatusRequestSchema,
 )
 from integrify.postaguvercini.schemas.response import (
     CreditBalanceResponseSchema,
     MinimalResponseSchema,
     SendMultipleSMSResponseSchema,
     SendSingleSMSResponseSchema,
+    StatusResponseSchema,
 )
 from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 
@@ -41,6 +43,11 @@ class SendSingleSMSPayloadHandler(BasePayloadHandler):
 class SendMultipleSMSPayloadHandler(BasePayloadHandler):
     def __init__(self):
         super().__init__(SendMultipleSMSRequestSchema, SendMultipleSMSResponseSchema)
+
+
+class StatusPayloadHandler(BasePayloadHandler):
+    def __init__(self):
+        super().__init__(StatusRequestSchema, StatusResponseSchema)
 
 
 class CreditBalancePayloadHandler(BasePayloadHandler):

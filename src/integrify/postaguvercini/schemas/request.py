@@ -4,9 +4,6 @@ from integrify.postaguvercini.schemas.utils import BaseSchema
 from integrify.schemas import PayloadBaseModel
 
 
-class CreditBalanceRequestSchema(PayloadBaseModel, BaseSchema): ...
-
-
 class SendSingleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     message: str
     receivers: List[str]
@@ -27,3 +24,10 @@ class SendMultipleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     expire_date: Optional[str] = None
     channel: Optional[str] = None
     originator: Optional[str] = None
+
+
+class StatusRequestSchema(PayloadBaseModel, BaseSchema):
+    message_ids: List[str]
+
+
+class CreditBalanceRequestSchema(PayloadBaseModel, BaseSchema): ...

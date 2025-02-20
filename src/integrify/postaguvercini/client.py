@@ -6,11 +6,13 @@ from integrify.postaguvercini.handlers import (
     CreditBalancePayloadHandler,
     SendMultipleSMSPayloadHandler,
     SendSingleSMSPayloadHandler,
+    StatusPayloadHandler,
 )
 from integrify.postaguvercini.schemas.response import (
     CreditBalanceResponseSchema,
     SendMultipleSMSResponseSchema,
     SendSingleSMSResponseSchema,
+    StatusResponseSchema,
 )
 from integrify.schemas import APIResponse
 
@@ -28,6 +30,9 @@ class PostaGuverciniClientClass(APIClient):
 
         self.add_url('send_multiple_sms', env.API.SEND_MULTIPLE_SMS, verb='POST')
         self.add_handler('send_multiple_sms', SendMultipleSMSPayloadHandler)
+
+        self.add_url('status', env.API.STATUS, verb='POST')
+        self.add_handler('status', StatusPayloadHandler)
 
         self.add_url('credit_balance', env.API.CREDIT_BALANCE, verb='POST')
         self.add_handler('credit_balance', CreditBalancePayloadHandler)
@@ -104,6 +109,26 @@ class PostaGuverciniClientClass(APIClient):
                 expire_date (Optional[str]): Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
                 channel (Optional[str]): SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
                 originator (Optional[str]): Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istən
+            """  # noqa: E501
+
+        def status(self, message_ids: List[str]) -> APIResponse[StatusResponseSchema]:
+            """SMS status sorğusu
+
+            **Endpoint:** /api_json/v1/Sms/Status
+
+            Example:
+            ```python
+            from integrify.postaguvercini import PostaGuverciniRequest
+
+            PostaGuverciniRequest.status(message_ids=["123456"])
+            ``
+
+            **Cavab formatı**: [`StatusResponseSchema`][integrify.postaguvercini.schemas.response.StatusResponseSchema]
+
+            Bu sorğunu göndərdikdə, cavab olaraq SMS statusu haqqında məlumat gəlir.
+
+            Args:
+                message_ids (List[str]): SMS mesajlarının ID-ləri. Boş ola bilməz.
             """  # noqa: E501
 
         def credit_balance(self) -> APIResponse[CreditBalanceResponseSchema]:

@@ -20,6 +20,7 @@ class API(str, Enum):
 
     SEND_SINGLE_SMS = '/api_json/v1/Sms/Send_1_N'
     SEND_MULTIPLE_SMS = '/api_json/v1/Sms/Send_N_N'
+    STATUS = '/api_json/v1/Sms/Status'
     CREDIT_BALANCE = '/api_json/v1/Sms/CreditBalance'
 
 
