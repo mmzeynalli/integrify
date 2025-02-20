@@ -1,7 +1,7 @@
 """
 Dokumentasiya:
 
-AZ: https://pg.kapitalbank.az/docs
+AZ, EN, RU: https://pg.kapitalbank.az/docs
 
 Development and testing üçün test kartı məlumatları:
 PAN: 4169741330151778, ExpDate: 11/26, CVV: 119
