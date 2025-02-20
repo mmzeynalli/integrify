@@ -22,8 +22,15 @@ __all__ = ['PostaGuverciniClientClass']
 class PostaGuverciniClientClass(APIClient):
     """Posta Guvercini sorğular üçün baza class"""
 
-    def __init__(self, sync: bool = True):
-        super().__init__('PostaGuvercini', env.API.BASE_URL, None, sync=sync)
+    def __init__(
+        self,
+        name='PostaGuvercini',
+        base_url=env.API.BASE_URL,
+        default_handler=None,
+        sync=True,
+        dry=False,
+    ):
+        super().__init__(name, base_url, default_handler, sync, dry)
 
         self.add_url('send_single_sms', env.API.SEND_SINGLE_SMS, verb='POST')
         self.add_handler('send_single_sms', SendSingleSMSPayloadHandler)
