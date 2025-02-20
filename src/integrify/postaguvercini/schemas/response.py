@@ -19,7 +19,7 @@ class SendSingleSMSResultSchema(BaseSchema):
 
 
 class SendSingleSMSResponseSchema(MinimalResponseSchema):
-    result: Optional[SendSingleSMSResultSchema]
+    result: Optional[List[SendSingleSMSResultSchema]]
 
 
 class SendMultipleSMSResponseSchema(MinimalResponseSchema):

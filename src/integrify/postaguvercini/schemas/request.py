@@ -10,10 +10,10 @@ class CreditBalanceRequestSchema(PayloadBaseModel, BaseSchema): ...
 class SendSingleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     message: str
     receivers: List[str]
-    send_date: Optional[str]
-    expire_date: Optional[str]
-    channel: Optional[str]
-    originator: Optional[str]
+    send_date: Optional[str] = None
+    expire_date: Optional[str] = None
+    channel: Optional[str] = None
+    originator: Optional[str] = None
 
 
 class SMSMessage(PayloadBaseModel, BaseSchema):
@@ -23,7 +23,7 @@ class SMSMessage(PayloadBaseModel, BaseSchema):
 
 class SendMultipleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     messages: List[SMSMessage]
-    send_date: Optional[str]
-    expire_date: Optional[str]
-    channel: Optional[str]
-    originator: Optional[str]
+    send_date: Optional[str] = None
+    expire_date: Optional[str] = None
+    channel: Optional[str] = None
+    originator: Optional[str] = None
