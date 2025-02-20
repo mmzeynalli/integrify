@@ -210,6 +210,7 @@ def new_integration(ctx: context.Context, name: str):
     open(f'src/integrify/{name}/schemas/__init__.py', 'a').close()
     open(f'src/integrify/{name}/schemas/request.py', 'a').close()
     open(f'src/integrify/{name}/schemas/response.py', 'a').close()
+    open(f'src/integrify/{name}/schemas/enums.py', 'a').close()
 
     # Create files in tests/${name}
     open(f'tests/{name}/__init__.py', 'a').close()
