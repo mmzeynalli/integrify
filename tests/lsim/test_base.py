@@ -1,3 +1,4 @@
+import os
 from typing import TYPE_CHECKING
 
 from integrify.lsim.schemas.enums import Code
@@ -8,19 +9,25 @@ if TYPE_CHECKING:
     from integrify.lsim.client import LSIMClientClass
 
 
-@requires_env
+@requires_env()
 def test_check_balance(lsim_client: 'LSIMClientClass'):
     assert lsim_client.check_balance().body.obj == 2
 
 
-@requires_env
+@requires_env('LSIM_TRANS_ID')
 def test_get_report_get(lsim_client: 'LSIMClientClass'):
-    assert lsim_client.get_report_get(trans_id=2275731548).body.error_code == Code.DELIVERED
+    assert (
+        lsim_client.get_report_get(trans_id=os.getenv('LSIM_TRANS_ID')).body.error_code
+        == Code.DELIVERED
+    )
 
 
-@requires_env
+@requires_env('LSIM_TRANS_ID')
 def test_get_report_post(lsim_client: 'LSIMClientClass'):
-    assert lsim_client.get_report_post(trans_id=2275813585).body.delivery_status == 'DELIVERED'
+    assert (
+        lsim_client.get_report_post(trans_id=os.getenv('LSIM_TRANS_ID')).body.delivery_status
+        == 'DELIVERED'
+    )
 
 
 @requires_env()
