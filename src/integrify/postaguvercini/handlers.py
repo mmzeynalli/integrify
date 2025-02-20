@@ -1,5 +1,4 @@
 from integrify.api import APIPayloadHandler
-from integrify.postaguvercini import env
 from integrify.postaguvercini.schemas.request import (
     CreditBalanceRequestSchema,
     SendMultipleSMSRequestSchema,
@@ -19,12 +18,6 @@ from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
 class BasePayloadHandler(APIPayloadHandler):
     def __init__(self, req_model: type[PayloadBaseModel], resp_model: type[_ResponseT]):
         super().__init__(req_model, resp_model)
-
-    def pre_handle_payload(self, *args, **kwds):
-        return {
-            'Username': env.POSTA_GUVERCINI_USERNAME,
-            'Password': env.POSTA_GUVERCINI_PASSWORD,
-        }
 
     def handle_response(self, resp):
         api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]

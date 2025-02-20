@@ -50,6 +50,8 @@ class PostaGuverciniClientClass(APIClient):
             self,
             message: str,
             receivers: List[str],
+            username: Optional[str] = None,
+            password: Optional[str] = None,
             send_date: Optional[str] = None,
             expire_date: Optional[str] = None,
             channel: Optional[str] = None,
@@ -76,6 +78,8 @@ class PostaGuverciniClientClass(APIClient):
             Args:
                 message: SMS mətnini göstərir. Boş ola bilməz.
                 receivers: SMS qəbul edənləri göstərir. Boş ola bilməz.
+                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 send_date: SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
                 expire_date: Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
                 channel: SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
@@ -85,6 +89,8 @@ class PostaGuverciniClientClass(APIClient):
         def send_multiple_sms(
             self,
             messages: List[dict],
+            username: Optional[str] = None,
+            password: Optional[str] = None,
             send_date: Optional[str] = None,
             expire_date: Optional[str] = None,
             channel: Optional[str] = None,
@@ -112,13 +118,20 @@ class PostaGuverciniClientClass(APIClient):
 
             Args:
                 messages: SMS mətnini və qəbul edəni göstərir. Boş ola bilməz.
+                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 send_date: SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
                 expire_date: Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
                 channel: SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
                 originator: Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istən
             """  # noqa: E501
 
-        def status(self, message_ids: List[str]) -> APIResponse[StatusResponseSchema]:
+        def status(
+            self,
+            message_ids: List[str],
+            username: Optional[str] = None,
+            password: Optional[str] = None,
+        ) -> APIResponse[StatusResponseSchema]:
             """SMS status sorğusu
 
             **Endpoint:** /api_json/v1/Sms/Status
@@ -136,9 +149,15 @@ class PostaGuverciniClientClass(APIClient):
 
             Args:
                 message_ids: SMS mesajlarının ID-ləri. Boş ola bilməz.
+                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
-        def credit_balance(self) -> APIResponse[CreditBalanceResponseSchema]:
+        def credit_balance(
+            self,
+            username: Optional[str] = None,
+            password: Optional[str] = None,
+        ) -> APIResponse[CreditBalanceResponseSchema]:
             """Kredit balans sorğusu
 
             **Endpoint:** /api_json/v1/Sms/CreditBalance
@@ -153,6 +172,10 @@ class PostaGuverciniClientClass(APIClient):
             **Cavab formatı**: [`CreditBalanceResponseSchema`][integrify.postaguvercini.schemas.response.CreditBalanceResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq kredit balans məlumatı gəlir.
+
+            Args:
+                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
 

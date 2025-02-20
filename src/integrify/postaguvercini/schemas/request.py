@@ -1,5 +1,8 @@
 from typing import List, Optional
 
+from pydantic import Field
+
+from integrify.postaguvercini import env
 from integrify.postaguvercini.schemas.utils import BaseSchema
 from integrify.schemas import PayloadBaseModel
 
@@ -7,6 +10,10 @@ from integrify.schemas import PayloadBaseModel
 class SendSingleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     message: str
     receivers: List[str]
+
+    # Not required
+    username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
+    password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]
     send_date: Optional[str] = None
     expire_date: Optional[str] = None
     channel: Optional[str] = None
@@ -20,6 +27,10 @@ class SMSMessage(PayloadBaseModel, BaseSchema):
 
 class SendMultipleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     messages: List[SMSMessage]
+
+    # Not required
+    username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
+    password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]
     send_date: Optional[str] = None
     expire_date: Optional[str] = None
     channel: Optional[str] = None
@@ -28,6 +39,12 @@ class SendMultipleSMSRequestSchema(PayloadBaseModel, BaseSchema):
 
 class StatusRequestSchema(PayloadBaseModel, BaseSchema):
     message_ids: List[str]
+    # Not required
+    username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
+    password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]
 
 
-class CreditBalanceRequestSchema(PayloadBaseModel, BaseSchema): ...
+class CreditBalanceRequestSchema(PayloadBaseModel, BaseSchema):
+    # Not required
+    username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
+    password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]

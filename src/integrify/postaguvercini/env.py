@@ -1,18 +1,11 @@
 import os
 from enum import Enum
-from warnings import warn
+from typing import Optional
 
 VERSION = 'v1'
 
-POSTA_GUVERCINI_USERNAME: str = os.getenv('POSTA_GUVERCINI_USERNAME', '')
-POSTA_GUVERCINI_PASSWORD: str = os.getenv('POSTA_GUVERCINI_PASSWORD', '')
-
-
-if not POSTA_GUVERCINI_USERNAME or not POSTA_GUVERCINI_PASSWORD:
-    warn(
-        'POSTA_GUVERCINI_USERNAME/POSTA_GUVERCINI_PASSWORD mühit dəyişənlərinə dəyər verməsəniz '
-        'sorğular çalışmayacaq!'
-    )
+POSTA_GUVERCINI_USERNAME: Optional[str] = os.getenv('POSTA_GUVERCINI_USERNAME', '')
+POSTA_GUVERCINI_PASSWORD: Optional[str] = os.getenv('POSTA_GUVERCINI_PASSWORD', '')
 
 
 class API(str, Enum):
