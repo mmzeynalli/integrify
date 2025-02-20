@@ -3,7 +3,6 @@ base = "docs/az"
 publish = "site"
 command = """
 pip3 install uv &&
-uv export --only-group=docs > tmp.txt &&
-uv pip install --requirements=tmp.txt &&
+uv sync --no-dev --no-group=gh &&
 uv run --no-sync mkdocs build --strict
 """
