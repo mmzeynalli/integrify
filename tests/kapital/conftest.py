@@ -1,24 +1,20 @@
 import os
+from functools import partial
+from typing import TYPE_CHECKING
 
 import pytest
 
-from integrify.kapital.client import KapitalClientClass
-from tests import kapital
+from tests.conftest import requires_env as _requires_env
 from tests.kapital.mocks import *  # noqa: F403
 
+if TYPE_CHECKING:
+    from integrify.kapital.client import KapitalClientClass
 
-@pytest.fixture(autouse=True, scope='session')
-def kapital_setenv():
-    os.environ['KAPITAL_ENV'] = kapital.KAPITAL_ENV
-    os.environ['KAPITAL_USERNAME'] = kapital.KAPITAL_USERNAME
-    os.environ['KAPITAL_PASSWORD'] = kapital.KAPITAL_PASSWORD
-
-    yield
+requires_env = partial(_requires_env, 'KAPITAL_USERNAME', 'KAPITAL_PASSWORD')
 
 
 @pytest.fixture(scope='session')
 def kapital_set_wrong_env():
-    os.environ['KAPITAL_ENV'] = 'test'
     os.environ['KAPITAL_USERNAME'] = 'TerminalSys/notkapital'
     os.environ['KAPITAL_PASSWORD'] = 'notkapital123'
 
@@ -26,7 +22,7 @@ def kapital_set_wrong_env():
 
 
 @pytest.fixture(scope='module')
-def kapital_order(kapital_client: KapitalClientClass):
+def kapital_order(kapital_client: 'KapitalClientClass'):
     """
     Fixture to manage shared state for order creation and retrieval.
     """
@@ -46,4 +42,6 @@ def kapital_order(kapital_client: KapitalClientClass):
 
 @pytest.fixture(scope='package')
 def kapital_client():
+    from integrify.kapital.client import KapitalClientClass
+
     yield KapitalClientClass()

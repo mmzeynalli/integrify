@@ -7,15 +7,14 @@ args = $(foreach a,$($(subst -,_,$1)_args),$(if $(value $a),$a="$($a)"))
 _coverage_args = title
 _docs_serve_args = lang
 _new_integration_args = name
+_test_args = live
 
 actions = \
 	setup \
 	format \
 	lint \
 	type-check \
-	test-live \
-	test-local \
-	test-github \
+	test \
 	coverage \
 	docs \
 	docs-serve \

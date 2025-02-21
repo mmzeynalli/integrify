@@ -37,7 +37,7 @@ class PayWithSavedCardRequestSchema(MinimalPaymentRequestSchema):
 
 
 class PayAndSaveCardRequestSchema(BasePaymentRequestSchema):
-    pass
+    description: str
 
 
 class PayoutRequestSchema(MinimalPaymentRequestSchema):

@@ -191,7 +191,7 @@ class EPointClientClass(APIClient):
             amount: Numeric,
             currency: str,
             order_id: str,
-            description: Unsettable[str] = _UNSET,
+            description: str,
         ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş və kartı yadda saxlama sorğusu
 
@@ -255,7 +255,7 @@ class EPointClientClass(APIClient):
             self,
             transaction_id: str,
             currency: str,
-            amount: Unsettable[Numeric],
+            amount: Unsettable[Numeric] = _UNSET,
         ) -> APIResponse[MinimalResponseSchema]:
             """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu
 

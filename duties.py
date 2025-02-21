@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
 
-from duty import context, duty, tools
+from duty import context, duty
 
 PYTHON_VERSIONS = os.getenv('PYTHON_VERSIONS', '3.9 3.10 3.11 3.12 3.13').split()
 
@@ -69,78 +69,49 @@ def setup(ctx: context.Context) -> None:
 @duty
 def format(ctx: context.Context):
     """Format the files."""
-    ctx.run(
-        tools.ruff.check(*SRC, fix_only=True, exit_zero=True),
-        title='Auto-fixing code',
-    )
-    ctx.run(tools.ruff.format(*SRC), title='Formatting code')
+    ctx.run('ruff check --fix-only --exit-zero', title='Auto-fixing code')
+    ctx.run('ruff format', title='Formatting code')
 
 
 @duty
 def lint(ctx: context.Context):
     """Lint the files."""
-    ctx.run(
-        tools.ruff.check(*SRC),
-        title='Linting with ruff check',
-    )
-
-    ctx.run(
-        tools.ruff.format(*SRC, check=True),
-        title='Linting with ruff format',
-    )
-
+    ctx.run('ruff check', title='Linting with ruff check')
+    ctx.run('ruff format --check', title='Linting with ruff format')
     ctx.run('pylint .', title='Linting with pylint')
 
 
 @duty
 def type_check(ctx: context.Context):
     """Type check the files."""
-    ctx.run(tools.mypy(*SRC), title='Type checking with mypy')
+    ctx.run('mypy .', title='Type checking with mypy')
 
 
-def pytest(ctx: context.Context, **kwds):
-    """Helper function to run pytest"""
-    args = ' '.join(f'--{k} {v}' for k, v in kwds.items() if v is not None)
+@duty
+def test(ctx: context.Context, live: bool = False):
+    """Run tests with local environment"""
     for ver in PYTHON_VERSIONS:
         venv_path = Path(f'.venvs{SEP}{ver}')
 
         with environ(VIRTUAL_ENV=str(venv_path)):
             ctx.run(
-                'uv run --active coverage run --data-file=coverage/.coverage.py'
+                'uv run --active --no-sync coverage run --data-file=coverage/.coverage.py'
                 + ver
                 + ' -m pytest --durations=10 '
-                + args,
+                + ('--live' if live else ''),
                 title=f'Running tests (python {ver})',
             )
 
 
 @duty
-def test_live(ctx: context.Context):
-    """Run tests with live environment (--live)"""
-    pytest(ctx, live=True)
-
-
-@duty
-def test_local(ctx: context.Context):
-    """Run tests with local environment"""
-    pytest(ctx)
-
-
-@duty
-def test_github(ctx: context.Context):
-    """Run tests with github environment (--github)"""
-    ctx.run(
-        'uv run coverage run -m pytest --durations=10 --github',
-        title='Running tests ',
-    )
-
-
-@duty
 def coverage(ctx: context.Context, title: str = ''):
     """Generate coverage report"""
-    ctx.run(tools.coverage.combine('coverage'))
-    ctx.run(tools.coverage.report(), capture=False)
-    ctx.run(tools.coverage.html(title=f'Coverage report {title}'))
+    ctx.run('coverage combine coverage', title='Combining coverage')
+    ctx.run('coverage report', title='Generating coverage report', capture=False)
+    ctx.run(
+        f'coverage html --title="Coverage report for {title}"',
+        title='Generating coverage HTML report',
+    )
 
 
 @duty
@@ -148,7 +119,7 @@ def docs(ctx: context.Context):
     """Build the documentation."""
     for lang in DOCS_LANGS:
         ctx.run(
-            tools.mkdocs.build(config_file=f'docs/{lang}/mkdocs.yml', strict=True),
+            f'mkdocs build -f docs/{lang}/mkdocs.yml --strict',
             title=f'Building documentation ({lang})',
         )
 
@@ -157,7 +128,7 @@ def docs(ctx: context.Context):
 def docs_serve(ctx: context.Context, lang='az'):
     """Serve the documentation."""
     ctx.run(
-        tools.mkdocs.serve(config_file=f'docs/{lang}/mkdocs.yml', verbose=True),
+        f'mkdocs serve -f docs/{lang}/mkdocs.yml',
         title=f'Serving documentation ({lang})',
     )
 

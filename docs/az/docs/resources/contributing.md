@@ -13,7 +13,7 @@ Bug qeyd etdikdə, istifadə etdiyiniz əməliyyat sistemi və kitabxananın ver
 
 !!! tip
 
-    **tl;dr:** Kodu format etmək üçün `make format`, test və lint etmək üçün `make test-local`/`make lint` və dokumentasiya generasiya etmək üçün `make docs` kommandını icra edin.
+    **tl;dr:** Kodu format etmək üçün `make format`, test və lint etmək üçün `make test`/`make lint` və dokumentasiya generasiya etmək üçün `make docs` kommandını icra edin.
 
 ### Rekvizitlər { #requisites }
 

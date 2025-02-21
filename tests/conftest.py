@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from integrify.api import APIClient
@@ -13,20 +15,16 @@ def pytest_addoption(parser):
         help='enable live tests with tokens provided',
     )
 
-    parser.addoption(
-        '--github',
-        action='store_true',
-        dest='githubrun',
-        default=False,
-        help='enable live tests with tokens provided',
-    )
-
 
 live = pytest.mark.skipif("not config.getoption('liverun')", allow_module_level=True)
 """Tests that need live environment to run"""
 
-github = pytest.mark.skipif("not config.getoption('githubrun')", allow_module_level=True)
-"""Tests that can run in Github environment"""
+
+def requires_env(*env_keys):
+    return pytest.mark.skipif(
+        any(not os.getenv(ek, None) for ek in env_keys),
+        reason='Env variables are not set',
+    )
 
 
 @pytest.fixture(scope='package')
