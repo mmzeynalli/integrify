@@ -1,5 +1,5 @@
 from datetime import datetime  # pylint: disable=unused-argument
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from typing import SupportsFloat as Numeric
 
 # pylint: disable=unused-argument
@@ -18,6 +18,7 @@ from integrify.azericard.schemas.enums import TrType
 from integrify.azericard.schemas.request import MInfo  # pylint: disable=unused-argument
 from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
 from integrify.schemas import DryResponse
+from integrify.utils import _UNSET, Unsettable
 
 
 class AzeriCardClientClass(APIClient):
@@ -75,17 +76,17 @@ class AzeriCardClientClass(APIClient):
         currency: str,  # pylint: disable=unused-argument
         order: str,  # pylint: disable=unused-argument
         desc: str,  # pylint: disable=unused-argument
-        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        email: Optional[str] = None,  # pylint: disable=unused-argument
-        country: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-        backref: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-        lang: Optional[str] = None,  # pylint: disable=unused-argument
-        name: Optional[str] = None,  # pylint: disable=unused-argument
-        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
     ) -> DryResponse:
         """Ödəniş sorğusu
 
@@ -126,17 +127,17 @@ class AzeriCardClientClass(APIClient):
         currency: str,  # pylint: disable=unused-argument
         order: str,  # pylint: disable=unused-argument
         desc: str,  # pylint: disable=unused-argument
-        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        email: Optional[str] = None,  # pylint: disable=unused-argument
-        country: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-        backref: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-        lang: Optional[str] = None,  # pylint: disable=unused-argument
-        name: Optional[str] = None,  # pylint: disable=unused-argument
-        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
     ) -> DryResponse:
         """Ödəniş və kartı yadda saxlama sorğusu
 
@@ -181,17 +182,17 @@ class AzeriCardClientClass(APIClient):
         order: str,  # pylint: disable=unused-argument
         desc: str,  # pylint: disable=unused-argument
         token: str,  # pylint: disable=unused-argument
-        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        email: Optional[str] = None,  # pylint: disable=unused-argument
-        country: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-        backref: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-        lang: Optional[str] = None,  # pylint: disable=unused-argument
-        name: Optional[str] = None,  # pylint: disable=unused-argument
-        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Yadda saxlanılmış kartla ödəniş sorğusu
 
@@ -234,17 +235,17 @@ class AzeriCardClientClass(APIClient):
         currency: str,  # pylint: disable=unused-argument
         order: str,  # pylint: disable=unused-argument
         desc: str,  # pylint: disable=unused-argument
-        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        email: Optional[str] = None,  # pylint: disable=unused-argument
-        country: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-        backref: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-        lang: Optional[str] = None,  # pylint: disable=unused-argument
-        name: Optional[str] = None,  # pylint: disable=unused-argument
-        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Pul Bloklama/Dondurma sorğusu.
 
@@ -292,17 +293,17 @@ class AzeriCardClientClass(APIClient):
         currency: str,  # pylint: disable=unused-argument
         order: str,  # pylint: disable=unused-argument
         desc: str,  # pylint: disable=unused-argument
-        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        email: Optional[str] = None,  # pylint: disable=unused-argument
-        country: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-        backref: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-        lang: Optional[str] = None,  # pylint: disable=unused-argument
-        name: Optional[str] = None,  # pylint: disable=unused-argument
-        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Pul bloklama/dondurma və kartı yadda saxlama sorğusu
 
@@ -351,17 +352,17 @@ class AzeriCardClientClass(APIClient):
         order: str,  # pylint: disable=unused-argument
         desc: str,  # pylint: disable=unused-argument
         token: str,  # pylint: disable=unused-argument
-        merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        email: Optional[str] = None,  # pylint: disable=unused-argument
-        country: Optional[str] = None,  # pylint: disable=unused-argument
-        merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-        backref: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-        lang: Optional[str] = None,  # pylint: disable=unused-argument
-        name: Optional[str] = None,  # pylint: disable=unused-argument
-        m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Yadda saxlanılmış kartdan pulu bloklama/dondurma sorğusu
 
@@ -411,8 +412,8 @@ class AzeriCardClientClass(APIClient):
         order: str,  # pylint: disable=unused-argument
         rrn: str,  # pylint: disable=unused-argument
         int_ref: str,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Blok olunmuş məbləği qəbul etmək sorğusu
 
@@ -449,8 +450,8 @@ class AzeriCardClientClass(APIClient):
         order: str,  # pylint: disable=unused-argument
         rrn: str,  # pylint: disable=unused-argument
         int_ref: str,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Blok olunmuş məbləği qəbul ETMƏMƏK (online) sorğusu
 
@@ -487,8 +488,8 @@ class AzeriCardClientClass(APIClient):
         order: str,  # pylint: disable=unused-argument
         rrn: str,  # pylint: disable=unused-argument
         int_ref: str,  # pylint: disable=unused-argument
-        terminal: Optional[str] = None,  # pylint: disable=unused-argument
-        timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu
 
@@ -527,17 +528,17 @@ class AzeriCardClientClass(APIClient):
             order: str,  # pylint: disable=unused-argument
             desc: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-            merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-            terminal: Optional[str] = None,  # pylint: disable=unused-argument
-            email: Optional[str] = None,  # pylint: disable=unused-argument
-            country: Optional[str] = None,  # pylint: disable=unused-argument
-            merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-            backref: Optional[str] = None,  # pylint: disable=unused-argument
-            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-            lang: Optional[str] = None,  # pylint: disable=unused-argument
-            name: Optional[str] = None,  # pylint: disable=unused-argument
-            m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+            merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
         ) -> DryResponse:
             """Ümumi Ödəniş/Pul Dondurma/Dondurulmanı tamamlama sorğusu
 
@@ -579,8 +580,8 @@ class AzeriCardClientClass(APIClient):
             rrn: str,  # pylint: disable=unused-argument
             int_ref: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            terminal: Optional[str] = None,  # pylint: disable=unused-argument
-            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
         ) -> DryResponse:
             """PreAuthorization sorğusuna cavab sorğusu
 
@@ -612,17 +613,17 @@ class AzeriCardClientClass(APIClient):
             order: str,  # pylint: disable=unused-argument
             desc: str,  # pylint: disable=unused-argument
             trtype: TrType,
-            merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-            merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-            terminal: Optional[str] = None,  # pylint: disable=unused-argument
-            email: Optional[str] = None,  # pylint: disable=unused-argument
-            country: Optional[str] = None,  # pylint: disable=unused-argument
-            merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-            backref: Optional[str] = None,  # pylint: disable=unused-argument
-            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-            lang: Optional[str] = None,  # pylint: disable=unused-argument
-            name: Optional[str] = None,  # pylint: disable=unused-argument
-            m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+            merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
         ) -> DryResponse:
             """Ümumi kartı saxlayaraq ödəniş sorğusu
 
@@ -663,17 +664,17 @@ class AzeriCardClientClass(APIClient):
             desc: str,  # pylint: disable=unused-argument
             trtype: TrType,
             token: str,  # pylint: disable=unused-argument
-            merch_name: Optional[str] = None,  # pylint: disable=unused-argument
-            merch_url: Optional[str] = None,  # pylint: disable=unused-argument
-            terminal: Optional[str] = None,  # pylint: disable=unused-argument
-            email: Optional[str] = None,  # pylint: disable=unused-argument
-            country: Optional[str] = None,  # pylint: disable=unused-argument
-            merch_gmt: Optional[str] = None,  # pylint: disable=unused-argument
-            backref: Optional[str] = None,  # pylint: disable=unused-argument
-            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
-            lang: Optional[str] = None,  # pylint: disable=unused-argument
-            name: Optional[str] = None,  # pylint: disable=unused-argument
-            m_info: Optional[MInfo] = None,  # pylint: disable=unused-argument
+            merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
+            m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
         ) -> DryResponse:
             """Ümumi saxlanmış kart ilə Authurization sorğusu
 
@@ -711,8 +712,8 @@ class AzeriCardClientClass(APIClient):
             self,
             tran_trtype: TrType,
             order: str,  # pylint: disable=unused-argument
-            terminal: Optional[str],  # pylint: disable=unused-argument
-            timestamp: Optional[datetime],  # pylint: disable=unused-argument
+            terminal: Unsettable[str],  # pylint: disable=unused-argument
+            timestamp: Unsettable[datetime],  # pylint: disable=unused-argument
         ) -> APIResponse[GetTransactionStatusResponseSchema]:
             """Bitmiş tranzaksiyanın statusunu alma sorğusu
 
@@ -771,7 +772,7 @@ class AzeriCardClientClass(APIClient):
             srn: str,  # pylint: disable=unused-argument
             amount: Numeric,  # pylint: disable=unused-argument
             cur: str,  # pylint: disable=unused-argument
-            timestamp: Optional[datetime] = None,  # pylint: disable=unused-argument
+            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
         ) -> DryResponse:
             """User-ə ödənişi təsdiqləmək sorğusu
 

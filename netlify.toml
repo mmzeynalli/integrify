@@ -2,8 +2,7 @@
 base = "docs/az"
 publish = "site"
 command = """
-pip3 install -q poetry &&
-poetry config virtualenvs.in-project true &&
-poetry install --only main,docs &&
-poetry run mkdocs build --strict
+pip3 install uv &&
+uv sync --no-dev --no-group=gh &&
+uv run --no-sync mkdocs build --strict
 """

@@ -13,14 +13,15 @@ Bug qeyd etdikdə, istifadə etdiyiniz əməliyyat sistemi və kitabxananın ver
 
 !!! tip
 
-    **tl;dr:** Kodu format etmək üçün `make format`, test və lint etmək üçün `make` və dokumentasiya generasiya etmək üçün `make docs` kommandını icra edin.
+    **tl;dr:** Kodu format etmək üçün `make format`, test və lint etmək üçün `make test`/`make lint` və dokumentasiya generasiya etmək üçün `make docs` kommandını icra edin.
 
 ### Rekvizitlər { #requisites }
 
-* Python 3.9 və 3.12 arası istənilən versiya
+* Python 3.9 və 3.13 arası istənilən versiya
 * git
 * make
-* [Poetry](https://python-poetry.org/docs/#installation)
+* [uv](https://github.com/astral-sh/uv)
+* [pre-commit](https://pre-commit.com/)
 
 ### İnstallasiya və quraşdırılma  { #installation }
 
@@ -29,11 +30,12 @@ Bug qeyd etdikdə, istifadə etdiyiniz əməliyyat sistemi və kitabxananın ver
 git clone git@github.com:<your username>/integrify.git
 cd integrify
 
-# Poetry yükləyin (https://python-poetry.org/docs/#installation)
-curl -sSL https://install.python-poetry.org | python3 -
+# uv yükləyin (https://docs.astral.sh/uv/getting-started/installation/#standalone-installer)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# For windows `powershell -c "irm https://astral.sh/uv/install.ps1 | more"`
 
-# Bütün dependency-ləri yükləyin
-make install
+# Mühiti quraşdırın
+make setup
 ```
 
 ### Yeni branch-a keçin və öz dəyişiklikləriniz əlavə edin  { #new-branch }
@@ -62,8 +64,8 @@ make format
 # Integrify Rust-da yazılmış ruff Python linterini istifadə edir
 # https://github.com/astral-sh/ruff
 
-make
-# Bu kommand öz içində bir neçə başqa kommandı icra edir (`test` və `lint`)
+make all
+# Bu kommand öz içində bir neçə başqa kommandı icra edir (`format`, `lint`, `type-check və `test`)
 ```
 
 ### Yeni dokumentasiyanı generasiya edin
@@ -74,7 +76,7 @@ Dokumentasiya üçün `mkdocs-material` alətindən istifadə edirik.
 ```bash
 # Dokumentasiya generasiya edin
 make docs
-# Əgər dokumentasiyaya təsir edəcək kod dəyişikliyi etmisinizsə, 
+# Əgər dokumentasiyaya təsir edəcək kod dəyişikliyi etmisinizsə,
 # əmin olun ki, yeni dokumentasiya uğurlar generasiya olunur.
 
 # make docs-serve kommandını icra etsəz, localhost:8000 addresində yeni dokumentasiyanı da görə bilərsiniz.

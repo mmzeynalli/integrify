@@ -1,21 +1,18 @@
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
+[project]
 name = "integrify"
-packages = [{include = "integrify", from="src"}]
-version = "2.2.0"
+version = "2.1.1"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
-license = "GPL-3.0-or-later"
 authors = [
-    "mmzeynalli <miradil.zeynalli@gmail.com>",
-    "vahidzhe <vahidzhe@gmail.com>"
+    { name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" },
+    { name = "vahidzhe", email = "vahidzhe@gmail.com" },
 ]
+requires-python = "~=3.9"
 readme = "README.md"
-homepage = "https://github.com/mmzeynalli/integrify"
-repository = "https://github.com/mmzeynalli/integrify"
-documentation = "https://integrify.mmzeynalli.dev/"
+license = "GPL-3.0-or-later"
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -37,48 +34,69 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
     "Topic :: Internet :: WWW/HTTP",
 ]
+dependencies = [
+    "pydantic>=2.8.2,<3",
+    "httpx>=0.27.2,<0.28",
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-pydantic = "^2.8.2"
-httpx = "^0.27.2"
+[project.urls]
+Homepage = "https://github.com/mmzeynalli/integrify"
+Repository = "https://github.com/mmzeynalli/integrify"
+Documentation = "https://integrify.mmzeynalli.dev/"
 
-# Packages needed for Github Actions, for future, we might add others
-[tool.poetry.group.gh]
-optional = true
+[dependency-groups]
+gh = [
+    "pytest>=8.1.1,<9",
+    "pytest-mock>=3.14.0,<4",
+    "time-machine>=2.16.0",
+    "smokeshow>=0.4.0,<0.5",
+    "coverage>=7.6.3,<8",
+    "duty>=1.5.0",
+]
+dev = [
+    "pytest>=8.1.1,<9",
+    "pytest-mock>=3.14.0,<4",
+    "mypy>=1.9.0,<2",
+    "ruff>=0.3.5,<0.4",
+    "pre-commit>=3.8.0,<4",
+    "ptpython>=3.0.29,<4",
+    "bandit>=1.7.10,<2",
+    "coverage>=7.6.3,<8",
+    "pylint>=3.3.1,<4",
+    "duty>=1.5.0",
+    "time-machine>=2.16.0",
+]
+docs = [
+    "mkdocs-material[imaging]>=9.6.4,<10",
+    "mkdocstrings[python]>=0.28.1,<1.0.0",
+    "mkdocs-panzoom-plugin>=0.1.3,<0.2",
+    "griffe-pydantic>=1.1.0,<2",
+]
 
-[tool.poetry.group.gh.dependencies]
-pytest = "^8.1.1"
-pytest-mock = "^3.14.0"
-smokeshow = "^0.4.0"
-coverage =  "^7.6.3"
-time-machine = "^2.16.0"
+[tool.uv]
+default-groups = [
+    "gh",
+    "dev",
+    "docs",
+]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.1.1"
-pytest-mock = "^3.14.0"
-mypy = "^1.9.0"
-ruff = "^0.3.5"
-pre-commit = "^3.8.0"
-ptpython = "^3.0.29"
-bandit = "^1.7.10"
-coverage = "^7.6.3"
-pylint = "^3.3.1"
-time-machine = "^2.16.0"
+[tool.hatch.build.targets.sdist]
+include = ["src/integrify"]
 
-[tool.poetry.group.docs.dependencies]
-mkdocs-material = {extras = ["imaging"], version = "^9.5.36"}
-mkdocstrings = {extras = ["python"], version = "^0.26.1"}
-mkdocs-panzoom-plugin = "^0.1.3"
-griffe-pydantic = "^1.0.0"
+[tool.hatch.build.targets.wheel]
+include = ["src/integrify"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/integrify" = "integrify"
 
 [tool.ruff]
 target-version = "py39"
 line-length = 100
-src = ["src", "tests"]
+src = ["src", "tests", "duties.py"]
 
 [tool.ruff.lint]
 select = [
@@ -101,7 +119,7 @@ quote-style = "single"
 docstring-quotes = "double"
 
 [tool.pylint.MASTER]
-ignore-paths = 'tests/'
+ignore-paths = ['tests/', '.venv/', '.venvs/', 'test.py']
 disable = [
     'C0114',
     'C0115',
@@ -113,7 +131,8 @@ disable = [
 
 [tool.mypy]
 exclude = [
-    'tests/*'
+    'tests/*',
+    'test.py'
 ]
 plugins = ['pydantic.mypy']
 
@@ -148,5 +167,5 @@ source = [
 ]
 
 [tool.bandit]
-skips = []
+skips = ["B101"]
 

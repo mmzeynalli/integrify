@@ -1,9 +1,8 @@
 import os
 from enum import Enum
-from typing import Literal
 from warnings import warn
 
-from integrify.schemas import Environment
+from integrify.utils import Environment
 
 VERSION = '2024.11.6'
 
@@ -39,23 +38,23 @@ if not AZERICARD_KEY_FILE_PATH:
 class MpiAPI(str, Enum):
     """Endpoint constant-ları"""
 
-    TEST_BASE_URL: Literal['https://testmpi.3dsecure.az'] = 'https://testmpi.3dsecure.az'
-    PROD_BASE_URL: Literal['https://mpi.3dsecure.az'] = 'https://mpi.3dsecure.az'
+    TEST_BASE_URL = 'https://testmpi.3dsecure.az'
+    PROD_BASE_URL = 'https://mpi.3dsecure.az'
     BASE_URL = PROD_BASE_URL if AZERICARD_ENV == Environment.PROD else TEST_BASE_URL
 
-    AUTHORIZATION: Literal['/cgi-bin/cgi_link'] = '/cgi-bin/cgi_link'
-    SAVE_CARD: Literal['/token/cgi_link'] = '/token/cgi_link'
+    AUTHORIZATION = '/cgi-bin/cgi_link'
+    SAVE_CARD = '/token/cgi_link'
 
 
 class MtAPI(str, Enum):
     """MT Endpoint constant-ları"""
 
-    TEST_BASE_URL: Literal['https://testmt.azericard.com'] = 'https://testmt.azericard.com'
-    PROD_BASE_URL: Literal['https://mt.azericard.com'] = 'https://mt.azericard.com'
+    TEST_BASE_URL = 'https://testmt.azericard.com'
+    PROD_BASE_URL = 'https://mt.azericard.com'
     BASE_URL = PROD_BASE_URL if AZERICARD_ENV == Environment.PROD else TEST_BASE_URL
 
-    TRANSFER: Literal['/payment/view'] = '/payment/view'
-    TRANSFER_CONFIRM: Literal['/api/confirm'] = '/api/confirm'
+    TRANSFER = '/payment/view'
+    TRANSFER_CONFIRM = '/api/confirm'
 
 
 __all__ = [

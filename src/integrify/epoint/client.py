@@ -24,6 +24,7 @@ from integrify.epoint.schemas.response import (
     TransactionStatusResponseSchema,
 )
 from integrify.schemas import APIResponse
+from integrify.utils import _UNSET, Unsettable
 
 __all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 
@@ -31,47 +32,45 @@ __all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 class EPointClientClass(APIClient):
     """EPoint sorğular üçün baza class"""
 
-    def __init__(self, sync: bool = True, dry: bool = False):
-        super().__init__('EPoint', env.API.BASE_URL, sync=sync, dry=dry)
+    def __init__(
+        self,
+        name='EPoint',
+        base_url: Optional[str] = env.API.BASE_URL,
+        default_handler=None,
+        sync: bool = True,
+        dry: bool = False,
+    ):
+        super().__init__(name, base_url, default_handler, sync, dry)
 
-        self.add_url('pay', env.API.PAY)
+        self.add_url('pay', env.API.PAY, verb='POST')
         self.add_handler('pay', PaymentPayloadHandler)
 
-        self.add_url('get_transaction_status', env.API.GET_STATUS)
+        self.add_url('get_transaction_status', env.API.GET_STATUS, verb='POST')
         self.add_handler('get_transaction_status', GetTransactionStatusPayloadHandler)
 
-        self.add_url('save_card', env.API.SAVE_CARD)
+        self.add_url('save_card', env.API.SAVE_CARD, verb='POST')
         self.add_handler('save_card', SaveCardPayloadHandler)
 
-        self.add_url('pay_with_saved_card', env.API.PAY_WITH_SAVED_CARD)
+        self.add_url('pay_with_saved_card', env.API.PAY_WITH_SAVED_CARD, verb='POST')
         self.add_handler('pay_with_saved_card', PayWithSavedCardPayloadHandler)
 
-        self.add_url('pay_and_save_card', env.API.PAY_AND_SAVE_CARD)
+        self.add_url('pay_and_save_card', env.API.PAY_AND_SAVE_CARD, verb='POST')
         self.add_handler('pay_and_save_card', PayAndSaveCardPayloadHandler)
 
-        self.add_url('payout', env.API.PAYOUT)
+        self.add_url('payout', env.API.PAYOUT, verb='POST')
         self.add_handler('payout', PayoutPayloadHandler)
 
-        self.add_url('refund', env.API.REFUND)
+        self.add_url('refund', env.API.REFUND, verb='POST')
         self.add_handler('refund', RefundPayloadHandler)
 
-        self.add_url('split_pay', env.API.SPLIT_PAY)
+        self.add_url('split_pay', env.API.SPLIT_PAY, verb='POST')
         self.add_handler('split_pay', SplitPayPayloadHandler)
 
-        self.add_url('split_pay_with_saved_card', env.API.SPLIT_PAY_WITH_SAVED_CARD)
+        self.add_url('split_pay_with_saved_card', env.API.SPLIT_PAY_WITH_SAVED_CARD, verb='POST')
         self.add_handler('split_pay_with_saved_card', SplitPayWithSavedCardPayloadHandler)
 
-        self.add_url('split_pay_and_save_card', env.API.SPLIT_PAY_AND_SAVE_CARD)
+        self.add_url('split_pay_and_save_card', env.API.SPLIT_PAY_AND_SAVE_CARD, verb='POST')
         self.add_handler('split_pay_and_save_card', SplitPayAndSaveCardPayloadHandler)
-
-    def add_url(
-        self,
-        route_name: str,
-        url: str,
-        verb: str = 'POST',
-        base_url: Optional[str] = None,
-    ):
-        return super().add_url(route_name, url, verb, base_url)
 
     if TYPE_CHECKING:
 
@@ -80,7 +79,7 @@ class EPointClientClass(APIClient):
             amount: Numeric,
             currency: str,
             order_id: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
             **extra: Any,
         ) -> APIResponse[RedirectUrlResponseSchema]:
             """Ödəniş sorğusu
@@ -190,7 +189,7 @@ class EPointClientClass(APIClient):
             amount: Numeric,
             currency: str,
             order_id: str,
-            description: Optional[str] = None,
+            description: str,
         ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş və kartı yadda saxlama sorğusu
 
@@ -224,7 +223,7 @@ class EPointClientClass(APIClient):
             currency: str,
             order_id: str,
             card_id: str,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[BaseResponseSchema]:
             """Hesabınızda olan pulu karta nağdlaşdırmaq sorğusu
 
@@ -254,7 +253,7 @@ class EPointClientClass(APIClient):
             self,
             transaction_id: str,
             currency: str,
-            amount: Optional[Numeric] = None,
+            amount: Unsettable[Numeric] = _UNSET,
         ) -> APIResponse[MinimalResponseSchema]:
             """Keçmiş ödənişi tam və ya yarımçıq geri qaytarma sorğusu
 
@@ -291,7 +290,7 @@ class EPointClientClass(APIClient):
             order_id: str,
             split_user_id: str,
             split_amount: Numeric,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
             **extra: Any,
         ) -> APIResponse[RedirectUrlResponseSchema]:
             """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu
@@ -326,7 +325,7 @@ class EPointClientClass(APIClient):
             card_id: str,
             split_user_id: str,
             split_amount: Numeric,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[SplitPayWithSavedCardResponseSchema]:
             """Saxlanılmış kartla ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə sorğusu
 
@@ -358,7 +357,7 @@ class EPointClientClass(APIClient):
             order_id: str,
             split_user_id: str,
             split_amount: Numeric,
-            description: Optional[str] = None,
+            description: Unsettable[str] = _UNSET,
         ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödənişi başqa EPoint istifadəçisi ilə bölüb ödəmə və kartı saxlama sorğusu
 

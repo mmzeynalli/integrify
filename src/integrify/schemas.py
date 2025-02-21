@@ -1,16 +1,10 @@
 import json
-from enum import Enum
-from typing import Any, ClassVar, Generic, Literal, TypeVar, Union
+from typing import Any, ClassVar, Generic, Union
 
 from pydantic import BaseModel, Field, field_validator
 from typing_extensions import TypedDict
 
-_ResponseT = TypeVar('_ResponseT', bound=Union[BaseModel, dict])
-
-
-class Environment(str, Enum):
-    TEST: Literal['test'] = 'test'
-    PROD: Literal['prod'] = 'prod'
+from integrify.utils import _ResponseT
 
 
 class APIResponse(BaseModel, Generic[_ResponseT]):

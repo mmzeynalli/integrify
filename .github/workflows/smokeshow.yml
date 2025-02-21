@@ -19,20 +19,20 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-        
+
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
+
       #----------------------------------------------
-      #  -----  install & configure poetry  -----
+      #  -----  Checkout -----
       #----------------------------------------------
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - uses: actions/checkout@v4
+      #----------------------------------------------
+      #  -----  install & configure uv  -----
+      #----------------------------------------------
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
+          python-version: 3.9
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
@@ -46,14 +46,12 @@ jobs:
       # install dependencies if cache does not exist
       #----------------------------------------------
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --only main,gh
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
+        run: uv export --only-group=gh | uv pip install --requirements=-
+
       #----------------------------------------------
-      # install your root project, if required
+      #  -----  Run Smokeshow -----
       #----------------------------------------------
-      - name: Install project
-        run: poetry install --no-interaction --only main,gh
-          
       - uses: actions/download-artifact@v4
         with:
           name: coverage-html
@@ -61,7 +59,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
-      - run: poetry run smokeshow upload htmlcov
+      - run: uv run --no-sync smokeshow upload htmlcov
         env:
           SMOKESHOW_GITHUB_STATUS_DESCRIPTION: Coverage {coverage-percentage}
           SMOKESHOW_GITHUB_COVERAGE_THRESHOLD: 95

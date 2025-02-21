@@ -4,21 +4,26 @@ repos:
       - id: format
         name: format
         entry: make format
-        types: [python]
         language: system
       - id: lint
         name: lint
         entry: make lint
-        types: [python]
         language: system
-        pass_filenames: false
       - id: typecheck
         name: typecheck
         entry: make type-check
-        types: [python]
         language: system
       - id: secure
         name: secure
         entry: make secure
         language: system
-        types: [ python ]
+      - id: docs
+        name: docs
+        entry: make docs
+        language: system
+      - id: test
+        name: test
+        entry: make test
+        language: system
+        pass_filenames: false
+

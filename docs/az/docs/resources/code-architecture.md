@@ -158,7 +158,7 @@ class NewIntegrationClientClass(APIClient):
 ???+ note
 
     Məsləhət görülür ki, faylın sonunda sync və async clientləri obyekt kimi yaradıb, onları `new_integration/__init__.py`
-    faylına import edəsiniz. Bu user-in istifadəsini asanlaşdırır; hər dəfə class-ı yaratmaq yerinə hazır sizin obyekti 
+    faylına import edəsiniz. Bu user-in istifadəsini asanlaşdırır; hər dəfə class-ı yaratmaq yerinə hazır sizin obyekti
     istifadə edir.
 
 ### 4. Type-hinted funksiyalar { #type-hinted-functions }
@@ -205,8 +205,8 @@ class NewIntegrationClientClass(APIClient):
                 currency: Məzənnə.
             """
 
-NewIntegrationRequest = NewIntegrationClientClass(sync=True)
-NewIntegrationAsyncRequest = NewIntegrationClientClass(sync=False)
+NewIntegrationClient = NewIntegrationClientClass(sync=True)
+NewIntegrationAsyncClient = NewIntegrationClientClass(sync=False)
 `````
 
 ### 5. Utils və Helpers { #utils-and-helpers }

@@ -107,7 +107,8 @@ class TransferCallbackSchema(BaseModel):
                 + self.rc
                 + self.message
                 + key
-            ).encode('utf-8')
+            ).encode(),
+            usedforsecurity=False,
         ).hexdigest()
 
         assert calc_signature == self.signature, 'Signature does not match!'
