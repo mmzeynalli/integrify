@@ -101,7 +101,7 @@ class ApiResponse:
 ```
 
 > [!Caution]
-> Bütün sorğular rəsmi dokumentasiyalara uyğun yazılsalar da, Integrify qeyri-rəsmi API klient-dir.'
+> Bütün sorğular rəsmi dokumentasiyalara uyğun yazılsalar da, Integrify qeyri-rəsmi API klient-dir.
 
 ## Dəstəklənən API inteqrasiyaları
 
