@@ -76,7 +76,7 @@ Dokumentasiya üçün `mkdocs-material` alətindən istifadə edirik.
 ```bash
 # Dokumentasiya generasiya edin
 make docs
-# Əgər dokumentasiyaya təsir edəcək kod dəyişikliyi etmisinizsə, 
+# Əgər dokumentasiyaya təsir edəcək kod dəyişikliyi etmisinizsə,
 # əmin olun ki, yeni dokumentasiya uğurlar generasiya olunur.
 
 # make docs-serve kommandını icra etsəz, localhost:8000 addresində yeni dokumentasiyanı da görə bilərsiniz.

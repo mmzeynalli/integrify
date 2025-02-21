@@ -53,8 +53,8 @@ def test_get_detailed_order_information_request(
     assert resp.body.data.status == 'Preparing'
     assert resp.body.data.password == kapital_order.password
 
-    # assert resp.body.data.hpp_redirect_url is not None, 'Redirect URL is None'
-    # assert resp.body.data.hpp_redirect_url.startswith('https://txpgtst.kapitalbank.az')
+    assert resp.body.data.hpp_url is not None, 'Redirect URL is None'
+    assert resp.body.data.hpp_url.startswith('https://txpgtst.kapitalbank.az')
 
 
 @requires_env()

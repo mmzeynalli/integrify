@@ -42,7 +42,7 @@ Bəzi sorğular müştəri məlumat daxil etdikdən və arxa fonda bank işləml
 }
 ```
 
-Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callback üçün API yazdıqda, datanı alıb, `helper.py`-dakı [`decode_callback_data`][integrify.epoint.helper.decode_callback_data] funksiyası ilə həm signature yoxlanması həm də datanın decode-unu edə bilərsiniz. Bu funksiya sizə [`DecodedCallbackDataSchema`][integrify.epoint.schemas.callback.DecodedCallbackDataSchema] formatında decode olunmuş datanı qaytarır.
+Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callback üçün API yazdıqda, datanı alıb, `helpers.py`-dakı [`decode_callback_data`][integrify.epoint.helpers.decode_callback_data] funksiyası ilə həm signature yoxlanması həm də datanın decode-unu edə bilərsiniz. Bu funksiya sizə [`DecodedCallbackDataSchema`][integrify.epoint.schemas.callback.DecodedCallbackDataSchema] formatında decode olunmuş datanı qaytarır.
 
 > **Qeyd**
 >
@@ -51,7 +51,7 @@ Bu data-nı `signature`-ni yoxladıqdan sonra, decode etmək lazımdır. Callbac
 > ```python
 > from fastapi import Fastapi, APIRouter, Depends
 > from integrify.epoint.schemas.callback import DecodedCallbackDataSchema
-> from integrify.epoint.helper import decode_callback_data
+> from integrify.epoint.helpers import decode_callback_data
 >
 > router = APIRouter()
 >
