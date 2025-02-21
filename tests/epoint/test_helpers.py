@@ -1,5 +1,6 @@
-from integrify.epoint.helper import decode_callback_data
+from integrify.epoint.helpers import decode_callback_data
 from integrify.epoint.schemas.callback import CallbackDataSchema
+from tests.epoint.conftest import requires_env
 
 
 def test_str_to_dict():
@@ -15,6 +16,7 @@ def test_wrong_signature_response():
     assert decode_callback_data(schema) is None
 
 
+@requires_env()
 def test_ok_signature_response():
     # data is: {"status": "sucess"}
     schema = CallbackDataSchema.model_validate(

@@ -1,4 +1,3 @@
-import json
 import string
 from functools import cached_property
 from typing import Any, Callable, Coroutine, Optional, Union
@@ -7,7 +6,7 @@ from urllib.parse import urljoin
 import httpx
 
 from integrify.logger import LOGGER_FUNCTION
-from integrify.schemas import APIResponse, PayloadBaseModel
+from integrify.schemas import APIResponse, DryResponse, PayloadBaseModel
 from integrify.utils import _UNSET, _ResponseT
 
 
@@ -215,7 +214,7 @@ class APIPayloadHandler:
     def handle_response(
         self,
         resp: httpx.Response,
-    ) -> Union[APIResponse[_ResponseT], APIResponse[dict], httpx.Response]:
+    ) -> Union[APIResponse[_ResponseT], httpx.Response]:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
@@ -255,11 +254,11 @@ class APIExecutor:
     ) -> Callable[
         [str, str, APIPayloadHandler, Any],  # input args
         Union[
-            Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+            Union[httpx.Response, APIResponse[_ResponseT], DryResponse],
             Coroutine[
                 Any,
                 Any,
-                Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]],
+                Union[httpx.Response, APIResponse[_ResponseT], DryResponse],
             ],
         ],  # output
     ]:
@@ -276,7 +275,7 @@ class APIExecutor:
         handler: APIPayloadHandler,
         *args,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], DryResponse]:
         """Sync sorğu atan funksiya
 
         Args:
@@ -291,11 +290,12 @@ class APIExecutor:
         full_url = handler.set_urlparams(url)
 
         if self.dry or handler.dry:
-            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
-                is_success=True,
-                status_code=200,
-                headers=headers or {},
-                content=json.dumps({**data, 'url': full_url}),
+            return DryResponse(  # type: ignore[return-value]
+                url=full_url,
+                verb=verb,
+                request_args=handler.req_args,
+                headers=headers,
+                data=data,
             )
 
         request_kwds = {'headers': headers, **handler.req_args}
@@ -325,7 +325,7 @@ class APIExecutor:
         handler: APIPayloadHandler,
         *args,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], APIResponse[dict]]:
+    ) -> Union[httpx.Response, APIResponse[_ResponseT], DryResponse]:
         """Async sorğu atan funksiya
 
         Args:
@@ -339,12 +339,14 @@ class APIExecutor:
         headers = handler.headers
         full_url = handler.set_urlparams(url)
 
-        if self.dry:  # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
-            return APIResponse[dict](  # type: ignore[valid-type, call-arg]
-                is_success=True,
-                status_code=200,
-                headers=headers or {},
-                content=json.dumps({**data, 'url': full_url}),
+        if self.dry:
+            # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
+            return DryResponse(  # type: ignore[return-value]
+                url=full_url,
+                verb=verb,
+                request_args=handler.req_args,
+                headers=headers,
+                data=data,
             )
 
         request_kwds = {'headers': headers, **handler.req_args}

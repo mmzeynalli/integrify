@@ -32,7 +32,7 @@ graph TD;
     APIClient --> KapitalAPISupport
     APIPayloadHandler --> epoint.PaymentPayloadHandler
     APIPayloadHandler --> kapital.PaymentPayloadHandler
-    httpx.Client --> APIExecutor 
+    httpx.Client --> APIExecutor
     httpx.AsyncClient --> APIExecutor
 
     EPointClientClass -->|add_url & add_handler| APIClient
@@ -59,7 +59,7 @@ sequenceDiagram;
 participant U as User
 participant C as EPointClientClass
 participant H as epoint.PaymentPayloadHandler
-participant E as APIExecutor 
+participant E as APIExecutor
 
 U ->> C: .pay(data)
 Note over C: get_url
@@ -177,7 +177,7 @@ class NewIntegrationClientClass(APIClient):
 
         self.add_url('function1', env.API.API1, 'GET')
         self.add_handler('function1', API1PayloadHandler)
-    
+
     if TYPE_CHECKING:
 
         def function1(
@@ -204,16 +204,24 @@ class NewIntegrationClientClass(APIClient):
                 amount: Ödəniş miqdarı. Numerik dəyər.
                 currency: Məzənnə.
             """
-    
-NewIntegrationRequest = NewIntegrationClientClass(sync=True)
-NewIntegrationAsyncRequest = NewIntegrationClientClass(sync=False)
+
+NewIntegrationClient = NewIntegrationClientClass(sync=True)
+NewIntegrationAsyncClient = NewIntegrationClientClass(sync=False)
 `````
 
-### 5. Testlər { #tests }
+### 5. Utils və Helpers { #utils-and-helpers }
+
+Bəzən kod yazanda köməkçi funksiyalar lazım olur. Bunun üçün ayrı fayl yaradıb, funksiyaları ora yığın. Strukturu saxlamaq üçün adlandırmanı aşağıda qeyd edilən kimi etməyiniz xahiş olunur:
+
+- utils.py - Daxili istifadəlik köməkçi funksiyalar üçün (bax: EPoint)
+- helpers.py - User istifadəsi üçün köməkçi funksiyalar (bax: AzeriCard)
+
+
+### 6. Testlər { #tests }
 
 Testsiz, əlbəttə ki, olmaz) Test üçün, `pytest` istifadə olunur. `conftest.py` faylında, əsas fixture-ləri əlavə edin. `mocks.py` faylı isə, mock response fixture-ləri üçün nəzərdə tutulub. Ondan sonra, testlər üçün fayllar yaradıb, orada testlərinizi yazın. Test coverage-dən istifadə edərək, nəzərdən qaçırdığınız hissələri də görə bilərsiniz.
 
-### 6. Dokumentasiya { #documentation }
+### 7. Dokumentasiya { #documentation }
 
 Kodun development-ini və testini bitirdikdən sonra, dokumentasiya yazmaq lazım olur. İlk mərhələdəki əməliyyatı icra etmişdinizsə, sizin üçün avtomatik markdown faylları da yaradılmışdır. `about.md` faylında inteqrasiya haqqında ümumi məlumat, orijinal dokumentasiyanın linklərini paylaşmağınız məsləhət görülür. Funksionallıqların və dəstəyini yazdığınız endpointləri də qeyd edin. Kodunuz bütün API-ləri istifadə etməyə bilər; bu halda, sadəcə bunu dokumentasiyada bilidirin.
 
