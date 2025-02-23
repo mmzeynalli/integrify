@@ -50,12 +50,12 @@ class PostaGuverciniClientClass(APIClient):
             self,
             message: str,
             receivers: List[str],
-            username: Optional[str] = None,
-            password: Optional[str] = None,
             send_date: Optional[str] = None,
             expire_date: Optional[str] = None,
             channel: Optional[str] = None,
             originator: Optional[str] = None,
+            username: Optional[str] = None,
+            password: Optional[str] = None,
         ) -> APIResponse[SendSingleSMSResponseSchema]:
             """Tək SMS göndərilməsi
 
@@ -89,12 +89,12 @@ class PostaGuverciniClientClass(APIClient):
         def send_multiple_sms(
             self,
             messages: List[dict],
-            username: Optional[str] = None,
-            password: Optional[str] = None,
             send_date: Optional[str] = None,
             expire_date: Optional[str] = None,
             channel: Optional[str] = None,
             originator: Optional[str] = None,
+            username: Optional[str] = None,
+            password: Optional[str] = None,
         ) -> APIResponse[SendMultipleSMSResponseSchema]:
             """Çoxlu SMS göndərilməsi
 

@@ -3,14 +3,13 @@ import os
 import pytest
 
 from integrify.postaguvercini.client import PostaGuverciniClientClass
-from tests import postaguvercini
 from tests.postaguvercini.mocks import *  # noqa: F403
 
 
 @pytest.fixture(autouse=True, scope='session')
 def postaguvercini_setenv():
-    os.environ['POSTA_GUVERCINI_USERNAME'] = postaguvercini.POSTA_GUVERCINI_USERNAME
-    os.environ['POSTA_GUVERCINI_PASSWORD'] = postaguvercini.POSTA_GUVERCINI_PASSWORD
+    os.environ['POSTA_GUVERCINI_USERNAME'] = os.getenv('POSTA_GUVERCINI_USERNAME')
+    os.environ['POSTA_GUVERCINI_PASSWORD'] = os.getenv('POSTA_GUVERCINI_PASSWORD')
 
     yield
 
