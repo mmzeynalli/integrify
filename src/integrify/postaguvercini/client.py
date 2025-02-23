@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 
 from integrify.api import APIClient
 from integrify.postaguvercini import env
@@ -15,6 +15,7 @@ from integrify.postaguvercini.schemas.response import (
     StatusResponseSchema,
 )
 from integrify.schemas import APIResponse
+from integrify.utils import _UNSET, Unsettable
 
 __all__ = ['PostaGuverciniClientClass']
 
@@ -50,12 +51,12 @@ class PostaGuverciniClientClass(APIClient):
             self,
             message: str,
             receivers: List[str],
-            send_date: Optional[str] = None,
-            expire_date: Optional[str] = None,
-            channel: Optional[str] = None,
-            originator: Optional[str] = None,
-            username: Optional[str] = None,
-            password: Optional[str] = None,
+            send_date: Unsettable[str] = _UNSET,
+            expire_date: Unsettable[str] = _UNSET,
+            channel: Unsettable[str] = _UNSET,
+            originator: Unsettable[str] = _UNSET,
+            username: Unsettable[str] = _UNSET,
+            password: Unsettable[str] = _UNSET,
         ) -> APIResponse[SendSingleSMSResponseSchema]:
             """Tək SMS göndərilməsi
 
@@ -89,12 +90,12 @@ class PostaGuverciniClientClass(APIClient):
         def send_multiple_sms(
             self,
             messages: List[dict],
-            send_date: Optional[str] = None,
-            expire_date: Optional[str] = None,
-            channel: Optional[str] = None,
-            originator: Optional[str] = None,
-            username: Optional[str] = None,
-            password: Optional[str] = None,
+            send_date: Unsettable[str] = _UNSET,
+            expire_date: Unsettable[str] = _UNSET,
+            channel: Unsettable[str] = _UNSET,
+            originator: Unsettable[str] = _UNSET,
+            username: Unsettable[str] = _UNSET,
+            password: Unsettable[str] = _UNSET,
         ) -> APIResponse[SendMultipleSMSResponseSchema]:
             """Çoxlu SMS göndərilməsi
 
@@ -129,8 +130,8 @@ class PostaGuverciniClientClass(APIClient):
         def status(
             self,
             message_ids: List[str],
-            username: Optional[str] = None,
-            password: Optional[str] = None,
+            username: Unsettable[str] = _UNSET,
+            password: Unsettable[str] = _UNSET,
         ) -> APIResponse[StatusResponseSchema]:
             """SMS status sorğusu
 
@@ -155,8 +156,8 @@ class PostaGuverciniClientClass(APIClient):
 
         def credit_balance(
             self,
-            username: Optional[str] = None,
-            password: Optional[str] = None,
+            username: Unsettable[str] = _UNSET,
+            password: Unsettable[str] = _UNSET,
         ) -> APIResponse[CreditBalanceResponseSchema]:
             """Kredit balans sorğusu
 
