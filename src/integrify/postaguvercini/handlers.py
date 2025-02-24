@@ -22,8 +22,10 @@ class BasePayloadHandler(APIPayloadHandler):
     def handle_response(self, resp):
         api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
 
-        # Status kodu hemise 200 gelir
-        # Body-in icindeki status kodu ise, ferqli araliqlarda olur
+        api_resp.ok = api_resp.body.status_code == 200
+        api_resp.status_code = (
+            400 if api_resp.body.status_code == 1063 else api_resp.body.status_code
+        )
 
         return api_resp
 
