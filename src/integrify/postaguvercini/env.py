@@ -4,8 +4,8 @@ from typing import Optional
 
 VERSION = 'v1'
 
-POSTA_GUVERCINI_USERNAME: Optional[str] = os.getenv('POSTA_GUVERCINI_USERNAME', '')
-POSTA_GUVERCINI_PASSWORD: Optional[str] = os.getenv('POSTA_GUVERCINI_PASSWORD', '')
+POSTA_GUVERCINI_USERNAME: Optional[str] = os.getenv('POSTA_GUVERCINI_USERNAME', None)
+POSTA_GUVERCINI_PASSWORD: Optional[str] = os.getenv('POSTA_GUVERCINI_PASSWORD', None)
 
 
 class API(str, Enum):
