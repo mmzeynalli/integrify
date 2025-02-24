@@ -23,9 +23,7 @@ class BasePayloadHandler(APIPayloadHandler):
         api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
 
         api_resp.ok = api_resp.body.status_code == 200
-        api_resp.status_code = (
-            400 if api_resp.body.status_code == 1063 else api_resp.body.status_code
-        )
+        api_resp.status_code = 500 if api_resp.body.status_code > 500 else api_resp.body.status_code
 
         return api_resp
 

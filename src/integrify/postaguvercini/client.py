@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from integrify.api import APIClient
 from integrify.postaguvercini import env
@@ -50,7 +50,7 @@ class PostaGuverciniClientClass(APIClient):
         def send_single_sms(
             self,
             message: str,
-            receivers: List[str],
+            receivers: list[str],
             send_date: Unsettable[str] = _UNSET,
             expire_date: Unsettable[str] = _UNSET,
             channel: Unsettable[str] = _UNSET,
@@ -89,7 +89,7 @@ class PostaGuverciniClientClass(APIClient):
 
         def send_multiple_sms(
             self,
-            messages: List[dict],
+            messages: list[dict],
             send_date: Unsettable[str] = _UNSET,
             expire_date: Unsettable[str] = _UNSET,
             channel: Unsettable[str] = _UNSET,
@@ -129,7 +129,7 @@ class PostaGuverciniClientClass(APIClient):
 
         def status(
             self,
-            message_ids: List[str],
+            message_ids: list[str],
             username: Unsettable[str] = _UNSET,
             password: Unsettable[str] = _UNSET,
         ) -> APIResponse[StatusResponseSchema]:
