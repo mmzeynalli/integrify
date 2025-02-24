@@ -1,25 +1,12 @@
-import os
+from functools import partial
 
 import pytest
 
 from integrify.postaguvercini.client import PostaGuverciniClientClass
+from tests.conftest import requires_env as _requires_env
 from tests.postaguvercini.mocks import *  # noqa: F403
 
-
-@pytest.fixture(autouse=True, scope='session')
-def postaguvercini_setenv():
-    os.environ['POSTA_GUVERCINI_USERNAME'] = os.getenv('POSTA_GUVERCINI_USERNAME')
-    os.environ['POSTA_GUVERCINI_PASSWORD'] = os.getenv('POSTA_GUVERCINI_PASSWORD')
-
-    yield
-
-
-@pytest.fixture(scope='session')
-def postaguvercini_set_wrong_env():
-    os.environ['POSTA_GUVERCINI_USERNAME'] = 'test'
-    os.environ['POSTA_GUVERCINI_PASSWORD'] = 'test'
-
-    yield
+requires_env = partial(_requires_env, 'POSTA_GUVERCINI_USERNAME', 'POSTA_GUVERCINI_PASSWORD')
 
 
 @pytest.fixture(scope='package')
