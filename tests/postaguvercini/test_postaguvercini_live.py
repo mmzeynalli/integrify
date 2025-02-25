@@ -5,19 +5,21 @@ from tests.conftest import live
 from tests.postaguvercini.conftest import requires_env
 
 
-@requires_env()
+@requires_env('POSTAGUVERCINI_RECEIVER')
 @live
 def test_single_sms_request(postaguvercini_client: PostaGuverciniClientClass):
     old_balance = postaguvercini_client.credit_balance().body.result.balance
 
-    postaguvercini_client.send_single_sms(message='test', receivers=['994555779018'])
+    postaguvercini_client.send_single_sms(
+        message='test', receivers=[os.getenv('POSTAGUVERCINI_RECEIVER')]
+    )
 
     new_balance = postaguvercini_client.credit_balance().body.result.balance
 
     assert new_balance + 1 == old_balance
 
 
-@requires_env()
+@requires_env('POSTAGUVERCINI_RECEIVER')
 @live
 def test_multiple_sms_request(
     postaguvercini_client: PostaGuverciniClientClass,
@@ -26,14 +28,14 @@ def test_multiple_sms_request(
 
     postaguvercini_client.send_multiple_sms(
         messages=[
-            {'receiver': '994555779018', 'message': 'Test SMS 1'},
-            {'receiver': '994555779018', 'message': 'Test SMS 2'},
+            {'receiver': os.getenv('POSTAGUVERCINI_RECEIVER'), 'message': 'Test SMS 1'},
+            {'receiver': os.getenv('POSTAGUVERCINI_RECEIVER'), 'message': 'Test SMS 2'},
         ]
     )
 
     new_balance = postaguvercini_client.credit_balance().body.result.balance
 
-    assert new_balance + 1 == old_balance
+    assert new_balance + 2 == old_balance
 
 
 @requires_env('POSTAGUVERCINI_MESSAGE_ID')
