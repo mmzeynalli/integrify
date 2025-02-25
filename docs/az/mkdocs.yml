@@ -80,14 +80,14 @@ nav:
   - Giriş: index.md
   - İnteqrasiya:
       - AzeriCard:
-        - Ümumi məlumat: "azericard/about.md"
+        - Ümumi məlumat: "integrations/azericard/about.md"
         - API Referansı:
-            - API Klient: "azericard/api-reference/client.md"
+            - API Klient: "integrations/azericard/api-reference/client.md"
             - Schemas:
-              - Response: "azericard/api-reference/response.md"
-              - Callback: "azericard/api-reference/callback.md"
-              - Common: "azericard/api-reference/common-schemas.md"
-              - Helpers: "azericard/api-reference/helper-functions.md"
+              - Response: "integrations/azericard/api-reference/response.md"
+              - Callback: "integrations/azericard/api-reference/callback.md"
+              - Common: "integrations/azericard/api-reference/common-schemas.md"
+              - Helpers: "integrations/azericard/api-reference/helper-functions.md"
       - EPoint:
           - Ümumi məlumat: "integrations/epoint/about.md"
           - API Referansı:

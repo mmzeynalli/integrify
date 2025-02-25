@@ -2,10 +2,7 @@ import base64
 import hashlib
 import hmac
 import json
-from datetime import datetime
-from decimal import Decimal
-from hashlib import md5
-from typing import ClassVar, Literal, Optional, Union
+from typing import ClassVar, Literal, Optional
 
 from pydantic import (
     AliasGenerator,
@@ -13,9 +10,7 @@ from pydantic import (
     Field,
     computed_field,
     field_serializer,
-    field_validator,
 )
-from pydantic.alias_generators import to_pascal
 from typing_extensions import TypedDict
 
 from integrify.azericard import env
@@ -28,13 +23,15 @@ from integrify.schemas import PayloadBaseModel
 
 
 class BaseRequestSchema(PayloadBaseModel):
-    PSIGN_FIELDS: ClassVar[list[str]]
+    SIGNATURE_FIELDS: ClassVar[list[str]]
+    """P_SIGN hesablanılması üçün lazım olan field adları"""
+
     model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
 
     @computed_field
     def p_sign(self) -> Optional[str]:
         """P_SIGN generasiyası"""
-        if not self.PSIGN_FIELDS:
+        if not self.SIGNATURE_FIELDS:
             return None  # pragma: no cover
 
         with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
@@ -46,7 +43,7 @@ class BaseRequestSchema(PayloadBaseModel):
     def generate_mac_source(self):
         """P_SIGN üçün MAC source-un yaradılması"""
         source = ''
-        for field in self.PSIGN_FIELDS:
+        for field in self.SIGNATURE_FIELDS:
             val = getattr(self, field)
 
             if val:
@@ -71,7 +68,7 @@ class MInfo(TypedDict):
 
 
 class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
-    PSIGN_FIELDS: ClassVar[list[str]] = [
+    SIGNATURE_FIELDS: ClassVar[list[str]] = [
         'amount',
         'currency',
         'terminal',
@@ -126,7 +123,7 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
 
 
 class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
-    PSIGN_FIELDS: ClassVar[list[str]] = [
+    SIGNATURE_FIELDS: ClassVar[list[str]] = [
         'amount',
         'currency',
         'terminal',
@@ -187,7 +184,7 @@ class AuthWithSavedCardRequestSchema(AuthRequestSchema):
 
 
 class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataSchema):
-    PSIGN_FIELDS: ClassVar[list[str]] = [
+    SIGNATURE_FIELDS: ClassVar[list[str]] = [
         'order',
         'terminal',
         'trtype',
@@ -200,61 +197,3 @@ class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataS
     @classmethod
     def get_input_fields(cls):
         return ['tran_trtype', 'order', 'terminal', 'timestamp']
-
-
-class BaseTransferRequestSchema(PayloadBaseModel):
-    model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=to_pascal))
-
-    merchant: str = Field(min_length=1, max_length=16)
-    """Şirkət adı"""
-
-    srn: str = Field(min_length=1, max_length=12)
-    """Tərəfinizdən unikal əməliyyat nömrəsi"""
-
-    amount: Decimal
-    """Ödəniş məbləği"""
-
-    cur: str = Field(min_length=3, max_length=3)
-    """Ödəniş valyutasının 3 rəqəmli kodu (AZN - 944)"""
-
-
-class StartTransferRequestSchema(BaseTransferRequestSchema):
-    receiver_credentials: str = Field(max_length=151)
-    """İstifadəçinin tam adı"""
-
-    redirect_link: str = Field(max_length=12)
-    """Əməliyyatın sonunda müştərini yönləndirmək istədiyiniz keçid"""
-
-    @computed_field  # type: ignore[prop-decorator]
-    @property
-    def signature(self) -> str:
-        """Yaradılmış data üçün signature generasiyası"""
-        with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
-            key = key_file.read()
-
-        return md5(
-            str(
-                self.merchant
-                + self.srn
-                + str(self.amount)
-                + self.cur
-                + self.receiver_credentials
-                + self.redirect_link
-                + key
-            ).encode('utf-8'),
-            usedforsecurity=False,
-        ).hexdigest()
-
-
-class ConfirmTransferRequestSchema(BaseTransferRequestSchema):
-    timestamp: str = Field(default_factory=datetime.now, validate_default=True)  # type: ignore[assignment]
-
-    @field_validator('timestamp', mode='before')
-    @classmethod
-    def format_timestamp(cls, timestamp: Union[datetime, str]) -> str:
-        """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
-
-        if isinstance(timestamp, datetime):
-            return timestamp.strftime('%Y%m%d%H%M%S')
-
-        return timestamp

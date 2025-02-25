@@ -39,7 +39,8 @@
         - reverse_blocked_payment
         - cancel_blocked_payment
         - get_transaction_status
-        - start_transfer
-        - confirm_transfer
+        - transfer_start
+        - transfer_confirm
+        - transfer_decline
         - auth
         - auth_response

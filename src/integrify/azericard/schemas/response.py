@@ -1,10 +1,15 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Union
+from hashlib import md5
+from typing import ClassVar, Optional, Union
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic.alias_generators import to_pascal
+from typing_extensions import Self
 
-from integrify.azericard.schemas.enums import Action, TrType
+from integrify.azericard import env
+from integrify.azericard.schemas.enums import Action, TransferStatusCode, TrType
+from integrify.azericard.utils import TimeStampIn
 
 
 class GetTransactionStatusResponseSchema(BaseModel):
@@ -50,7 +55,7 @@ class GetTransactionStatusResponseSchema(BaseModel):
     trtype: TrType = Field(validation_alias='Original transaction TRTYPE')
     """Orijinal əməliyyat TRTYPE"""
 
-    timestamp: datetime = Field(validation_alias='Timestamp')
+    timestamp: TimeStampIn = Field(validation_alias='Timestamp')
     """Sorğunun vaxtı"""
 
     nonce: str = Field(validation_alias='Nonce')
@@ -68,3 +73,89 @@ class GetTransactionStatusResponseSchema(BaseModel):
             return val
 
         return datetime.strptime(val, '%Y%m%d%H%M%S')
+
+
+class TransferDeclineResponseSchema(BaseModel):
+    SIGNATURE_FIELDS: ClassVar[list[str]] = [
+        'operation_id',
+        'srn',
+        'amount',
+        'cur',
+        'status',
+        'timestamp',
+        'response_code',
+        'message',
+    ]
+    """Signature hesablanılması üçün lazım olan field adları"""
+
+    model_config = ConfigDict(alias_generator=to_pascal)
+
+    operation_id: str
+    """Sorğu əməliyyatının ID-si"""
+
+    srn: str = Field(validation_alias='SRN')
+    """Unikal əməliyyat nömrəsi"""
+
+    amount: Optional[Decimal] = None
+    """Ödəniş məbləği"""
+
+    cur: Optional[str] = None
+    """Ödəniş valyutası"""
+
+    status: Optional[str] = None
+    """Status Mesajı"""
+
+    timestamp: Optional[TimeStampIn] = None
+    """Sorğunun vaxtı"""
+
+    response_code: Union[TransferStatusCode, int]
+    """Uğur(suz)luq kodu"""
+
+    message: str
+    """Mesaj"""
+
+    signature: str
+    """AzeriCard imzası"""
+
+    @model_validator(mode='after')
+    def validate_signature(self) -> Self:
+        """AzeriCard-dan gələn signature-ni təsdiqləmə funksiyası"""
+        assert self.SIGNATURE_FIELDS
+
+        source = ''
+        for field in self.SIGNATURE_FIELDS:
+            val = getattr(self, field) or ''
+            source += str(val)
+
+        with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
+            key = key_file.read()
+
+        source += key
+
+        calc_signature = md5(source.encode('utf-8'), usedforsecurity=False).hexdigest()
+
+        assert calc_signature == self.signature, 'Signature does not match!'
+
+        return self
+
+
+class TransferConfirmResponseSchema(TransferDeclineResponseSchema):
+    SIGNATURE_FIELDS: ClassVar[list[str]] = [
+        'operation_id',
+        'srn',
+        'rrn',
+        'amount',
+        'cur',
+        'receiver_pan',
+        'status',
+        'timestamp',
+        'response_code',
+        'message',
+    ]
+    """Signature hesablanılması üçün lazım olan field adları"""
+
+    rrn: str = Field(validation_alias='RRN')
+    """Unikal əməliyyat nömrəsi"""
+
+    receiver_pan: str
+    """Maskalanmış kart nömrəsi"""

@@ -1,12 +1,11 @@
 import random
-from datetime import datetime
 from decimal import Decimal
-from typing import Union
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 from integrify.azericard import env
 from integrify.azericard.schemas.enums import TrType
+from integrify.azericard.utils import TimeStampOut
 
 
 class AzeriCardMinimalDataSchema(BaseModel):
@@ -21,7 +20,7 @@ class AzeriCardMinimalDataSchema(BaseModel):
     """Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),
     Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)"""
 
-    timestamp: str = Field(default_factory=datetime.now, validate_default=True)  # type: ignore[assignment]
+    timestamp: TimeStampOut
     """GMT-də e-ticarət şlüzünün vaxt damğası: YYYYMMDDHHMMSS"""
 
     nonce: str = Field(
@@ -31,19 +30,6 @@ class AzeriCardMinimalDataSchema(BaseModel):
     )
     """E-Commerce Gateway qeyri-dəyərlidir. Hexadecimal formatda 8-32
     təsadüfi baytla doldurulacaq. MAC istifadə edildikdə mövcud olacaq."""
-
-    @field_validator('timestamp', mode='before')
-    @classmethod
-    def validate_timestamp(cls, val: Union[datetime, str, None]) -> str:
-        """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
-
-        if val is None:
-            return datetime.now().strftime('%Y%m%d%H%M%S')
-
-        if isinstance(val, datetime):
-            return val.strftime('%Y%m%d%H%M%S')
-
-        return val
 
 
 class AzeriCardMinimalWithAmountDataSchema(AzeriCardMinimalDataSchema):

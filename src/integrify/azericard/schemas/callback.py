@@ -10,6 +10,7 @@ from typing_extensions import Self
 from integrify.azericard import env
 from integrify.azericard.schemas.common import AzeriCardMinimalWithAmountDataSchema
 from integrify.azericard.schemas.enums import Action, CardStatus
+from integrify.azericard.utils import TimeStampIn
 
 
 class AuthCallbackSchema(AzeriCardMinimalWithAmountDataSchema):
@@ -67,7 +68,7 @@ class TransferCallbackSchema(BaseModel):
     status: str
     """Cari tranzaksiya statusu (məsələn, "pending")"""
 
-    timestamp: datetime
+    timestamp: TimeStampIn
     """Cavab vaxtı"""
 
     rc: str = Field(validation_alias='Response Code')

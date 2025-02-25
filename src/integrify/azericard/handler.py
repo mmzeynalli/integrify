@@ -6,12 +6,20 @@ from integrify.azericard.schemas.request import (
     AuthConfirmRequestSchema,
     AuthRequestSchema,
     AuthWithSavedCardRequestSchema,
-    ConfirmTransferRequestSchema,
     GetTransactionStatusRequestSchema,
-    StartTransferRequestSchema,
+    TransferConfirmDeclineRequestSchema,
+    TransferStartRequestSchema,
 )
-from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
+from integrify.azericard.schemas.response import (
+    GetTransactionStatusResponseSchema,
+    TransferConfirmResponseSchema,
+    TransferDeclineResponseSchema,
+)
 from integrify.schemas import PayloadBaseModel, _ResponseT
+
+# =============================================================================================== #
+# AUTH HANDLERS                                                                               #
+# =============================================================================================== #
 
 
 class BaseAzericardPayloadHandler(APIPayloadHandler):
@@ -44,20 +52,24 @@ class AuthWithSavedCardPayloadHandler(BaseAzericardPayloadHandler):
         super().__init__(req_model=AuthWithSavedCardRequestSchema)
 
 
-class GetTransactionStatusPayloadHandler(BaseAzericardPayloadHandler):
+class GetTransactionStatusPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(
-            GetTransactionStatusRequestSchema,
-            GetTransactionStatusResponseSchema,
-            dry=False,
-        )
+        super().__init__(GetTransactionStatusRequestSchema, GetTransactionStatusResponseSchema)
 
 
-class StartTransferPayloadHandler(BaseAzericardPayloadHandler):
+# =============================================================================================== #
+# TRANSFER HANDLERS                                                                               #
+# =============================================================================================== #
+class TransferStartPayloadHandler(BaseAzericardPayloadHandler):
     def __init__(self):
-        super().__init__(req_model=StartTransferRequestSchema)
+        super().__init__(req_model=TransferStartRequestSchema)
 
 
-class ConfirmTransactionPayloadHandler(BaseAzericardPayloadHandler):
+class TransferConfirmPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(req_model=ConfirmTransferRequestSchema)
+        super().__init__(TransferConfirmDeclineRequestSchema, TransferConfirmResponseSchema)
+
+
+class TransferDeclinePayloadHandler(APIPayloadHandler):
+    def __init__(self):
+        super().__init__(TransferConfirmDeclineRequestSchema, TransferDeclineResponseSchema)

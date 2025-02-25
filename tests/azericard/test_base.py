@@ -46,9 +46,7 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
 
     form = json_to_html_form(req)
 
-    assert form.startswith(
-        '<form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">'
-    )
+    assert form.startswith('<form action="https://mpi.3dsecure.az/cgi-bin/cgi_link" method="POST">')
 
 
 @pytest.mark.parametrize(

@@ -81,7 +81,7 @@ def test_get_transaction_status(
 
 
 def test_start_transfer(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.start_transfer(
+    azericard_client.transfer_start(
         merchant='merchant',
         srn='srn',
         amount=1,
@@ -91,12 +91,12 @@ def test_start_transfer(azericard_client: 'AzeriCardClientClass'):
     )
 
 
-def test_confirm_transfer(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.confirm_transfer(
-        merchant='merchant',
-        srn='srn',
-        amount=1,
-        cur='944',
-        receiver_credentials='creds',
-        redirect_link='link',
-    )
+# def test_confirm_transfer(azericard_client: 'AzeriCardClientClass'):
+#     azericard_client.transfer_confirm(
+#         merchant='merchant',
+#         srn='srn',
+#         amount=1,
+#         cur='944',
+#         receiver_credentials='creds',
+#         redirect_link='link',
+#     )

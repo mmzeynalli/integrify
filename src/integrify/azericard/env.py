@@ -55,9 +55,4 @@ class MtAPI(str, Enum):
 
     TRANSFER = '/payment/view'
     TRANSFER_CONFIRM = '/api/confirm'
-
-
-__all__ = [
-    'AZERICARD_MERCHANT_ID',
-    'MpiAPI',
-]
+    TRANSFER_DECLINE = '/api/decline'

@@ -45,3 +45,24 @@ class CardStatus(str, Enum):
 
     MISSING = 'foreign'
     """Kart AzeriCard database-ində yoxdur"""
+
+
+class TransferStatusCode(str, Enum):
+    SUCCESS = 0
+    """Uğurla tamamlandı"""
+
+    DUPLICATE_TRANSACTION = 105
+    """Tranzaksiya Gözləyən statusunda deyil. Onu rədd etmək və ya təsdiqləmək mümkün deyil.
+    Əlavə məlumat üçün Azericard ilə əlaqə saxlayın"""
+
+    SIGNATURE_ERROR = 106
+    """Giriş məlumatları imzaya uyğun gəlmir"""
+
+    TRANSACTION_NOT_FOUND = 112
+    """Ödəniş arxa tərəfdə tapılmadı"""
+
+    TRANSACTION_ACTIVE = 116
+    """Tranzaksiya artıq təsdiqlənib, tamamlanması və ya yoxlanılmasını gözləməyə başlayıb."""
+
+    def __str__(self):
+        return str(self.value)

@@ -1,22 +1,26 @@
 from datetime import datetime  # pylint: disable=unused-argument
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
 from typing import SupportsFloat as Numeric
 
 # pylint: disable=unused-argument
-from integrify.api import APIClient, APIResponse
+from integrify.api import APIClient, APIPayloadHandler, APIResponse
 from integrify.azericard import env
 from integrify.azericard.handler import (
     AuthAndSavePayloadHandler,
     AuthConfirmPayloadHandler,
     AuthPayloadHandler,
     AuthWithSavedCardPayloadHandler,
-    ConfirmTransactionPayloadHandler,
     GetTransactionStatusPayloadHandler,
-    StartTransferPayloadHandler,
+    TransferConfirmPayloadHandler,
+    TransferStartPayloadHandler,
 )
 from integrify.azericard.schemas.enums import TrType
-from integrify.azericard.schemas.request import MInfo  # pylint: disable=unused-argument
-from integrify.azericard.schemas.response import GetTransactionStatusResponseSchema
+from integrify.azericard.schemas.request.auth import MInfo  # pylint: disable=unused-argument
+from integrify.azericard.schemas.response import (
+    GetTransactionStatusResponseSchema,
+    TransferConfirmResponseSchema,
+    TransferDeclineResponseSchema,
+)
 from integrify.schemas import DryResponse
 from integrify.utils import _UNSET, Unsettable
 
@@ -24,8 +28,15 @@ from integrify.utils import _UNSET, Unsettable
 class AzeriCardClientClass(APIClient):
     """AzeriCard sorğular üçün baza class"""
 
-    def __init__(self, sync: bool = True, dry: bool = False):
-        super().__init__('AzeriCard', sync=sync, dry=dry)
+    def __init__(
+        self,
+        name: str = 'AzeriCard',
+        base_url: Optional[str] = None,
+        default_handler: Optional[APIPayloadHandler] = None,
+        sync: bool = True,
+        dry: bool = False,
+    ):
+        super().__init__(name, base_url, default_handler, sync, dry)
 
         self.add_url('auth', env.MpiAPI.AUTHORIZATION, 'POST', base_url=env.MpiAPI.BASE_URL)
         self.add_handler('auth', AuthPayloadHandler)
@@ -33,7 +44,7 @@ class AzeriCardClientClass(APIClient):
         self.add_url(
             'auth_response',
             env.MpiAPI.AUTHORIZATION,
-            'POST',
+            verb='POST',
             base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth_response', AuthConfirmPayloadHandler)
@@ -41,7 +52,7 @@ class AzeriCardClientClass(APIClient):
         self.add_url(
             'auth_and_save_card',
             env.MpiAPI.SAVE_CARD,
-            'POST',
+            verb='POST',
             base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth_and_save_card', AuthAndSavePayloadHandler)
@@ -49,7 +60,7 @@ class AzeriCardClientClass(APIClient):
         self.add_url(
             'auth_with_saved_card',
             env.MpiAPI.SAVE_CARD,
-            'POST',
+            verb='POST',
             base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('auth_with_saved_card', AuthWithSavedCardPayloadHandler)
@@ -57,19 +68,30 @@ class AzeriCardClientClass(APIClient):
         self.add_url(
             'get_transaction_status',
             env.MpiAPI.AUTHORIZATION,
-            'POST',
+            verb='POST',
             base_url=env.MpiAPI.BASE_URL,
         )
         self.add_handler('get_transaction_status', GetTransactionStatusPayloadHandler)
 
-        self.add_url('start_transfer', env.MtAPI.TRANSFER, 'POST', env.MtAPI.BASE_URL)
-        self.add_handler('start_transfer', StartTransferPayloadHandler)
+        self.add_url('transfer_start', env.MtAPI.TRANSFER, verb='GET', base_url=env.MtAPI.BASE_URL)
+        self.add_handler('transfer_start', TransferStartPayloadHandler)
 
-        self.add_url('confirm_transfer', env.MtAPI.TRANSFER_CONFIRM, 'POST', env.MtAPI.BASE_URL)
-        self.add_handler('confirm_transfer', ConfirmTransactionPayloadHandler)
+        self.add_url(
+            'transfer_confirm',
+            env.MtAPI.TRANSFER_CONFIRM,
+            verb='POST',
+            base_url=env.MtAPI.BASE_URL,
+        )
+        self.add_handler('transfer_confirm', TransferConfirmPayloadHandler)
 
-    # arguments are given for sake of type-hinting. None is needed to NOT SEND unset variables
-    # to pydantic model in order to trigger default values.
+        self.add_url(
+            'transfer_decline',
+            env.MtAPI.TRANSFER_DECLINE,
+            verb='POST',
+            base_url=env.MtAPI.BASE_URL,
+        )
+
+    # arguments are given for sake of type-hinting.
     def pay(  # pylint: disable=duplicate-code
         self,
         amount: Numeric,  # pylint: disable=unused-argument
@@ -83,7 +105,7 @@ class AzeriCardClientClass(APIClient):
         country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -94,9 +116,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.pay(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.pay(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -118,7 +140,8 @@ class AzeriCardClientClass(APIClient):
             name: Müştərinin adı (kartda göstərildiyi kimi)
             m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
         """  # noqa: E501
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth(trtype=TrType.AUTHORAZATION, **kwds)
 
     def pay_and_save_card(
@@ -134,7 +157,7 @@ class AzeriCardClientClass(APIClient):
         country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -145,9 +168,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -172,7 +195,8 @@ class AzeriCardClientClass(APIClient):
             m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_and_save_card(trtype=TrType.AUTHORAZATION, **kwds)
 
     def pay_with_saved_card(
@@ -189,7 +213,7 @@ class AzeriCardClientClass(APIClient):
         country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -200,9 +224,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+            AzeriCardClient.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -226,7 +250,8 @@ class AzeriCardClientClass(APIClient):
             m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_with_saved_card(trtype=TrType.AUTHORAZATION, **kwds)
 
     def block(
@@ -242,7 +267,7 @@ class AzeriCardClientClass(APIClient):
         country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -253,9 +278,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.block(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.block(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -284,7 +309,8 @@ class AzeriCardClientClass(APIClient):
             m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth(trtype=TrType.PRE_AUTHORAZATION, **kwds)
 
     def block_and_save_card(
@@ -300,7 +326,7 @@ class AzeriCardClientClass(APIClient):
         country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -311,9 +337,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.block_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.block_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -342,7 +368,8 @@ class AzeriCardClientClass(APIClient):
             m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_and_save_card(trtype=TrType.PRE_AUTHORAZATION, **kwds)
 
     def block_with_saved_card(
@@ -359,7 +386,7 @@ class AzeriCardClientClass(APIClient):
         country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
         m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -370,9 +397,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.block_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+            AzeriCardClient.block_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -402,7 +429,8 @@ class AzeriCardClientClass(APIClient):
             m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_with_saved_card(trtype=TrType.PRE_AUTHORAZATION, **kwds)
 
     def accept_blocked_payment(
@@ -413,7 +441,7 @@ class AzeriCardClientClass(APIClient):
         rrn: str,  # pylint: disable=unused-argument
         int_ref: str,  # pylint: disable=unused-argument
         terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Blok olunmuş məbləği qəbul etmək sorğusu
 
@@ -421,9 +449,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.accept_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            AzeriCardClient.accept_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -440,7 +468,8 @@ class AzeriCardClientClass(APIClient):
             timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_response(trtype=TrType.ACCEPT_REQUEST, **kwds)
 
     def reverse_blocked_payment(
@@ -451,7 +480,7 @@ class AzeriCardClientClass(APIClient):
         rrn: str,  # pylint: disable=unused-argument
         int_ref: str,  # pylint: disable=unused-argument
         terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Blok olunmuş məbləği qəbul ETMƏMƏK (online) sorğusu
 
@@ -459,9 +488,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.reverse_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            AzeriCardClient.reverse_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -478,7 +507,8 @@ class AzeriCardClientClass(APIClient):
             timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_response(trtype=TrType.RETURN_REQUEST, **kwds)
 
     def cancel_blocked_payment(
@@ -489,7 +519,7 @@ class AzeriCardClientClass(APIClient):
         rrn: str,  # pylint: disable=unused-argument
         int_ref: str,  # pylint: disable=unused-argument
         terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
     ):
         """Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu
 
@@ -497,9 +527,9 @@ class AzeriCardClientClass(APIClient):
 
         Example:
             ```python
-            from integrify.azericard import AzeriCardRequest
+            from integrify.azericard import AzeriCardClient
 
-            AzeriCardRequest.cancel_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            AzeriCardClient.cancel_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -516,7 +546,8 @@ class AzeriCardClientClass(APIClient):
             timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
         """  # noqa: E501
 
-        kwds = {k: v for k, v in locals().items() if k != 'self'}
+        kwds = locals()
+        kwds.pop('self')
         return self.auth_response(trtype=TrType.CANCEL_REQUEST, **kwds)
 
     if TYPE_CHECKING:
@@ -535,7 +566,7 @@ class AzeriCardClientClass(APIClient):
             country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
             lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -546,9 +577,9 @@ class AzeriCardClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.auth(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+                AzeriCardClient.auth(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
                 ```
 
             **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -581,7 +612,7 @@ class AzeriCardClientClass(APIClient):
             int_ref: str,  # pylint: disable=unused-argument
             trtype: TrType,
             terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
         ) -> DryResponse:
             """PreAuthorization sorğusuna cavab sorğusu
 
@@ -589,9 +620,9 @@ class AzeriCardClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.auth_response(amount=100, currency='944', order='12345678', rrn='payment_rrn', int_ref='int_ref', trtype='21')
+                AzeriCardClient.auth_response(amount=100, currency='944', order='12345678', rrn='payment_rrn', int_ref='int_ref', trtype='21')
                 ```
 
             **Cavab formatı**:
@@ -620,7 +651,7 @@ class AzeriCardClientClass(APIClient):
             country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
             lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -631,9 +662,9 @@ class AzeriCardClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.auth_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+                AzeriCardClient.auth_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
@@ -671,7 +702,7 @@ class AzeriCardClientClass(APIClient):
             country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
             lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
             m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
@@ -682,9 +713,9 @@ class AzeriCardClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.auth_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes', token='card-token')
+                AzeriCardClient.auth_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes', token='card-token')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
@@ -713,7 +744,7 @@ class AzeriCardClientClass(APIClient):
             tran_trtype: TrType,
             order: str,  # pylint: disable=unused-argument
             terminal: Unsettable[str],  # pylint: disable=unused-argument
-            timestamp: Unsettable[datetime],  # pylint: disable=unused-argument
+            timestamp: Unsettable[Union[datetime, str]],  # pylint: disable=unused-argument
         ) -> APIResponse[GetTransactionStatusResponseSchema]:
             """Bitmiş tranzaksiyanın statusunu alma sorğusu
 
@@ -721,9 +752,9 @@ class AzeriCardClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.get_transaction_status(tran_trtype='21', order='12345678')
+                AzeriCardClient.get_transaction_status(tran_trtype='21', order='12345678')
                 ```
 
             **Cavab formatı**: [`GetTransactionStatusResponseSchema`][integrify.azericard.schemas.response.GetTransactionStatusResponseSchema]
@@ -735,7 +766,7 @@ class AzeriCardClientClass(APIClient):
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
-        def start_transfer(
+        def transfer_start(
             self,
             merchant: str,  # pylint: disable=unused-argument
             srn: str,  # pylint: disable=unused-argument
@@ -750,9 +781,9 @@ class AzeriCardClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.start_transfer(merchant='MyMerchant', srn='12345678', amount=100, cur='944', receiver_credentials='Filankəsov Filankəs', redirect_link='my-redirect-api-for-user')
+                AzeriCardClient.transfer_start(merchant='MyMerchant', srn='12345678', amount=100, cur='944', receiver_credentials='Filankəsov Filankəs', redirect_link='my-redirect-api-for-user')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
@@ -766,26 +797,55 @@ class AzeriCardClientClass(APIClient):
                 redirect_link: Əməliyyatın sonunda müştərini yönləndirmək istədiyiniz keçid linki
             """  # noqa: E501
 
-        def confirm_transfer(
+        def transfer_confirm(
             self,
             merchant: str,  # pylint: disable=unused-argument
             srn: str,  # pylint: disable=unused-argument
             amount: Numeric,  # pylint: disable=unused-argument
             cur: str,  # pylint: disable=unused-argument
-            timestamp: Unsettable[datetime] = _UNSET,  # pylint: disable=unused-argument
-        ) -> DryResponse:
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
+        ) -> APIResponse[TransferConfirmResponseSchema]:
             """User-ə ödənişi təsdiqləmək sorğusu
 
             **Endpoint:** *https://testmt.3dsecure.az/api/confirm*
 
             Example:
                 ```python
-                from integrify.azericard import AzeriCardRequest
+                from integrify.azericard import AzeriCardClient
 
-                AzeriCardRequest.confirm_transfer(merchant='MyMerchant', srn='12345678', amount=100, cur='944')
+                AzeriCardClient.transfer_confirm(merchant='MyMerchant', srn='12345678', amount=100, cur='944')
                 ```
 
-            **Cavab formatı**: Callback sorğu baş verir
+            **Cavab formatı**: [TransferConfirmResponseSchema][integrify.azericard.schemas.response.TransferConfirmResponseSchema]
+
+            Args:
+                merchant: Şirkət adı
+                srn: Unikal əməliyyat nömrəsi
+                amount: Ödəniş məbləği
+                cur: Ödəniş valyutası
+                timestamp: Dəyər verilmədikdə, `now` avtomatik göndəriləcək
+            """  # noqa: E501
+
+        def transfer_decline(
+            self,
+            merchant: str,  # pylint: disable=unused-argument
+            srn: str,  # pylint: disable=unused-argument
+            amount: Numeric,  # pylint: disable=unused-argument
+            cur: str,  # pylint: disable=unused-argument
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
+        ) -> APIResponse[TransferDeclineResponseSchema]:
+            """User-ə ödənişi imtina etmək sorğusu
+
+            **Endpoint:** *https://testmt.3dsecure.az/api/decline*
+
+            Example:
+                ```python
+                from integrify.azericard import AzeriCardClient
+
+                AzeriCardClient.transfer_decline(merchant='MyMerchant', srn='12345678', amount=100, cur='944')
+                ```
+
+            **Cavab formatı**: [TransferDeclineResponseSchema][integrify.azericard.schemas.response.TransferDeclineResponseSchema]
 
             Args:
                 merchant: Şirkət adı
