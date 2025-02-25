@@ -27,7 +27,6 @@ def decode_callback_data(data: CallbackDataSchema) -> DecodedCallbackDataSchema:
     Args:
         data: Callback datası
     """
-
     if data.signature != generate_signature(data.data):
         return None  # type: ignore[return-value]
 

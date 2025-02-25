@@ -158,7 +158,7 @@ class NewIntegrationClientClass(APIClient):
 ???+ note
 
     Məsləhət görülür ki, faylın sonunda sync və async clientləri obyekt kimi yaradıb, onları `new_integration/__init__.py`
-    faylına import edəsiniz. Bu user-in istifadəsini asanlaşdırır; hər dəfə class-ı yaratmaq yerinə hazır sizin obyekti 
+    faylına import edəsiniz. Bu user-in istifadəsini asanlaşdırır; hər dəfə class-ı yaratmaq yerinə hazır sizin obyekti
     istifadə edir.
 
 ### 4. Type-hinted funksiyalar { #type-hinted-functions }
@@ -215,7 +215,6 @@ Bəzən kod yazanda köməkçi funksiyalar lazım olur. Bunun üçün ayrı fayl
 
 - utils.py - Daxili istifadəlik köməkçi funksiyalar üçün (bax: EPoint)
 - helpers.py - User istifadəsi üçün köməkçi funksiyalar (bax: AzeriCard)
-
 
 ### 6. Testlər { #tests }
 
