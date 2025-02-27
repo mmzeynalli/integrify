@@ -10,7 +10,8 @@ from integrify.lsim.handlers import (
     SendSMSPostPayloadHandler,
 )
 from integrify.lsim.schemas.response import (
-    BaseResponseSchema,
+    BaseGetResponseSchema,
+    BasePostResponseSchema,
     ReportGetResponseSchema,
     ReportPostResponseSchema,
 )
@@ -53,7 +54,7 @@ class LSIMClientClass(APIClient):
             password: Optional[str] = None,
             sender: Optional[str] = None,
             unicode: bool = False,
-        ) -> APIResponse[BaseResponseSchema]:
+        ) -> APIResponse[BaseGetResponseSchema]:
             """SMS göndərən GET sorğusu
 
             **Endpoint:** */quicksms/v1/send*
@@ -65,9 +66,9 @@ class LSIMClientClass(APIClient):
                 LSIMClient.send_sms_get(msidn='99450123456', text='test')
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.lsim.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`BaseGetResponseSchema`][integrify.lsim.schemas.response.BaseGetResponseSchema]
 
-            Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
+            Bu sorğunu göndərdikdə, cavab olaraq `BaseGetResponseSchema` formatında
             cavab gəlir, və uğurlu olduqda, `obj` field-ində transaction_id dəyəri gəlir.
 
             Args:
@@ -89,7 +90,7 @@ class LSIMClientClass(APIClient):
             sender: Optional[str] = None,
             unicode: bool = False,
             scheduled: str = 'NOW',
-        ) -> APIResponse[BaseResponseSchema]:
+        ) -> APIResponse[BasePostResponseSchema]:
             """SMS göndərən POST sorğusu
 
             **Endpoint:** */quicksms/v1/smssender*
@@ -101,9 +102,9 @@ class LSIMClientClass(APIClient):
                 LSIMClient.send_sms_post(msidn='99450123456', text='test')
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.lsim.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`BasePostResponseSchema`][integrify.lsim.schemas.response.BasePostResponseSchema]
 
-            Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
+            Bu sorğunu göndərdikdə, cavab olaraq `BasePostResponseSchema` formatında
             cavab gəlir, və uğurlu olduqda, `obj` field-ində transaction_id dəyəri gəlir.
 
             Args:
@@ -122,7 +123,7 @@ class LSIMClientClass(APIClient):
             self,
             login: Optional[str] = None,
             password: Optional[str] = None,
-        ) -> APIResponse[BaseResponseSchema]:
+        ) -> APIResponse[BaseGetResponseSchema]:
             """LSIM balans sorğusu
 
             **Endpoint:** */quicksms/v1/balance*
@@ -134,9 +135,9 @@ class LSIMClientClass(APIClient):
                 LSIMClient.check_balance()
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.lsim.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`BaseGetResponseSchema`][integrify.lsim.schemas.response.BaseGetResponseSchema]
 
-            Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
+            Bu sorğunu göndərdikdə, cavab olaraq `BaseGetResponseSchema` formatında
             cavab gəlir, `obj` field-ində balans dəyəri gəlir.
 
             Args:

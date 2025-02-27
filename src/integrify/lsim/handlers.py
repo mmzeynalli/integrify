@@ -7,7 +7,8 @@ from integrify.lsim.schemas.request import (
     SendSMSPostRequestSchema,
 )
 from integrify.lsim.schemas.response import (
-    BaseResponseSchema,
+    BaseGetResponseSchema,
+    BasePostResponseSchema,
     ReportGetResponseSchema,
     ReportPostResponseSchema,
 )
@@ -15,17 +16,17 @@ from integrify.lsim.schemas.response import (
 
 class SendSMSGetPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(SendSMSGetRequestSchema, BaseResponseSchema)
+        super().__init__(SendSMSGetRequestSchema, BaseGetResponseSchema)
 
 
 class SendSMSPostPayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(SendSMSPostRequestSchema, BaseResponseSchema)
+        super().__init__(SendSMSPostRequestSchema, BasePostResponseSchema)
 
 
 class CheckBalancePayloadHandler(APIPayloadHandler):
     def __init__(self):
-        super().__init__(CheckBalanceRequestSchema, BaseResponseSchema)
+        super().__init__(CheckBalanceRequestSchema, BaseGetResponseSchema)
 
 
 class GetReportGetPayloadHandler(APIPayloadHandler):

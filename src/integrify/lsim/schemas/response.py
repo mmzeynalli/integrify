@@ -6,7 +6,7 @@ from pydantic.alias_generators import to_camel
 from integrify.lsim.schemas.enums import Code
 
 
-class BaseResponseSchema(BaseModel):
+class BaseGetResponseSchema(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel)
 
     success_message: Optional[str] = None
@@ -20,6 +20,11 @@ class BaseResponseSchema(BaseModel):
 
     error_code: Optional[Code] = None
     """Status kodu (həm uğurlu, həm xəta)"""
+
+
+class BasePostResponseSchema(BaseGetResponseSchema):
+    error_code: Optional[str] = None  # type: ignore[assignment]
+    """Status mesajı (həm uğurlu, həm xəta)"""
 
 
 class ReportGetResponseSchema(BaseModel):

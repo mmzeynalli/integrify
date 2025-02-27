@@ -11,10 +11,13 @@ if TYPE_CHECKING:
 
 @requires_env()
 def test_check_balance(lsim_client: 'LSIMClientClass'):
-    assert lsim_client.check_balance().body.obj == 2
+    assert lsim_client.check_balance().body.obj == 1
 
 
+# Report ancaq son 1 həftə üçün keçərlidir. Bir həftə öncədən
+# göndərilmiş SMS-lərin statusunu almaq mümkün deyildir
 @requires_env('LSIM_TRANS_ID')
+@live
 def test_get_report_get(lsim_client: 'LSIMClientClass'):
     assert (
         lsim_client.get_report_get(trans_id=os.getenv('LSIM_TRANS_ID')).body.error_code
@@ -23,11 +26,17 @@ def test_get_report_get(lsim_client: 'LSIMClientClass'):
 
 
 @requires_env('LSIM_TRANS_ID')
+@live
 def test_get_report_post(lsim_client: 'LSIMClientClass'):
     assert (
         lsim_client.get_report_post(trans_id=os.getenv('LSIM_TRANS_ID')).body.delivery_status
         == 'DELIVERED'
     )
+
+
+# ------------------------------------------------------------------------------------------------ #
+# SMS Sending
+# ------------------------------------------------------------------------------------------------ #
 
 
 @requires_env()
