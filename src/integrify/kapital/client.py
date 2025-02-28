@@ -35,8 +35,15 @@ __all__ = ['KapitalClientClass']
 
 
 class KapitalClientClass(APIClient):
-    def __init__(self, sync: bool = True):
-        super().__init__('Kapital', env.API.BASE_URL, sync=sync)
+    def __init__(
+        self,
+        name='Kapital',
+        base_url=env.API.BASE_URL,
+        default_handler=None,
+        sync=True,
+        dry=False,
+    ):
+        super().__init__(name, base_url, default_handler, sync, dry)
 
         self.add_url('create_order', env.API.ORDER, verb='POST')
         self.add_handler('create_order', CreateOrderPayloadHandler)
