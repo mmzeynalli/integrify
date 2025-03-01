@@ -55,7 +55,7 @@ def test_invalid_pass(lsim_singlesms_client: LSIMSingleSMSClientClass):
     )
 
 
-@requires_env('LSIM_SENDER_NAME')
+@requires_env('PHONE_NUMBER_1')
 def test_invalid_sender(lsim_singlesms_client: LSIMSingleSMSClientClass):
     assert (
         lsim_singlesms_client.send_sms_get(

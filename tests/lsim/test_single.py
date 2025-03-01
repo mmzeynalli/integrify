@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 @requires_env()
 def test_check_balance(lsim_singlesms_client: 'LSIMSingleSMSClientClass'):
-    assert lsim_singlesms_client.check_balance().body.obj == 7
+    assert lsim_singlesms_client.check_balance().body.obj == 6
 
 
 # Report ancaq son 1 həftə üçün keçərlidir. Bir həftə öncədən

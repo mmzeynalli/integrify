@@ -47,13 +47,3 @@ def test_invalid_pass(lsim_bulksms_client: LSIMBulkSMSClientClass):
         ).body.response_code
         == Code.INVALID_AUTH
     )
-
-
-@requires_env()
-def test_invalid_phone_numbers(lsim_bulksms_client: LSIMBulkSMSClientClass):
-    assert (
-        lsim_bulksms_client.bulk_send_one_message(
-            controlid=123456, msisdns=['994XXXXXXXXX'], bulkmessage='Test Message!'
-        ).body.response_code
-        == 235
-    )

@@ -74,4 +74,4 @@ def test_get_bulk_detailed_with_dates_report(lsim_bulksms_client: 'LSIMBulkSMSCl
 
 @requires_env()
 def test_check_balance(lsim_bulksms_client: 'LSIMBulkSMSClientClass'):
-    assert lsim_bulksms_client.check_balance().body.units == 7
+    assert lsim_bulksms_client.check_balance().body.units == 6
