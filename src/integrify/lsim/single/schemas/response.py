@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
-from integrify.lsim.schemas.enums import Code
+from integrify.lsim.single.schemas.enums import Code
 
 
 class BaseGetResponseSchema(BaseModel):

@@ -21,6 +21,7 @@ repos:
         name: docs
         entry: make docs
         language: system
+        pass_filenames: false
       - id: test
         name: test
         entry: make test

@@ -1,12 +1,12 @@
 from integrify.api import APIPayloadHandler
-from integrify.lsim.schemas.request import (
+from integrify.lsim.single.schemas.request import (
     CheckBalanceRequestSchema,
     GetReportGetRequestSchema,
     GetReportPostRequestSchema,
     SendSMSGetRequestSchema,
     SendSMSPostRequestSchema,
 )
-from integrify.lsim.schemas.response import (
+from integrify.lsim.single.schemas.response import (
     BaseGetResponseSchema,
     BasePostResponseSchema,
     ReportGetResponseSchema,
