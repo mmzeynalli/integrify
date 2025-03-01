@@ -19,7 +19,7 @@ def test_duplicate_controlid(lsim_bulksms_client: LSIMBulkSMSClientClass):
         lsim_bulksms_client.bulk_send_one_message(
             controlid='1', msisdns=[os.getenv('PHONE_NUMBER_1')], bulkmessage='Test Message!'
         ).body.response_code
-        == 235
+        == Code.DUPLICATE
     )
 
 
