@@ -1,4 +1,4 @@
-# LSIM klientinin API Reference-i
+# LSIM Bulk SMS klientinin API Reference-i
 
 ???+ note
 
@@ -6,15 +6,15 @@
     bu importu edin və eyni-adlı funksiyaları `await` ilə çağırın:
 
     ```python
-    from integrify.lsim import LSIMAsyncClient
+    from integrify.lsim import LSIMBulkSMSAsyncClient
     ```
 
-::: integrify.lsim.client.LSIMClient
+::: integrify.lsim.bulk.client.LSIMBulkSMSClient
     handler: python
     options:
       separate_signature: true
 
-::: integrify.lsim.client.LSIMAsyncClient
+::: integrify.lsim.bulk.client.LSIMBulkSMSAsyncClient
     handler: python
     options:
       separate_signature: true
@@ -22,15 +22,16 @@
 ???+ note
 
     Bunlar artıq hazır yaradılmış klass obyektləridir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
-    bütün sorğuları `LSIMClientClass().send_sms_post()` kimi istifadə etməlisiniz.
+    bütün sorğuları `LSIMBulkSMSClientClass().check_balance()` kimi istifadə etməlisiniz.
 
-::: integrify.lsim.client.LSIMClientClass
+::: integrify.lsim.bulk.client.LSIMBulkSMSClientClass
     handler: python
     options:
       separate_signature: true
       members:
-        - send_sms_get
-        - send_sms_post
+        - bulk_send_one_message
+        - bulk_send_different_messages
+        - get_report
+        - get_detailed_report
+        - get_detailed_report_with_dates
         - check_balance
-        - get_report_get
-        - get_report_post

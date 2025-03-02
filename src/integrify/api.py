@@ -51,14 +51,15 @@ class APIClient:
         Args:
             route_name: Funksionallığın adı (məs., `pay`, `refund` və s.)
             url: Endpoint url-i
-            verb: Endpoint metodunun (`POST`, `GET`, və s.)
+            verb: Endpoint metodu (`POST`, `GET`, və s.)
+            base_url: Endpoint-lərin baza (kök) url-i. Endpoint-lər fərqli hostlar
+                    üzərində qurulduqda lazım olur.
         """
         self.urls[route_name] = {'url': url, 'verb': verb}
 
         # Əgər inteqrasiyanın bütün endpoint-ləri bir base_url-də deyilsə,
         # endpointləri, `base_url` ilə əlavə etmək lazımdır.
-        if base_url:
-            self.urls[route_name]['base_url'] = base_url
+        self.urls[route_name]['base_url'] = base_url or self.base_url or ''
 
     def set_default_handler(self, handler_class: type['APIPayloadHandler']) -> None:
         """Sorğulara default handler setter-i
@@ -93,7 +94,7 @@ class APIClient:
 
             # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
             # taparaq, sorğunu icra edirik.
-            base_url = self.base_url or self.urls[name]['base_url']
+            base_url = self.urls[name]['base_url']
             url = urljoin(base_url, self.urls[name]['url'])
             verb = self.urls[name]['verb']
             handler = self.handlers.get(name, self.default_handler)
