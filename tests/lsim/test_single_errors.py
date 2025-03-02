@@ -2,6 +2,7 @@ import os
 
 from integrify.lsim.single.client import LSIMSingleSMSClientClass
 from integrify.lsim.single.schemas.enums import Code
+from tests.conftest import live
 from tests.lsim.conftest import requires_env
 
 
@@ -32,6 +33,7 @@ def test_too_long_text(lsim_singlesms_client: LSIMSingleSMSClientClass):
 
 
 @requires_env('PHONE_NUMBER_1')
+@live
 def test_invalid_login(lsim_singlesms_client: LSIMSingleSMSClientClass):
     assert (
         lsim_singlesms_client.send_sms_get(
@@ -44,6 +46,7 @@ def test_invalid_login(lsim_singlesms_client: LSIMSingleSMSClientClass):
 
 
 @requires_env('PHONE_NUMBER_1')
+@live
 def test_invalid_pass(lsim_singlesms_client: LSIMSingleSMSClientClass):
     assert (
         lsim_singlesms_client.send_sms_get(
@@ -56,6 +59,7 @@ def test_invalid_pass(lsim_singlesms_client: LSIMSingleSMSClientClass):
 
 
 @requires_env('PHONE_NUMBER_1')
+@live
 def test_invalid_sender(lsim_singlesms_client: LSIMSingleSMSClientClass):
     assert (
         lsim_singlesms_client.send_sms_get(

@@ -2,6 +2,7 @@ import os
 
 from integrify.lsim.bulk.client import LSIMBulkSMSClientClass
 from integrify.lsim.bulk.schemas.enums import Code
+from tests.conftest import live
 from tests.lsim.conftest import requires_env
 
 
@@ -24,6 +25,7 @@ def test_duplicate_controlid(lsim_bulksms_client: LSIMBulkSMSClientClass):
 
 
 @requires_env('PHONE_NUMBER_1')
+@live
 def test_invalid_login(lsim_bulksms_client: LSIMBulkSMSClientClass):
     assert (
         lsim_bulksms_client.bulk_send_one_message(
@@ -37,6 +39,7 @@ def test_invalid_login(lsim_bulksms_client: LSIMBulkSMSClientClass):
 
 
 @requires_env('PHONE_NUMBER_1')
+@live
 def test_invalid_pass(lsim_bulksms_client: LSIMBulkSMSClientClass):
     assert (
         lsim_bulksms_client.bulk_send_one_message(
