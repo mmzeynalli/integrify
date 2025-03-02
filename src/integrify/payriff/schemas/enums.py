@@ -34,3 +34,20 @@ class ResultMessages(str, Enum):
     USER_ALREADY_EXISTS = 'User already exists!'
     UNEXPECTED_GATEWAY_ERROR = 'Occurred problem with Processing'
     INVALID_CREDENTIALS = 'Username or Password is incorrect'
+
+
+class Currency(str, Enum):
+    AZN = 'AZN'
+    USD = 'USD'
+    EUR = 'EUR'
+
+
+class Operation(str, Enum):
+    PURCHASE = 'PURCHASE'
+    PRE_AUTH = 'PRE_AUTH'
+
+
+class Language(str, Enum):
+    AZ = 'AZ'
+    EN = 'EN'
+    RU = 'RU'
