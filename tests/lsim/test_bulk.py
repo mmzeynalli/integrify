@@ -1,12 +1,9 @@
 import os
-from typing import TYPE_CHECKING
 
+from integrify.lsim.bulk.client import LSIMBulkSMSClientClass
 from integrify.lsim.bulk.schemas.enums import Code, SMSStatus
 from tests.conftest import live
 from tests.lsim.conftest import requires_env
-
-if TYPE_CHECKING:
-    from integrify.lsim.bulk.client import LSIMBulkSMSClientClass
 
 
 @live

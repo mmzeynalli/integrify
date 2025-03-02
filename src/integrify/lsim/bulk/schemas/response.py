@@ -99,5 +99,5 @@ class GetBalanceResponseSchema(BaseModel):
         """Sorğunun cavabının strukturunu parçalayan funksiya"""
         return {
             'response_code': data['response']['head']['responsecode'],
-            'units': data['response']['body']['units'],
+            'units': data['response'].get('body', {}).get('units', -1),
         }

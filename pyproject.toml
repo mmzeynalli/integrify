@@ -44,7 +44,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mmzeynalli/integrify"
+Homepage = "https://integrify.mmzeynalli.dev/"
 Repository = "https://github.com/mmzeynalli/integrify"
 Documentation = "https://integrify.mmzeynalli.dev/"
 
