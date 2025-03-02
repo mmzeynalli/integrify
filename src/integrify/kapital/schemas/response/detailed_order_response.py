@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from pydantic import Field
 
@@ -89,16 +89,16 @@ class DetailedOrderType(BaseSchema):
     secret_length: int
     title: str
     rid: str
-    payment_methods: List[str]
-    card_brands: Optional[List[str]] = None
+    payment_methods: list[str]
+    card_brands: Optional[list[str]] = None
     allow_tds_attempt: bool
     allow_tds_cant: bool
     allow_tds_challenged: bool
     allow_surcharge: bool
-    allow_tran_types: List[str]
-    allow_tran_phases: List[str]
-    allow_auth_kinds: List[str]
-    allow_cof_store_usages: List[str]
+    allow_tran_types: list[str]
+    allow_tran_phases: list[str]
+    allow_auth_kinds: list[str]
+    allow_cof_store_usages: list[str]
     order_class: str
     allow_cvv2: bool = Field(alias='allowCVV2')
 
@@ -119,7 +119,7 @@ class DetailedOrderInformationResponseSchema(BaseSchema):
     src_currency: str
     dst_amount: Optional[float] = None
     dst_currency: Optional[str] = None
-    stored_tokens: Optional[List[StoredToken]] = None
+    stored_tokens: Optional[list[StoredToken]] = None
     create_time: datetime
     finish_time: Optional[datetime] = None
     cvv2_auth_status: str
@@ -136,6 +136,6 @@ class DetailedOrderInformationResponseSchema(BaseSchema):
     merchant: Merchant
     initiation_env_kind: str
     type: DetailedOrderType
-    hpp_cof_capture_purposes: List[str]
-    cust_attrs: List[str]
+    hpp_cof_capture_purposes: list[str]
+    cust_attrs: list[str]
     report_pubs: Dict
