@@ -31,11 +31,7 @@ class StatusResultSchema(BaseSchema):
 # Response schemas
 
 
-class SendSingleSMSResponseSchema(MinimalResponseSchema):
-    result: Optional[list[SendSingleSMSResultSchema]]
-
-
-class SendMultipleSMSResponseSchema(MinimalResponseSchema):
+class SendSMSResponseSchema(MinimalResponseSchema):
     result: Optional[list[SendSingleSMSResultSchema]]
 
 

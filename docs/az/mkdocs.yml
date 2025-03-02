@@ -97,10 +97,16 @@ nav:
       - LSIM:
           - Ümumi məlumat: "integrations/lsim/about.md"
           - API Referansı:
-            - API Klient: "integrations/lsim/api-reference/client.md"
-            - Schemas:
-              - Response: "integrations/lsim/api-reference/response.md"
-              - Enums: "integrations/lsim/api-reference/enums.md"
+            - Single SMS:
+              - API Klient: "integrations/lsim/api-reference/single/client.md"
+              - Schemas:
+                - Response: "integrations/lsim/api-reference/single/response.md"
+                - Enums: "integrations/lsim/api-reference/single/enums.md"
+            - Bulk SMS:
+              - API Klient: "integrations/lsim/api-reference/bulk/client.md"
+              - Schemas:
+                - Response: "integrations/lsim/api-reference/bulk/response.md"
+                - Enums: "integrations/lsim/api-reference/bulk/enums.md"
       - Posta Guvercini:
           - Ümumi məlumat: "integrations/postaguvercini/about.md"
           - API Referansı:

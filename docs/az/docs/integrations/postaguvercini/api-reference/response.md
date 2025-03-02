@@ -8,9 +8,7 @@
 
 ::: integrify.postaguvercini.schemas.response.StatusResultSchema
 
-::: integrify.postaguvercini.schemas.response.SendSingleSMSResponseSchema
-
-::: integrify.postaguvercini.schemas.response.SendMultipleSMSResponseSchema
+::: integrify.postaguvercini.schemas.response.SendSMSResponseSchema
 
 ::: integrify.postaguvercini.schemas.response.StatusResponseSchema
 

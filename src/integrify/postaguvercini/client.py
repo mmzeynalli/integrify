@@ -8,16 +8,15 @@ from integrify.postaguvercini.handlers import (
     SendSingleSMSPayloadHandler,
     StatusPayloadHandler,
 )
+from integrify.postaguvercini.schemas.enums import ChannelType
+from integrify.postaguvercini.schemas.request import SMSMessage
 from integrify.postaguvercini.schemas.response import (
     CreditBalanceResponseSchema,
-    SendMultipleSMSResponseSchema,
-    SendSingleSMSResponseSchema,
+    SendSMSResponseSchema,
     StatusResponseSchema,
 )
 from integrify.schemas import APIResponse
 from integrify.utils import _UNSET, Unsettable
-
-__all__ = ['PostaGuverciniClientClass']
 
 
 class PostaGuverciniClientClass(APIClient):
@@ -39,8 +38,8 @@ class PostaGuverciniClientClass(APIClient):
         self.add_url('send_multiple_sms', env.API.SEND_MULTIPLE_SMS, verb='POST')
         self.add_handler('send_multiple_sms', SendMultipleSMSPayloadHandler)
 
-        self.add_url('status', env.API.STATUS, verb='POST')
-        self.add_handler('status', StatusPayloadHandler)
+        self.add_url('get_status', env.API.STATUS, verb='POST')
+        self.add_handler('get_status', StatusPayloadHandler)
 
         self.add_url('credit_balance', env.API.CREDIT_BALANCE, verb='POST')
         self.add_handler('credit_balance', CreditBalancePayloadHandler)
@@ -53,59 +52,59 @@ class PostaGuverciniClientClass(APIClient):
             receivers: list[str],
             send_date: Unsettable[str] = _UNSET,
             expire_date: Unsettable[str] = _UNSET,
-            channel: Unsettable[str] = _UNSET,
+            channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
-            username: Unsettable[str] = _UNSET,
-            password: Unsettable[str] = _UNSET,
-        ) -> APIResponse[SendSingleSMSResponseSchema]:
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+        ) -> APIResponse[SendSMSResponseSchema]:
             """Tək SMS göndərilməsi
 
             **Endpoint:** */api_json/v1/Sms/Send_1_N*
 
             Example:
                 ```python
-                from integrify.postaguvercini import PostaGuverciniRequest
+                from integrify.postaguvercini import PostaGuverciniClient
 
-                PostaGuverciniRequest.send_single_sms(
+                PostaGuverciniClient.send_single_sms(
                     message="Test SMS",
                     receivers=["905320000000"],
                 )
                 ```
 
-            **Cavab formatı**: [`SendSingleSMSResponseSchema`][integrify.postaguvercini.schemas.response.SendSingleSMSResponseSchema]
+            **Cavab formatı**: [`SendSMSResponseSchema`][integrify.postaguvercini.schemas.response.SendSMSResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq SMS göndərilməsi haqqında məlumat gəlir.
 
             Args:
                 message: SMS mətnini göstərir. Boş ola bilməz.
                 receivers: SMS qəbul edənləri göstərir. Boş ola bilməz.
-                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 send_date: SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
                 expire_date: Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
                 channel: SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
                 originator: Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istənildikdə istifadə ediləcək bir sahədir. Göndəriləcək məlumat müştəri xidmətləri nümayəndəsi tərəfindən veriləcək və 11 simvol dəyərindədir.
+                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
         def send_multiple_sms(
             self,
-            messages: list[dict],
+            messages: list[SMSMessage],
             send_date: Unsettable[str] = _UNSET,
             expire_date: Unsettable[str] = _UNSET,
-            channel: Unsettable[str] = _UNSET,
+            channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
-            username: Unsettable[str] = _UNSET,
-            password: Unsettable[str] = _UNSET,
-        ) -> APIResponse[SendMultipleSMSResponseSchema]:
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+        ) -> APIResponse[SendSMSResponseSchema]:
             """Çoxlu SMS göndərilməsi
 
             **Endpoint:** /api_json/v1/Sms/Send_N_N
 
             Example:
             ```python
-            from integrify.postaguvercini import PostaGuverciniRequest
+            from integrify.postaguvercini import PostaGuverciniClient
 
-            PostaGuverciniRequest.send_multiple_sms(
+            PostaGuverciniClient.send_multiple_sms(
                 messages=[
                     {"receiver": "905320000000", "message": "Test SMS 1"},
                     {"receiver": "905320000001", "message": "Test SMS 2"},
@@ -113,25 +112,25 @@ class PostaGuverciniClientClass(APIClient):
             )
             ```
 
-            **Cavab formatı**: [`SendMultipleSMSResponseSchema`][integrify.postaguvercini.schemas.response.SendMultipleSMSResponseSchema]
+            **Cavab formatı**: [`SendSMSResponseSchema`][integrify.postaguvercini.schemas.response.SendSMSResponseSchema]
 
             Bu sorğunu göndərdikdə, cavab olaraq SMS göndərilməsi haqqında məlumat gəlir.
 
             Args:
                 messages: SMS mətnini və qəbul edəni göstərir. Boş ola bilməz.
-                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 send_date: SMS göndərilmə vaxtını göstərir. Boş olduqda dərhal sms göndəriləcək. Format: `yyyyMMdd HH:mm`
                 expire_date: Sonuncu dəfə SMS göndərilməyə cəhd ediləcəyini göstərir. Boş olduqda, sistem tərəfindən müəyyən edilmiş vaxt etibarlı olacaq. Format: `yyyyMMdd HH:mm`
                 channel: SMS-in göndərən ilə hansı platformada (OTP və ya BULK) göndəriləcəyini göstərir. Misal: OTP.
                 originator: Bu, tək hesabla müxtəlif göndəricilər altında sms göndərmək istən
+                username: Posta Guvercini hesabı adı. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
+                password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
-        def status(
+        def get_status(
             self,
             message_ids: list[str],
-            username: Unsettable[str] = _UNSET,
-            password: Unsettable[str] = _UNSET,
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
         ) -> APIResponse[StatusResponseSchema]:
             """SMS status sorğusu
 
@@ -139,9 +138,9 @@ class PostaGuverciniClientClass(APIClient):
 
             Example:
             ```python
-            from integrify.postaguvercini import PostaGuverciniRequest
+            from integrify.postaguvercini import PostaGuverciniClient
 
-            PostaGuverciniRequest.status(message_ids=["123456"])
+            PostaGuverciniClient.get_status(message_ids=["123456"])
             ```
 
             **Cavab formatı**: [`StatusResponseSchema`][integrify.postaguvercini.schemas.response.StatusResponseSchema]
@@ -156,8 +155,8 @@ class PostaGuverciniClientClass(APIClient):
 
         def credit_balance(
             self,
-            username: Unsettable[str] = _UNSET,
-            password: Unsettable[str] = _UNSET,
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
         ) -> APIResponse[CreditBalanceResponseSchema]:
             """Kredit balans sorğusu
 
@@ -165,9 +164,9 @@ class PostaGuverciniClientClass(APIClient):
 
             Example:
             ```python
-            from integrify.postaguvercini import PostaGuverciniRequest
+            from integrify.postaguvercini import PostaGuverciniClient
 
-            PostaGuverciniRequest.credit_balance()
+            PostaGuverciniClient.credit_balance()
             ```
 
             **Cavab formatı**: [`CreditBalanceResponseSchema`][integrify.postaguvercini.schemas.response.CreditBalanceResponseSchema]

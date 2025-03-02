@@ -1,4 +1,4 @@
-# Posta Guvercini klientinin API Reference-i
+# LSIM Single SMS klientinin API Reference-i
 
 ???+ note
 
@@ -6,15 +6,15 @@
     bu importu edin və eyni-adlı funksiyaları `await` ilə çağırın:
 
     ```python
-    from integrify.postaguvercini import PostaGuverciniAsyncClient
+    from integrify.lsim import LSIMSingleSMSAsyncClient
     ```
 
-::: integrify.postaguvercini.client.PostaGuverciniClient
+::: integrify.lsim.single.client.LSIMSingleSMSClient
     handler: python
     options:
       separate_signature: true
 
-::: integrify.postaguvercini.client.PostaGuverciniAsyncClient
+::: integrify.lsim.single.client.LSIMSingleSMSAsyncClient
     handler: python
     options:
       separate_signature: true
@@ -22,14 +22,15 @@
 ???+ note
 
     Bunlar artıq hazır yaradılmış klass obyektləridir, birbaşa istifadə üçün nəzərdə tutulub. Əks halda
-    bütün sorğuları `PostaGuverciniClientClass().send_single_sms()` kimi istifadə etməlisiniz.
+    bütün sorğuları `LSIMSingleSMSClientClass().send_sms_post()` kimi istifadə etməlisiniz.
 
-::: integrify.postaguvercini.client.PostaGuverciniClientClass
+::: integrify.lsim.single.client.LSIMSingleSMSClientClass
     handler: python
     options:
       separate_signature: true
       members:
-        - send_single_sms
-        - send_multiple_sms
-        - get_status
-        - credit_balance
+        - send_sms_get
+        - send_sms_post
+        - check_balance
+        - get_report_get
+        - get_report_post

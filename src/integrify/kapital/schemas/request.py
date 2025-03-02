@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from pydantic import Field
 
@@ -15,7 +15,7 @@ class CreateOrderRequestSchema(PayloadBaseModel, BaseSchema):
     language: Optional[str] = env.KAPITAL_INTERFACE_LANG
     hpp_redirect_url: Optional[str] = Field(default=env.KAPITAL_REDIRECT_URL)
     type_rid: Optional[str] = Field(default='Order_SMS')
-    hpp_cof_capture_purposes: Optional[List[str]] = Field(default=['Cit'])
+    hpp_cof_capture_purposes: Optional[list[str]] = Field(default=['Cit'])
 
 
 class OrderInformationRequestSchema(PayloadBaseModel):
@@ -35,7 +35,7 @@ class RefundOrderRequestSchema(PayloadBaseModel):
 
 class SaveCardRequestSchema(CreateOrderRequestSchema):
     type_rid: Optional[str] = Field(default='Order_DMS')
-    hpp_cof_capture_purposes: Optional[List[str]] = Field(default=['Cit', 'Recurring'])
+    hpp_cof_capture_purposes: Optional[list[str]] = Field(default=['Cit', 'Recurring'])
     aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
 
 

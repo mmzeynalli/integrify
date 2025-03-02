@@ -1,44 +1,46 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field
+from typing_extensions import TypedDict
 
 from integrify.postaguvercini import env
+from integrify.postaguvercini.schemas.enums import ChannelType
 from integrify.postaguvercini.schemas.utils import BaseSchema
 from integrify.schemas import PayloadBaseModel
 
 
 class SendSingleSMSRequestSchema(PayloadBaseModel, BaseSchema):
     message: str
-    receivers: List[str]
+    receivers: list[str]
 
     # Not required
     send_date: Optional[str] = None
     expire_date: Optional[str] = None
-    channel: Optional[str] = None
+    channel: ChannelType = ChannelType.OTP
     originator: Optional[str] = None
     username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
     password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]
 
 
-class SMSMessage(PayloadBaseModel, BaseSchema):
+class SMSMessage(TypedDict):
     receiver: str
     message: str
 
 
 class SendMultipleSMSRequestSchema(PayloadBaseModel, BaseSchema):
-    messages: List[SMSMessage]
+    messages: list[SMSMessage]
 
     # Not required
     send_date: Optional[str] = None
     expire_date: Optional[str] = None
-    channel: Optional[str] = None
+    channel: ChannelType = ChannelType.OTP
     originator: Optional[str] = None
     username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
     password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]
 
 
 class StatusRequestSchema(PayloadBaseModel, BaseSchema):
-    message_ids: List[str]
+    message_ids: list[str]
     # Not required
     username: str = Field(env.POSTA_GUVERCINI_USERNAME, validate_default=True)  # type: ignore[assignment]
     password: str = Field(env.POSTA_GUVERCINI_PASSWORD, validate_default=True)  # type: ignore[assignment]
