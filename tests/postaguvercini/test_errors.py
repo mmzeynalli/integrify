@@ -70,7 +70,7 @@ def test_wrong_expiry_date_format(postaguvercini_client: PostaGuverciniClientCla
 
 @requires_env()
 def test_non_existent_transaction(postaguvercini_client: PostaGuverciniClientClass):
-    resp = postaguvercini_client.get_status(message_ids=['asdasfagfasds,ghs'])
+    resp = postaguvercini_client.get_status(message_ids=['randomid'])
 
     assert resp.status_code == 200
     assert resp.body.result[0].sms_status == ''
