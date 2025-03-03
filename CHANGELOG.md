@@ -1,4 +1,4 @@
-## v2.2.1 (2025-03-03)
+## v2.2.0 (2025-03-03)
 
 [GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.2.1)
 
