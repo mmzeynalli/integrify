@@ -18,7 +18,5 @@ def json_to_html_form(json_data: DryResponse, with_submit: bool = True) -> str:
         f'<input type="hidden" name="{key}" value="{value}">' for key, value in data.items()
     )
 
-    return (
-        f'<form action="{url}" method="{verb}">\n{form}\n'
-        f'{'<input type="submit" value="Submit">\n' if with_submit else ''}</form>'
-    )
+    submit = '<input type="submit" value="Submit">\n' if with_submit else ''
+    return f'<form action="{url}" method="{verb}">\n{form}\n{submit}</form>'
