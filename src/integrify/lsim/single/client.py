@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING, Union
 
 from integrify.api import APIClient
 from integrify.lsim import env as base_env
@@ -90,7 +91,7 @@ class LSIMSingleSMSClientClass(APIClient):
             password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
             sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
             unicode: bool = False,
-            scheduled: str = 'NOW',
+            scheduled: Union[str, datetime] = 'NOW',
         ) -> APIResponse[BasePostResponseSchema]:
             """SMS göndərən POST sorğusu
 

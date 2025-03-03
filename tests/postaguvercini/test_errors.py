@@ -45,30 +45,6 @@ def test_max_recipient(postaguvercini_client: PostaGuverciniClientClass):
 
 
 @requires_env()
-def test_wrong_send_date_format(postaguvercini_client: PostaGuverciniClientClass):
-    resp = postaguvercini_client.send_single_sms(message='test', receivers=['99450'], send_date='1')
-
-    assert resp.status_code == 500
-    assert resp.body.status_code == StatusCode.INVALID_SEND_DATE_FORMAT
-    assert (
-        resp.body.status_description == 'SendDate: Must be in the format yyyyMMdd HH:mm. (ERR1063)'
-    )
-
-
-@requires_env()
-def test_wrong_expiry_date_format(postaguvercini_client: PostaGuverciniClientClass):
-    resp = postaguvercini_client.send_single_sms(
-        message='test', receivers=['99450'], expire_date='1'
-    )
-
-    assert resp.status_code == 500
-    assert resp.body.status_code == StatusCode.INVALID_EXPIRE_DATE_FORMAT
-    assert (
-        resp.body.status_description == 'ExpireDate: Must be in the format yyyyMMdd HH:mm. (1064)'
-    )
-
-
-@requires_env()
 def test_non_existent_transaction(postaguvercini_client: PostaGuverciniClientClass):
     resp = postaguvercini_client.get_status(message_ids=['randomid'])
 

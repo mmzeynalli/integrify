@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify"
-version = "2.1.1"
+version = "2.2.1"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 authors = [
     { name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" },
@@ -123,7 +123,8 @@ disable = [
     'C0115',
     'C0301',
     'R0913',
-    'R0917'
+    'R0917',
+    'R0801',
 ]
 
 [tool.mypy]

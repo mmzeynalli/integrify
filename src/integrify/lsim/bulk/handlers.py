@@ -15,22 +15,46 @@ from integrify.lsim.bulk.schemas.response import (
 )
 
 
+class HeadOnlyPayloadHandler(APIPayloadHandler):
+    def post_handle_payload(self, data: dict):
+        return {'request': {'head': data}}
+
+
 class SendBulkSMSOneMessagePayloadHandler(APIPayloadHandler):
     def __init__(self):
         super().__init__(SendBulkSMSOneMessageRequestSchema, SendBulkSMSResponseSchema)
+
+    def post_handle_payload(self, data: dict):
+        msisdns = data.pop('msisdns')
+
+        return {'request': {'head': data, 'body': [{'msisdn': msisdn} for msisdn in msisdns]}}
 
 
 class SendBulkSMSDifferentMessagesPayloadHandler(APIPayloadHandler):
     def __init__(self):
         super().__init__(SendBulkSMSDifferentMessagesRequestSchema, SendBulkSMSResponseSchema)
 
+    def post_handle_payload(self, data: dict):
+        msisdns = data.pop('msisdns')
+        messages = data.pop('messages')
 
-class GetBulkSMSReportPayloadHandler(APIPayloadHandler):
+        return {
+            'request': {
+                'head': data,
+                'body': [
+                    {'msisdn': msisdn, 'message': message}
+                    for msisdn, message in zip(msisdns, messages)
+                ],
+            }
+        }
+
+
+class GetBulkSMSReportPayloadHandler(HeadOnlyPayloadHandler):
     def __init__(self):
         super().__init__(GetBulkSMSReportRequestSchema, GetBulkSMSReportResponseSchema)
 
 
-class GetBulkSMSDeatiledReportPayloadHandler(APIPayloadHandler):
+class GetBulkSMSDeatiledReportPayloadHandler(HeadOnlyPayloadHandler):
     def __init__(self):
         super().__init__(
             GetBulkSMSDeatiledReportRequestSchema,
@@ -38,7 +62,7 @@ class GetBulkSMSDeatiledReportPayloadHandler(APIPayloadHandler):
         )
 
 
-class GetBulkSMSDeatiledWithDateReportPayloadHandler(APIPayloadHandler):
+class GetBulkSMSDeatiledWithDateReportPayloadHandler(HeadOnlyPayloadHandler):
     def __init__(self):
         super().__init__(
             GetBulkSMSDeatiledWithDateReportRequestSchema,
@@ -46,6 +70,6 @@ class GetBulkSMSDeatiledWithDateReportPayloadHandler(APIPayloadHandler):
         )
 
 
-class GetBalancePayloadHandler(APIPayloadHandler):
+class GetBalancePayloadHandler(HeadOnlyPayloadHandler):
     def __init__(self):
         super().__init__(GetBalanceRequestSchema, GetBalanceResponseSchema)

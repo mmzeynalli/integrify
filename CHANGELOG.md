@@ -1,3 +1,27 @@
+## v2.2.1 (2025-03-03)
+
+[GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.2.1)
+
+### What's Changed
+
+#### New integrations
+
+* Added LSIM integration
+* Added PostaGuvercini integration ([kazimovzaman2](https://github.com/kazimovzaman2))
+
+#### Additions
+
+* Added _UNSET logic to distinguish between unset and `None` values
+* Migrated from poetry to uv
+* Switched Makefile to python duty library
+* Now dry-run response is `TypedDict` instead of `dict`
+
+#### Fixes
+
+* Fixed GET requests sending data in body instead of query params
+* Replaced all possible mock requests with live ones
+* Fixed outdated Kapital documentation for test cards ([AlifaghaSalmanov](https://github.com/AlifaghaSalmanov))
+
 ## v2.1.1 (2025-01-27)
 
 [GitHub release](https://github.com/mmzeynalli/integrify/releases/tag/v2.1.1)
@@ -20,7 +44,7 @@
 
 #### New integrations
 
-* Added KapitalBank integration
+* Added KapitalBank integration  ([kazimovzaman2](https://github.com/kazimovzaman2))
 
 #### Fixes
 
@@ -28,7 +52,7 @@
 
 #### Support
 
-* Dropped support for Python3.8
+* Dropped support for Python 3.8
 
 ## v2.0.1 (2024-10-28)
 

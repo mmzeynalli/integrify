@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING, Union
 
 from integrify.api import APIClient
 from integrify.postaguvercini import env
@@ -50,8 +51,8 @@ class PostaGuverciniClientClass(APIClient):
             self,
             message: str,
             receivers: list[str],
-            send_date: Unsettable[str] = _UNSET,
-            expire_date: Unsettable[str] = _UNSET,
+            send_date: Unsettable[Union[str, datetime]] = _UNSET,
+            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
             channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
             username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
@@ -89,8 +90,8 @@ class PostaGuverciniClientClass(APIClient):
         def send_multiple_sms(
             self,
             messages: list[SMSMessage],
-            send_date: Unsettable[str] = _UNSET,
-            expire_date: Unsettable[str] = _UNSET,
+            send_date: Unsettable[Union[str, datetime]] = _UNSET,
+            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
             channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
             username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
