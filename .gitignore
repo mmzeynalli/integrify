@@ -166,7 +166,7 @@ cython_debug/
 #.idea/
 
 # User Defined
-test.py
+/test.py
 *.lcov
 site
 .aider*
