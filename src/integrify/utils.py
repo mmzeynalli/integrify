@@ -3,8 +3,11 @@ from typing import Literal, TypeVar, Union
 
 from pydantic import BaseModel
 
+_ResponsePayloadType = TypeVar('ResponsePayloadType', bound=Union[BaseModel, dict])
+"""Dinamik payload cavab tipi."""
+
 _ResponseT = TypeVar('_ResponseT', bound=Union[BaseModel, dict])
-"""Dynamic response type."""
+"""Dinamik cavab tipi."""
 
 T = TypeVar('T')
 

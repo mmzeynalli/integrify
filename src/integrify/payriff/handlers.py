@@ -3,8 +3,12 @@ from typing import Optional, Type
 
 from integrify.api import APIPayloadHandler, _ResponseT
 from integrify.payriff import env
-from integrify.payriff.schemas.request import CreateOrderRequestSchema
-from integrify.payriff.schemas.response import CreateOrderResponseSchema
+from integrify.payriff.schemas.request import CreateOrderRequestSchema, GetOrderInfoRequestSchema
+from integrify.payriff.schemas.response import (
+    BaseResponseSchema,
+    CreateOrderResponseSchema,
+    GetOrderInfoResponseSchema,
+)
 from integrify.schemas import PayloadBaseModel
 
 
@@ -33,4 +37,9 @@ class BasePayloadHandler(APIPayloadHandler):
 
 class CreateOrderPayloadHandler(BasePayloadHandler):
     def __init__(self):
-        super().__init__(CreateOrderRequestSchema, CreateOrderResponseSchema)
+        super().__init__(CreateOrderRequestSchema, BaseResponseSchema[CreateOrderResponseSchema])
+
+
+class GetOrderInfoPayloadHandler(BasePayloadHandler):
+    def __init__(self):
+        super().__init__(GetOrderInfoRequestSchema, BaseResponseSchema[GetOrderInfoResponseSchema])
