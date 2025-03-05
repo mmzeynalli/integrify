@@ -3,6 +3,7 @@ from hashlib import md5
 from pydantic import Field, computed_field
 
 from integrify.lsim import env
+from integrify.lsim.types import DateTime
 from integrify.schemas import PayloadBaseModel
 
 
@@ -38,7 +39,7 @@ class SendSMSGetRequestSchema(PayloadBaseModel):
 
 
 class SendSMSPostRequestSchema(SendSMSGetRequestSchema):
-    scheduled: str = 'NOW'
+    scheduled: DateTime
 
 
 class CheckBalanceRequestSchema(PayloadBaseModel):

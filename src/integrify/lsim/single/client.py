@@ -1,23 +1,26 @@
-from typing import TYPE_CHECKING, Optional
+from datetime import datetime
+from typing import TYPE_CHECKING, Union
 
 from integrify.api import APIClient
-from integrify.lsim import env
-from integrify.lsim.handlers import (
+from integrify.lsim import env as base_env
+from integrify.lsim.single import env
+from integrify.lsim.single.handlers import (
     CheckBalancePayloadHandler,
     GetReportGetPayloadHandler,
     GetReportPostPayloadHandler,
     SendSMSGetPayloadHandler,
     SendSMSPostPayloadHandler,
 )
-from integrify.lsim.schemas.response import (
-    BaseResponseSchema,
+from integrify.lsim.single.schemas.response import (
+    BaseGetResponseSchema,
+    BasePostResponseSchema,
     ReportGetResponseSchema,
     ReportPostResponseSchema,
 )
 from integrify.schemas import APIResponse
 
 
-class LSIMClientClass(APIClient):
+class LSIMSingleSMSClientClass(APIClient):
     def __init__(
         self,
         name='LSIM',
@@ -49,25 +52,25 @@ class LSIMClientClass(APIClient):
             self,
             msisdn: str,
             text: str,
-            login: Optional[str] = None,
-            password: Optional[str] = None,
-            sender: Optional[str] = None,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
             unicode: bool = False,
-        ) -> APIResponse[BaseResponseSchema]:
+        ) -> APIResponse[BaseGetResponseSchema]:
             """SMS göndərən GET sorğusu
 
             **Endpoint:** */quicksms/v1/send*
 
             Example:
                 ```python
-                from integrify.lsim import LSIMClient
+                from integrify.lsim import LSIMSingleSMSClient
 
-                LSIMClient.send_sms_get(msidn='99450123456', text='test')
+                LSIMSingleSMSClient.send_sms_get(msidn='99450XXXXXXX', text='test')
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.lsim.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`BaseGetResponseSchema`][integrify.lsim.single.schemas.response.BaseGetResponseSchema]
 
-            Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
+            Bu sorğunu göndərdikdə, cavab olaraq `BaseGetResponseSchema` formatında
             cavab gəlir, və uğurlu olduqda, `obj` field-ində transaction_id dəyəri gəlir.
 
             Args:
@@ -84,26 +87,26 @@ class LSIMClientClass(APIClient):
             self,
             msisdn: str,
             text: str,
-            login: Optional[str] = None,
-            password: Optional[str] = None,
-            sender: Optional[str] = None,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
             unicode: bool = False,
-            scheduled: str = 'NOW',
-        ) -> APIResponse[BaseResponseSchema]:
+            scheduled: Union[str, datetime] = 'NOW',
+        ) -> APIResponse[BasePostResponseSchema]:
             """SMS göndərən POST sorğusu
 
             **Endpoint:** */quicksms/v1/smssender*
 
             Example:
                 ```python
-                from integrify.lsim import LSIMClient
+                from integrify.lsim import LSIMSingleSMSClient
 
-                LSIMClient.send_sms_post(msidn='99450123456', text='test')
+                LSIMSingleSMSClient.send_sms_post(msidn='99450XXXXXXX', text='test')
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.lsim.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`BasePostResponseSchema`][integrify.lsim.single.schemas.response.BasePostResponseSchema]
 
-            Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
+            Bu sorğunu göndərdikdə, cavab olaraq `BasePostResponseSchema` formatında
             cavab gəlir, və uğurlu olduqda, `obj` field-ində transaction_id dəyəri gəlir.
 
             Args:
@@ -120,23 +123,23 @@ class LSIMClientClass(APIClient):
 
         def check_balance(
             self,
-            login: Optional[str] = None,
-            password: Optional[str] = None,
-        ) -> APIResponse[BaseResponseSchema]:
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+        ) -> APIResponse[BaseGetResponseSchema]:
             """LSIM balans sorğusu
 
             **Endpoint:** */quicksms/v1/balance*
 
             Example:
                 ```python
-                from integrify.lsim import LSIMClient
+                from integrify.lsim import LSIMSingleSMSClient
 
-                LSIMClient.check_balance()
+                LSIMSingleSMSClient.check_balance()
                 ```
 
-            Cavab formatı: [`BaseResponseSchema`][integrify.lsim.schemas.response.BaseResponseSchema]
+            Cavab formatı: [`BaseGetResponseSchema`][integrify.lsim.single.schemas.response.BaseGetResponseSchema]
 
-            Bu sorğunu göndərdikdə, cavab olaraq `BaseResponseSchema` formatında
+            Bu sorğunu göndərdikdə, cavab olaraq `BaseGetResponseSchema` formatında
             cavab gəlir, `obj` field-ində balans dəyəri gəlir.
 
             Args:
@@ -147,7 +150,7 @@ class LSIMClientClass(APIClient):
         def get_report_get(
             self,
             trans_id: int,
-            login: Optional[str] = None,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
         ) -> APIResponse[ReportGetResponseSchema]:
             """Göndərilmiş SMS-in reportunu alan GET sorğusu
 
@@ -155,12 +158,12 @@ class LSIMClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.lsim import LSIMClient
+                from integrify.lsim import LSIMSingleSMSClient
 
-                LSIMClient.get_report_get(trans_id=1)
+                LSIMSingleSMSClient.get_report_get(trans_id=1)
                 ```
 
-            Cavab formatı: [`ReportGetResponseSchema`][integrify.lsim.schemas.response.ReportGetResponseSchema]
+            Cavab formatı: [`ReportGetResponseSchema`][integrify.lsim.single.schemas.response.ReportGetResponseSchema]
 
             Args:
                 trans_id: Uğurlu SMS göndərildikdə alınan transaction id
@@ -170,7 +173,7 @@ class LSIMClientClass(APIClient):
         def get_report_post(
             self,
             trans_id: int,
-            login: Optional[str] = None,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
         ) -> APIResponse[ReportPostResponseSchema]:
             """Göndərilmiş SMS-in reportunu alan POST sorğusu
 
@@ -178,12 +181,12 @@ class LSIMClientClass(APIClient):
 
             Example:
                 ```python
-                from integrify.lsim import LSIMClient
+                from integrify.lsim import LSIMSingleSMSClient
 
-                LSIMClient.get_report_post(trans_id=1)
+                LSIMSingleSMSClient.get_report_post(trans_id=1)
                 ```
 
-            Cavab formatı: [`ReportPostResponseSchema`][integrify.lsim.schemas.response.ReportPostResponseSchema]
+            Cavab formatı: [`ReportPostResponseSchema`][integrify.lsim.single.schemas.response.ReportPostResponseSchema]
 
             Args:
                 trans_id: Uğurlu SMS göndərildikdə alınan transaction id
@@ -191,5 +194,5 @@ class LSIMClientClass(APIClient):
             """  # noqa: E501
 
 
-LSIMClient = LSIMClientClass()
-LSIMAsyncClient = LSIMClientClass(sync=False)
+LSIMSingleSMSClient = LSIMSingleSMSClientClass()
+LSIMSingleSMSAsyncClient = LSIMSingleSMSClientClass(sync=False)
