@@ -9,9 +9,9 @@ class ResultCodes(str, Enum):
     WARNING = '01000'
     ERROR = '15000'
     INVALID_PARAMETERS = '15400'
-    UNAUTHORIZED = '14010'
-    TOKEN_NOT_PRESENT = '14013'
-    INVALID_TOKEN = '14014'
+    UNAUTHORIZED = '14010'  # nosec: B105
+    TOKEN_NOT_PRESENT = '14013'  # nosec: B105
+    INVALID_TOKEN = '14014'  # nosec: B105
 
 
 class ResultMessages(str, Enum):
@@ -21,11 +21,11 @@ class ResultMessages(str, Enum):
     UNAUTHORIZED = 'Unauthorized'
     NOT_FOUND = 'Not found'
 
-    TOKEN_NOT_PRESENT = 'Token not present'
-    INVALID_TOKEN = 'Invalid Token'
-    TOKEN_EXPIRED = 'Token expired'
-    DEACTIVE_TOKEN = 'Token is not active'
-    LINK_EXPIRED = 'Link is expired!'
+    TOKEN_NOT_PRESENT = 'Token not present'  # nosec: B105
+    INVALID_TOKEN = 'Invalid Token'  # nosec: B105
+    TOKEN_EXPIRED = 'Token expired'  # nosec: B105
+    DEACTIVE_TOKEN = 'Token is not active'  # nosec: B105
+    LINK_EXPIRED = 'Link is expired!'  # nosec: B105
 
     NO_RECORD_FOUND = 'No record found!'
     NO_INVOICE_FOUND = 'No invoice found!'

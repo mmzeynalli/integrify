@@ -8,9 +8,6 @@ VERSION = '3'
 PAYRIFF_AUTHORIZATION_KEY: str = os.getenv('PAYRIFF_AUTHORIZATION_KEY', '')
 PAYRIFF_MERCHANT_ID: str = os.getenv('PAYRIFF_MERCHANT_ID', '')
 
-PAYRIFF_SUCCESS_REDIRECT_URL: Optional[str] = os.getenv('PAYRIFF_SUCCESS_REDIRECT_URL', '')
-PAYRIFF_FAILED_REDIRECT_URL: Optional[str] = os.getenv('PAYRIFF_FAILED_REDIRECT_URL', '')
-PAYRIFF_CANCELED_REDIRECT_URL: Optional[str] = os.getenv('PAYRIFF_CANCELED_REDIRECT_URL', '')
 
 PAYRIFF_CALLBACK_URL: Optional[str] = os.getenv('PAYRIFF_CALLBACK_URL', '')
 PAYRIFF_LOGGER_NAME: str = os.getenv('PAYRIFF_LOGGER_NAME', 'payriff')
@@ -26,9 +23,9 @@ if not PAYRIFF_AUTHORIZATION_KEY or not PAYRIFF_MERCHANT_ID:
 class API(str, Enum):
     """Payriff API constant-ları"""
 
-    BASE_URL: str = 'https://api.payriff.com'
-    CREATE_ORDER: str = '/api/v3/orders'
-    GET_ORDER: str = '/api/v3/orders/{order_id}'
+    BASE_URL = 'https://api.payriff.com'
+    CREATE_ORDER = '/api/v3/orders'
+    GET_ORDER = '/api/v3/orders/{order_id}'
 
 
 __all__ = [
@@ -36,7 +33,4 @@ __all__ = [
     'API',
     'PAYRIFF_AUTHORIZATION_KEY',
     'PAYRIFF_MERCHANT_ID',
-    'PAYRIFF_SUCCESS_REDIRECT_URL',
-    'PAYRIFF_FAILED_REDIRECT_URL',
-    'PAYRIFF_CANCELED_REDIRECT_URL',
 ]
