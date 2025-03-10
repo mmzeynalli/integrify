@@ -40,7 +40,7 @@ class GetOrderTransactionResponseSchema(BaseSchema):
     """Tranzaksiya statusu"""
     channel: str
     """Tranzaksiya kanalı(bank)"""
-    channel_type: str
+    channel_type: Optional[str] = None
     """Kanal tipi"""
     request_rrn: str
     response_rrn: str
@@ -50,7 +50,7 @@ class GetOrderTransactionResponseSchema(BaseSchema):
     """Ödəniş səhifəsi"""
     card_details: 'CardDetails'
     """Kart məlumatları"""
-    merchant_category: str
+    merchant_category: Optional[str] = None
     """Sifarişçi kateqoriyası"""
     installment: Optional['Installment'] = None
     """Taksit məlumatları"""
@@ -66,5 +66,5 @@ class CardDetails(BaseSchema):
 
 
 class Installment(BaseSchema):
-    type: str
-    period: str
+    type: Optional[str] = None
+    period: Optional[str] = None

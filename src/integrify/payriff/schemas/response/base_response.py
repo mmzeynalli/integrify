@@ -21,5 +21,5 @@ class BaseResponseSchema(PayloadBaseModel, BaseSchema, Generic[_ResponsePayloadT
     """Cavab ID"""
     internal_message: Optional[str] = None
     """Daxili mesaj"""
-    payload: _ResponsePayloadT
+    payload: Optional[_ResponsePayloadT] = None
     """Payload"""

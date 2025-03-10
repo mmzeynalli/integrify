@@ -4,12 +4,18 @@ from uuid import UUID
 
 from integrify.api import APIClient
 from integrify.payriff import env
-from integrify.payriff.handlers import CreateOrderPayloadHandler, GetOrderInfoPayloadHandler
+from integrify.payriff.handlers import (
+    CompletePayloadHandler,
+    CreateOrderPayloadHandler,
+    GetOrderInfoPayloadHandler,
+    RefundPayloadHandler,
+)
 from integrify.payriff.schemas.enums import Currency, Language, Operation
 from integrify.payriff.schemas.response import (
     BaseResponseSchema,
     CreateOrderResponseSchema,
     GetOrderInfoResponseSchema,
+    RefundResponseSchema,
 )
 from integrify.schemas import APIResponse
 
@@ -31,6 +37,12 @@ class PayriffClientClass(APIClient):
         self.add_url('get_order_info', env.API.GET_ORDER, verb='GET')
         self.add_handler('get_order_info', GetOrderInfoPayloadHandler)
 
+        self.add_url('refund', env.API.REFUND, verb='POST')
+        self.add_handler('refund', RefundPayloadHandler)
+
+        self.add_url('complete', env.API.COMPLETE, verb='POST')
+        self.add_handler('complete', CompletePayloadHandler)
+
     if TYPE_CHECKING:
 
         def create_order(
@@ -49,9 +61,9 @@ class PayriffClientClass(APIClient):
 
             Example:
             ```python
-            from integrify.payriff import PayriffRequest
+            from integrify.payriff import PayriffClient
 
-            PayriffRequest.create_order(
+            PayriffClient.create_order(
                 amount=10.0,
                 description="Test payment",
             )
@@ -85,9 +97,9 @@ class PayriffClientClass(APIClient):
 
             Example:
             ```python
-            from integrify.payriff import PayriffRequest
+            from integrify.payriff import PayriffClient
 
-            PayriffRequest.get_order_info(order_id=123456)
+            PayriffClient.get_order_info(order_id='123456')
             ```
 
             **Cavab formatı: [`BaseResponseSchema[GetOrderInfoResponseSchema]`][integrify.payriff.schemas.response.BaseResponseSchema]**
@@ -96,6 +108,59 @@ class PayriffClientClass(APIClient):
 
             Args:
                 order_id: Ödənişin ID-si.
+            """  # noqa: E501
+
+        def refund(
+            self,
+            order_id: UUID,
+            amount: Decimal,
+        ) -> APIResponse[RefundResponseSchema]:
+            """Geri ödəniş sorğusu
+
+            **Endpoint** /api/v3/refund
+
+            Example:
+            ```python
+            from integrify.payriff import PayriffClient
+
+            PayriffClient.refund(
+                order_id='123456',
+                amount=10.0,
+            )
+            ```
+
+            **Cavab formatı: [`RefundResponseSchema]`][integrify.payriff.schemas.response.RefundResponseSchema]**
+
+            Bu sorğu ilə əvvəlki ödənişi geri ödəmək üçün istifadə edə bilərsiniz.
+            Cavab olaraq geri ödənişin detallarını əldə edə bilərsiniz.
+
+            Args:
+                order_id: Ödənişin ID-si.
+                amount: Geri ödəniş miqdarı. Numerik dəyər.
+            """  # noqa: E501
+
+        def complete(
+            self,
+            order_id: UUID,
+            amount: Decimal,
+        ) -> APIResponse[BaseResponseSchema]:
+            """Ödənişin tamamlanması sorğusu
+
+            **Endpoint** /api/v3/complete
+
+            Example:
+            ```python
+            from integrify.payriff import PayriffClient
+
+            PayriffClient.complete(order_id='123456')
+            ```
+
+
+            Bu sorğunu göndərdikdə, daxil edilən `order_id` və `amount` ilə qeyd edilən ödəniş tamamlanacaq.
+
+            Args:
+                order_id: Ödənişin ID-si.
+                amount: Ödəniş miqdarı.
             """  # noqa: E501
 
 

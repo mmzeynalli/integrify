@@ -2,6 +2,8 @@ from decimal import Decimal
 from typing import Optional
 from uuid import UUID
 
+from pydantic import Field
+
 from integrify.payriff import env
 from integrify.payriff.schemas.enums import Currency, Language, Operation
 from integrify.payriff.schemas.utils import BaseSchema
@@ -30,4 +32,16 @@ class CreateOrderRequestSchema(BaseRequestSchema): ...
 
 class GetOrderInfoRequestSchema(PayloadBaseModel):
     URL_PARAM_FIELDS = {'order_id'}
+    """URL parametrləri"""
     order_id: UUID
+    """Ödənişin ID-si."""
+
+
+class RefundRequestSchema(PayloadBaseModel):
+    amount: Decimal
+    """Geri ödəniş miqdarı. Numerik dəyər."""
+    order_id: UUID = Field(serialization_alias='orderId')
+    """Ödənişin ID-si."""
+
+
+class CompleteRequestSchema(RefundRequestSchema): ...

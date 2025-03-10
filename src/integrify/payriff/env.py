@@ -26,6 +26,8 @@ class API(str, Enum):
     BASE_URL = 'https://api.payriff.com'
     CREATE_ORDER = '/api/v3/orders'
     GET_ORDER = '/api/v3/orders/{order_id}'
+    REFUND = '/api/v3/refund'
+    COMPLETE = '/api/v3/complete'
 
 
 __all__ = [
