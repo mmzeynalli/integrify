@@ -108,11 +108,11 @@ nav:
                 - Response: "integrations/lsim/api-reference/bulk/response.md"
                 - Enums: "integrations/lsim/api-reference/bulk/enums.md"
       - Posta Guvercini:
-          - Ümumi məlumat: "integrations/postaguvercini/about.md"
+          - Ümumi məlumat: "integrations/posta-guvercini/about.md"
           - API Referansı:
-            - API Klient: "integrations/postaguvercini/api-reference/client.md"
+            - API Klient: "integrations/posta-guvercini/api-reference/client.md"
             - Schemas:
-              - Response: "integrations/postaguvercini/api-reference/response.md"
+              - Response: "integrations/posta-guvercini/api-reference/response.md"
   - Resurslar:
     - Contibuting: "resources/contributing.md"
     - Kod Arxitekturası: "resources/code-architecture.md"
