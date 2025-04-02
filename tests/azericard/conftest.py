@@ -20,11 +20,25 @@ def azericard_set_env():
 
 
 @pytest.fixture(scope='function', autouse=True)
-def mock_private_key_file_reading(mocker: MockerFixture):
-    with mocker.patch(
-        'builtins.open',
-        return_value=io.StringIO('test_private_key'),
-    ):
+def mock_private_key_file_reading(request: pytest.FixtureRequest, mocker: MockerFixture):
+    # Random Private Key, generated from
+    key = """-----BEGIN RSA PRIVATE KEY-----
+            MIIBOQIBAAJAc/aeBVL37Jvd5fZBjM/ENRsVa0TnqcGbmx0K1RCzoOg4g2wIK/Fy
+            PV7Dm+vLuunrueh7vXzTlxZdAteUN8+rrwIDAQABAkBC8dpj5HPwCkNd4H4TFlaE
+            +e+xj4PVwklckLWSLyQj/V9yOzebCHwIoRMF08yTOxvzJoS4RjMHbom2IGZZEPGB
+            AiEA2P/0U9DOpnoC7OjpJIJBSfgJ04M8H4BzeNC3Uw/nGCECIQCIzgdiJH1nhKPn
+            N3o2ePt1SWk/V81axkEfaS06sNoJzwIhAIrEs8RdxakkYXaLQ3y7Z3EcE3yVcf9b
+            L3zVTEbr5obBAiAkI9FdguhCDY9DCKvXchRzwoX0Pty4C0Gu65kQNSIUjwIgLc5j
+            gdx2NeK8j3Dye22xqPT5lvPOC+O/LNZ7lmrAybw=
+            -----END RSA PRIVATE KEY-----"""
+
+    if 'key_as_string' in request.keywords:
+        klass = io.StringIO
+    else:
+        klass = io.BytesIO
+        key = key.encode()
+
+    with mocker.patch('builtins.open', return_value=klass(key)):
         yield
 
 

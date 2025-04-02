@@ -1,9 +1,8 @@
 import base64
-import hashlib
-import hmac
 import json
 from typing import ClassVar, Literal, Optional
 
+import rsa
 from pydantic import (
     AliasGenerator,
     ConfigDict,
@@ -34,11 +33,11 @@ class BaseRequestSchema(PayloadBaseModel):
         if not self.SIGNATURE_FIELDS:
             return None  # pragma: no cover
 
-        with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
-            key = key_file.read()
+        with open(env.AZERICARD_KEY_FILE_PATH, 'rb') as key_file:
+            private_key = rsa.PrivateKey.load_pkcs1(key_file.read())
 
-        mac_source = self.generate_mac_source()
-        return hmac.new(key.encode('utf-8'), mac_source.encode('utf-8'), hashlib.sha256).hexdigest()
+        mac_source = self.generate_mac_source().encode('utf-8')
+        return rsa.sign(mac_source, private_key, 'SHA-256').hex()
 
     def generate_mac_source(self):
         """P_SIGN üçün MAC source-un yaradılması"""

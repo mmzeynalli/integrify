@@ -29,7 +29,7 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
 
         assert (
             req['data']['P_SIGN']
-            == 'a6870b8b80540304b3100997db51ec8add1727ed9feff9ea79f06d99399dedb4'
+            == '3ab4d6bfc48f888c6f0644f184210c0ae7439ba7cf2fb622a1a09f6003c2713202eefc5ce7101557395d91c3519fa7d90d38c70347311477c033c2af61f60c3f'  # noqa: E501
         )
 
 
@@ -46,13 +46,16 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
 
     form = json_to_html_form(req)
 
-    assert form.startswith('<form action="https://mpi.3dsecure.az/cgi-bin/cgi_link" method="POST">')
+    assert form.startswith(
+        '<form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">'
+    )
 
 
 @pytest.mark.parametrize(
     'amount,exception',
     [(1, does_not_raise()), (2, pytest.raises(ValidationError))],
 )
+@pytest.mark.key_as_string
 def test_signature_verification(amount, exception):
     from integrify.azericard.schemas.callback import TransferCallbackSchema
     from integrify.azericard.schemas.enums import CardStatus
@@ -70,6 +73,6 @@ def test_signature_verification(amount, exception):
                 'Timestamp': '20250403020100',
                 'Response Code': '0000',
                 'Message': 'Success',
-                'Signature': '4b6aecd7afddbe4197d461cb126541fd',
+                'Signature': 'c61d54afde515aeba6ae12ab80182324',
             }
         ).model_dump()

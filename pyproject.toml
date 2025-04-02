@@ -41,6 +41,7 @@ classifiers = [
 dependencies = [
     "pydantic>=2.8.2,<3",
     "httpx>=0.27.2,<0.28",
+    "rsa>=4.9",
 ]
 
 [project.urls]

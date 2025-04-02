@@ -112,6 +112,6 @@ class TransferCallbackSchema(BaseModel):
             usedforsecurity=False,
         ).hexdigest()
 
-        assert calc_signature == self.signature, 'Signature does not match!'
+        assert calc_signature == self.signature, ' Signature does not match!'
 
         return self
