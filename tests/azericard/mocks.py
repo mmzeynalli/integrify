@@ -15,7 +15,7 @@ def azericard_transaction_status_response():
             'TERMINAL': '',
             'Card number': '',
             'Transaction amount': 1,
-            'Transaction currency': '944',
+            'Transaction currency': 'AZN',
             'Transaction date': '20250403020100',
             'Transaction state': '',
             'Merchant order id': '',

@@ -118,14 +118,14 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.pay(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.pay(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             desc: Ödənişin təsviri/açıqlaması
             merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -170,7 +170,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.pay_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -179,7 +179,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             desc: Ödənişin təsviri/açıqlaması
             merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -226,14 +226,14 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.pay_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+            AzeriCardClient.pay_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             desc: Ödənişin təsviri/açıqlaması
             token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
@@ -280,7 +280,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.block(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.block(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -293,7 +293,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             desc: Ödənişin təsviri/açıqlaması
             merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -339,7 +339,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.block_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', name='Filankes')
+            AzeriCardClient.block_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
             ```
 
         **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -352,7 +352,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             desc: Ödənişin təsviri/açıqlaması
             merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
@@ -399,7 +399,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.block_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+            AzeriCardClient.block_with_saved_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -412,7 +412,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             desc: Ödənişin təsviri/açıqlaması
             token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
@@ -451,7 +451,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.accept_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            AzeriCardClient.accept_blocked_payment(amount=100, currency='AZN', order='12345678', rrn='RRN', int_ref='INT_REF')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -461,7 +461,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
             int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
@@ -490,7 +490,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.reverse_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            AzeriCardClient.reverse_blocked_payment(amount=100, currency='AZN', order='12345678', rrn='RRN', int_ref='INT_REF')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -500,7 +500,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
             int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
@@ -529,7 +529,7 @@ class AzeriCardClientClass(APIClient):
             ```python
             from integrify.azericard import AzeriCardClient
 
-            AzeriCardClient.cancel_blocked_payment(amount=100, currency='944', order='12345678', rrn='RRN', int_ref='INT_REF')
+            AzeriCardClient.cancel_blocked_payment(amount=100, currency='AZN', order='12345678', rrn='RRN', int_ref='INT_REF')
             ```
 
         **Cavab formatı**: Callback sorğu baş verir
@@ -539,7 +539,7 @@ class AzeriCardClientClass(APIClient):
 
         Args:
             amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
             order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
             rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
             int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
@@ -579,14 +579,14 @@ class AzeriCardClientClass(APIClient):
                 ```python
                 from integrify.azericard import AzeriCardClient
 
-                AzeriCardClient.auth(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+                AzeriCardClient.auth(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
                 ```
 
             **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+                currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
@@ -622,14 +622,14 @@ class AzeriCardClientClass(APIClient):
                 ```python
                 from integrify.azericard import AzeriCardClient
 
-                AzeriCardClient.auth_response(amount=100, currency='944', order='12345678', rrn='payment_rrn', int_ref='int_ref', trtype='21')
+                AzeriCardClient.auth_response(amount=100, currency='AZN', order='12345678', rrn='payment_rrn', int_ref='int_ref', trtype='21')
                 ```
 
             **Cavab formatı**:
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+                currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 rrn: Ödənişin RRN-i, Authorization sorğusuna response-da gəlir
                 int_ref: Ödənişin referansı, Authorization sorğusuna response-da gəlir
@@ -664,14 +664,14 @@ class AzeriCardClientClass(APIClient):
                 ```python
                 from integrify.azericard import AzeriCardClient
 
-                AzeriCardClient.auth_and_save_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+                AzeriCardClient.auth_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+                currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
@@ -715,14 +715,14 @@ class AzeriCardClientClass(APIClient):
                 ```python
                 from integrify.azericard import AzeriCardClient
 
-                AzeriCardClient.auth_with_saved_card(amount=100, currency='944', order='12345678', desc='Ödəniş', trype='1', name='Filankes', token='card-token')
+                AzeriCardClient.auth_with_saved_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes', token='card-token')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
 
             Args:
                 amount: Ödəniş miqdarı. Numerik dəyər.
-                currency: Sifariş valyutası: 3 rəqəmli valyuta kodu (AZN - 944)
+                currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 desc: Ödənişin təsviri/açıqlaması
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
@@ -792,7 +792,7 @@ class AzeriCardClientClass(APIClient):
                 merchant: Şirkət adı
                 srn: Unikal əməliyyat nömrəsi
                 amount: Ödəniş məbləği
-                cur: Ödəniş valyutası
+                cur: Ödəniş valyutasının 3 rəqəmli kodu (944 - AZN)
                 receiver_credentials: İstifadəçinin tam adı
                 redirect_link: Əməliyyatın sonunda müştərini yönləndirmək istədiyiniz keçid linki
             """  # noqa: E501
@@ -822,7 +822,7 @@ class AzeriCardClientClass(APIClient):
                 merchant: Şirkət adı
                 srn: Unikal əməliyyat nömrəsi
                 amount: Ödəniş məbləği
-                cur: Ödəniş valyutası
+                cur: Ödəniş valyutasının 3 rəqəmli kodu (944 - AZN)
                 timestamp: Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
@@ -851,7 +851,7 @@ class AzeriCardClientClass(APIClient):
                 merchant: Şirkət adı
                 srn: Unikal əməliyyat nömrəsi
                 amount: Ödəniş məbləği
-                cur: Ödəniş valyutası
+                cur: Ödəniş valyutasının 3 rəqəmli kodu (944 - AZN)
                 timestamp: Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 

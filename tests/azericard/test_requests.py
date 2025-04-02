@@ -8,13 +8,13 @@ if TYPE_CHECKING:
 
 
 def test_pay_and_save_card(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.pay_and_save_card(amount=1, currency='944', order='12345678', desc='desc')
+    azericard_client.pay_and_save_card(amount=1, currency='AZN', order='12345678', desc='desc')
 
 
 def test_pay_with_saved_card(azericard_client: 'AzeriCardClientClass'):
     azericard_client.pay_with_saved_card(
         amount=1,
-        currency='944',
+        currency='AZN',
         order='12345678',
         desc='desc',
         token='*' * 28,
@@ -22,17 +22,17 @@ def test_pay_with_saved_card(azericard_client: 'AzeriCardClientClass'):
 
 
 def test_block(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.block(amount=1, currency='944', order='12345678', desc='desc')
+    azericard_client.block(amount=1, currency='AZN', order='12345678', desc='desc')
 
 
 def test_block_and_save_card(azericard_client: 'AzeriCardClientClass'):
-    azericard_client.block_and_save_card(amount=1, currency='944', order='12345678', desc='desc')
+    azericard_client.block_and_save_card(amount=1, currency='AZN', order='12345678', desc='desc')
 
 
 def test_block_with_saved_card(azericard_client: 'AzeriCardClientClass'):
     azericard_client.block_with_saved_card(
         amount=1,
-        currency='944',
+        currency='AZN',
         order='12345678',
         desc='desc',
         token='*' * 28,
@@ -42,7 +42,7 @@ def test_block_with_saved_card(azericard_client: 'AzeriCardClientClass'):
 def test_accept_blocked_payment(azericard_client: 'AzeriCardClientClass'):
     azericard_client.accept_blocked_payment(
         amount=1,
-        currency='944',
+        currency='AZN',
         order='12345678',
         rrn='rrnrrnrrnrrn',
         int_ref='int_ref',
@@ -52,7 +52,7 @@ def test_accept_blocked_payment(azericard_client: 'AzeriCardClientClass'):
 def test_reverse_blocked_payment(azericard_client: 'AzeriCardClientClass'):
     azericard_client.reverse_blocked_payment(
         amount=1,
-        currency='944',
+        currency='AZN',
         order='12345678',
         rrn='rrnrrnrrnrrn',
         int_ref='int_ref',
@@ -62,7 +62,7 @@ def test_reverse_blocked_payment(azericard_client: 'AzeriCardClientClass'):
 def test_cancel_blocked_payment(azericard_client: 'AzeriCardClientClass'):
     azericard_client.cancel_blocked_payment(
         amount=1,
-        currency='944',
+        currency='AZN',
         order='12345678',
         rrn='rrnrrnrrnrrn',
         int_ref='int_ref',
@@ -87,7 +87,7 @@ def test_start_transfer(azericard_client: 'AzeriCardClientClass'):
         merchant='merchant',
         srn='srn',
         amount=1,
-        cur='944',
+        cur='AZN',
         receiver_credentials='creds',
         redirect_link='link',
     )
@@ -98,7 +98,7 @@ def test_start_transfer(azericard_client: 'AzeriCardClientClass'):
 #         merchant='merchant',
 #         srn='srn',
 #         amount=1,
-#         cur='944',
+#         cur='AZN',
 #         receiver_credentials='creds',
 #         redirect_link='link',
 #     )

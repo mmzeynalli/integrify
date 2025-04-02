@@ -15,7 +15,7 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
     with mocker.patch('random.getrandbits', return_value=0xFFEEDDCCBBAA99887766554433221100):
         req = azericard_client.pay(
             1,  # amount
-            '944',  # currency
+            'AZN',  # currency
             '12345678',  # order
             desc='test',
             country='AZ',
@@ -29,7 +29,7 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
 
         assert (
             req['data']['P_SIGN']
-            == '3ab4d6bfc48f888c6f0644f184210c0ae7439ba7cf2fb622a1a09f6003c2713202eefc5ce7101557395d91c3519fa7d90d38c70347311477c033c2af61f60c3f'  # noqa: E501
+            == '6c7d41126ce5d55e59a19b63a3b6e72fde83559c75db3e6feccb9307645f84581dbbe2739845e7bf836d22d83aeba2f8449cf8b85a10f18500b711d1dbb61e72'  # noqa: E501
         )
 
 
@@ -38,7 +38,7 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
 
     req = azericard_client.pay(
         amount=1,
-        currency='944',
+        currency='AZN',
         order='12345678',
         desc='test',
         country='AZ',
@@ -66,13 +66,13 @@ def test_signature_verification(amount, exception):
                 'OperationID': '1234567890123456',
                 'SRN': '1234567890',
                 'Amount': amount,
-                'Cur': '944',
+                'Cur': 'AZN',
                 'CardStatus': CardStatus.ACTIVE,
                 'ReceiverPAN': '0123456789012345',
                 'Status': 'pending',
                 'Timestamp': '20250403020100',
                 'Response Code': '0000',
                 'Message': 'Success',
-                'Signature': 'c61d54afde515aeba6ae12ab80182324',
+                'Signature': 'b7d61c5a3c685ac2f4a56c40dc718b36',
             }
         ).model_dump()

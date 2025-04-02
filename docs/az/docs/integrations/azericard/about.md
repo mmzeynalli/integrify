@@ -46,7 +46,7 @@ from integrify.azericard.helpers import json_to_html_form
 
 req = AzericardClient.pay(
     amount=1,
-    currency='944',
+    currency='AZN',
     order='12345678',
     desc='test',
     country='AZ',

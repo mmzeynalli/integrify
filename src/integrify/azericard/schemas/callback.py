@@ -57,7 +57,7 @@ class TransferCallbackSchema(BaseModel):
     """Müraciətdən gələn məbləğ"""
 
     cur: str
-    """Sorğunun valyutası yalnız 944 (AZN) olmalıdır"""
+    """Sorğunun valyutası yalnız AZN) olmalıdır"""
 
     card_status: CardStatus
     """Azericard tərəfində istifadəçi kartı statusu"""
@@ -112,6 +112,6 @@ class TransferCallbackSchema(BaseModel):
             usedforsecurity=False,
         ).hexdigest()
 
-        assert calc_signature == self.signature, ' Signature does not match!'
+        assert calc_signature == self.signature, calc_signature + ' Signature does not match!'
 
         return self
