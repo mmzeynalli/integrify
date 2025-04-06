@@ -6,11 +6,11 @@ from pydantic import Field
 
 from integrify.payriff import env
 from integrify.payriff.schemas.enums import Currency, Language, Operation
-from integrify.payriff.schemas.utils import BaseSchema
+from integrify.payriff.schemas.utils import BaseCamelRequestSchema
 from integrify.schemas import PayloadBaseModel
 
 
-class BaseRequestSchema(PayloadBaseModel, BaseSchema):
+class BaseRequestSchema(PayloadBaseModel, BaseCamelRequestSchema):
     amount: Decimal
     """Ödəniş miqadrı"""
     language: Language = Language.AZ

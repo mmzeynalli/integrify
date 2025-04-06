@@ -143,7 +143,7 @@ class PayriffClientClass(APIClient):
             self,
             order_id: UUID,
             amount: Decimal,
-        ) -> APIResponse[BaseResponseSchema]:
+        ):
             """Ödənişin tamamlanması sorğusu
 
             **Endpoint** /api/v3/complete

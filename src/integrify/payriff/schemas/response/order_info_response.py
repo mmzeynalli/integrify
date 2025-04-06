@@ -4,11 +4,11 @@ from typing import Optional
 from uuid import UUID
 
 from integrify.payriff.schemas.enums import Currency, Operation
-from integrify.payriff.schemas.utils import BaseSchema
+from integrify.payriff.schemas.utils import BaseCamelResponseSchema
 from integrify.schemas import PayloadBaseModel
 
 
-class GetOrderInfoResponseSchema(PayloadBaseModel, BaseSchema):
+class GetOrderInfoResponseSchema(PayloadBaseModel, BaseCamelResponseSchema):
     order_id: UUID
     """Sifariş ID"""
     amount: Decimal
@@ -31,7 +31,7 @@ class GetOrderInfoResponseSchema(PayloadBaseModel, BaseSchema):
     """Tranzaksiyalar"""
 
 
-class GetOrderTransactionResponseSchema(BaseSchema):
+class GetOrderTransactionResponseSchema(BaseCamelResponseSchema):
     uuid: UUID
     """Tranzaksiya ID"""
     created_date: datetime
@@ -56,7 +56,7 @@ class GetOrderTransactionResponseSchema(BaseSchema):
     """Taksit məlumatları"""
 
 
-class CardDetails(BaseSchema):
+class CardDetails(BaseCamelResponseSchema):
     masked_pan: str
     """Maskalanmış kart nömrəsi"""
     brand: str
@@ -65,6 +65,6 @@ class CardDetails(BaseSchema):
     """Kart sahibinin adı"""
 
 
-class Installment(BaseSchema):
+class Installment(BaseCamelResponseSchema):
     type: Optional[str] = None
     period: Optional[str] = None

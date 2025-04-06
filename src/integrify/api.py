@@ -100,6 +100,7 @@ class APIClient:
             handler = self.handlers.get(name, self.default_handler)
 
             func = self.request_executor.request_function
+
             return lambda *args, **kwds: func(
                 url,
                 verb,
@@ -284,6 +285,7 @@ class APIExecutor:
             verb: Sorğunun metodun (`POST`, `GET`, və s.)
             handler: Sorğu və cavabın payload handler-i
         """
+    
         assert isinstance(self.client, httpx.Client)
 
         data = handler.handle_request(*args, **kwds)
@@ -317,6 +319,7 @@ class APIExecutor:
                 response.content.decode(),
             )
 
+    
         return handler.handle_response(response)
 
     async def async_req(  # pragma: no cover

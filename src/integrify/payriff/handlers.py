@@ -15,18 +15,9 @@ from integrify.payriff.schemas.response import (
     GetOrderInfoResponseSchema,
     RefundResponseSchema,
 )
-from integrify.schemas import PayloadBaseModel
 
 
 class BasePayloadHandler(APIPayloadHandler):
-    def __init__(
-        self,
-        req_model: Type[PayloadBaseModel],
-        resp_model: Optional[Type[_ResponseT]] = None,
-        data_key: Optional[str] = None,
-    ):
-        super().__init__(req_model, resp_model)
-        self.data_key = data_key
 
     @cached_property
     def headers(self):

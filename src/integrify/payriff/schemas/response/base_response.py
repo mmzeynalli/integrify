@@ -4,11 +4,11 @@ from pydantic import ConfigDict
 from pydantic.alias_generators import to_camel
 
 from integrify.payriff.schemas.enums import ResultCodes
-from integrify.payriff.schemas.utils import BaseSchema, _ResponsePayloadT
+from integrify.payriff.schemas.utils import BaseCamelResponseSchema, _ResponsePayloadT
 from integrify.schemas import PayloadBaseModel
 
 
-class BaseResponseSchema(PayloadBaseModel, BaseSchema, Generic[_ResponsePayloadT]):
+class BaseResponseSchema(PayloadBaseModel, BaseCamelResponseSchema, Generic[_ResponsePayloadT]):
     model_config = ConfigDict(alias_generator=to_camel)
 
     code: ResultCodes
