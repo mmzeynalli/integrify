@@ -1,8 +1,7 @@
-from datetime import datetime  # pylint: disable=unused-argument
+from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Union
 from typing import SupportsFloat as Numeric
 
-# pylint: disable=unused-argument
 from integrify.api import APIClient, APIPayloadHandler, APIResponse
 from integrify.azericard import env
 from integrify.azericard.handler import (
@@ -14,8 +13,8 @@ from integrify.azericard.handler import (
     TransferConfirmPayloadHandler,
     TransferStartPayloadHandler,
 )
-from integrify.azericard.schemas.enums import TrType
-from integrify.azericard.schemas.request.auth import MInfo  # pylint: disable=unused-argument
+from integrify.azericard.schemas.enums import AuthorizationResponseType, AuthorizationType
+from integrify.azericard.schemas.request.auth import MInfo
 from integrify.azericard.schemas.response import (
     GetTransactionStatusResponseSchema,
     TransferConfirmResponseSchema,
@@ -38,11 +37,16 @@ class AzeriCardClientClass(APIClient):
     ):
         super().__init__(name, base_url, default_handler, sync, dry)
 
-        self.add_url('auth', env.MpiAPI.AUTHORIZATION, 'POST', base_url=env.MpiAPI.BASE_URL)
-        self.add_handler('auth', AuthPayloadHandler)
+        self.add_url(
+            'authorization',
+            env.MpiAPI.AUTHORIZATION,
+            'POST',
+            base_url=env.MpiAPI.BASE_URL,
+        )
+        self.add_handler('authorization', AuthPayloadHandler)
 
         self.add_url(
-            'auth_response',
+            'finalize',
             env.MpiAPI.AUTHORIZATION,
             verb='POST',
             base_url=env.MpiAPI.BASE_URL,
@@ -91,495 +95,37 @@ class AzeriCardClientClass(APIClient):
             base_url=env.MtAPI.BASE_URL,
         )
 
-    # arguments are given for sake of type-hinting.
-    def pay(  # pylint: disable=duplicate-code
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        desc: str,  # pylint: disable=unused-argument
-        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
-    ) -> DryResponse:
-        """Ödəniş sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.pay(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
-            ```
-
-        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            desc: Ödənişin təsviri/açıqlaması
-            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            lang: Dil seçimi
-            name: Müştərinin adı (kartda göstərildiyi kimi)
-            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-        """  # noqa: E501
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth(trtype=TrType.AUTHORAZATION, **kwds)
-
-    def pay_and_save_card(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        desc: str,  # pylint: disable=unused-argument
-        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
-    ) -> DryResponse:
-        """Ödəniş və kartı yadda saxlama sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.pay_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
-            ```
-
-        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-        Saxlamalı olduğunuz kartın ID-si də callback-də gəlir.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            desc: Ödənişin təsviri/açıqlaması
-            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            lang: Dil seçimi
-            name: Müştərinin adı (kartda göstərildiyi kimi)
-            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_and_save_card(trtype=TrType.AUTHORAZATION, **kwds)
-
-    def pay_with_saved_card(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        desc: str,  # pylint: disable=unused-argument
-        token: str,  # pylint: disable=unused-argument
-        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Yadda saxlanılmış kartla ödəniş sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.pay_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
-            ```
-
-        **Cavab formatı**: Callback sorğu baş verir
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            desc: Ödənişin təsviri/açıqlaması
-            token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
-            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            lang: Dil seçimi
-            name: Müştərinin adı (kartda göstərildiyi kimi)
-            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_with_saved_card(trtype=TrType.AUTHORAZATION, **kwds)
-
-    def block(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        desc: str,  # pylint: disable=unused-argument
-        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Pul Bloklama/Dondurma sorğusu.
-
-        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.block(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
-            ```
-
-        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-        Bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
-        [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
-        [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
-        [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
-        tranzaksiyanı bitirməlisiniz.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            desc: Ödənişin təsviri/açıqlaması
-            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            lang: Dil seçimi
-            name: Müştərinin adı (kartda göstərildiyi kimi)
-            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth(trtype=TrType.PRE_AUTHORAZATION, **kwds)
-
-    def block_and_save_card(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        desc: str,  # pylint: disable=unused-argument
-        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Pul bloklama/dondurma və kartı yadda saxlama sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.block_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', name='Filankes')
-            ```
-
-        **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
-
-        Saxlamalı olduğunuz kartın ID-si də callback-də gəlir. Həmçinin, bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
-        [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
-        [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
-        [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
-        tranzaksiyanı bitirməlisiniz.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            desc: Ödənişin təsviri/açıqlaması
-            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            lang: Dil seçimi
-            name: Müştərinin adı (kartda göstərildiyi kimi)
-            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_and_save_card(trtype=TrType.PRE_AUTHORAZATION, **kwds)
-
-    def block_with_saved_card(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        desc: str,  # pylint: disable=unused-argument
-        token: str,  # pylint: disable=unused-argument
-        merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-        lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Yadda saxlanılmış kartdan pulu bloklama/dondurma sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.block_with_saved_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
-            ```
-
-        **Cavab formatı**: Callback sorğu baş verir
-
-        Bu sorğunu istifadə etdikdə, user-in ödəyəcəyi pul onun kartında bloklanır/dondurlur, amma çıxmır. Bir neçə müddət sonra,
-        [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.accept_blocked_payment],
-        [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.reverse_blocked_payment],
-        [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.cancel_blocked_payment] funksiyalarını çağırmaqla
-        tranzaksiyanı bitirməlisiniz.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            desc: Ödənişin təsviri/açıqlaması
-            token: Yadda saxlanılmış kartın ID-si. Save-card sorğularında callback-də gəlir.
-            merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır). Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            merch_url: Satıcının web site URL-i. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
-            country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
-            merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
-            backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-            lang: Dil seçimi
-            name: Müştərinin adı (kartda göstərildiyi kimi)
-            m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_with_saved_card(trtype=TrType.PRE_AUTHORAZATION, **kwds)
-
-    def accept_blocked_payment(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        rrn: str,  # pylint: disable=unused-argument
-        int_ref: str,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Blok olunmuş məbləği qəbul etmək sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.accept_blocked_payment(amount=100, currency='AZN', order='12345678', rrn='RRN', int_ref='INT_REF')
-            ```
-
-        **Cavab formatı**: Callback sorğu baş verir
-
-        Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
-        sonra, ödənişi qəbul etmək üçün gönmdərmək lazımdır
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
-            int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_response(trtype=TrType.ACCEPT_REQUEST, **kwds)
-
-    def reverse_blocked_payment(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        rrn: str,  # pylint: disable=unused-argument
-        int_ref: str,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Blok olunmuş məbləği qəbul ETMƏMƏK (online) sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.reverse_blocked_payment(amount=100, currency='AZN', order='12345678', rrn='RRN', int_ref='INT_REF')
-            ```
-
-        **Cavab formatı**: Callback sorğu baş verir
-
-        Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
-        sonra, ödənişi qəbul ETMƏMƏK üçün gönmdərmək lazımdır.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
-            int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_response(trtype=TrType.RETURN_REQUEST, **kwds)
-
-    def cancel_blocked_payment(
-        self,
-        amount: Numeric,  # pylint: disable=unused-argument
-        currency: str,  # pylint: disable=unused-argument
-        order: str,  # pylint: disable=unused-argument
-        rrn: str,  # pylint: disable=unused-argument
-        int_ref: str,  # pylint: disable=unused-argument
-        terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-        timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-    ):
-        """Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu
-
-        **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
-
-        Example:
-            ```python
-            from integrify.azericard import AzeriCardClient
-
-            AzeriCardClient.cancel_blocked_payment(amount=100, currency='AZN', order='12345678', rrn='RRN', int_ref='INT_REF')
-            ```
-
-        **Cavab formatı**: Callback sorğu baş verir
-
-        Bu sorğunu [`block`][integrify.azericard.client.AzeriCardClientClass.block] və bənzəri soröulardan
-        sonra, ödənişi qəbul ETMƏMƏK üçün gönmdərmək lazımdır.
-
-        Args:
-            amount: Ödəniş miqdarı. Numerik dəyər.
-            currency: Sifariş valyutası: 3 simvollu valyuta: (AZN)
-            order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
-            rrn: Merchant bank üzrə axraş sorğu nömrəsi (ISO-8583 Field 37). İlk sorğunun callback-ində gəlir.
-            int_ref: Daxili E-Commercegateway sorğu nömrə. İlk sorğunun callback-ində gəlir.
-            timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
-        """  # noqa: E501
-
-        kwds = locals()
-        kwds.pop('self')
-        return self.auth_response(trtype=TrType.CANCEL_REQUEST, **kwds)
-
     if TYPE_CHECKING:
 
-        def auth(
+        def authorization(
             self,
-            amount: Numeric,  # pylint: disable=unused-argument
-            currency: str,  # pylint: disable=unused-argument
-            order: str,  # pylint: disable=unused-argument
-            desc: str,  # pylint: disable=unused-argument
-            trtype: TrType,
-            merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-            lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
+            amount: Numeric,
+            currency: str,
+            order: str,
+            desc: str,
+            trtype: AuthorizationType,
+            merch_name: Unsettable[str] = _UNSET,
+            merch_url: Unsettable[str] = _UNSET,
+            terminal: Unsettable[str] = _UNSET,
+            email: Unsettable[str] = _UNSET,
+            country: Unsettable[str] = _UNSET,
+            merch_gmt: Unsettable[str] = _UNSET,
+            backref: Unsettable[str] = _UNSET,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
+            lang: Unsettable[str] = _UNSET,
+            name: Unsettable[str] = _UNSET,
+            m_info: Unsettable[MInfo] = _UNSET,
         ) -> DryResponse:
             """Ümumi Ödəniş/Pul Dondurma/Dondurulmanı tamamlama sorğusu
 
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+            **Endpoint:** *https://{test}mpi.3dsecure.az/cgi-bin/cgi_link*
 
             Example:
                 ```python
                 from integrify.azericard import AzeriCardClient
+                from integrify.azericard.schemas.enums import AuthorizationType
 
-                AzeriCardClient.auth(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+                AzeriCardClient.auth(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype=AuthorizationType.FREEZE, name='Filankes')
                 ```
 
             **Cavab formatı**: Yoxdur. Redirect baş verir, nəticə callback sorğusunda qayıdır.
@@ -592,7 +138,7 @@ class AzeriCardClientClass(APIClient):
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
                 merch_url: Satıcının web site URL-i
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
-                trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
+                trtype: Tranzaksiya növü: 0 (Pre-Avtorizasiya əməliyyatı, pulu bloklamaq/dondurmaq) və ya  1 (Avtorizasiya əməliyyatı, birbaşa ödəniş)
                 email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
                 country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
                 merch_gmt: Merchant-ın UTC/GMT vaxt zonası. Merchant sistemi Gateway serverin yerləşdiyi vaxt zonasından fərqli vaxt zonasında yerləşirsə qeyd olunmalıdır
@@ -603,26 +149,27 @@ class AzeriCardClientClass(APIClient):
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
-        def auth_response(
+        def finalize(
             self,
-            amount: Numeric,  # pylint: disable=unused-argument
-            currency: str,  # pylint: disable=unused-argument
-            order: str,  # pylint: disable=unused-argument
-            rrn: str,  # pylint: disable=unused-argument
-            int_ref: str,  # pylint: disable=unused-argument
-            trtype: TrType,
-            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
+            amount: Numeric,
+            currency: str,
+            order: str,
+            rrn: str,
+            int_ref: str,
+            trtype: AuthorizationResponseType,
+            terminal: Unsettable[str] = _UNSET,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
         ) -> DryResponse:
             """PreAuthorization sorğusuna cavab sorğusu
 
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+            **Endpoint:** *https://{test}mpi.3dsecure.az/cgi-bin/cgi_link*
 
             Example:
                 ```python
                 from integrify.azericard import AzeriCardClient
+                from integrify.azericard.schemas.enums import AuthorizationResponseType
 
-                AzeriCardClient.auth_response(amount=100, currency='AZN', order='12345678', rrn='payment_rrn', int_ref='int_ref', trtype='21')
+                AzeriCardClient.auth_response(amount=100, currency='AZN', order='12345678', rrn='payment_rrn', int_ref='int_ref', trtype=AuthorizationResponseType.ACCEPT_PAYMENT)
                 ```
 
             **Cavab formatı**:
@@ -633,38 +180,39 @@ class AzeriCardClientClass(APIClient):
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 rrn: Ödənişin RRN-i, Authorization sorğusuna response-da gəlir
                 int_ref: Ödənişin referansı, Authorization sorğusuna response-da gəlir
-                trtype: Tranzaksiya növü = 21 (Təsdiq), Tranzaksiya növü = 22 (Geri qaytarma), Tranzaksiya növü = 24 (Ləğv etmə)
+                trtype: Tranzaksiya növü: 21 (Təsdiq), 22 (Geri qaytarma), 24 (Ləğv etmə, spesifik banklar üçün istifadə olunur)
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
         def auth_and_save_card(
             self,
-            amount: Numeric,  # pylint: disable=unused-argument
-            currency: str,  # pylint: disable=unused-argument
-            order: str,  # pylint: disable=unused-argument
-            desc: str,  # pylint: disable=unused-argument
-            trtype: TrType,
-            merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-            lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
+            amount: Numeric,
+            currency: str,
+            order: str,
+            desc: str,
+            trtype: AuthorizationType,
+            merch_name: Unsettable[str] = _UNSET,
+            merch_url: Unsettable[str] = _UNSET,
+            terminal: Unsettable[str] = _UNSET,
+            email: Unsettable[str] = _UNSET,
+            country: Unsettable[str] = _UNSET,
+            merch_gmt: Unsettable[str] = _UNSET,
+            backref: Unsettable[str] = _UNSET,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
+            lang: Unsettable[str] = _UNSET,
+            name: Unsettable[str] = _UNSET,
+            m_info: Unsettable[MInfo] = _UNSET,
         ) -> DryResponse:
             """Ümumi kartı saxlayaraq ödəniş sorğusu
 
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+            **Endpoint:** *https://{test}mpi.3dsecure.az/token/cgi_link*
 
             Example:
                 ```python
                 from integrify.azericard import AzeriCardClient
+                from integrify.azericard.schemas.enums import AuthorizationType
 
-                AzeriCardClient.auth_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes')
+                AzeriCardClient.auth_and_save_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype=AuthorizationType.DIRECT, name='Filankes')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
@@ -676,7 +224,7 @@ class AzeriCardClientClass(APIClient):
                 desc: Ödənişin təsviri/açıqlaması
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
                 merch_url: Satıcının web site URL-i
-                trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
+                trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı, pulu bloklamaq/dondurmaq),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL
                 email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
                 country: Merchant shop 2 simvollu ölkə kodu. Merchant sistemi Gateway serverin yerləşdiyi ölkədən fərqli ölkədə yerləşirsə qeyd olunmalıdır
@@ -689,33 +237,34 @@ class AzeriCardClientClass(APIClient):
 
         def auth_with_saved_card(
             self,
-            amount: Numeric,  # pylint: disable=unused-argument
-            currency: str,  # pylint: disable=unused-argument
-            order: str,  # pylint: disable=unused-argument
-            desc: str,  # pylint: disable=unused-argument
-            trtype: TrType,
-            token: str,  # pylint: disable=unused-argument
-            merch_name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            merch_url: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            terminal: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            email: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            country: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            merch_gmt: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            backref: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
-            lang: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            name: Unsettable[str] = _UNSET,  # pylint: disable=unused-argument
-            m_info: Unsettable[MInfo] = _UNSET,  # pylint: disable=unused-argument
+            amount: Numeric,
+            currency: str,
+            order: str,
+            desc: str,
+            trtype: AuthorizationType,
+            token: str,
+            merch_name: Unsettable[str] = _UNSET,
+            merch_url: Unsettable[str] = _UNSET,
+            terminal: Unsettable[str] = _UNSET,
+            email: Unsettable[str] = _UNSET,
+            country: Unsettable[str] = _UNSET,
+            merch_gmt: Unsettable[str] = _UNSET,
+            backref: Unsettable[str] = _UNSET,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
+            lang: Unsettable[str] = _UNSET,
+            name: Unsettable[str] = _UNSET,
+            m_info: Unsettable[MInfo] = _UNSET,
         ) -> DryResponse:
             """Ümumi saxlanmış kart ilə Authurization sorğusu
 
-            **Endpoint:** *https://testmpi.3dsecure.az/token/cgi_link*
+            **Endpoint:** *https://{test}mpi.3dsecure.az/token/cgi_link*
 
             Example:
                 ```python
                 from integrify.azericard import AzeriCardClient
+                from integrify.azericard.schemas.enums import AuthorizationType
 
-                AzeriCardClient.auth_with_saved_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype='1', name='Filankes', token='card-token')
+                AzeriCardClient.auth_with_saved_card(amount=100, currency='AZN', order='12345678', desc='Ödəniş', trype=AuthorizationType.DIRECT, name='Filankes', token='card-token')
                 ```
 
             **Cavab formatı**: Callback sorğu baş verir
@@ -727,7 +276,7 @@ class AzeriCardClientClass(APIClient):
                 desc: Ödənişin təsviri/açıqlaması
                 merch_name: Satıcının (merchant) adı (kart istifadəçisinin anladığı formada olmalıdır)
                 merch_url: Satıcının web site URL-i
-                trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
+                trtype: Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı, pulu bloklamaq/dondurmaq),Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)
                 backref: Avtorizasiya nəticəsinin yerləşdirilməsində(post) istifadə olunan Merchant URL
                 token: Yadda saxlanılmış kartın ID-si
                 email: Bildirişlər üçün Email ünvan. Qeyd olunmuş sahə doldurulduğu halda Gateway email ünvanı müəyyən etmək üçün əməliyyat nəticəsi haqqında bildiriş göndərə bilər
@@ -741,26 +290,27 @@ class AzeriCardClientClass(APIClient):
 
         def get_transaction_status(
             self,
-            tran_trtype: TrType,
-            order: str,  # pylint: disable=unused-argument
-            terminal: Unsettable[str],  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]],  # pylint: disable=unused-argument
+            tran_trtype: Union[AuthorizationType, AuthorizationResponseType],
+            order: str,
+            terminal: Unsettable[str] = _UNSET,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
         ) -> APIResponse[GetTransactionStatusResponseSchema]:
             """Bitmiş tranzaksiyanın statusunu alma sorğusu
 
-            **Endpoint:** *https://testmpi.3dsecure.az/cgi-bin/cgi_link*
+            **Endpoint:** *https://{test}mpi.3dsecure.az/cgi-bin/cgi_link*
 
             Example:
                 ```python
                 from integrify.azericard import AzeriCardClient
+                from integrify.azericard.schemas.enums import AuthorizationType
 
-                AzeriCardClient.get_transaction_status(tran_trtype='21', order='12345678')
+                AzeriCardClient.get_transaction_status(tran_trtype=AuthorizationType.DIRECT, order='12345678')
                 ```
 
             **Cavab formatı**: [`GetTransactionStatusResponseSchema`][integrify.azericard.schemas.response.GetTransactionStatusResponseSchema]
 
             Args:
-                tran_trtype: Sorğu üçün orijinal əməliyyat növü (Məsələn: TRTYPE 0, 1, 22, 24 və s.)
+                tran_trtype: Sorğu üçün orijinal əməliyyat növü, TRTYPE (Məsələn: 0, 1, 22, 24 və s.)
                 order: Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur, terminal id üçün bir gün ərzində unikal olmalıdır
                 terminal: Bank tərəfindən təyin edilmiş Merchant Terminal ID. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
@@ -768,16 +318,16 @@ class AzeriCardClientClass(APIClient):
 
         def transfer_start(
             self,
-            merchant: str,  # pylint: disable=unused-argument
-            srn: str,  # pylint: disable=unused-argument
-            amount: Numeric,  # pylint: disable=unused-argument
-            cur: str,  # pylint: disable=unused-argument
-            receiver_credentials: str,  # pylint: disable=unused-argument
-            redirect_link: str,  # pylint: disable=unused-argument
+            merchant: str,
+            srn: str,
+            amount: Numeric,
+            cur: str,
+            receiver_credentials: str,
+            redirect_link: str,
         ) -> DryResponse:
             """User-ə ödəniş etmək sorğusu
 
-            **Endpoint:** *https://testmt.3dsecure.az/payment/view*
+            **Endpoint:** *https://{test}mt.3dsecure.az/payment/view*
 
             Example:
                 ```python
@@ -799,15 +349,15 @@ class AzeriCardClientClass(APIClient):
 
         def transfer_confirm(
             self,
-            merchant: str,  # pylint: disable=unused-argument
-            srn: str,  # pylint: disable=unused-argument
-            amount: Numeric,  # pylint: disable=unused-argument
-            cur: str,  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
+            merchant: str,
+            srn: str,
+            amount: Numeric,
+            cur: str,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
         ) -> APIResponse[TransferConfirmResponseSchema]:
             """User-ə ödənişi təsdiqləmək sorğusu
 
-            **Endpoint:** *https://testmt.3dsecure.az/api/confirm*
+            **Endpoint:** *https://{test}mt.3dsecure.az/api/confirm*
 
             Example:
                 ```python
@@ -828,15 +378,15 @@ class AzeriCardClientClass(APIClient):
 
         def transfer_decline(
             self,
-            merchant: str,  # pylint: disable=unused-argument
-            srn: str,  # pylint: disable=unused-argument
-            amount: Numeric,  # pylint: disable=unused-argument
-            cur: str,  # pylint: disable=unused-argument
-            timestamp: Unsettable[Union[datetime, str]] = _UNSET,  # pylint: disable=unused-argument
+            merchant: str,
+            srn: str,
+            amount: Numeric,
+            cur: str,
+            timestamp: Unsettable[Union[datetime, str]] = _UNSET,
         ) -> APIResponse[TransferDeclineResponseSchema]:
             """User-ə ödənişi imtina etmək sorğusu
 
-            **Endpoint:** *https://testmt.3dsecure.az/api/decline*
+            **Endpoint:** *https://{test}mt.3dsecure.az/api/decline*
 
             Example:
                 ```python

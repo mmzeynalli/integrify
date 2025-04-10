@@ -8,7 +8,12 @@ from pydantic.alias_generators import to_pascal
 from typing_extensions import Self
 
 from integrify.azericard import env
-from integrify.azericard.schemas.enums import Action, TransferStatusCode, TrType
+from integrify.azericard.schemas.enums import (
+    Action,
+    AuthorizationResponseType,
+    AuthorizationType,
+    TransferStatusCode,
+)
 from integrify.azericard.utils import TimeStampIn
 
 
@@ -52,7 +57,9 @@ class GetTransactionStatusResponseSchema(BaseModel):
     int_ref: str = Field(validation_alias='INT_REF')
     """Orijinal əməliyyat INT_REF"""
 
-    trtype: TrType = Field(validation_alias='Original transaction TRTYPE')
+    trtype: Union[AuthorizationType, AuthorizationResponseType] = Field(
+        validation_alias='Original transaction TRTYPE'
+    )
     """Orijinal əməliyyat TRTYPE"""
 
     timestamp: TimeStampIn = Field(validation_alias='Timestamp')

@@ -29,18 +29,11 @@
     options:
       separate_signature: true
       members:
-        - pay
-        - pay_and_save_card
-        - pay_with_saved_card
-        - block
-        - block_and_save_card
-        - block_with_saved_card
-        - accept_blocked_payment
-        - reverse_blocked_payment
-        - cancel_blocked_payment
+        - authorize
+        - auth_and_save_card
+        - auth_with_saved_card
+        - finalize
         - get_transaction_status
         - transfer_start
         - transfer_confirm
         - transfer_decline
-        - auth
-        - auth_response

@@ -4,7 +4,7 @@ from httpx import Response
 
 @pytest.fixture(scope='package')
 def azericard_transaction_status_response():
-    from integrify.azericard.schemas.enums import Action, TrType
+    from integrify.azericard.schemas.enums import Action, AuthorizationType
 
     return Response(
         status_code=200,
@@ -22,7 +22,7 @@ def azericard_transaction_status_response():
             'Banks approval code': '',
             'Transaction RRN': '',
             'INT_REF': '',
-            'Original transaction TRTYPE': TrType.AUTHORAZATION,
+            'Original transaction TRTYPE': AuthorizationType.DIRECT,
             'Timestamp': '20250403020100',
             'Nonce': '',
             'P_SIGN': '',

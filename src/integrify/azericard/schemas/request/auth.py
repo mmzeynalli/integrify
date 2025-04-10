@@ -1,6 +1,6 @@
 import base64
 import json
-from typing import ClassVar, Literal, Optional
+from typing import ClassVar, Literal, Optional, Union
 
 import rsa
 from pydantic import (
@@ -17,7 +17,11 @@ from integrify.azericard.schemas.common import (
     AzeriCardMinimalDataSchema,
     AzeriCardMinimalWithAmountDataSchema,
 )
-from integrify.azericard.schemas.enums import TrType
+from integrify.azericard.schemas.enums import (
+    AuthorizationMiscType,
+    AuthorizationResponseType,
+    AuthorizationType,
+)
 from integrify.schemas import PayloadBaseModel
 
 
@@ -190,8 +194,11 @@ class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataS
         'timestamp',
         'nonce',
     ]
-    tran_trtype: TrType = Field(min_length=1, max_length=2)
-    trtype: Literal[TrType.REQUEST_STATUS] = TrType.REQUEST_STATUS
+    tran_trtype: Union[AuthorizationType, AuthorizationResponseType] = Field(
+        min_length=1,
+        max_length=2,
+    )
+    trtype: Literal[AuthorizationMiscType.REQUEST_STATUS] = AuthorizationMiscType.REQUEST_STATUS
 
     @classmethod
     def get_input_fields(cls):

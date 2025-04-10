@@ -1,12 +1,27 @@
 from enum import Enum
 
 
-class TrType(str, Enum):
-    PRE_AUTHORAZATION = '0'
-    AUTHORAZATION = '1'
-    ACCEPT_REQUEST = '21'
-    RETURN_REQUEST = '22'
-    CANCEL_REQUEST = '24'
+class AuthorizationType(str, Enum):
+    FREEZE = '0'
+    """Məbləği bloklamaq"""
+
+    DIRECT = '1'
+    """Məbləği birbaşa çıxmaq"""
+
+    def __str__(self):
+        return self.value
+
+
+class AuthorizationResponseType(str, Enum):
+    ACCEPT_PAYMENT = '21'
+    RETURN_PAYMENT = '22'
+    CANCEL_PAYMENT = '24'
+
+    def __str__(self):
+        return self.value
+
+
+class AuthorizationMiscType(str, Enum):
     REQUEST_STATUS = '90'
 
     def __str__(self):

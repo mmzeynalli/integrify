@@ -6,17 +6,23 @@ import time_machine
 from pydantic_core import ValidationError
 from pytest_mock import MockerFixture
 
+from tests.azericard.conftest import requires_env
+
 if TYPE_CHECKING:
     from integrify.azericard.client import AzeriCardClientClass
 
 
+@requires_env()
 @time_machine.travel('2025-04-03 02:01:00')
 def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: MockerFixture):
+    from integrify.azericard.schemas.enums import AuthorizationType
+
     with mocker.patch('random.getrandbits', return_value=0xFFEEDDCCBBAA99887766554433221100):
-        req = azericard_client.pay(
+        req = azericard_client.authorization(
             1,  # amount
             'AZN',  # currency
             '12345678',  # order
+            trtype=AuthorizationType.DIRECT,
             desc='test',
             country='AZ',
             m_info={
@@ -33,15 +39,18 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
         )
 
 
+@requires_env()
 def test_html_form(azericard_client: 'AzeriCardClientClass'):
     from integrify.azericard.helpers import json_to_html_form
+    from integrify.azericard.schemas.enums import AuthorizationType
 
-    req = azericard_client.pay(
+    req = azericard_client.authorization(
         amount=1,
         currency='AZN',
         order='12345678',
         desc='test',
         country='AZ',
+        trtype=AuthorizationType.DIRECT,
     )
 
     form = json_to_html_form(req)

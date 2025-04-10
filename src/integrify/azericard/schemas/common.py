@@ -1,10 +1,15 @@
 import random
 from decimal import Decimal
+from typing import Union
 
 from pydantic import BaseModel, Field
 
 from integrify.azericard import env
-from integrify.azericard.schemas.enums import TrType
+from integrify.azericard.schemas.enums import (
+    AuthorizationMiscType,
+    AuthorizationResponseType,
+    AuthorizationType,
+)
 from integrify.azericard.utils import TimeStampOut
 
 
@@ -16,9 +21,10 @@ class AzeriCardMinimalDataSchema(BaseModel):
     terminal: str = Field(default=env.AZERICARD_MERCHANT_ID)  # type: ignore[assignment]
     """Bank tərəfindən təyin edilmiş Merchant Terminal ID"""
 
-    trtype: TrType = Field(min_length=1, max_length=2)
-    """Tranzaksiya növü = 0 (Pre-Avtorizasiya əməliyyatı),
-    Tranzaksiya növü = 1 (Avtorizasiya əməliyyatı)"""
+    trtype: Union[AuthorizationType, AuthorizationResponseType, AuthorizationMiscType] = Field(
+        min_length=1, max_length=2
+    )
+    """Tranzaksiya növü. Mümkün dəyərlər üçün enum faylına bax."""
 
     timestamp: TimeStampOut
     """GMT-də e-ticarət şlüzünün vaxt damğası: YYYYMMDDHHMMSS"""
