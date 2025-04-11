@@ -22,15 +22,10 @@
 
 | Sorğu metodu                                                                                       | Məqsəd                                               |                      Azericard API                       |
 | :------------------------------------------------------------------------------------------------- | :--------------------------------------------------- | :------------------------------------------------------: |
-| [`pay`][integrify.azericard.client.AzeriCardClientClass.pay]                                       | Ödəniş                                               | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='1')`  |
-| [`pay_and_save_card`][integrify.azericard.client.AzeriCardClientClass.pay_and_save_card]           | Ödəniş etmə və kartı yadda saxlamaq                  | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='1')`  |
-| [`pay_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]       | Saxlanılan kartla ödəniş                             | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='1')`  |
-| [`block`][integrify.azericard.client.AzeriCardClientClass.block]                                   | Pulu bloklama                                        | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='0')`  |
-| [`block_and_save_card`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card]       | Pulu blok etmək və kartı yadda saxlamaq              | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='0')`  |
-| [`block_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]     | Saxlanılan kartda pulu blok etmək                    | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='0')`  |
-| [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block]                  | Blok olunmuş məbləği qəbul etmək sorğusu             | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='21')` |
-| [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card]   | Blok olunmuş məbləği qəbul ETMƏMƏK (online) sorğusu  | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='22')` |
-| [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]    | Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='24')` |
+| [`authorization`][integrify.azericard.client.AzeriCardClientClass.authorization]                   | Ödəniş/Bloklama                                      | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='1')`  |
+| [`auth_and_save_card`][integrify.azericard.client.AzeriCardClientClass.auth_and_save_card]         | Ödəniş/Bloklama və kartı yadda saxlamaq              | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='1')`  |
+| [`auth_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.auth_with_saved_card]     | Saxlanılan kartla ödəniş/bloklama                    | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='1')`  |
+| [`finalize`][integrify.azericard.client.AzeriCardClientClass.finalize]                             | Blok olunmuş məbləği qəbul ETMƏMƏK (offline) sorğusu | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='24')` |
 | [`get_transaction_status`][integrify.azericard.client.AzeriCardClientClass.get_transaction_status] | Ödəniş statusunun yoxlanılması                       | `https://mpi.3dsecure.az/cgi-bin/cgi_link (TRTYPE='90')` |
 | [`transfer_start`][integrify.azericard.client.AzeriCardClientClass.transfer_start]                 | Müştəriyə pul köçürülmə prosesinin başladılması      |         `https://mt.azericard.com/payment/view`          |
 | [`transfer_confirm`][integrify.azericard.client.AzeriCardClientClass.transfer_confirm]             | Müştəriyə pul köçürülmə prosesini təsdiqləmə         |          `https://mt.azericard.com/api/confirm`          |
@@ -102,17 +97,12 @@ Nə sorğu göndərməyinizdən asılı olaraq, callback-ə gələn data biraz f
 
 Sorğudan asılı olaraq, bu data-lar callback-də **GƏLMİR** (yəni, avtomatik `None` dəyəri alır):
 
-| Sorğu metodu                                                                                     | `None` field-lər |
-| :----------------------------------------------------------------------------------------------- | :--------------- |
-| [`pay`][integrify.azericard.client.AzeriCardClientClass.pay]                                     | `card`, `token`  |
-| [`pay_and_save_card`][integrify.azericard.client.AzeriCardClientClass.pay_and_save_card]         | -                |
-| [`pay_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]     | -                |
-| [`block`][integrify.azericard.client.AzeriCardClientClass.block]                                 | `card`, `token`  |
-| [`block_and_save_card`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card]     | -                |
-| [`block_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]   | -                |
-| [`accept_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block]                | `card`, `token`  |
-| [`reverse_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.block_and_save_card] | `card`, `token`  |
-| [`cancel_blocked_payment`][integrify.azericard.client.AzeriCardClientClass.pay_with_saved_card]  | `card`, `token`  |
+| Sorğu metodu                                                                                   | `None` field-lər |
+| :--------------------------------------------------------------------------------------------- | :--------------- |
+| [`authorization`][integrify.azericard.client.AzeriCardClientClass.authorization]               | `card`, `token`  |
+| [`auth_and_save_card`][integrify.azericard.client.AzeriCardClientClass.auth_and_save_card]     | -                |
+| [`auth_with_saved_card`][integrify.azericard.client.AzeriCardClientClass.auth_with_saved_card] | -                |
+| [`finalize`][integrify.azericard.client.AzeriCardClientClass.finalize]                         | `card`, `token`  |
 
 > **Qeyd**
 >

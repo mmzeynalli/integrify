@@ -35,7 +35,7 @@ def test_psign_generation(azericard_client: 'AzeriCardClientClass', mocker: Mock
 
         assert (
             req['data']['P_SIGN']
-            == '6c7d41126ce5d55e59a19b63a3b6e72fde83559c75db3e6feccb9307645f84581dbbe2739845e7bf836d22d83aeba2f8449cf8b85a10f18500b711d1dbb61e72'  # noqa: E501
+            == '715716a0d73cac9f69878baee497497c6b24a61c59c7cd66e1c99a13e2fb9cd18dd71fc77e4ba54d152de15055c4c63814d358cbdd12f990a540d5e36bfd8fa607d519c7856536c82393ff2e50375e3bc88263277096c38944a9682e706c931d735febee882ed9bb7698a3a1961c06a4fb2d4e1a35d3e94ecf2352002ac1dcc33c26d9821e96c266f23e952400e7dd358d3c5fddb68c698ceb459666d1b81ade0a78bb59f5b56efdf8e8cea8ff82d88b6e42e55d569c89b608937a10c2848a73293340edc1abd94205471367f4e632e4f32e03d1cc90f9b4d9ae33313f4692975eabf6d24042314d492da54261360ae1940c31e5a6d2fcd701fb85a985f41d31'  # noqa: E501
         )
 
 
@@ -56,7 +56,7 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
     form = json_to_html_form(req)
 
     assert form.startswith(
-        '<form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">'
+        '<form name="azericard_form" action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">'  # noqa: E501
     )
 
 
@@ -64,7 +64,6 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
     'amount,exception',
     [(1, does_not_raise()), (2, pytest.raises(ValidationError))],
 )
-@pytest.mark.key_as_string
 def test_signature_verification(amount, exception):
     from integrify.azericard.schemas.callback import TransferCallbackSchema
     from integrify.azericard.schemas.enums import CardStatus
@@ -82,6 +81,6 @@ def test_signature_verification(amount, exception):
                 'Timestamp': '20250403020100',
                 'Response Code': '0000',
                 'Message': 'Success',
-                'Signature': 'b7d61c5a3c685ac2f4a56c40dc718b36',
+                'Signature': 'bf46acdb8fe9ecc6ba784a3427de88d1',
             }
         ).model_dump()

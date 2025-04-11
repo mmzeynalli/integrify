@@ -29,7 +29,7 @@
     options:
       separate_signature: true
       members:
-        - authorize
+        - authorization
         - auth_and_save_card
         - auth_with_saved_card
         - finalize

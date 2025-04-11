@@ -1,7 +1,7 @@
 from integrify.schemas import DryResponse
 
 
-def json_to_html_form(json_data: DryResponse, with_submit: bool = True) -> str:
+def json_to_html_form(json_data: DryResponse, with_submit: bool = False) -> str:
     """AzeriCard-ə göndərilməli datanı HTML formuna çevirən funksiya
 
     Args:
@@ -19,4 +19,7 @@ def json_to_html_form(json_data: DryResponse, with_submit: bool = True) -> str:
     )
 
     submit = '<input type="submit" value="Submit">\n' if with_submit else ''
-    return f'<form action="{url}" method="{verb}">\n{form}\n{submit}</form>'
+    return (
+        f'<form name="azericard_form" action="{url}" method="{verb}">\n{form}\n{submit}</form>\n'
+        '<script>document.azericard_form.submit();</script>'
+    )

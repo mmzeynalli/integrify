@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-import pytest
 from pytest_mock import MockerFixture
 
 from integrify.azericard.schemas.enums import AuthorizationResponseType, AuthorizationType
@@ -62,7 +61,6 @@ def test_get_transaction_status(
 
 
 @requires_env()
-@pytest.mark.key_as_string
 def test_start_transfer(azericard_client: 'AzeriCardClientClass'):
     azericard_client.transfer_start(
         merchant='merchant',
