@@ -65,6 +65,11 @@ jobs:
         if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
         run: uv sync --no-dev --no-group=docs
       #----------------------------------------------
+      #            add keys to files
+      #----------------------------------------------
+      - name: Add keys to files
+        run: echo $AZERICARD_KEY > $AZERICARD_KEY_FILE_PATH
+      #----------------------------------------------
       #              run test suite
       #----------------------------------------------
       - run: mkdir coverage
