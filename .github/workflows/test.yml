@@ -68,7 +68,7 @@ jobs:
       #            add keys to files
       #----------------------------------------------
       - name: Add keys to files
-        run: echo $AZERICARD_KEY > $AZERICARD_KEY_FILE_PATH
+        run: echo ${{ secrets.AZERICARD_KEY }} > ${{ secrets.AZERICARD_KEY_FILE_PATH }}
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
