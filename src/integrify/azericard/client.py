@@ -51,7 +51,7 @@ class AzeriCardClientClass(APIClient):
             verb='POST',
             base_url=env.MpiAPI.BASE_URL,
         )
-        self.add_handler('auth_response', AuthConfirmPayloadHandler)
+        self.add_handler('finalize', AuthConfirmPayloadHandler)
 
         self.add_url(
             'auth_and_save_card',
