@@ -1,9 +1,8 @@
-from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import Optional, Union
+from typing import Optional
 
-from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, model_validator
 from pydantic.alias_generators import to_pascal
 from typing_extensions import Self
 
@@ -80,20 +79,11 @@ class TransferCallbackSchema(BaseModel):
     signature: str
     """Hesablanmış dəyər MD5(Bütün sahələr birləşdirilib + Açar)"""
 
-    @field_validator('timestamp', mode='before')
-    @classmethod
-    def validate_timestamp(cls, val: Union[datetime, str]) -> datetime:
-        """Input string dəyərdirsə, datetime obyektinə çevirən funksiya"""
-        if isinstance(val, datetime):
-            return val
-
-        return datetime.strptime(val, '%Y%m%d%H%M%S')
-
     @model_validator(mode='after')
     def validate_signature(self) -> Self:
         """AzeriCard-dan gələn signature-ni təsdiqləmə funksiyası"""
         with open(env.AZERICARD_KEY_FILE_PATH, encoding='utf-8') as key_file:
-            key = key_file.read()
+            key = key_file.read().strip().replace('\r\n', '\n')
 
         calc_signature = md5(
             str(
@@ -108,7 +98,7 @@ class TransferCallbackSchema(BaseModel):
                 + self.rc
                 + self.message
                 + key
-            ).encode(),
+            ).encode('utf-8'),
             usedforsecurity=False,
         ).hexdigest()
 
