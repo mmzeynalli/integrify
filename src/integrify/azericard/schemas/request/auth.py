@@ -127,11 +127,11 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
 
 class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema):
     SIGNATURE_FIELDS: ClassVar[list[str]] = [
+        'order',
         'amount',
         'currency',
         'terminal',
         'trtype',
-        'order',
         'rrn',
         'int_ref',
     ]
@@ -145,9 +145,9 @@ class AuthConfirmRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountData
     @classmethod
     def get_input_fields(cls):
         return [
+            'order',
             'amount',
             'currency',
-            'order',
             'rrn',
             'int_ref',
             'trtype',
