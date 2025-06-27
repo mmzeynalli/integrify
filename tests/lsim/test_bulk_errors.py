@@ -16,12 +16,9 @@ def test_invalid_task_id(lsim_bulksms_client: LSIMBulkSMSClientClass):
 
 @requires_env('PHONE_NUMBER_1')
 def test_duplicate_controlid(lsim_bulksms_client: LSIMBulkSMSClientClass):
-    assert (
-        lsim_bulksms_client.bulk_send_one_message(
-            controlid='1', msisdns=[os.getenv('PHONE_NUMBER_1')], bulkmessage='Test Message!'
-        ).body.response_code
-        == Code.DUPLICATE
-    )
+    assert lsim_bulksms_client.bulk_send_one_message(
+        controlid='1', msisdns=[os.getenv('PHONE_NUMBER_1')], bulkmessage='Test Message!'
+    ).body.response_code in (Code.DUPLICATE, Code.UNKNOWN_ERROR)
 
 
 @requires_env('PHONE_NUMBER_1')

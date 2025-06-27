@@ -26,6 +26,7 @@ class Code(int, Enum):
     INVALID_BULK_MSG = 116
     INVALID_BODY = 117
     INSUFFICIENT_BALANCE = 118
+    UNKNOWN_ERROR = 235  # Not documented
 
 
 class SMSStatus(int, Enum):
