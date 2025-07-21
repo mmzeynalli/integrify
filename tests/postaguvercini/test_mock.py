@@ -2,8 +2,10 @@ from httpx import Response
 from pytest_mock import MockFixture
 
 from integrify.postaguvercini.client import PostaGuverciniClientClass
+from tests.postaguvercini.conftest import requires_env
 
 
+@requires_env()
 def test_mock_single_sms_request(
     postaguvercini_client: PostaGuverciniClientClass,
     postaguvercini_mock_single_sms_response: Response,
@@ -22,6 +24,7 @@ def test_mock_single_sms_request(
         assert resp.body.result[0].charge == 1
 
 
+@requires_env()
 def test_mock_multiple_sms_request(
     postaguvercini_client: PostaGuverciniClientClass,
     postaguvercini_mock_multiple_sms_response: Response,

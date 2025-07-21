@@ -26,7 +26,7 @@ from integrify.epoint.schemas.response import (
 from integrify.schemas import APIResponse
 from integrify.utils import _UNSET, Unsettable
 
-__all__ = ['EPointClientClass']
+__all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 
 
 class EPointClientClass(APIClient):

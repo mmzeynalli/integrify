@@ -25,4 +25,5 @@ def test_ok_signature_response():
 
     data = decode_callback_data(schema)
 
+    assert data
     assert data.status == 'success'

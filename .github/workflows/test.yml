@@ -65,6 +65,13 @@ jobs:
         if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
         run: uv sync --no-dev --no-group=docs
       #----------------------------------------------
+      #            add keys to files
+      #----------------------------------------------
+      - name: Add keys to files
+        run: |
+          echo "${{ secrets.AZERICARD_KEY }}" > "${{ secrets.AZERICARD_KEY_FILE_PATH }}"
+          chmod 600 "${{ secrets.AZERICARD_KEY_FILE_PATH }}"  # Ensure the file is only readable by the owner
+      #----------------------------------------------
       #              run test suite
       #----------------------------------------------
       - run: mkdir coverage

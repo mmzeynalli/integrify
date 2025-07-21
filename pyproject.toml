@@ -41,6 +41,7 @@ classifiers = [
 dependencies = [
     "pydantic>=2.8.2,<3",
     "httpx>=0.27.2,<0.28",
+    "rsa>=4.9",
 ]
 
 [project.urls]
@@ -52,6 +53,7 @@ Documentation = "https://integrify.mmzeynalli.dev/"
 gh = [
     "pytest>=8.1.1,<9",
     "pytest-mock>=3.14.0,<4",
+    "time-machine>=2.16.0",
     "smokeshow>=0.4.0,<0.5",
     "coverage>=7.6.3,<8",
     "duty>=1.5.0",
@@ -67,6 +69,7 @@ dev = [
     "coverage>=7.6.3,<8",
     "pylint>=3.3.1,<4",
     "duty>=1.5.0",
+    "time-machine>=2.16.0",
 ]
 docs = [
     "mkdocs-material[imaging]>=9.6.4,<10",
@@ -123,6 +126,7 @@ disable = [
     'C0115',
     'C0301',
     'R0913',
+    'R0914',
     'R0917',
     'R0801',
 ]

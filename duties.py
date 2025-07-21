@@ -97,7 +97,7 @@ def test(ctx: context.Context, live: bool = False):
             ctx.run(
                 'uv run --active --no-sync coverage run --data-file=coverage/.coverage.py'
                 + ver
-                + ' -m pytest --durations=10 '
+                + ' -m pytest -sv --durations=10 '
                 + ('--live' if live else ''),
                 title=f'Running tests (python {ver})',
             )
