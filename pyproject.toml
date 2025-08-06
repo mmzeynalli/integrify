@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify"
-version = "2.2.0"
+version = "2.2.1"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 authors = [
     { name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" },
@@ -38,11 +38,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
     "Topic :: Internet :: WWW/HTTP",
 ]
-dependencies = [
-    "pydantic>=2.8.2,<3",
-    "httpx>=0.27.2,<0.28",
-    "rsa>=4.9",
-]
+dependencies = ["pydantic>=2.8.2,<3", "httpx>=0.27.2,<0.28", "rsa>=4.9"]
 
 [project.urls]
 Homepage = "https://integrify.mmzeynalli.dev/"
@@ -79,11 +75,7 @@ docs = [
 ]
 
 [tool.uv]
-default-groups = [
-    "gh",
-    "dev",
-    "docs",
-]
+default-groups = ["gh", "dev", "docs"]
 
 [tool.hatch.build.targets.sdist]
 include = ["src/integrify"]
@@ -109,7 +101,7 @@ select = [
     # isort
     "I",
     # Print statements
-    "T201"
+    "T201",
 ]
 ignore-init-module-imports = true
 
@@ -121,28 +113,15 @@ docstring-quotes = "double"
 
 [tool.pylint.MASTER]
 ignore-paths = ['tests/', '.venv/', '.venvs/', 'test.py']
-disable = [
-    'C0114',
-    'C0115',
-    'C0301',
-    'R0913',
-    'R0914',
-    'R0917',
-    'R0801',
-]
+disable = ['C0114', 'C0115', 'C0301', 'R0913', 'R0914', 'R0917', 'R0801']
 
 [tool.mypy]
-exclude = [
-    'tests/*',
-    'test.py'
-]
+exclude = ['tests/*', 'test.py']
 plugins = ['pydantic.mypy']
 
 [tool.pytest.ini_options]
 pythonpath = ["src/"]
-filterwarnings = [
-    "ignore::UserWarning",
-]
+filterwarnings = ["ignore::UserWarning"]
 
 [tool.coverage.report]
 exclude_also = [
@@ -170,4 +149,3 @@ source = [
 
 [tool.bandit]
 skips = ["B101"]
-
