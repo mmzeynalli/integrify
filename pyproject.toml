@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify"
-version = "2.2.1"
+version = "2.2.2"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır."
 authors = [
     { name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" },
