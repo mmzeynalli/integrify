@@ -1,4 +1,4 @@
-> [!CAUTION] Bu integrify kitabxanası arxivlənmişdir, yeni versiyası olmayacaqdır. Əvəzinə, daha modular qurulmuş [bu kitabxanalardan](https://github.com/Integrify-SDK/) istifadə etməyiniz tövsiyyə olunur.
+> [!CAUTION] Bu integrify kitabxanası arxivlənmişdir, yeni versiyası olmayacaqdır. Əvəzinə, daha modular qurulmuş [bu kitabxanalardan](https://github.com/orgs/Integrify-SDK/repositories) istifadə etməyiniz tövsiyyə olunur.
 
 ---
 
