@@ -1,10 +1,14 @@
+> [!CAUTION] Bu integrify kitabxanası arxivlənmişdir, yeni versiyası olmayacaqdır. Əvəzinə, daha modular qurulmuş [bu kitabxanalardan](https://github.com/Integrify-SDK/) istifadə etməyiniz tövsiyyə olunur.
+
+---
+
 <p align="center">
   <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/az/docs/assets/integrify.png" alt="Integrify"></a>
 </p>
 <p align="center">
     <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır.</em>
 </p>
-<p  style='display:flex;flex-wrap:wrap;gap:5px;width:70%;justify-content:flex-start;margin: 0 auto;'>
+<p style='display:flex;flex-wrap:wrap;gap:5px;width:70%;justify-content:flex-start;margin: 0 auto;'>
 <a href="https://github.com/mmzeynalli/integrify/actions/workflows/test.yml" target="_blank">
     <img src="https://github.com/mmzeynalli/integrify/actions/workflows/test.yml/badge.svg?branch=main" alt="Test">
 </a>
@@ -51,7 +55,7 @@
 <div class="termy">
 
 ```console
-$ pip install integrify
+pip install integrify
 ```
 
 </div>
