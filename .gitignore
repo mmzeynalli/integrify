@@ -173,7 +173,7 @@ site
 
 docs/**
 !docs/*/
-!docs/*/partial.yml
+!docs/partial.yml
 !docs/*/docs/
 !docs/*/docs/integrations/
 !docs/*/docs/integrations/**

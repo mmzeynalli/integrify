@@ -1,4 +1,4 @@
-# KapitalBank mühit dəyişənləri
+# Mühit dəyişənləri
 
 ## Haqqında
 
