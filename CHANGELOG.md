@@ -1,3 +1,10 @@
+## v1.1.1 (2026-08-08)
+
+### What's Changed
+
+* Bumped maximal httpx version from 0.28.0 to 1.
+* Added dependabot
+
 ## v1.1.0 (2025-10-28)
 
 ### What's Changed

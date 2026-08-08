@@ -592,7 +592,7 @@ wheels = [
 
 [[package]]
 name = "integrify-core"
-version = "1.0.5"
+version = "1.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
@@ -628,7 +628,7 @@ gh = [
 
 [package.metadata]
 requires-dist = [
-    { name = "httpx", specifier = ">=0.27.2,<0.28" },
+    { name = "httpx", specifier = ">=0.27.2,<1" },
     { name = "pydantic", specifier = ">=2.11.10,<3" },
 ]
 
