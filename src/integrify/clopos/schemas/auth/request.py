@@ -12,4 +12,8 @@ class AuthRequest(PayloadBaseModel):
         validate_default=True,
     )
     brand: str = Field(default=env.CLOPOS_BRAND, min_length=1, validate_default=True)
-    venue_id: str = Field(default=env.CLOPOS_VENUE_ID, min_length=1, validate_default=True)
+    integrator_id: str = Field(
+        default=env.CLOPOS_INTEGRATOR_ID,
+        min_length=1,
+        validate_default=True,
+    )

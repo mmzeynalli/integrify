@@ -1,15 +1,13 @@
 from datetime import date, datetime
-from decimal import Decimal
-from typing import TYPE_CHECKING, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Coroutine, Generic, Literal, Optional, Union, overload
 
-from integrify.api import APIClient
+from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.clopos import env
 from integrify.clopos.handlers import (
     AuthHandler,
+    CloseReceiptHandler,
     CreateCustomerHandler,
     CreateOrderHandler,
-    CreateReceiptHandler,
-    DeleteReceiptHandler,
     GetByIDHandler,
     GetCategoriesHandler,
     GetCategoryByIDHandler,
@@ -20,16 +18,15 @@ from integrify.clopos.handlers import (
     GetProductByIDHandler,
     GetProductsHandler,
     GetReceiptsHandler,
+    GetReceiptStockOperationsHandler,
     GetStationsHandler,
     GetStopListHandler,
     UpdateClosedReceiptHandler,
     UpdateOrderHandler,
-    UpdateReceiptHandler,
 )
 from integrify.clopos.schemas.auth.response import AuthResponse
 from integrify.clopos.schemas.categories.object import Category
 from integrify.clopos.schemas.common.response import (
-    BaseResponse,
     ObjectListResponse,
     ObjectResponse,
 )
@@ -37,26 +34,29 @@ from integrify.clopos.schemas.customers.object import Customer, Group
 from integrify.clopos.schemas.customers.request import CustomerFilter
 from integrify.clopos.schemas.enums import (
     CategoryType,
-    DiscountType,
     Gender,
     OrderStatus,
 )
 from integrify.clopos.schemas.orders.object import Order, OrderPayloadIn
+from integrify.clopos.schemas.price_lists.object import PriceList, PriceListPrice
 from integrify.clopos.schemas.products.object import Product, StopList
 from integrify.clopos.schemas.products.request import GetProducstRequestFilter, StopListFilter
-from integrify.clopos.schemas.receipts.object import Receipt, ReceiptProductIn
-from integrify.clopos.schemas.receipts.request import PaymentMethodIn, UpdateReceiptMetaData
+from integrify.clopos.schemas.receipts.object import (
+    Receipt,
+    ReceiptStockOperation,
+)
+from integrify.clopos.schemas.receipts.request import PaymentMethodIn
 from integrify.clopos.schemas.sales.object import PaymentMethod, SaleType
 from integrify.clopos.schemas.stations.object import Station
 from integrify.clopos.schemas.users.object import User
 from integrify.clopos.schemas.venues.object import Venue
 from integrify.schemas import APIResponse
-from integrify.utils import UNSET, Unset, UnsetOrNone
+from integrify.utils import UNSET, Unset
 
 __all__ = ['CloposClientClass', 'CloposRequest', 'CloposAsyncRequest']
 
 
-class CloposClientClass(APIClient):
+class CloposClientClass(APIClient, Generic[_Mode]):
     """Base class for CloposClient"""
 
     def __init__(
@@ -124,14 +124,17 @@ class CloposClientClass(APIClient):
         self.add_handler('get_receipts', GetReceiptsHandler)
         self.add_url('get_receipt_by_id', env.API.RECEIPT_BY_ID, verb='GET')
         self.add_handler('get_receipt_by_id', GetByIDHandler(Receipt))
-        self.add_url('create_receipt', env.API.RECEIPTS, verb='POST')
-        self.add_handler('create_receipt', CreateReceiptHandler)
         self.add_url('update_closed_receipt', env.API.RECEIPT_BY_ID, verb='PATCH')
         self.add_handler('update_closed_receipt', UpdateClosedReceiptHandler)
-        self.add_url('update_receipt', env.API.RECEIPT_BY_ID, verb='PUT')
-        self.add_handler('update_receipt', UpdateReceiptHandler)
-        self.add_url('delete_receipt', env.API.RECEIPT_BY_ID, verb='DELETE')
-        self.add_handler('delete_receipt', DeleteReceiptHandler)
+        self.add_url('close_receipt', env.API.RECEIPT_CLOSE, verb='POST')
+        self.add_handler('close_receipt', CloseReceiptHandler)
+        self.add_url('get_receipt_stock_operations', env.API.RECEIPT_STOCK_OPERATIONS, verb='GET')
+        self.add_handler('get_receipt_stock_operations', GetReceiptStockOperationsHandler)
+
+        self.add_url('get_price_lists', env.API.PRICE_LISTS, verb='GET')
+        self.add_handler('get_price_lists', GetPaginatedDataHandler(PriceList))
+        self.add_url('get_price_list_prices', env.API.PRICE_LIST_PRICES, verb='GET')
+        self.add_handler('get_price_list_prices', GetPaginatedDataHandler(PriceListPrice))
 
     def _build_request_lambda(self, func, url, verb, handler):
         # No headers needed in auth
@@ -149,17 +152,18 @@ class CloposClientClass(APIClient):
 
     if TYPE_CHECKING:
         # pylint: disable=all
+        @overload
         def auth(
-            self,
+            self: 'CloposClientClass[_Sync]',
             client_id: Unset[str] = UNSET,
             client_secret: Unset[str] = UNSET,
             brand: Unset[str] = UNSET,
-            venue_id: Unset[str] = UNSET,
+            integrator_id: Unset[str] = UNSET,
         ) -> APIResponse[AuthResponse]:
             """Exchange your client credentials for a short-lived access token that authorizes all other API requests.
 
 
-            **Endpoint**: `POST /open-api/auth`
+            **Endpoint**: `POST /open-api/v2/auth`
 
             Example:
             ```python
@@ -169,7 +173,7 @@ class CloposClientClass(APIClient):
                 client_id='eNUKI04aYJRU6TBhh5bwUrvmEORgQoxM',
                 client_secret='dqYkWUpDjzvKOgbP3ar8tSNKJbwMyYe1V5R7DHClfSNYkap5C5XxRA6PmzoPv1I2',
                 brand='openapitest',
-                venue_id='1'
+                integrator_id='1'
             )
 
             # Or if you have set the environment variables
@@ -184,11 +188,22 @@ class CloposClientClass(APIClient):
                 client_id: Client ID provided by Clopos. Can be set in environment variable `CLOPOS_CLIENT_ID`
                 client_secret: Client secret provided by Clopos. Can be set in environment variable `CLOPOS_CLIENT_SECRET`
                 brand: Brand you want to authenticate. Can be set in environment variable `CLOPOS_BRAND`
-                venue_id: Venue ID you want to authenticate. Can be set in environment variable `CLOPOS_VENUE_ID`
+                integrator_id: Integrator ID provided by Clopos. Can be set in environment variable `CLOPOS_INTEGRATOR_ID`
             """  # noqa: E501
 
+        @overload
+        def auth(
+            self: 'CloposClientClass[_Async]',
+            client_id: Unset[str] = UNSET,
+            client_secret: Unset[str] = UNSET,
+            brand: Unset[str] = UNSET,
+            integrator_id: Unset[str] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[AuthResponse]]: ...
+        def auth(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_venues(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = UNSET,
             limit: Unset[int] = UNSET,
             *,
@@ -217,8 +232,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_venues(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Venue]]]: ...
+        def get_venues(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_users(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = UNSET,
             limit: Unset[int] = UNSET,
             *,
@@ -247,8 +273,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_users(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[User]]]: ...
+        def get_users(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_user_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -275,8 +312,18 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_user_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[User]]]: ...
+        def get_user_by_id(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_customers(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 20,
             with_: Unset[list[str]] = UNSET,
@@ -309,8 +356,21 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_customers(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 20,
+            with_: Unset[list[str]] = UNSET,
+            filters: Unset[list[CustomerFilter]] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Customer]]]: ...
+        def get_customers(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_customer_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -337,8 +397,18 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_customer_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Customer]]]: ...
+        def get_customer_by_id(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def create_customer(
-            self,
+            self: 'CloposClientClass[_Sync]',
             name: str,
             email: Unset[str] = UNSET,
             phone: Unset[str] = UNSET,
@@ -380,8 +450,25 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def create_customer(
+            self: 'CloposClientClass[_Async]',
+            name: str,
+            email: Unset[str] = UNSET,
+            phone: Unset[str] = UNSET,
+            code: Unset[str] = UNSET,
+            cid: Unset[str] = UNSET,
+            description: Unset[str] = UNSET,
+            group_id: Unset[int] = UNSET,
+            gender: Unset[Gender] = UNSET,
+            date_of_birth: Unset[str | date] = UNSET,
+            header: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Customer]]]: ...
+        def create_customer(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_customer_groups(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = UNSET,
             limit: Unset[int] = UNSET,
             *,
@@ -410,8 +497,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_customer_groups(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Group]]]: ...
+        def get_customer_groups(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_categories(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 50,
             parent_id: Unset[int] = UNSET,
@@ -448,8 +546,23 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_categories(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 50,
+            parent_id: Unset[int] = UNSET,
+            type: Unset[CategoryType] = UNSET,
+            include_children: Unset[bool] = True,
+            include_inactive: Unset[bool] = False,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Category]]]: ...
+        def get_categories(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_category_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -476,8 +589,18 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_category_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Category]]]: ...
+        def get_category_by_id(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_stations(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 50,
             status: Unset[int] = UNSET,
@@ -510,8 +633,21 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_stations(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 50,
+            status: Unset[int] = UNSET,
+            can_print: Unset[bool] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Station]]]: ...
+        def get_stations(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_station_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -538,8 +674,18 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_station_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Station]]]: ...
+        def get_station_by_id(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_products(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 50,
             selects: Unset[Union[str, list[str]]] = UNSET,
@@ -586,8 +732,21 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_products(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 50,
+            selects: Unset[Union[str, list[str]]] = UNSET,
+            filters: Unset[GetProducstRequestFilter] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Product]]]: ...
+        def get_products(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_product_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             with_: Unset[list[str]] = UNSET,
             *,
@@ -616,8 +775,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_product_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            with_: Unset[list[str]] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Product]]]: ...
+        def get_product_by_id(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_stop_list(
-            self,
+            self: 'CloposClientClass[_Sync]',
             filters: Unset[list[StopListFilter]] = UNSET,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -652,8 +822,18 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_stop_list(
+            self: 'CloposClientClass[_Async]',
+            filters: Unset[list[StopListFilter]] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[StopList]]]: ...
+        def get_stop_list(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_sale_types(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 20,
             *,
@@ -686,8 +866,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_sale_types(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 20,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[SaleType]]]: ...
+        def get_sale_types(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_payment_methods(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 20,
             *,
@@ -716,8 +907,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_payment_methods(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 20,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[PaymentMethod]]]: ...
+        def get_payment_methods(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_orders(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 20,
             status: Unset[OrderStatus] = UNSET,
@@ -748,8 +950,20 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_orders(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 20,
+            status: Unset[OrderStatus] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Order]]]: ...
+        def get_orders(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_order_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             with_: Unset[Literal['receipt:id', 'service_notification_id', 'status']] = UNSET,
             *,
@@ -779,8 +993,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_order_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            with_: Unset[Literal['receipt:id', 'service_notification_id', 'status']] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Order]]]: ...
+        def get_order_by_id(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def create_order(
-            self,
+            self: 'CloposClientClass[_Sync]',
             customer_id: int,
             payload: OrderPayloadIn,
             meta: Unset[dict] = UNSET,
@@ -875,8 +1100,20 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def create_order(
+            self: 'CloposClientClass[_Async]',
+            customer_id: int,
+            payload: OrderPayloadIn,
+            meta: Unset[dict] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Order]]]: ...
+        def create_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def update_order(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             status: OrderStatus,
             *,
@@ -906,8 +1143,19 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def update_order(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            status: OrderStatus,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Order]]]: ...
+        def update_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_receipts(
-            self,
+            self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 50,
             sort_by: Unset[str] = 'created_at',
@@ -944,8 +1192,23 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
+        @overload
+        def get_receipts(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = 1,
+            limit: Unset[int] = 50,
+            sort_by: Unset[str] = 'created_at',
+            sort_order: Unset[int] = -1,
+            date_from: Unset[Union[str, datetime]] = UNSET,
+            date_to: Unset[Union[str, datetime]] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Receipt]]]: ...
+        def get_receipts(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_receipt_by_id(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -972,103 +1235,18 @@ class CloposClientClass(APIClient):
             ```
             """  # noqa: E501
 
-        def create_receipt(
-            self,
-            cid: str,
-            payment_methods: list[PaymentMethodIn],
-            user_id: int,
-            by_cash: Unset[Decimal] = UNSET,
-            by_card: Unset[Decimal] = UNSET,
-            customer_discount_type: Unset[DiscountType] = UNSET,
-            discount_rate: Unset[Decimal] = UNSET,
-            discount_type: Unset[DiscountType] = UNSET,
-            discount_value: Unset[Decimal] = UNSET,
-            delivery_fee: Unset[Decimal] = UNSET,
-            gift_total: Unset[Decimal] = UNSET,
-            guests: Unset[int] = UNSET,
-            original_subtotal: Unset[Decimal] = UNSET,
-            printed: Unset[bool] = UNSET,
-            receipt_products: Unset[list[ReceiptProductIn]] = UNSET,
-            remaining: Unset[Decimal] = UNSET,
-            rps_discount: Unset[Decimal] = UNSET,
-            sale_type_id: Unset[int] = UNSET,
-            service_charge: Unset[Decimal] = UNSET,
-            service_charge_value: Unset[Decimal] = UNSET,
-            status: Unset[int] = UNSET,
-            subtotal: Unset[Decimal] = UNSET,
-            terminal_id: Unset[int] = UNSET,
-            total: Unset[Decimal] = UNSET,
-            total_tax: Unset[Decimal] = UNSET,
-            created_at: Unset[int] = UNSET,
-            closed_at: Unset[int] = UNSET,
-            address: Unset[str] = UNSET,
-            courier_id: UnsetOrNone[int] = UNSET,
-            meta: Unset[dict] = UNSET,
+        @overload
+        def get_receipt_by_id(
+            self: 'CloposClientClass[_Async]',
+            id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
-            **kwargs,
-        ) -> APIResponse[ObjectResponse[Receipt]]:
-            """Create a new receipt with payment amounts and methods
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Receipt]]]: ...
+        def get_receipt_by_id(self, *args: Any, **kwds: Any) -> Any: ...
 
-            **Endpoint**: `POST /open-api/receipts`
-
-            Example:
-            ```python
-            from integrify.clopos import CloposClient
-
-            CloposClient.create_receipt(cid='uuid', payment_methods=[{'id': 1, 'name': 'cash', 'amount': 100}], user_id=1, headers={'x-brand': 'openapitest', 'x-venue': '1', 'x-token': 'token'})
-
-            # Or if you have set the environment variables
-            CloposClient.create_receipt(cid='uuid', payment_methods=[{'id': 1, 'name': 'cash', 'amount': 100}], user_id=1, headers={'x-token': 'token'})
-            ```
-
-            Notes:
-                - cid must be unique; if you send the same value again, you will get a 409.
-                - The sum of amounts in payment_methods[] should equal the total (it may differ from by_cash + by_card when you track tenders only via payment_methods).
-                - All time fields are strings and may represent Unix milliseconds in certain integrations.
-                - Creating a receipt through this endpoint stores it as a closed record and does not notify POS terminals or other systems.
-                - Read the `Retry-After` header before retrying if you encounter rate limits or transient errors.
-
-
-            **Response format: [`ObjectResponse[Receipt]`][integrify.clopos.schemas.common.response.ObjectResponse]**
-
-            Args:
-                cid: Transaction UUID
-                payment_methods: List of payment methods
-                user_id: User ID
-                by_cash: Cash total
-                by_card: Card total
-                customer_discount_type: Customer discount type.
-                discount_rate: Percentage discount
-                discount_type: Discount type
-                discount_value: Amount-based discount
-                delivery_fee: Delivery fee
-                gift_total: Gift total
-                guests: Number of guests
-                original_subtotal: Original subtotal
-                printed: If receipt is printed
-                receipt_products: List of receipt products
-                remaining: Remaining amount
-                rps_discount: RPS discount
-                sale_type_id: Sale type ID
-                service_charge: Service charge
-                service_charge_value: Service charge value
-                status: Status
-                subtotal: Subtotal
-                terminal_id: Terminal ID
-                total: Total
-                total_tax: Total tax
-                created_at: Creation time (Unix ms)
-                closed_at: Closing time (Unix ms)
-                address: Customer address
-                courier_id: Courier user ID; can be any user ID
-                meta: Metadata
-                headers: Headers for request
-            ```
-            """  # noqa: E501
-
+        @overload
         def update_closed_receipt(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             order_status: Unset[OrderStatus] = UNSET,
             order_number: Unset[str] = UNSET,
@@ -1102,114 +1280,22 @@ class CloposClientClass(APIClient):
                 headers: Headers for request
             """  # noqa: E501
 
-        def update_receipt(
-            self,
+        @overload
+        def update_closed_receipt(
+            self: 'CloposClientClass[_Async]',
             id: int,
-            cid: str,
-            delivery_fee: int,
-            description: str,
-            order_number: str,
-            order_status: OrderStatus,
-            guests: int,
-            discount_rate: int,
-            discount_type: DiscountType,
-            discount_value: Optional[Decimal],
-            customer_id: int,
-            closed_at: str,
-            meta_customer: UpdateReceiptMetaData,
+            order_status: Unset[OrderStatus] = UNSET,
+            order_number: Unset[str] = UNSET,
+            fiscal_id: Unset[str] = UNSET,
+            lock: Unset[bool] = UNSET,
             *,
             headers: Unset[dict[str, str]] = UNSET,
-        ) -> APIResponse[ObjectResponse[Receipt]]:
-            """Comprehensively update a receipt using the PUT method. This method allows you to update multiple fields at once and can also be used to close receipts.
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Receipt]]]: ...
+        def update_closed_receipt(self, *args: Any, **kwds: Any) -> Any: ...
 
-            Critical Requirements:
-                - The cid and id fields must not change. If different values are sent, the system will treat it as a new receipt and return an error.
-                - All fields in the request body must be provided (full receipt object update).
-
-            **Endpoint**: `PUT /open-api/receipts/{id}`
-
-            Example:
-            ```python
-            from integrify.clopos import CloposClient
-            from integrify.clopos.schemas.enums import DiscountType
-
-            CloposClient.update_receipt(
-                id=1,
-                cid='1',
-                delivery_fee=100,
-                description='Receipt description',
-                order_number='002',
-                order_status='NEW',
-                guests=2,
-                discount_rate=0,
-                discount_type=0,
-                discount_value=None,
-                customer_id=1,
-                closed_at='',
-                meta_customer={
-                    "name": "Rahid Akhundzada",
-                    "bonus": 0,
-                    "cashback": 54.69,
-                    "balance": -108,
-                    "desc": null,
-                    "code": null,
-                    "phone": "+994 70 540 10 40",
-                    "group_name": "My Customers",
-                    "group_id": 1
-                },
-                headers={'x-brand': 'openapitest', 'x-venue': '1', 'x-token': 'token'}
-            )
-
-            # Or if you have set the environment variables
-            CloposClient.update_receipt(
-                id= 1,
-                cid'= 'a7890398-d8ae-41cb-b95f-4d21458d72cf',
-                delivery_fee=5,
-                description='Updated receipt description',
-                order_number='002',
-                order_status='IN_PROGRESS',
-                guests=2,
-                discount_rate=10,
-                discount_type=DiscountType.PERCENTAGE,
-                discount_value=0,
-                customer_id=123,
-                closed_at='',
-                meta_customer={
-                    'name': 'Rahid Akhundzada',
-                    'bonus': 0,
-                    'cashback': 54.69,
-                    'balance': -108,
-                    'desc': null,
-                    'code': null,
-                    'phone': '+994 70 540 10 40',
-                    'group_name': 'My Customers',
-                    'group_id': 1
-                },
-                headers={'x-token': 'token'}
-            )
-            ```
-
-            **Response format: [`ObjectResponse[Receipt]`][integrify.clopos.schemas.common.response.ObjectResponse]**
-
-            Args:
-                id: Receipt ID. **Must match the path parameter** - cannot be changed.
-                cid: Client identifier. **Must match the existing receipt's CID** - cannot be changed.
-                delivery_fee: Delivery fee amount.
-                description: Receipt description. Maximum 500 characters.
-                order_number: Order number identifier (e.g., "002").
-                order_status: Order status. Valid values: "NEW", "SCHEDULED", "IN_PROGRESS", "READY", "PICKED_UP", "COMPLETED", "CANCELLED".
-                guests: Number of guests
-                discount_rate: Discount rate
-                discount_type: Discount type. Valid values: 1 (percent), 2 (amount).
-                discount_value: Discount value. Required when discount_type is 2 (amount).
-                customer_id: Customer identifier. When adding or changing a customer, you must also provide the meta.customer data structure.
-                closed_at: Timestamp when the receipt was closed. Can be set to close the receipt. Format: "YYYY-MM-DD HH:MM:SS" or empty string "" to keep open.
-                meta_customer: Customer metadata object. Required when customer_id is provided.
-                headers: Headers for request
-            """  # noqa: E501
-
+        @overload
         def close_receipt(
-            self,
+            self: 'CloposClientClass[_Sync]',
             id: int,
             cid: str,
             payment_methods: list[PaymentMethodIn],
@@ -1245,34 +1331,96 @@ class CloposClientClass(APIClient):
                 headers: Headers for request
             """  # noqa: E501
 
-        def delete_receipt(
-            self,
+        @overload
+        def close_receipt(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            cid: str,
+            payment_methods: list[PaymentMethodIn],
+            closed_at: str,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectResponse[Receipt]]]: ...
+        def close_receipt(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
+        def get_receipt_stock_operations(
+            self: 'CloposClientClass[_Sync]',
             id: int,
             *,
             headers: Unset[dict[str, str]] = UNSET,
-        ) -> APIResponse[BaseResponse]:
-            """Permanently remove a receipt by its identifier
+        ) -> APIResponse[ObjectListResponse[ReceiptStockOperation]]:
+            """Retrieve the stock deductions (operations) generated by a receipt.
 
-            **Endpoint**: `DELETE /open-api/receipts/{id}`
-
-            Example:
-            ```python
-            from integrify.clopos import CloposClient
-
-            CloposClient.delete_receipt(1, headers={'x-brand': 'openapitest', 'x-venue': '1', 'x-token': 'token'})
-
-            # Or if you have set the environment variables
-            CloposClient.delete_receipt(id=1, headers={'x-token': 'token'})
-            ```
-
-            **Response format: [`BaseResponse`][integrify.clopos.schemas.common.response.BaseResponse]**
+            **Endpoint**: `GET /open-api/v2/receipts/{id}/stock-operations`
 
             Args:
-                id: Receipt ID
-                headers: Headers for request
-            ```
+                id: The receipt ID (path parameter).
             """  # noqa: E501
 
+        @overload
+        def get_receipt_stock_operations(
+            self: 'CloposClientClass[_Async]',
+            id: int,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[ReceiptStockOperation]]]: ...
+        def get_receipt_stock_operations(self, *args: Any, **kwds: Any) -> Any: ...
 
-CloposRequest = CloposClientClass(sync=True)
-CloposAsyncRequest = CloposClientClass(sync=False)
+        @overload
+        def get_price_lists(
+            self: 'CloposClientClass[_Sync]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> APIResponse[ObjectListResponse[PriceList]]:
+            """Retrieve all configured price lists.
+
+            **Endpoint**: `GET /open-api/v2/price-lists`
+
+            Args:
+                page: Page number for pagination.
+                limit: Number of items per page (1-999).
+            """  # noqa: E501
+
+        @overload
+        def get_price_lists(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[PriceList]]]: ...
+        def get_price_lists(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
+        def get_price_list_prices(
+            self: 'CloposClientClass[_Sync]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> APIResponse[ObjectListResponse[PriceListPrice]]:
+            """Retrieve individual product prices within price lists.
+
+            **Endpoint**: `GET /open-api/v2/price-lists/prices`
+
+            Args:
+                page: Page number for pagination.
+                limit: Number of items per page (1-999).
+            """  # noqa: E501
+
+        @overload
+        def get_price_list_prices(
+            self: 'CloposClientClass[_Async]',
+            page: Unset[int] = UNSET,
+            limit: Unset[int] = UNSET,
+            *,
+            headers: Unset[dict[str, str]] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[PriceListPrice]]]: ...
+        def get_price_list_prices(self, *args: Any, **kwds: Any) -> Any: ...
+
+
+CloposRequest: 'CloposClientClass[_Sync]' = CloposClientClass(sync=True)
+CloposAsyncRequest: 'CloposClientClass[_Async]' = CloposClientClass(sync=False)

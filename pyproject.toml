@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify-clopos"
-version = "0.0.1"
+version = "0.1.0"
 description = "Integrify is a library that simplifies API integrations. This library is designed for Clopos integration."
 authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
 requires-python = ">=3.9"
@@ -35,7 +35,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
     "Topic :: Internet :: WWW/HTTP",
 ]
-dependencies = ["integrify-core>=1.1.0"]
+dependencies = ["integrify-core>=1.2.0,<2"]
 
 [project.urls]
 Homepage = "https://integrify.mmzeynalli.dev/integrations/clopos/about"

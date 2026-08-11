@@ -302,3 +302,50 @@ class Receipt(Timestamp):
 
     properties: UnsetOrNoneField[dict]
     """Receipt properties"""
+
+
+class ReceiptStockOperation(BaseModel):
+    id: int
+    """Unique identifier of the stock operation"""
+
+    receipt_id: int
+    """ID of the receipt that generated this operation"""
+
+    receipt_product_id: UnsetOrNoneField[int]
+    """ID of the receipt product, if applicable"""
+
+    product_id: int
+    """ID of the product whose stock changed"""
+
+    stock_id: int
+    """ID of the stock record"""
+
+    storage_id: int
+    """ID of the storage the stock belongs to"""
+
+    quantity: Decimal
+    """The quantity deducted (or added) by this operation"""
+
+    before_quantity: Decimal
+    """Stock quantity before the operation"""
+
+    after_quantity: Decimal
+    """Stock quantity after the operation"""
+
+    cost: Decimal
+    """Unit cost used for the operation"""
+
+    before_cost: Decimal
+    """Cost before the operation"""
+
+    total_cost: Decimal
+    """Total cost of the operation"""
+
+    operated_at: UnsetOrNoneField[str]
+    """Timestamp of the operation (YYYY-MM-DD HH:mm:ss)"""
+
+    product: UnsetOrNoneField[dict]
+    """The related product object"""
+
+    stock: UnsetOrNoneField[dict]
+    """The related stock object"""

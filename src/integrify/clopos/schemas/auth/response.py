@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel
 
@@ -8,4 +8,5 @@ class AuthResponse(BaseModel):
     token: str
     token_type: str
     expires_in: int
-    message: str
+    expires_at: Optional[int] = None
+    message: Optional[str] = None

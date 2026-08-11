@@ -1,3 +1,4 @@
+# pylint: disable=wrong-import-order,ungrouped-imports
 import json
 from functools import cached_property
 from typing import Annotated, Union
@@ -12,7 +13,6 @@ from integrify.clopos.schemas.categories.object import Category
 from integrify.clopos.schemas.categories.request import GetCategoriesRequest, GetCategoryByIDRequest
 from integrify.clopos.schemas.common.request import ByIDRequest, PaginatedDataRequest
 from integrify.clopos.schemas.common.response import (
-    BaseResponse,
     ErrorResponse,
     ObjectListResponse,
     ObjectResponse,
@@ -32,13 +32,11 @@ from integrify.clopos.schemas.products.request import (
     GetProductsRequest,
     GetStopListRequest,
 )
-from integrify.clopos.schemas.receipts.object import Receipt
+from integrify.clopos.schemas.receipts.object import Receipt, ReceiptStockOperation
 from integrify.clopos.schemas.receipts.request import (
     CloseReceiptRequest,
-    CreateReceiptRequest,
     GetReceiptsRequest,
     UpdateClosedReceiptRequest,
-    UpdateReceiptRequest,
 )
 from integrify.clopos.schemas.stations.object import Station
 from integrify.clopos.schemas.stations.request import GetStationsRequest
@@ -68,9 +66,8 @@ class AuthedAPIPayloadHandler(APIPayloadHandler):
     def headers(self):
         default = super().headers
 
-        if env.CLOPOS_BRAND:
-            default['x-brand'] = env.CLOPOS_BRAND
-
+        # v2: yalnız `x-token` tələb olunur (JWT brand/venue/integrator-i encode edir).
+        # `x-venue` opsional olaraq JWT-dəki venue-nu konkret sorğu üçün override edir.
         if env.CLOPOS_VENUE_ID:
             default['x-venue'] = env.CLOPOS_VENUE_ID
 
@@ -231,21 +228,12 @@ class GetReceiptsHandler(AuthedAPIPayloadHandler):
         super().__init__(req_model, resp_model, dry)
 
 
-class CreateReceiptHandler(AuthedAPIPayloadHandler):
-    def __init__(
-        self,
-        req_model=CreateReceiptRequest,
-        resp_model=ObjectResponse[Receipt],
-        dry=False,
-    ):
-        super().__init__(req_model, resp_model, dry)
-
-
 class _UpdateReceiptHandler(AuthedAPIPayloadHandler):
-    def handle_payload(self, *args, **kwds):
-        if self.req_model:
-            self._APIPayloadHandler__req_model = self.req_model.from_args(*args, **kwds)  # pylint: disable=invalid-name,attribute-defined-outside-init
-            return self._APIPayloadHandler__req_model.model_dump(
+    def handle_payload(self, req_model, *args, **kwds):
+        # Fərqli olaraq base handler-dən, burada `URL_PARAM_FIELDS` body-dən çıxarılmır
+        # (yəni id həm URL-də, həm body-də göndərilir).
+        if self.req_model and req_model is not None:
+            return req_model.model_dump(
                 by_alias=True,
                 mode='json',
             )
@@ -266,16 +254,6 @@ class UpdateClosedReceiptHandler(_UpdateReceiptHandler):
         super().__init__(req_model, resp_model, dry)
 
 
-class UpdateReceiptHandler(_UpdateReceiptHandler):
-    def __init__(
-        self,
-        req_model=UpdateReceiptRequest,
-        resp_model=ObjectResponse[Receipt],
-        dry=False,
-    ):
-        super().__init__(req_model, resp_model, dry)
-
-
 class CloseReceiptHandler(_UpdateReceiptHandler):
     def __init__(
         self,
@@ -286,6 +264,11 @@ class CloseReceiptHandler(_UpdateReceiptHandler):
         super().__init__(req_model, resp_model, dry)
 
 
-class DeleteReceiptHandler(AuthedAPIPayloadHandler):
-    def __init__(self, req_model=ByIDRequest, resp_model=BaseResponse, dry=False):
+class GetReceiptStockOperationsHandler(AuthedAPIPayloadHandler):
+    def __init__(
+        self,
+        req_model=ByIDRequest,
+        resp_model=ObjectListResponse[ReceiptStockOperation],
+        dry=False,
+    ):
         super().__init__(req_model, resp_model, dry)

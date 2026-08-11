@@ -3,11 +3,12 @@ from typing import TYPE_CHECKING
 
 from pytest_mock import MockerFixture
 
-from integrify.clopos.schemas.common.response import BaseResponse, ErrorResponse, ObjectResponse
+from integrify.clopos.schemas.common.response import ErrorResponse, ObjectResponse
 from integrify.clopos.schemas.enums import OrderStatus, ProductType
 from integrify.clopos.schemas.orders.object import Order
+from integrify.clopos.schemas.price_lists.object import PriceList, PriceListPrice
 from integrify.clopos.schemas.products.object import Product, StopList
-from integrify.clopos.schemas.receipts.object import Receipt
+from integrify.clopos.schemas.receipts.object import Receipt, ReceiptStockOperation
 from integrify.schemas import APIResponse
 from tests.client import CloposTestClientClass
 from tests.conftest import requires_env
@@ -284,20 +285,6 @@ def test_get_receipt_by_id_wrong_id(authed_client: 'CloposTestClientClass'):
 
 
 @requires_env()
-def test_create_receipt(
-    authed_client: 'CloposTestClientClass',
-    new_receipt_resp: APIResponse[ObjectResponse[Receipt]],
-):
-    assert new_receipt_resp.ok
-    assert isinstance(new_receipt_resp.body.data, Receipt)
-
-    resp = authed_client.get_receipt_by_id(new_receipt_resp.body.data.id)
-
-    assert resp.ok
-    assert isinstance(resp.body.data, Receipt)
-
-
-@requires_env()
 def test_get_receipt_by_id(authed_client: 'CloposTestClientClass', new_receipt_object: Receipt):
     resp = authed_client.get_receipt_by_id(new_receipt_object.id)
 
@@ -328,8 +315,38 @@ def test_update_closed_receipt(authed_client: 'CloposTestClientClass', new_recei
 
 
 @requires_env()
-def test_delete_receipt(authed_client: 'CloposTestClientClass', new_receipt_object: Receipt):
-    resp = authed_client.delete_receipt(new_receipt_object.id)
+def test_get_receipt_stock_operations(
+    authed_client: 'CloposTestClientClass', new_receipt_object: Receipt
+):
+    resp = authed_client.get_receipt_stock_operations(new_receipt_object.id)
 
     assert resp.ok
-    assert isinstance(resp.body, BaseResponse)
+    assert resp.body.success
+    assert isinstance(resp.body.data, list)
+
+    if len(resp.body.data) > 0:
+        assert isinstance(resp.body.data[0], ReceiptStockOperation)
+
+
+@requires_env()
+def test_get_price_lists(authed_client: 'CloposTestClientClass'):
+    resp = authed_client.get_price_lists()
+
+    assert resp.ok
+    assert resp.body.success
+    assert isinstance(resp.body.data, list)
+
+    if len(resp.body.data) > 0:
+        assert isinstance(resp.body.data[0], PriceList)
+
+
+@requires_env()
+def test_get_price_list_prices(authed_client: 'CloposTestClientClass'):
+    resp = authed_client.get_price_list_prices()
+
+    assert resp.ok
+    assert resp.body.success
+    assert isinstance(resp.body.data, list)
+
+    if len(resp.body.data) > 0:
+        assert isinstance(resp.body.data[0], PriceListPrice)

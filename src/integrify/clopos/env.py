@@ -3,20 +3,23 @@ from enum import Enum
 
 from integrify.utils import Environment
 
-VERSION = '1.0.1'  # version of client documentation
+VERSION = '2.0.0'  # Clopos Open API version targeted by this client
 
 # ENV VARS HERE
 CLOPOS_CLIENT_ID: str = os.getenv('CLOPOS_CLIENT_ID', '')
 CLOPOS_CLIENT_SECRET: str = os.getenv('CLOPOS_CLIENT_SECRET', '')
 CLOPOS_BRAND: str = os.getenv('CLOPOS_BRAND', '')
+CLOPOS_INTEGRATOR_ID: str = os.getenv('CLOPOS_INTEGRATOR_ID', '')
+# v2-də auth JWT-si brand/venue/integrator-i encode edir. `x-venue` opsional olaraq
+# JWT-dəki venue-nu konkret sorğu üçün override etmək üçün saxlanılır.
 CLOPOS_VENUE_ID: str = os.getenv('CLOPOS_VENUE_ID', '')
 CLOPOS_ENV: str = os.getenv('CLOPOS_ENV', Environment.TEST.value)
 
 
 class API(str, Enum):
-    """Endpoint constant-ları"""
+    """Endpoint constant-ları (Clopos Open API v2)"""
 
-    BASE_URL = 'https://integrations.clopos.com/open-api/'
+    BASE_URL = 'https://integrations.clopos.com/open-api/v2/'
 
     AUTH = 'auth'
 
@@ -47,6 +50,11 @@ class API(str, Enum):
 
     RECEIPTS = 'receipts'
     RECEIPT_BY_ID = 'receipts/{id}'
+    RECEIPT_CLOSE = 'receipts/{id}/close'
+    RECEIPT_STOCK_OPERATIONS = 'receipts/{id}/stock-operations'
+
+    PRICE_LISTS = 'price-lists'
+    PRICE_LIST_PRICES = 'price-lists/prices'
 
 
 __all__ = [
