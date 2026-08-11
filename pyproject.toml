@@ -4,10 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify-kapitalbank"
-version = "1.0.0"
+version = "1.1.0"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır. Bu kitabxana KapitalBank inteqrasiyası üçün nəzərdə tutulmuşdur."
 authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
-requires-python = "~=3.9"
+requires-python = ">=3.9"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 classifiers = [
@@ -35,7 +35,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
     "Topic :: Internet :: WWW/HTTP",
 ]
-dependencies = ["integrify-core>=1.0.3,<2"]
+dependencies = ["integrify-core>=1.2.0,<2"]
 
 [project.urls]
 Homepage = "https://integrify.mmzeynalli.dev/integrations/kapitalbank/about"
@@ -68,7 +68,7 @@ docs = [
     "mkdocs-material[imaging]>=9.6.4,<10",
     "mkdocstrings[python]>=0.28.1,<1.0.0",
     "mkdocs-panzoom-plugin>=0.1.3,<0.2",
-    "griffe-pydantic>=1.1.0,<2",
+    "griffe-pydantic>=1.1.5,<2",
 ]
 
 [tool.uv]
@@ -93,15 +93,12 @@ src = ["src", "tests", "duties.py"]
 
 [tool.ruff.lint]
 select = [
-    # Pyflakes
-    "F",
-    # Pycodestyle
-    "E",
-    "W",
-    # isort
-    "I",
-    # Print statements
-    "T201",
+    "F",  # Pyflakes
+    "E",  # Pycodestyle
+    "W",  # warnings
+    "I",  # isort
+    "T",  # Ban print statements (T201)
+    "UP", # pyupgrade (modern typing / syntax fixes)
 ]
 ignore-init-module-imports = true
 

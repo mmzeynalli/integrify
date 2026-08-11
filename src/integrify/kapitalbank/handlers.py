@@ -1,7 +1,7 @@
 import base64
 import json
 from functools import cached_property
-from typing import Optional, Type
+from typing import ClassVar, Optional
 
 import httpx
 from pydantic import BaseModel
@@ -34,18 +34,24 @@ from integrify.kapitalbank.schemas.response import (
     ProcessPaymentWithSavedCardResponseSchema,
     RefundOrderResponseSchema,
 )
-from integrify.schemas import PayloadBaseModel
+
+
+def _safe_json(resp: httpx.Response) -> dict:
+    """Cavabı JSON kimi parse etmək; JSON deyilsə (gateway xətası, boş body)
+    exception atmaq əvəzinə boş dict qaytarır."""
+    try:
+        data = resp.json()
+    except (json.JSONDecodeError, ValueError):
+        return {}
+
+    return data if isinstance(data, dict) else {}
 
 
 class BasePayloadHandler(APIPayloadHandler):
-    def __init__(
-        self,
-        req_model: Type[PayloadBaseModel],
-        resp_model: Type[_ResponseT],
-        data_key: Optional[str] = None,
-    ):
-        super().__init__(req_model, resp_model)
-        self.data_key = data_key
+    """Kapitalbank üçün baza handler. `req_model`/`resp_model`/`data_key`
+    alt class-larda ClassVar kimi təyin olunur."""
+
+    data_key: ClassVar[Optional[str]] = None
 
     @cached_property
     def headers(self):
@@ -70,148 +76,118 @@ class BasePayloadHandler(APIPayloadHandler):
         """  # noqa: E501
 
         api_resp = APIResponse[BaseResponseSchema].model_validate(resp, from_attributes=True)
+        body = _safe_json(resp)
 
         if resp.status_code == 200:
             if not self.resp_model:
                 raise ValueError('Response model is not set for this handler.')
 
-            data = self.get_response_data(resp.json())
+            data = self.get_response_data(body)
 
             assert issubclass(self.resp_model, BaseModel)
             api_resp.body.data = self.resp_model.model_validate(data, from_attributes=True)
         else:
-            api_resp.body.error = ErrorResponseBodySchema.model_validate(
-                resp.json(),
-                from_attributes=True,
-            )
+            # Error body gözlənilən formatda olmaya bilər (məs., HTML xəta səhifəsi);
+            # bu halda status kodu və `ok` field-i xətanı bildirir.
+            try:
+                api_resp.body.error = ErrorResponseBodySchema.model_validate(
+                    body,
+                    from_attributes=True,
+                )
+            except (ValueError, TypeError):
+                api_resp.body.error = None
 
         return api_resp  # type: ignore[return-value]
 
     def get_response_data(self, response_json: dict) -> dict:
         """`self.data_key` varsa, o key-dəki datanı götürmək"""
         if not self.data_key:
-            raise NotImplementedError("Subclasses must define 'response_data_key'")
+            raise NotImplementedError("Subclasses must define 'data_key'")
 
         return response_json.get(self.data_key, {})
 
 
 class CreateOrderPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            CreateOrderRequestSchema,
-            CreateOrderResponseSchema,
-            data_key='order',
-        )
+    req_model = CreateOrderRequestSchema
+    resp_model = CreateOrderResponseSchema
+    data_key = 'order'
 
 
 class OrderInformationPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            OrderInformationRequestSchema,
-            OrderInformationResponseSchema,
-            data_key='order',
-        )
+    req_model = OrderInformationRequestSchema
+    resp_model = OrderInformationResponseSchema
+    data_key = 'order'
 
     def post_handle_payload(self, data):
         return data
 
 
 class DetailedOrderInformationPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            OrderInformationRequestSchema,
-            DetailedOrderInformationResponseSchema,
-            data_key='order',
-        )
+    req_model = OrderInformationRequestSchema
+    resp_model = DetailedOrderInformationResponseSchema
+    data_key = 'order'
 
     def post_handle_payload(self, data):
         return data
 
 
 class RefundOrderPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            RefundOrderRequestSchema,
-            RefundOrderResponseSchema,
-            data_key='tran',
-        )
+    req_model = RefundOrderRequestSchema
+    resp_model = RefundOrderResponseSchema
+    data_key = 'tran'
 
 
 class SaveCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            SaveCardRequestSchema,
-            CreateOrderResponseSchema,
-            data_key='order',
-        )
+    req_model = SaveCardRequestSchema
+    resp_model = CreateOrderResponseSchema
+    data_key = 'order'
 
 
 class PayAndSaveCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            PayAndSaveCardRequestSchema,
-            CreateOrderResponseSchema,
-            data_key='order',
-        )
+    req_model = PayAndSaveCardRequestSchema
+    resp_model = CreateOrderResponseSchema
+    data_key = 'order'
 
 
 class FullReverseOrderPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            FullReverseOrderRequestSchema,
-            FullReverseOrderResponseSchema,
-            data_key='tran',
-        )
+    req_model = FullReverseOrderRequestSchema
+    resp_model = FullReverseOrderResponseSchema
+    data_key = 'tran'
 
 
 class ClearingOrderPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            ClearingOrderRequestSchema,
-            ClearingOrderResponseSchema,
-            data_key='tran',
-        )
+    req_model = ClearingOrderRequestSchema
+    resp_model = ClearingOrderResponseSchema
+    data_key = 'tran'
 
 
 class PartialReverseOrderPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            PartialReverseOrderRequestSchema,
-            PartialReverseOrderResponseSchema,
-            data_key='tran',
-        )
+    req_model = PartialReverseOrderRequestSchema
+    resp_model = PartialReverseOrderResponseSchema
+    data_key = 'tran'
 
 
 class OrderWithSavedCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            OrderWithSavedCardRequestSchema,
-            CreateOrderResponseSchema,
-            data_key='order',
-        )
+    req_model = OrderWithSavedCardRequestSchema
+    resp_model = CreateOrderResponseSchema
+    data_key = 'order'
 
 
 class LinkCardTokenPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            LinkCardTokenRequestSchema,
-            LinkCardTokenResponseSchema,
-            data_key='order',
-        )
+    req_model = LinkCardTokenRequestSchema
+    resp_model = LinkCardTokenResponseSchema
+    data_key = 'order'
 
     def post_handle_payload(self, data):
-        return json.dumps(
-            {
-                'order': {'initiationEnvKind': 'Server'},
-                'token': {'storedId': data['token']},
-            }
-        )
+        # `dict` qaytarırıq (əvvəlki `json.dumps(...)` string qaytarırdı, bu da httpx
+        # tərəfindən ikiqat JSON-encode olunub, body-ni korlayırdı).
+        return {
+            'order': {'initiationEnvKind': 'Server'},
+            'token': {'storedId': data['token']},
+        }
 
 
 class ProcessPaymentWithSavedCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            ProcessPaymentWithSavedCardRequestSchema,
-            ProcessPaymentWithSavedCardResponseSchema,
-            data_key='tran',
-        )
+    req_model = ProcessPaymentWithSavedCardRequestSchema
+    resp_model = ProcessPaymentWithSavedCardResponseSchema
+    data_key = 'tran'

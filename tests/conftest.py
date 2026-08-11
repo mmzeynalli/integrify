@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from integrify.test import pytest_addoption  # noqa: F401
 from integrify.test import requires_env as _requires_env
 from tests.mocks import *  # noqa: F403
 

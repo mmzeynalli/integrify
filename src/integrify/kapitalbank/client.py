@@ -1,7 +1,8 @@
-from typing import TYPE_CHECKING
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any, Generic, overload
 from typing import SupportsFloat as Numeric
 
-from integrify.api import APIClient, APIResponse
+from integrify.api import APIClient, APIResponse, _Async, _Mode, _Sync
 from integrify.kapitalbank import env
 from integrify.kapitalbank.handlers import (
     ClearingOrderPayloadHandler,
@@ -29,12 +30,13 @@ from integrify.kapitalbank.schemas.response import (
     ProcessPaymentWithSavedCardResponseSchema,
     RefundOrderResponseSchema,
 )
-from integrify.utils import _UNSET, Unsettable
+from integrify.utils import UNSET as _UNSET
+from integrify.utils import Unset as Unsettable
 
 __all__ = ['KapitalClientClass']
 
 
-class KapitalClientClass(APIClient):
+class KapitalClientClass(APIClient, Generic[_Mode]):
     def __init__(
         self,
         name='Kapital',
@@ -121,7 +123,12 @@ class KapitalClientClass(APIClient):
             currency: Ödənişin məzənnəsi. Mümkün dəyərlər: `["AZN", "USD"]`.
             description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
         """  # noqa: E501
-        order_response = self.order_with_saved_card(  # pylint: disable=assignment-from-no-return
+        # Bu köməkçi metod nəticələri sinxron istifadə edir (`.body.data`), ona görə
+        # yalnız sync klient üçün mənalıdır. Alt-metodların overload-ları `self`-in
+        # `KapitalClientClass[_Sync]` olmasını tələb etdiyi üçün `self`-i sync kimi cast edirik.
+        sync_self: 'KapitalClientClass[_Sync]' = self  # type: ignore[assignment]
+
+        order_response = sync_self.order_with_saved_card(  # pylint: disable=assignment-from-no-return
             amount=amount,
             currency=currency,
             description=description,
@@ -132,22 +139,24 @@ class KapitalClientClass(APIClient):
         order_id = order_response.body.data.id
         password = order_response.body.data.password
 
-        self.link_card_token(
+        sync_self.link_card_token(
             token=token,
             order_id=order_id,
             password=password,
         )
 
-        return self.process_payment_with_saved_card(
+        return sync_self.process_payment_with_saved_card(
             amount=amount,
             order_id=order_id,
             password=password,
         )
 
     if TYPE_CHECKING:
+        # pylint: disable=missing-function-docstring,unused-argument
 
+        @overload
         def create_order(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             description: Unsettable[str] = _UNSET,
@@ -180,8 +189,18 @@ class KapitalClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
+        @overload
+        def create_order(
+            self: 'KapitalClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            description: Unsettable[str] = _UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]]: ...
+        def create_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_order_information(
-            self, order_id: int
+            self: 'KapitalClientClass[_Sync]', order_id: int
         ) -> APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]:
             """Ödəniş haqda qısa məlumat əldə etmək üçün sorğu
 
@@ -202,8 +221,17 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
             """  # noqa: E501
 
+        @overload
+        def get_order_information(
+            self: 'KapitalClientClass[_Async]', order_id: int
+        ) -> Coroutine[
+            Any, Any, APIResponse[BaseResponseSchema[OrderInformationResponseSchema]]
+        ]: ...
+        def get_order_information(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_detailed_order_info(
-            self, order_id: int
+            self: 'KapitalClientClass[_Sync]', order_id: int
         ) -> APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]:
             """Ödəniş haqda detallı məlumat əldə etmək üçün sorğu
 
@@ -224,8 +252,17 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
             """  # noqa: E501
 
+        @overload
+        def get_detailed_order_info(
+            self: 'KapitalClientClass[_Async]', order_id: int
+        ) -> Coroutine[
+            Any, Any, APIResponse[BaseResponseSchema[DetailedOrderInformationResponseSchema]]
+        ]: ...
+        def get_detailed_order_info(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def refund_order(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             order_id: int,
             amount: Numeric,
         ) -> APIResponse[BaseResponseSchema[RefundOrderResponseSchema]]:
@@ -253,8 +290,17 @@ class KapitalClientClass(APIClient):
                 amount: Geri ödəniş miqdarı. Numerik dəyər.
             """  # noqa: E501
 
+        @overload
+        def refund_order(
+            self: 'KapitalClientClass[_Async]',
+            order_id: int,
+            amount: Numeric,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[RefundOrderResponseSchema]]]: ...
+        def refund_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def save_card(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             description: Unsettable[str] = _UNSET,
@@ -286,8 +332,18 @@ class KapitalClientClass(APIClient):
             `response.body.data.stored_tokens[0].id` ilə tokeni əldə edə bilərsiniz.
             """  # noqa: E501
 
+        @overload
+        def save_card(
+            self: 'KapitalClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            description: Unsettable[str] = _UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]]: ...
+        def save_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def pay_and_save_card(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             description: Unsettable[str] = _UNSET,
@@ -319,8 +375,18 @@ class KapitalClientClass(APIClient):
             `response.body.data.stored_tokens[0].id` ilə tokeni əldə edə bilərsiniz.
             """  # noqa: E501
 
+        @overload
+        def pay_and_save_card(
+            self: 'KapitalClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            description: Unsettable[str] = _UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]]: ...
+        def pay_and_save_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def full_reverse_order(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             order_id: int,
         ) -> APIResponse[BaseResponseSchema[FullReverseOrderResponseSchema]]:
             """Ödənişi ləğv etmək üçün sorğu
@@ -344,8 +410,18 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
             """  # noqa: E501
 
+        @overload
+        def full_reverse_order(
+            self: 'KapitalClientClass[_Async]',
+            order_id: int,
+        ) -> Coroutine[
+            Any, Any, APIResponse[BaseResponseSchema[FullReverseOrderResponseSchema]]
+        ]: ...
+        def full_reverse_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def clearing_order(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             order_id: int,
             amount: Numeric,
         ) -> APIResponse[BaseResponseSchema[ClearingOrderResponseSchema]]:
@@ -370,8 +446,17 @@ class KapitalClientClass(APIClient):
                 order_id: Ödənişin ID-si.
             """  # noqa: E501
 
+        @overload
+        def clearing_order(
+            self: 'KapitalClientClass[_Async]',
+            order_id: int,
+            amount: Numeric,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[ClearingOrderResponseSchema]]]: ...
+        def clearing_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def partial_reverse_order(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             order_id: int,
             amount: Numeric,
         ) -> APIResponse[BaseResponseSchema[PartialReverseOrderResponseSchema]]:
@@ -397,8 +482,19 @@ class KapitalClientClass(APIClient):
                 amount: Ləğv olunacaq miqdar. Numerik dəyər.
             """  # noqa: E501
 
+        @overload
+        def partial_reverse_order(
+            self: 'KapitalClientClass[_Async]',
+            order_id: int,
+            amount: Numeric,
+        ) -> Coroutine[
+            Any, Any, APIResponse[BaseResponseSchema[PartialReverseOrderResponseSchema]]
+        ]: ...
+        def partial_reverse_order(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def order_with_saved_card(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             description: Unsettable[str] = _UNSET,
@@ -417,8 +513,18 @@ class KapitalClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
+        @overload
+        def order_with_saved_card(
+            self: 'KapitalClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            description: Unsettable[str] = _UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[CreateOrderResponseSchema]]]: ...
+        def order_with_saved_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def link_card_token(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             token: int,
             order_id: int,
             password: str,
@@ -437,8 +543,18 @@ class KapitalClientClass(APIClient):
                 password: Ödənişin passwordu.
             """  # noqa: E501
 
+        @overload
+        def link_card_token(
+            self: 'KapitalClientClass[_Async]',
+            token: int,
+            order_id: int,
+            password: str,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema[LinkCardTokenResponseSchema]]]: ...
+        def link_card_token(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def process_payment_with_saved_card(
-            self,
+            self: 'KapitalClientClass[_Sync]',
             amount: Numeric,
             order_id: int,
             password: str,
@@ -457,6 +573,17 @@ class KapitalClientClass(APIClient):
                 password: Ödənişin password
             """  # noqa: E501
 
+        @overload
+        def process_payment_with_saved_card(
+            self: 'KapitalClientClass[_Async]',
+            amount: Numeric,
+            order_id: int,
+            password: str,
+        ) -> Coroutine[
+            Any, Any, APIResponse[BaseResponseSchema[ProcessPaymentWithSavedCardResponseSchema]]
+        ]: ...
+        def process_payment_with_saved_card(self, *args: Any, **kwds: Any) -> Any: ...
 
-KapitalRequest = KapitalClientClass(sync=True)
-KapitalAsyncRequest = KapitalClientClass(sync=False)
+
+KapitalRequest: 'KapitalClientClass[_Sync]' = KapitalClientClass(sync=True)
+KapitalAsyncRequest: 'KapitalClientClass[_Async]' = KapitalClientClass(sync=False)

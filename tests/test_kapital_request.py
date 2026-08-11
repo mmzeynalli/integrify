@@ -3,14 +3,17 @@ from pytest_mock import MockFixture
 
 from integrify.kapitalbank.client import KapitalClientClass
 from integrify.kapitalbank.schemas.enums import ErrorCode
+from integrify.test import live
 from tests.conftest import requires_env
 
 
+@live
 @requires_env()
 def test_create_order_request(kapital_order):
     assert kapital_order.redirect_url.startswith('https://txpgtst.kapitalbank.az')
 
 
+@live
 @requires_env()
 def test_get_order_information_request(kapital_order, kapital_client: KapitalClientClass):
     order_id = kapital_order.id
@@ -25,6 +28,7 @@ def test_get_order_information_request(kapital_order, kapital_client: KapitalCli
     assert resp.body.data.status == 'Preparing'
 
 
+@live
 @requires_env()
 def test_get_order_information_invalid_id_request(kapital_client: KapitalClientClass):
     resp = kapital_client.get_order_information(order_id=0)
@@ -36,6 +40,7 @@ def test_get_order_information_invalid_id_request(kapital_client: KapitalClientC
     assert resp.body.error.error_description == 'no order found'
 
 
+@live
 @requires_env()
 def test_get_detailed_order_information_request(
     kapital_order,
@@ -57,6 +62,7 @@ def test_get_detailed_order_information_request(
     assert resp.body.data.hpp_url.startswith('https://txpgtst.kapitalbank.az')
 
 
+@live
 @requires_env()
 def test_get_detailed_order_information_invalid_id_request(kapital_client: KapitalClientClass):
     resp = kapital_client.get_detailed_order_info(order_id=0)
@@ -68,6 +74,7 @@ def test_get_detailed_order_information_invalid_id_request(kapital_client: Kapit
     assert resp.body.error.error_description == 'no order found'
 
 
+@live
 @requires_env()
 def test_save_card_request(kapital_client: KapitalClientClass):
     resp = kapital_client.save_card(
@@ -82,6 +89,7 @@ def test_save_card_request(kapital_client: KapitalClientClass):
     assert resp.body.data.redirect_url.startswith('https://txpgtst.kapitalbank.az')
 
 
+@live
 @requires_env()
 def test_pay_and_save_card_request(
     kapital_client: KapitalClientClass,

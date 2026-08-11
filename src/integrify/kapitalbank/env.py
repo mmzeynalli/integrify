@@ -7,7 +7,17 @@ from integrify.utils import Environment
 
 VERSION = '2024.10.19'
 
-KAPITAL_ENV: str = os.getenv('KAPITAL_ENV', Environment.TEST.value)
+KAPITAL_ENV: str = os.getenv('KAPITAL_ENV', Environment.TEST.value).strip().lower()
+
+# Naməlum dəyər verilibsə (məs., 'PROD', 'production'), səssizcə TEST-ə düşmək əvəzinə
+# xəbərdarlıq edirik — əks halda real ödənişlər test gateway-ə gedər.
+if KAPITAL_ENV not in (Environment.TEST.value, Environment.PROD.value):
+    warn(
+        f"KAPITAL_ENV='{KAPITAL_ENV}' tanınmayan dəyərdir; TEST mühiti istifadə olunacaq. "
+        f"Mümkün dəyərlər: '{Environment.TEST.value}', '{Environment.PROD.value}'."
+    )
+    KAPITAL_ENV = Environment.TEST.value
+
 KAPITAL_USERNAME: str = os.getenv('KAPITAL_USERNAME', '')
 KAPITAL_PASSWORD: str = os.getenv('KAPITAL_PASSWORD', '')
 
@@ -25,7 +35,7 @@ if not KAPITAL_USERNAME or not KAPITAL_PASSWORD:
 class API(str, Enum):
     TEST_BASE_URL = 'https://txpgtst.kapitalbank.az'
     PROD_BASE_URL = 'https://e-commerce.kapitalbank.az'
-    BASE_URL = PROD_BASE_URL if KAPITAL_ENV == Environment.PROD else TEST_BASE_URL
+    BASE_URL = PROD_BASE_URL if KAPITAL_ENV == Environment.PROD.value else TEST_BASE_URL
 
     ORDER = '/api/order'
     GET_ORDER = '/api/order/{order_id}'
