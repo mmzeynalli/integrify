@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify-core"
-version = "1.1.1"
+version = "1.2.0"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran bünovrə (core) kitabxanadır."
 authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
 requires-python = ">=3.9"
@@ -91,15 +91,12 @@ src = ["src", "tests", "duties.py"]
 
 [tool.ruff.lint]
 select = [
-    # Pyflakes
-    "F",
-    # Pycodestyle
-    "E",
-    "W",
-    # isort
-    "I",
-    # Print statements
-    "T201",
+    "F",  # Pyflakes
+    "E",  # Pycodestyle
+    "W",  # warnings
+    "I",  # isort
+    "T",  # Ban print statements (T201)
+    "UP", # pyupgrade (modern typing / syntax fixes)
 ]
 ignore-init-module-imports = true
 

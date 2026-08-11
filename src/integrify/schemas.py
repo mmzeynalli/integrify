@@ -27,8 +27,22 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
     @field_validator('body', mode='before')
     @classmethod
     def convert_to_dict(cls, v: Union[str, bytes]):
-        """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir."""
-        return json.loads(v)
+        """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir.
+
+        Cavab JSON deyilsə (məs., gateway xətası zamanı HTML səhifə və ya boş body),
+        `json.loads` xətası atmaq əvəzinə boş dict qaytarılır ki, sorğu axını crash olmasın.
+        Bu halda, status kodu və `ok` field-ləri vasitəsilə xətanı öyrənmək olar.
+        """
+        if isinstance(v, (bytes, bytearray, str)):
+            if not v:
+                return {}
+
+            try:
+                return json.loads(v)
+            except (json.JSONDecodeError, ValueError, UnicodeDecodeError):
+                return {}
+
+        return v
 
 
 class DryResponse(TypedDict):
@@ -65,4 +79,22 @@ class PayloadBaseModel(BaseModel):
         modelindəki field-lərin ardıcıllığı və çağırılan funksiyada parametrlərinin ardıcıllığı
         EYNİ OLMALIDIR, əks halda, bu method yararsızdır.
         """
-        return cls.model_validate({**dict(zip(cls.get_input_fields(), args)), **kwds})
+        fields = cls.get_input_fields()
+
+        if len(args) > len(fields):
+            raise TypeError(
+                f'{cls.__name__}.from_args() got {len(args)} positional arguments '
+                f'but only {len(fields)} are expected'
+            )
+
+        positional = dict(zip(fields, args))
+
+        # Eyni field həm positional, həm keyword kimi verilibsə, xəta qaldırırıq
+        duplicates = positional.keys() & kwds.keys()
+        if duplicates:
+            raise TypeError(
+                f'{cls.__name__}.from_args() got multiple values for '
+                f'argument(s): {", ".join(sorted(duplicates))}'
+            )
+
+        return cls.model_validate({**positional, **kwds})

@@ -1,6 +1,7 @@
 import string
+from collections.abc import Coroutine
 from functools import cached_property
-from typing import Any, Callable, Coroutine, Optional, Union
+from typing import Any, Callable, ClassVar, Optional, TypeVar, Union
 from urllib.parse import urljoin
 
 import httpx
@@ -8,6 +9,32 @@ import httpx
 from integrify.logger import LOGGER_FUNCTION
 from integrify.schemas import APIResponse, DryResponse, PayloadBaseModel
 from integrify.utils import UNSET, _ResponseT
+
+DEFAULT_TIMEOUT = 10
+"""Default sorğu timeout-u (saniyə ilə)"""
+
+
+# ------------------------------------------------------------------------------------------------ #
+# Sync/async üçün tip markerləri                                                                   #
+# ------------------------------------------------------------------------------------------------ #
+# Bunlar yalnız tip səviyyəsində istifadə olunur (runtime-da heç bir rol oynamır). İnteqrasiya
+# klientləri `Generic[_Mode]` ilə parametrləşdirilib, hər metod üçün iki `@overload` təyin edir:
+# `self: XClientClass[_Sync]`  -> sync qaytarış (APIResponse[...])
+# `self: XClientClass[_Async]` -> async qaytarış (Coroutine[Any, Any, APIResponse[...]])
+# Beləliklə, sync və async klientlər eyni docstring-i paylaşır,
+# lakin düzgün qaytarış tipinə malikdir.
+
+
+class _Sync:  # pylint: disable=too-few-public-methods
+    """Sync klient rejimi üçün tip markeri (yalnız type-checking)."""
+
+
+class _Async:  # pylint: disable=too-few-public-methods
+    """Async klient rejimi üçün tip markeri (yalnız type-checking)."""
+
+
+_Mode = TypeVar('_Mode')
+"""İnteqrasiya klientlərinin sync/async rejimini bildirən TypeVar (`_Sync` və ya `_Async`)."""
 
 
 class APIClient:
@@ -22,6 +49,7 @@ class APIClient:
         default_handler: Optional['APIPayloadHandler'] = None,
         sync: bool = True,
         dry: bool = False,
+        timeout: Optional[float] = DEFAULT_TIMEOUT,
     ):
         """
         Args:
@@ -32,11 +60,13 @@ class APIClient:
             default_handler: default API handler. Bu handler əgər hər hansı bir API-yə
                 handler register olunmadıqda istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
+            dry: Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq üçün istifadə olunur.
+            timeout: httpx sorğu timeout-u (saniyə ilə).
         """
         self.base_url = base_url
         self.default_handler = default_handler or APIPayloadHandler(None, None)
 
-        self.request_executor = APIExecutor(name=name, sync=sync, dry=dry)
+        self.request_executor = APIExecutor(name=name, sync=sync, dry=dry, timeout=timeout)
         """API sorğularını icra edən obyekt"""
 
         self.urls: dict[str, dict[str, str]] = {}
@@ -78,6 +108,26 @@ class APIClient:
         """
         self.handlers[route_name] = handler_class()
 
+    def close(self) -> None:
+        """Sync klientin bağlanması (httpx connection pool-un boşaldılması)"""
+        self.request_executor.close()
+
+    async def aclose(self) -> None:
+        """Async klientin bağlanması (httpx connection pool-un boşaldılması)"""
+        await self.request_executor.aclose()
+
+    def __enter__(self) -> 'APIClient':
+        return self
+
+    def __exit__(self, *exc: Any) -> None:
+        self.close()
+
+    async def __aenter__(self) -> 'APIClient':
+        return self
+
+    async def __aexit__(self, *exc: Any) -> None:
+        await self.aclose()
+
     def _build_request_lambda(
         self,
         func: Callable,
@@ -93,65 +143,106 @@ class APIClient:
             **{k: v for k, v in kwds.items() if v is not UNSET},
         )
 
-    def __getattribute__(self, name: str) -> Any:
+    def __getattr__(self, name: str) -> Any:
         """Möcüzənin baş verdiyi yer:
 
         Bu kitanxanada, heç bir inteqrasiya üçün birbaşa funksiya mövcud deyil. Bunun yerinə,
         bu dunder metodundan istifadə edərək, hansı endpointə nə sorğu atılacağını anlaya bilirik.
+
+        `__getattr__` yalnız adi atribut axtarışı uğursuz olduqda çağırılır, ona görə də
+        real atributlara (`urls`, `handlers` və s.) heç bir əlavə yük gətirmir.
         """
-        try:
-            return super().__getattribute__(name)
-        except AttributeError:
-            # Əgər "axtarılan" funksiyanın adı `self.urls` listimizdə mövcud deyilsə,
-            # exception qaldırırıq
-            if name not in self.urls:
-                raise
+        # `self.urls`-ə birbaşa müraciət rekursiyaya səbəb ola bilər (əgər hələ init
+        # olunmayıbsa), ona görə `__dict__`-dən oxuyuruq.
+        urls = self.__dict__.get('urls')
 
-            # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
-            # taparaq, sorğunu icra edirik.
-            base_url = self.urls[name]['base_url']
-            url = urljoin(base_url, self.urls[name]['url'])
-            verb = self.urls[name]['verb']
-            handler = self.handlers.get(name, self.default_handler)
+        # "Axtarılan" funksiyanın adı `self.urls` listimizdə mövcud deyilsə, exception qaldırırıq
+        if not urls or name not in urls:
+            raise AttributeError(name)
 
-            func = self.request_executor.request_function
-            return self._build_request_lambda(func, url, verb, handler)
+        # "Axtarılan" funksiyanın adından istifadə edərək, lazımi endpoint, metod və handler-i
+        # taparaq, sorğunu icra edirik.
+        base_url = urls[name]['base_url']
+        url = urljoin(base_url, urls[name]['url'])
+        verb = urls[name]['verb']
+        handler = self.handlers.get(name, self.default_handler)
+
+        func = self.request_executor.request_function
+        return self._build_request_lambda(func, url, verb, handler)
 
 
 class APIPayloadHandler:
-    """Sorğu və cavab data payload-ları üçün handler class-ı"""
+    """Sorğu və cavab data payload-ları üçün handler class-ı
+
+    Handler-lər **stateless**-dir: sorğu modeli heç vaxt `self`-də saxlanılmır, hər
+    çağırışda lokal olaraq yaradılıb ötürülür. Bu, eyni handler instansiyasının
+    (məs., `EPointAsyncRequest` kimi shared klientlərdə) paralel sorğularda təhlükəsiz
+    istifadəsinə imkan verir.
+
+    `req_model`, `resp_model` və `dry` class atribut (ClassVar) kimi təyin oluna bilər::
+
+        class MyHandler(APIPayloadHandler):
+            req_model = MyRequestSchema
+            resp_model = MyResponseSchema
+
+    və ya geriyə uyğunluq üçün `__init__`-ə ötürülə bilər.
+    """
+
+    req_model: ClassVar[Optional[type[PayloadBaseModel]]] = None
+    """Sorğunun payload model-i"""
+
+    resp_model: ClassVar[Any] = dict
+    """Sorğunun cavabının payload model-i"""
+
+    dry: ClassVar[bool] = False
+    """Simulasiya bool-u: True olarsa, sorğu göndərilmir, göndərilən data qaytarılır"""
 
     def __init__(
         self,
-        req_model: Optional[type[PayloadBaseModel]] = None,
-        resp_model: Union[type[_ResponseT], type[dict], None] = dict,
-        dry: bool = False,
+        req_model: Any = UNSET,
+        resp_model: Any = UNSET,
+        dry: Any = UNSET,
     ):
         """
         Args:
-            req_model: Sorğunun payload model-i
-            resp_model: Sorğunun cavabının payload model-i
-            dry: Simulasiya bool-u: True olarsa, sorğu göndərilmir, göndərilən data qaytarılır
-        """
-        self.req_model = req_model
-        self.__req_model: Optional[PayloadBaseModel] = None  # initialized pydantic model
-        self.resp_model = resp_model
-        self.dry = dry
+            req_model: Sorğunun payload model-i. Verilməsə, class atributu istifadə olunur.
+            resp_model: Sorğunun cavabının payload model-i. Verilməsə, class atributu istifadə olunur.
+            dry: Simulasiya bool-u. Verilməsə, class atributu istifadə olunur.
+        """  # noqa: E501
+        # Geriyə uyğunluq: dəyər `__init__`-ə ötürülübsə, instansiya səviyyəsində
+        # class atributunu override edirik; əks halda ClassVar dəyəri qalır.
+        if req_model is not UNSET:
+            self.req_model = req_model  # type: ignore[misc]
+        if resp_model is not UNSET:
+            self.resp_model = resp_model  # type: ignore[misc]
+        if dry is not UNSET:
+            self.dry = dry  # type: ignore[misc]
 
-    def set_urlparams(self, url: str) -> str:
+    def build_request_model(self, *args, **kwds) -> Optional[PayloadBaseModel]:
+        """Verilən argumentlərdən `self.req_model` instansiyasını yaradan funksiya.
+
+        Model heç bir instansiya state-i saxlamadan qaytarılır (thread/async safe).
+        """
+        if self.req_model:
+            return self.req_model.from_args(*args, **kwds)
+
+        return None
+
+    def set_urlparams(self, url: str, req_model: Optional[PayloadBaseModel] = None) -> str:
         """URL-in query-param-larını set etmək üçün funksiya (əgər varsa)
 
         Args:
             url: Format olunmalı url
+            req_model: `build_request_model`-dan qayıdan model instansiyası
         """
-        if not (self.req_model and self.req_model.URL_PARAM_FIELDS and self.__req_model):
+        if not (self.req_model and self.req_model.URL_PARAM_FIELDS and req_model):
             if any(tup[1] for tup in string.Formatter().parse(url) if tup[1] is not None):
                 raise ValueError('URL should not expect any arguments')
 
             return url
 
         return url.format(
-            **self.__req_model.model_dump(
+            **req_model.model_dump(
                 by_alias=True,
                 include=self.req_model.URL_PARAM_FIELDS,
                 exclude_none=True,
@@ -177,13 +268,15 @@ class APIPayloadHandler:
         Misal üçün: Bax [`EPointClientClass`](https://integrify.mmzeynalli.dev/integrations/epoint/api-reference/client/#integrify.epoint.client.EPointClientClass)
         """
 
-    def handle_payload(self, *args, **kwds):
-        """Verilən argumentləri `self.req_model` formatında payload-a çevirən funksiya.
+    def handle_payload(self, req_model: Optional[PayloadBaseModel], *args, **kwds):
+        """Verilən sorğu modelini payload-a (dict) çevirən funksiya.
         `self.req_model` qeyd edilməyibsə, bu funksiya override olunmalıdır (!).
+
+        Args:
+            req_model: `build_request_model`-dan qayıdan model instansiyası
         """
-        if self.req_model:
-            self.__req_model = self.req_model.from_args(*args, **kwds)
-            return self.__req_model.model_dump(
+        if self.req_model and req_model is not None:
+            return req_model.model_dump(
                 by_alias=True,
                 exclude=self.req_model.URL_PARAM_FIELDS,
                 mode='json',
@@ -205,7 +298,7 @@ class APIPayloadHandler:
         """
         return data  # pragma: no cover
 
-    def handle_request(self, *args, **kwds):
+    def handle_request(self, req_model: Optional[PayloadBaseModel], *args, **kwds):
         """Sorğu üçün payload-u hazırlayan funksiya. Üç mərhələ icra edir,
         və bu mərhələlər override oluna bilər. (Misal üçün:
         Bax [`EPointClientClass`](https://integrify.mmzeynalli.dev/integrations/epoint/api-reference/client/#integrify.epoint.client.EPointClientClass)
@@ -213,10 +306,12 @@ class APIPayloadHandler:
         1. Pre-processing
         2. Payload hazırlama
         3. Post-processing
-        """
 
+        Args:
+            req_model: `build_request_model`-dan qayıdan model instansiyası
+        """
         pre_data = self.pre_handle_payload(*args, **kwds) or {}
-        data = {**pre_data, **self.handle_payload(*args, **kwds)}
+        data = {**pre_data, **self.handle_payload(req_model, *args, **kwds)}
         return self.post_handle_payload(data)
 
     def handle_response(
@@ -235,26 +330,53 @@ class APIPayloadHandler:
 class APIExecutor:
     """API sorgularını icra edən class"""
 
-    def __init__(self, name: str, sync: bool = True, dry: bool = False):
+    def __init__(
+        self,
+        name: str,
+        sync: bool = True,
+        dry: bool = False,
+        timeout: Optional[float] = DEFAULT_TIMEOUT,
+    ):
         """
         Args:
             name: API klientin adı. Logging üçün istifadə olunur.
             sync: Sync (True) və ya Async (False) klient seçimi. Default olaraq sync seçilir.
             dry: Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq üçün istifadə olunur.
                     Debug üçün nəzərdə tutulub.
+            timeout: httpx sorğu timeout-u (saniyə ilə).
         """
         self.sync = sync
         self.dry = dry
+        self.timeout = timeout
         self.client_name = name
         self.logger = LOGGER_FUNCTION(name)
 
-        self.client: Union[httpx.Client, httpx.AsyncClient]
-        """httpx sorğu client-i"""
+    @cached_property
+    def client(self) -> Union[httpx.Client, httpx.AsyncClient]:
+        """httpx sorğu client-i.
 
-        if sync:
-            self.client = httpx.Client(timeout=10)
-        else:
-            self.client = httpx.AsyncClient(timeout=10)
+        Lazy yaradılır: import zamanı deyil, ilk sorğuda açılır. Beləliklə, `AsyncClient`
+        event loop-dan kənarda import zamanı yaradılmır və heç istifadə olunmayan
+        klient üçün socket açılmır.
+        """
+        if self.sync:
+            return httpx.Client(timeout=self.timeout)
+
+        return httpx.AsyncClient(timeout=self.timeout)
+
+    def close(self) -> None:
+        """Sync httpx client-in bağlanması (əgər yaradılıbsa)"""
+        client = self.__dict__.get('client')
+        if client is not None and isinstance(client, httpx.Client):
+            client.close()
+            del self.__dict__['client']
+
+    async def aclose(self) -> None:
+        """Async httpx client-in bağlanması (əgər yaradılıbsa)"""
+        client = self.__dict__.get('client')
+        if client is not None and isinstance(client, httpx.AsyncClient):
+            await client.aclose()
+            del self.__dict__['client']
 
     @property
     def request_function(
@@ -294,9 +416,10 @@ class APIExecutor:
         """
         assert isinstance(self.client, httpx.Client)
 
-        data = handler.handle_request(*args, **kwds)
+        req_model = handler.build_request_model(*args, **kwds)
+        data = handler.handle_request(req_model, *args, **kwds)
         full_headers = {**handler.headers, **(headers or {})}
-        full_url = handler.set_urlparams(url)
+        full_url = handler.set_urlparams(url, req_model)
 
         if self.dry or handler.dry:
             return DryResponse(
@@ -320,9 +443,9 @@ class APIExecutor:
             self.logger.error(
                 '%s request to %s failed. Status code was %d. Content => %s',
                 self.client_name,
-                url,
+                full_url,
                 response.status_code,
-                response.content.decode(),
+                response.content.decode(errors='replace'),
             )
 
         return handler.handle_response(response)
@@ -345,12 +468,13 @@ class APIExecutor:
         """
         assert isinstance(self.client, httpx.AsyncClient)
 
-        data = handler.handle_request(*args, **kwds)
+        req_model = handler.build_request_model(*args, **kwds)
+        data = handler.handle_request(req_model, *args, **kwds)
         full_headers = {**handler.headers, **(headers or {})}
-        full_url = handler.set_urlparams(url)
+        full_url = handler.set_urlparams(url, req_model)
 
-        if self.dry:
-            # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
+        if self.dry or handler.dry:
+            # Sorğu göndərmək əvəzinə göndəriləcək datanı qaytarmaq
             return DryResponse(
                 url=full_url,
                 verb=verb,
@@ -372,9 +496,9 @@ class APIExecutor:
             self.logger.error(
                 '%s request to %s failed. Status code was %d. Content => %s',
                 self.client_name,
-                url,
+                full_url,
                 response.status_code,
-                response.content.decode(),
+                response.content.decode(errors='replace'),
             )
 
         return handler.handle_response(response)

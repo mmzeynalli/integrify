@@ -1,3 +1,17 @@
+## v1.2.0 (2026-08-11)
+
+### What's Changed
+
+* Payload handlers are now **stateless**: the request model is built per-call instead of being stored on the handler, so shared/singleton handlers are safe under concurrent (including async) requests.
+* Handler `req_model`, `resp_model` and `dry` can now be declared as class attributes, in addition to `__init__` arguments (backward compatible).
+* Added sync/async type markers `_Sync`, `_Async` and the `_Mode` `TypeVar`, enabling correctly-typed async clients through overloads.
+* `APIClient` now dispatches requests via `__getattr__` instead of `__getattribute__` (faster; only triggered on an attribute miss).
+* The `httpx` client is now created lazily and can be closed: added `close()`/`aclose()` and (async) context-manager support. Importing a client no longer opens connections.
+* Request `timeout` is now configurable (default: 10s).
+* Non-JSON or empty response bodies no longer raise `JSONDecodeError`; `APIResponse` now decodes defensively.
+* `PayloadBaseModel.from_args` now raises on duplicate or excess positional arguments.
+
+
 ## v1.1.1 (2026-08-08)
 
 ### What's Changed
