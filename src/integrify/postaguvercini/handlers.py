@@ -11,12 +11,12 @@ from integrify.postaguvercini.schemas.response import (
     SendSMSResponseSchema,
     StatusResponseSchema,
 )
-from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
+from integrify.schemas import APIResponse
 
 
 class BasePayloadHandler(APIPayloadHandler):
-    def __init__(self, req_model: type[PayloadBaseModel], resp_model: type[_ResponseT]):
-        super().__init__(req_model, resp_model)
+    """PostaGuvercini üçün baza handler. `req_model`/`resp_model` alt class-larda
+    ClassVar kimi təyin olunur."""
 
     def handle_response(self, resp):
         api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
@@ -28,20 +28,20 @@ class BasePayloadHandler(APIPayloadHandler):
 
 
 class SendSingleSMSPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(SendSingleSMSRequestSchema, SendSMSResponseSchema)
+    req_model = SendSingleSMSRequestSchema
+    resp_model = SendSMSResponseSchema
 
 
 class SendMultipleSMSPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(SendMultipleSMSRequestSchema, SendSMSResponseSchema)
+    req_model = SendMultipleSMSRequestSchema
+    resp_model = SendSMSResponseSchema
 
 
 class StatusPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(StatusRequestSchema, StatusResponseSchema)
+    req_model = StatusRequestSchema
+    resp_model = StatusResponseSchema
 
 
 class CreditBalancePayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(CreditBalanceRequestSchema, CreditBalanceResponseSchema)
+    req_model = CreditBalanceRequestSchema
+    resp_model = CreditBalanceResponseSchema

@@ -1,7 +1,8 @@
+from collections.abc import Coroutine
 from datetime import datetime
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Generic, Union, overload
 
-from integrify.api import APIClient
+from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.postaguvercini import env
 from integrify.postaguvercini.handlers import (
     CreditBalancePayloadHandler,
@@ -17,10 +18,11 @@ from integrify.postaguvercini.schemas.response import (
     StatusResponseSchema,
 )
 from integrify.schemas import APIResponse
-from integrify.utils import _UNSET, Unsettable
+from integrify.utils import UNSET as _UNSET
+from integrify.utils import Unset as Unsettable
 
 
-class PostaGuverciniClientClass(APIClient):
+class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
     """Posta Guvercini sorğular üçün baza class"""
 
     def __init__(
@@ -46,9 +48,11 @@ class PostaGuverciniClientClass(APIClient):
         self.add_handler('credit_balance', CreditBalancePayloadHandler)
 
     if TYPE_CHECKING:
+        # pylint: disable=missing-function-docstring,unused-argument
 
+        @overload
         def send_single_sms(
-            self,
+            self: 'PostaGuverciniClientClass[_Sync]',
             message: str,
             receivers: list[str],
             send_date: Unsettable[Union[str, datetime]] = _UNSET,
@@ -87,8 +91,23 @@ class PostaGuverciniClientClass(APIClient):
                 password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def send_single_sms(
+            self: 'PostaGuverciniClientClass[_Async]',
+            message: str,
+            receivers: list[str],
+            send_date: Unsettable[Union[str, datetime]] = _UNSET,
+            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
+            channel: ChannelType = ChannelType.OTP,
+            originator: Unsettable[str] = _UNSET,
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[SendSMSResponseSchema]]: ...
+        def send_single_sms(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def send_multiple_sms(
-            self,
+            self: 'PostaGuverciniClientClass[_Sync]',
             messages: list[SMSMessage],
             send_date: Unsettable[Union[str, datetime]] = _UNSET,
             expire_date: Unsettable[Union[str, datetime]] = _UNSET,
@@ -127,8 +146,22 @@ class PostaGuverciniClientClass(APIClient):
                 password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def send_multiple_sms(
+            self: 'PostaGuverciniClientClass[_Async]',
+            messages: list[SMSMessage],
+            send_date: Unsettable[Union[str, datetime]] = _UNSET,
+            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
+            channel: ChannelType = ChannelType.OTP,
+            originator: Unsettable[str] = _UNSET,
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[SendSMSResponseSchema]]: ...
+        def send_multiple_sms(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_status(
-            self,
+            self: 'PostaGuverciniClientClass[_Sync]',
             message_ids: list[str],
             username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
             password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
@@ -154,8 +187,18 @@ class PostaGuverciniClientClass(APIClient):
                 password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def get_status(
+            self: 'PostaGuverciniClientClass[_Async]',
+            message_ids: list[str],
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[StatusResponseSchema]]: ...
+        def get_status(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def credit_balance(
-            self,
+            self: 'PostaGuverciniClientClass[_Sync]',
             username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
             password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
         ) -> APIResponse[CreditBalanceResponseSchema]:
@@ -179,6 +222,16 @@ class PostaGuverciniClientClass(APIClient):
                 password: Posta Guvercini hesabı şifrəsi. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def credit_balance(
+            self: 'PostaGuverciniClientClass[_Async]',
+            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
+            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[CreditBalanceResponseSchema]]: ...
+        def credit_balance(self, *args: Any, **kwds: Any) -> Any: ...
 
-PostaGuverciniClient = PostaGuverciniClientClass(sync=True)
-PostaGuverciniAsyncClient = PostaGuverciniClientClass(sync=False)
+
+PostaGuverciniClient: 'PostaGuverciniClientClass[_Sync]' = PostaGuverciniClientClass(sync=True)
+PostaGuverciniAsyncClient: 'PostaGuverciniClientClass[_Async]' = PostaGuverciniClientClass(
+    sync=False
+)
