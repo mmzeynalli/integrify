@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from pytest_mock import MockerFixture
 
+from integrify.test import live
 from tests.conftest import requires_env
 from tests.mocks import MESSAGE_TRANSACTION_FAIL
 
@@ -14,7 +15,9 @@ if TYPE_CHECKING:
 def test_ok_signature(epoint_client: 'EPointClientClass'):
     from integrify.epoint.schemas.enums import TransactionStatusExtended
 
-    resp = epoint_client.get_transaction_status(transaction_id=os.getenv('EPOINT_TRANSACTION_ID'))
+    resp = epoint_client.get_transaction_status(
+        transaction_id=os.getenv('EPOINT_TRANSACTION_ID', '')
+    )
     assert resp.ok
     assert resp.body.status == TransactionStatusExtended.RETURNED
 
@@ -60,6 +63,7 @@ def test_get_failed_transaction_status(
 
 
 @requires_env()
+@live
 def test_epoint_save_card_request(epoint_client: 'EPointClientClass'):
     from integrify.epoint.schemas.enums import TransactionStatus
 

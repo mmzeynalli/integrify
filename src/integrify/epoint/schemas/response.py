@@ -3,11 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, field_validator
 
-from integrify.epoint.schemas.enums import (
-    Code,
-    TransactionStatus,
-    TransactionStatusExtended,
-)
+from integrify.epoint.schemas.enums import Code, TransactionStatus, TransactionStatusExtended
 
 
 class MinimalResponseSchema(BaseModel):
@@ -53,8 +49,15 @@ class BaseWithCodeSchema(BaseResponseSchema):
     @field_validator('code', mode='before')
     @classmethod
     def code_to_msg(cls, v: Optional[str] = None) -> Optional[str]:
-        """3 rəqəmli koddan, xəta/uğur mesajına çevrilir."""
-        return Code[v] if v else None
+        """3 rəqəmli koddan, xəta/uğur mesajına çevrilir.
+
+        Kod `Code` lüğətində yoxdursa (bank yeni/naməlum kod qaytara bilər),
+        `KeyError` atmaq əvəzinə orijinal kod qaytarılır ki, cavab parse-i crash olmasın.
+        """
+        if not v:
+            return None
+
+        return Code.get(v, v)
 
 
 #################################################################

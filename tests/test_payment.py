@@ -8,6 +8,7 @@ from tests.conftest import requires_env
 
 
 @requires_env()
+@live
 def test_epoint_payment_request(epoint_client: EPointClientClass):
     resp = epoint_client.pay(
         amount=1,
@@ -34,6 +35,7 @@ def test_epoint_pay_with_saved_card_request(epoint_client: EPointClientClass):
 
 
 @requires_env()
+@live
 def test_epoint_pay_and_save_card_request(epoint_client: EPointClientClass):
     resp = epoint_client.pay_and_save_card(
         amount=1,

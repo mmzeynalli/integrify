@@ -27,12 +27,12 @@ from integrify.epoint.schemas.response import (
     SplitPayWithSavedCardResponseSchema,
     TransactionStatusResponseSchema,
 )
-from integrify.schemas import APIResponse, PayloadBaseModel, _ResponseT
+from integrify.schemas import APIResponse, _ResponseT
 
 
 class BasePayloadHandler(APIPayloadHandler):
-    def __init__(self, req_model: type[PayloadBaseModel], resp_model: type[_ResponseT]):
-        super().__init__(req_model, resp_model)
+    """EPoint üçün baza handler. `req_model`/`resp_model` alt class-larda
+    ClassVar kimi təyin olunur."""
 
     def pre_handle_payload(self, *args, **kwds):
         return {
@@ -60,56 +60,50 @@ class BasePayloadHandler(APIPayloadHandler):
 
 
 class PaymentPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(PaymentRequestSchema, RedirectUrlResponseSchema)
+    req_model = PaymentRequestSchema
+    resp_model = RedirectUrlResponseSchema
 
 
 class GetTransactionStatusPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(GetTransactionStatusRequestSchema, TransactionStatusResponseSchema)
+    req_model = GetTransactionStatusRequestSchema
+    resp_model = TransactionStatusResponseSchema
 
 
 class SaveCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(SaveCardRequestSchema, RedirectUrlWithCardIdResponseSchema)
+    req_model = SaveCardRequestSchema
+    resp_model = RedirectUrlWithCardIdResponseSchema
 
 
 class PayWithSavedCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(PayWithSavedCardRequestSchema, BaseResponseSchema)
+    req_model = PayWithSavedCardRequestSchema
+    resp_model = BaseResponseSchema
 
 
 class PayAndSaveCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(PayAndSaveCardRequestSchema, RedirectUrlWithCardIdResponseSchema)
+    req_model = PayAndSaveCardRequestSchema
+    resp_model = RedirectUrlWithCardIdResponseSchema
 
 
 class PayoutPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(PayoutRequestSchema, BaseResponseSchema)
+    req_model = PayoutRequestSchema
+    resp_model = BaseResponseSchema
 
 
 class RefundPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(RefundRequestSchema, MinimalResponseSchema)
+    req_model = RefundRequestSchema
+    resp_model = MinimalResponseSchema
 
 
 class SplitPayPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(SplitPayRequestSchema, RedirectUrlResponseSchema)
+    req_model = SplitPayRequestSchema
+    resp_model = RedirectUrlResponseSchema
 
 
 class SplitPayWithSavedCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            SplitPayWithSavedCardRequestSchema,
-            SplitPayWithSavedCardResponseSchema,
-        )
+    req_model = SplitPayWithSavedCardRequestSchema
+    resp_model = SplitPayWithSavedCardResponseSchema
 
 
 class SplitPayAndSaveCardPayloadHandler(BasePayloadHandler):
-    def __init__(self):
-        super().__init__(
-            SplitPayAndSaveCardRequestSchema,
-            RedirectUrlWithCardIdResponseSchema,
-        )
+    req_model = SplitPayAndSaveCardRequestSchema
+    resp_model = RedirectUrlWithCardIdResponseSchema

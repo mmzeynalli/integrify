@@ -1,10 +1,8 @@
-from importlib.metadata import version
-from typing import TYPE_CHECKING, Any, Optional
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any, Generic, Optional, overload
 from typing import SupportsFloat as Numeric
 
-from packaging.version import parse
-
-from integrify.api import APIClient
+from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.epoint import env
 from integrify.epoint.handlers import (
     GetTransactionStatusPayloadHandler,
@@ -27,20 +25,12 @@ from integrify.epoint.schemas.response import (
     TransactionStatusResponseSchema,
 )
 from integrify.schemas import APIResponse
-
-# pylint: disable=no-name-in-module
-
-if parse(version('integrify-core')) >= parse('1.1.0'):
-    from integrify.utils import UNSET, Unset  # type: ignore
-else:
-    from integrify.utils import _UNSET as UNSET  # type: ignore
-    from integrify.utils import Unsettable as Unset  # type: ignore
-# pylint: enable=no-name-in-module
+from integrify.utils import UNSET, Unset
 
 __all__ = ['EPointAsyncRequest', 'EPointClientClass', 'EPointRequest']
 
 
-class EPointClientClass(APIClient):
+class EPointClientClass(APIClient, Generic[_Mode]):
     """EPoint sorğular üçün baza class"""
 
     def __init__(
@@ -84,9 +74,11 @@ class EPointClientClass(APIClient):
         self.add_handler('split_pay_and_save_card', SplitPayAndSaveCardPayloadHandler)
 
     if TYPE_CHECKING:
+        # pylint: disable=missing-function-docstring,unused-argument
 
+        @overload
         def pay(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -121,8 +113,20 @@ class EPointClientClass(APIClient):
                             geri göndərilir.
             """  # noqa: E501
 
+        @overload
+        def pay(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            description: Unset[str] = UNSET,
+            **extra: Any,
+        ) -> Coroutine[Any, Any, APIResponse[RedirectUrlResponseSchema]]: ...
+        def pay(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_transaction_status(
-            self,
+            self: 'EPointClientClass[_Sync]',
             transaction_id: str,
         ) -> APIResponse[TransactionStatusResponseSchema]:
             """
@@ -144,7 +148,17 @@ class EPointClientClass(APIClient):
                                 Adətən `te` prefiksi ilə olur.
             """  # noqa: E501
 
-        def save_card(self) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
+        @overload
+        def get_transaction_status(
+            self: 'EPointClientClass[_Async]',
+            transaction_id: str,
+        ) -> Coroutine[Any, Any, APIResponse[TransactionStatusResponseSchema]]: ...
+        def get_transaction_status(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
+        def save_card(
+            self: 'EPointClientClass[_Sync]',
+        ) -> APIResponse[RedirectUrlWithCardIdResponseSchema]:
             """Ödəniş olmadan kartı yadda saxlamaq sorğusu
 
             **Endpoint:** */api/1/card-registration*
@@ -165,8 +179,15 @@ class EPointClientClass(APIClient):
             formatında məlumat gəlir.
             """  # noqa: E501
 
+        @overload
+        def save_card(
+            self: 'EPointClientClass[_Async]',
+        ) -> Coroutine[Any, Any, APIResponse[RedirectUrlWithCardIdResponseSchema]]: ...
+        def save_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def pay_with_saved_card(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -195,8 +216,19 @@ class EPointClientClass(APIClient):
                 card_id: Saxlanılmış kartın id-si. Adətən `ce` prefiksi ilə başlayır.
             """  # noqa: E501
 
+        @overload
+        def pay_with_saved_card(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            card_id: str,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema]]: ...
+        def pay_with_saved_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def pay_and_save_card(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -228,8 +260,19 @@ class EPointClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
+        @overload
+        def pay_and_save_card(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            description: str,
+        ) -> Coroutine[Any, Any, APIResponse[RedirectUrlWithCardIdResponseSchema]]: ...
+        def pay_and_save_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def payout(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -260,8 +303,20 @@ class EPointClientClass(APIClient):
                 description: Nağdlaşdırmanın təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
+        @overload
+        def payout(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            card_id: str,
+            description: Unset[str] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[BaseResponseSchema]]: ...
+        def payout(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def refund(
-            self,
+            self: 'EPointClientClass[_Sync]',
             transaction_id: str,
             currency: str,
             amount: Unset[Numeric] = UNSET,
@@ -294,8 +349,18 @@ class EPointClientClass(APIClient):
                         əks halda tam geri-qaytarma baş verəcəkdir.
             """  # noqa: E501
 
+        @overload
+        def refund(
+            self: 'EPointClientClass[_Async]',
+            transaction_id: str,
+            currency: str,
+            amount: Unset[Numeric] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[MinimalResponseSchema]]: ...
+        def refund(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def split_pay(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -328,8 +393,22 @@ class EPointClientClass(APIClient):
                             geri göndərilir.
             """  # noqa: E501
 
+        @overload
+        def split_pay(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            split_user_id: str,
+            split_amount: Numeric,
+            description: Unset[str] = UNSET,
+            **extra: Any,
+        ) -> Coroutine[Any, Any, APIResponse[RedirectUrlResponseSchema]]: ...
+        def split_pay(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def split_pay_with_saved_card(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -361,8 +440,22 @@ class EPointClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
+        @overload
+        def split_pay_with_saved_card(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            card_id: str,
+            split_user_id: str,
+            split_amount: Numeric,
+            description: Unset[str] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[SplitPayWithSavedCardResponseSchema]]: ...
+        def split_pay_with_saved_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def split_pay_and_save_card(
-            self,
+            self: 'EPointClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order_id: str,
@@ -392,6 +485,18 @@ class EPointClientClass(APIClient):
                 description: Ödənişin təsviri. Maksimal uzunluq: 1000 simvol. Məcburi arqument deyil.
             """  # noqa: E501
 
+        @overload
+        def split_pay_and_save_card(
+            self: 'EPointClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order_id: str,
+            split_user_id: str,
+            split_amount: Numeric,
+            description: Unset[str] = UNSET,
+        ) -> Coroutine[Any, Any, APIResponse[RedirectUrlWithCardIdResponseSchema]]: ...
+        def split_pay_and_save_card(self, *args: Any, **kwds: Any) -> Any: ...
 
-EPointRequest = EPointClientClass(sync=True)
-EPointAsyncRequest = EPointClientClass(sync=False)
+
+EPointRequest: 'EPointClientClass[_Sync]' = EPointClientClass(sync=True)
+EPointAsyncRequest: 'EPointClientClass[_Async]' = EPointClientClass(sync=False)
