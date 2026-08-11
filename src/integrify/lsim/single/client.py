@@ -1,7 +1,8 @@
+from collections.abc import Coroutine
 from datetime import datetime
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Generic, Union, overload
 
-from integrify.api import APIClient
+from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.lsim import env as base_env
 from integrify.lsim.single import env
 from integrify.lsim.single.handlers import (
@@ -20,7 +21,7 @@ from integrify.lsim.single.schemas.response import (
 from integrify.schemas import APIResponse
 
 
-class LSIMSingleSMSClientClass(APIClient):
+class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
     def __init__(
         self,
         name='LSIM',
@@ -47,9 +48,11 @@ class LSIMSingleSMSClientClass(APIClient):
         self.add_handler('get_report_post', GetReportPostPayloadHandler)
 
     if TYPE_CHECKING:
+        # pylint: disable=missing-function-docstring,unused-argument
 
+        @overload
         def send_sms_get(
-            self,
+            self: 'LSIMSingleSMSClientClass[_Sync]',
             msisdn: str,
             text: str,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
@@ -83,8 +86,21 @@ class LSIMSingleSMSClientClass(APIClient):
                     edirsizsə, `True` seçməlisiniz
             """  # noqa: E501
 
+        @overload
+        def send_sms_get(
+            self: 'LSIMSingleSMSClientClass[_Async]',
+            msisdn: str,
+            text: str,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            unicode: bool = False,
+        ) -> Coroutine[Any, Any, APIResponse[BaseGetResponseSchema]]: ...
+        def send_sms_get(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def send_sms_post(
-            self,
+            self: 'LSIMSingleSMSClientClass[_Sync]',
             msisdn: str,
             text: str,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
@@ -121,8 +137,22 @@ class LSIMSingleSMSClientClass(APIClient):
                     formatında verməlisiniz. Sahə boş qaldıqda, SMS sorğu atdığınız an gedəcək.
             """  # noqa: E501
 
+        @overload
+        def send_sms_post(
+            self: 'LSIMSingleSMSClientClass[_Async]',
+            msisdn: str,
+            text: str,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            unicode: bool = False,
+            scheduled: Union[str, datetime] = 'NOW',
+        ) -> Coroutine[Any, Any, APIResponse[BasePostResponseSchema]]: ...
+        def send_sms_post(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def check_balance(
-            self,
+            self: 'LSIMSingleSMSClientClass[_Sync]',
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
             password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
         ) -> APIResponse[BaseGetResponseSchema]:
@@ -147,8 +177,17 @@ class LSIMSingleSMSClientClass(APIClient):
                 password: LSIM parolunuz. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def check_balance(
+            self: 'LSIMSingleSMSClientClass[_Async]',
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[BaseGetResponseSchema]]: ...
+        def check_balance(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_report_get(
-            self,
+            self: 'LSIMSingleSMSClientClass[_Sync]',
             trans_id: int,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
         ) -> APIResponse[ReportGetResponseSchema]:
@@ -170,8 +209,17 @@ class LSIMSingleSMSClientClass(APIClient):
                 login: LSIM logininiz.  Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def get_report_get(
+            self: 'LSIMSingleSMSClientClass[_Async]',
+            trans_id: int,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[ReportGetResponseSchema]]: ...
+        def get_report_get(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_report_post(
-            self,
+            self: 'LSIMSingleSMSClientClass[_Sync]',
             trans_id: int,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
         ) -> APIResponse[ReportPostResponseSchema]:
@@ -193,6 +241,14 @@ class LSIMSingleSMSClientClass(APIClient):
                 login: LSIM logininiz.  Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def get_report_post(
+            self: 'LSIMSingleSMSClientClass[_Async]',
+            trans_id: int,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[ReportPostResponseSchema]]: ...
+        def get_report_post(self, *args: Any, **kwds: Any) -> Any: ...
 
-LSIMSingleSMSClient = LSIMSingleSMSClientClass()
-LSIMSingleSMSAsyncClient = LSIMSingleSMSClientClass(sync=False)
+
+LSIMSingleSMSClient: 'LSIMSingleSMSClientClass[_Sync]' = LSIMSingleSMSClientClass()
+LSIMSingleSMSAsyncClient: 'LSIMSingleSMSClientClass[_Async]' = LSIMSingleSMSClientClass(sync=False)

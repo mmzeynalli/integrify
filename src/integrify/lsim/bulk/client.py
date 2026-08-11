@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any, Generic, overload
 
-from integrify.api import APIClient
+from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.lsim import env as base_env
 from integrify.lsim.bulk import env
 from integrify.lsim.bulk.handlers import (
@@ -20,7 +21,7 @@ from integrify.lsim.bulk.schemas.response import (
 from integrify.schemas import APIResponse
 
 
-class LSIMBulkSMSClientClass(APIClient):
+class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
     def __init__(
         self,
         name='LSIM-BulkSMS',
@@ -53,9 +54,11 @@ class LSIMBulkSMSClientClass(APIClient):
         self.add_handler('check_balance', GetBalancePayloadHandler)
 
     if TYPE_CHECKING:
+        # pylint: disable=missing-function-docstring,unused-argument
 
+        @overload
         def bulk_send_one_message(
-            self,
+            self: 'LSIMBulkSMSClientClass[_Sync]',
             controlid: int,
             msisdns: list[str],
             bulkmessage: str,
@@ -88,8 +91,22 @@ class LSIMBulkSMSClientClass(APIClient):
                 title: LSIM tərəfindən təyin olunmuş göndərən adınız. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def bulk_send_one_message(
+            self: 'LSIMBulkSMSClientClass[_Async]',
+            controlid: int,
+            msisdns: list[str],
+            bulkmessage: str,
+            scheduled: str = 'NOW',
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            title: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[SendBulkSMSResponseSchema]]: ...
+        def bulk_send_one_message(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def bulk_send_different_messages(
-            self,
+            self: 'LSIMBulkSMSClientClass[_Sync]',
             controlid: int,
             msisdns: list[str],
             messages: list[str],
@@ -123,8 +140,22 @@ class LSIMBulkSMSClientClass(APIClient):
                 title: LSIM tərəfindən təyin olunmuş göndərən adınız. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def bulk_send_different_messages(
+            self: 'LSIMBulkSMSClientClass[_Async]',
+            controlid: int,
+            msisdns: list[str],
+            messages: list[str],
+            scheduled: str = 'NOW',
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            title: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[SendBulkSMSResponseSchema]]: ...
+        def bulk_send_different_messages(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_report(
-            self,
+            self: 'LSIMBulkSMSClientClass[_Sync]',
             taskid: int,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
             password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
@@ -148,8 +179,18 @@ class LSIMBulkSMSClientClass(APIClient):
                 password: LSIM parolunuz. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def get_report(
+            self: 'LSIMBulkSMSClientClass[_Async]',
+            taskid: int,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[GetBulkSMSReportResponseSchema]]: ...
+        def get_report(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_detailed_report(
-            self,
+            self: 'LSIMBulkSMSClientClass[_Sync]',
             taskid: int,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
             password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
@@ -173,8 +214,18 @@ class LSIMBulkSMSClientClass(APIClient):
                 password: LSIM parolunuz. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def get_detailed_report(
+            self: 'LSIMBulkSMSClientClass[_Async]',
+            taskid: int,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[GetBulkSMSDetailedReportResponseSchema]]: ...
+        def get_detailed_report(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_detailed_report_with_dates(
-            self,
+            self: 'LSIMBulkSMSClientClass[_Sync]',
             taskid: int,
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
             password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
@@ -198,8 +249,18 @@ class LSIMBulkSMSClientClass(APIClient):
                 password: LSIM parolunuz. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def get_detailed_report_with_dates(
+            self: 'LSIMBulkSMSClientClass[_Async]',
+            taskid: int,
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[GetBulkSMSDetailedReportResponseSchema]]: ...
+        def get_detailed_report_with_dates(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def check_balance(
-            self,
+            self: 'LSIMBulkSMSClientClass[_Sync]',
             login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
             password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
         ) -> APIResponse[GetBalanceResponseSchema]:
@@ -221,6 +282,14 @@ class LSIMBulkSMSClientClass(APIClient):
                 password: LSIM parolunuz. Mühit dəyişəni kimi təyin olunmayıbsa, burada parametr kimi ötürülməlidir.
             """  # noqa: E501
 
+        @overload
+        def check_balance(
+            self: 'LSIMBulkSMSClientClass[_Async]',
+            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+        ) -> Coroutine[Any, Any, APIResponse[GetBalanceResponseSchema]]: ...
+        def check_balance(self, *args: Any, **kwds: Any) -> Any: ...
 
-LSIMBulkSMSClient = LSIMBulkSMSClientClass()
-LSIMBulkSMSAsyncClient = LSIMBulkSMSClientClass(sync=False)
+
+LSIMBulkSMSClient: 'LSIMBulkSMSClientClass[_Sync]' = LSIMBulkSMSClientClass()
+LSIMBulkSMSAsyncClient: 'LSIMBulkSMSClientClass[_Async]' = LSIMBulkSMSClientClass(sync=False)
