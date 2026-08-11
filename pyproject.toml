@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "integrify-azericard"
-version = "1.0.0"
+version = "1.1.0"
 description = "Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır. Bu kitabxana Azericard inteqrasiyası üçün nəzərdə tutulmuşdur."
 authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
 requires-python = ">=3.9"
@@ -35,7 +35,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
     "Topic :: Internet :: WWW/HTTP",
 ]
-dependencies = ["integrify-core>=1.0.3,<2", "rsa>=4.9.1"]
+dependencies = ["integrify-core>=1.2.0,<2", "rsa>=4.9.1"]
 
 [project.urls]
 Homepage = "https://integrify.mmzeynalli.dev/integrations/azericard/about"
@@ -93,15 +93,12 @@ src = ["src", "tests", "duties.py"]
 
 [tool.ruff.lint]
 select = [
-    # Pyflakes
-    "F",
-    # Pycodestyle
-    "E",
-    "W",
-    # isort
-    "I",
-    # Print statements
-    "T201",
+    "F",  # Pyflakes
+    "E",  # Pycodestyle
+    "W",  # warnings
+    "I",  # isort
+    "T",  # Ban print statements (T201)
+    "UP", # pyupgrade (modern typing / syntax fixes)
 ]
 ignore-init-module-imports = true
 

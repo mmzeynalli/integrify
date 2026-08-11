@@ -13,8 +13,17 @@ AZERICARD_MERCHANT_ID = os.getenv('AZERICARD_MERCHANT_ID', None)
 AZERICARD_KEY_FILE_PATH = os.getenv('AZERICARD_KEY_FILE_PATH', '')
 """AzeriCard sorğuları üçün açar"""
 
-AZERICARD_ENV: str = os.getenv('AZERICARD_ENV', Environment.TEST)  # pylint: disable=invalid-envvar-default
+AZERICARD_ENV: str = os.getenv('AZERICARD_ENV', Environment.TEST.value).strip().lower()
 """AzeriCard sorğu mühiti (test/prod)"""
+
+# Naməlum dəyər verilibsə (məs., 'PROD', 'production'), səssizcə TEST-ə düşmək əvəzinə
+# xəbərdarlıq edirik — əks halda real ödənişlər test gateway-ə gedər.
+if AZERICARD_ENV not in (Environment.TEST.value, Environment.PROD.value):  # pragma: no cover
+    warn(
+        f"AZERICARD_ENV='{AZERICARD_ENV}' tanınmayan dəyərdir; TEST mühiti istifadə olunacaq. "
+        f"Mümkün dəyərlər: '{Environment.TEST.value}', '{Environment.PROD.value}'."
+    )
+    AZERICARD_ENV = Environment.TEST.value
 
 AZERICARD_MERCHANT_NAME = os.getenv('AZERICARD_MERCHANT_NAME', None)
 """Satıcının (merchan) adı (kart istifadəçisinin anladığı formada olmalıdır)"""
@@ -40,7 +49,7 @@ class MpiAPI(str, Enum):
 
     TEST_BASE_URL = 'https://testmpi.3dsecure.az'
     PROD_BASE_URL = 'https://mpi.3dsecure.az'
-    BASE_URL = PROD_BASE_URL if AZERICARD_ENV == Environment.PROD else TEST_BASE_URL
+    BASE_URL = PROD_BASE_URL if AZERICARD_ENV == Environment.PROD.value else TEST_BASE_URL
 
     AUTHORIZATION = '/cgi-bin/cgi_link'
     SAVE_CARD = '/token/cgi_link'
@@ -51,7 +60,7 @@ class MtAPI(str, Enum):
 
     TEST_BASE_URL = 'https://testmt.azericard.com'
     PROD_BASE_URL = 'https://mt.azericard.com'
-    BASE_URL = PROD_BASE_URL if AZERICARD_ENV == Environment.PROD else TEST_BASE_URL
+    BASE_URL = PROD_BASE_URL if AZERICARD_ENV == Environment.PROD.value else TEST_BASE_URL
 
     TRANSFER = '/payment/view'
     TRANSFER_CONFIRM = '/api/confirm'

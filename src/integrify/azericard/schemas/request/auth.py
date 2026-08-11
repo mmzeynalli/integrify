@@ -1,5 +1,6 @@
 import base64
 import json
+from functools import cache
 from typing import ClassVar, Literal, Optional, Union
 
 import rsa
@@ -25,6 +26,17 @@ from integrify.azericard.schemas.enums import (
 from integrify.schemas import PayloadBaseModel
 
 
+@cache
+def _load_private_key(key_file_path: str) -> rsa.PrivateKey:
+    """RSA private key-i fayldan oxuyub cache-ləyən funksiya.
+
+    Əvvəllər hər sorğuda fayl oxunub parse olunurdu; indi eyni fayl yolu üçün bir dəfə
+    oxunur. Nəticə eynidir (deterministik), lakin hər sorğuda disk I/O aradan qalxır.
+    """
+    with open(key_file_path, 'rb') as key_file:
+        return rsa.PrivateKey.load_pkcs1(key_file.read())
+
+
 class BaseRequestSchema(PayloadBaseModel):
     SIGNATURE_FIELDS: ClassVar[list[str]]
     """P_SIGN hesablanılması üçün lazım olan field adları"""
@@ -37,8 +49,7 @@ class BaseRequestSchema(PayloadBaseModel):
         if not self.SIGNATURE_FIELDS:
             return None  # pragma: no cover
 
-        with open(env.AZERICARD_KEY_FILE_PATH, 'rb') as key_file:
-            private_key = rsa.PrivateKey.load_pkcs1(key_file.read())
+        private_key = _load_private_key(env.AZERICARD_KEY_FILE_PATH)
 
         mac_source = self.generate_mac_source().encode('utf-8')
         return rsa.sign(mac_source, private_key, 'SHA-256').hex()

@@ -1,8 +1,9 @@
+from collections.abc import Coroutine
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Any, Generic, Optional, Union, overload
 from typing import SupportsFloat as Numeric
 
-from integrify.api import APIClient, APIPayloadHandler, APIResponse
+from integrify.api import APIClient, APIPayloadHandler, APIResponse, _Async, _Mode, _Sync
 from integrify.azericard import env
 from integrify.azericard.handler import (
     AuthAndSavePayloadHandler,
@@ -21,10 +22,11 @@ from integrify.azericard.schemas.response import (
     TransferDeclineResponseSchema,
 )
 from integrify.schemas import DryResponse
-from integrify.utils import _UNSET, Unsettable
+from integrify.utils import UNSET as _UNSET
+from integrify.utils import Unset as Unsettable
 
 
-class AzeriCardClientClass(APIClient):
+class AzeriCardClientClass(APIClient, Generic[_Mode]):
     """AzeriCard sorğular üçün baza class"""
 
     def __init__(
@@ -96,9 +98,11 @@ class AzeriCardClientClass(APIClient):
         )
 
     if TYPE_CHECKING:
+        # pylint: disable=missing-function-docstring,unused-argument
 
+        @overload
         def authorization(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order: str,
@@ -149,8 +153,31 @@ class AzeriCardClientClass(APIClient):
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
+        @overload
+        def authorization(
+            self: 'AzeriCardClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order: str,
+            desc: str,
+            trtype: AuthorizationType,
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
+            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            country: Unsettable[str] = _UNSET,
+            merch_gmt: Unsettable[str] = _UNSET,
+            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
+            timestamp: Union[datetime, str] = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            name: Unsettable[str] = _UNSET,
+            m_info: Unsettable[MInfo] = _UNSET,
+        ) -> Coroutine[Any, Any, DryResponse]: ...
+        def authorization(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def finalize(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order: str,
@@ -184,8 +211,23 @@ class AzeriCardClientClass(APIClient):
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
+        @overload
+        def finalize(
+            self: 'AzeriCardClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order: str,
+            rrn: str,
+            int_ref: str,
+            trtype: AuthorizationResponseType,
+            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
+            timestamp: Union[datetime, str] = datetime.now(),
+        ) -> Coroutine[Any, Any, DryResponse]: ...
+        def finalize(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def auth_and_save_card(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order: str,
@@ -235,8 +277,31 @@ class AzeriCardClientClass(APIClient):
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
+        @overload
+        def auth_and_save_card(
+            self: 'AzeriCardClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order: str,
+            desc: str,
+            trtype: AuthorizationType,
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
+            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            country: Unsettable[str] = _UNSET,
+            merch_gmt: Unsettable[str] = _UNSET,
+            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
+            timestamp: Union[datetime, str] = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            name: Unsettable[str] = _UNSET,
+            m_info: Unsettable[MInfo] = _UNSET,
+        ) -> Coroutine[Any, Any, DryResponse]: ...
+        def auth_and_save_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def auth_with_saved_card(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             amount: Numeric,
             currency: str,
             order: str,
@@ -288,8 +353,32 @@ class AzeriCardClientClass(APIClient):
                 m_info: Əlavə məlumatlar. Məs: {"browserScreenHeight":"1920","browserScreenWidth":"1080","browserTZ":"0","mobilePhone":{"cc":"994","subscriber":"5077777777"}}
             """  # noqa: E501
 
+        @overload
+        def auth_with_saved_card(
+            self: 'AzeriCardClientClass[_Async]',
+            amount: Numeric,
+            currency: str,
+            order: str,
+            desc: str,
+            trtype: AuthorizationType,
+            token: str,
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
+            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            country: Unsettable[str] = _UNSET,
+            merch_gmt: Unsettable[str] = _UNSET,
+            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
+            timestamp: Union[datetime, str] = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            name: Unsettable[str] = _UNSET,
+            m_info: Unsettable[MInfo] = _UNSET,
+        ) -> Coroutine[Any, Any, DryResponse]: ...
+        def auth_with_saved_card(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def get_transaction_status(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             tran_trtype: Union[AuthorizationType, AuthorizationResponseType],
             order: str,
             terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
@@ -316,8 +405,19 @@ class AzeriCardClientClass(APIClient):
                 timestamp: Merchant server-lə e-Gateway server arasında zaman fərqi 1 saatı aşmamalıdır, əks halda Gateway tranzaksiyaya imtina verəcək. Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
+        @overload
+        def get_transaction_status(
+            self: 'AzeriCardClientClass[_Async]',
+            tran_trtype: Union[AuthorizationType, AuthorizationResponseType],
+            order: str,
+            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
+            timestamp: Union[datetime, str] = datetime.now(),
+        ) -> Coroutine[Any, Any, APIResponse[GetTransactionStatusResponseSchema]]: ...
+        def get_transaction_status(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def transfer_start(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             merchant: str,
             srn: str,
             amount: Numeric,
@@ -347,8 +447,21 @@ class AzeriCardClientClass(APIClient):
                 redirect_link: Əməliyyatın sonunda müştərini yönləndirmək istədiyiniz keçid linki
             """  # noqa: E501
 
+        @overload
+        def transfer_start(
+            self: 'AzeriCardClientClass[_Async]',
+            merchant: str,
+            srn: str,
+            amount: Numeric,
+            cur: str,
+            receiver_credentials: str,
+            redirect_link: str,
+        ) -> Coroutine[Any, Any, DryResponse]: ...
+        def transfer_start(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def transfer_confirm(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             merchant: str,
             srn: str,
             amount: Numeric,
@@ -376,8 +489,20 @@ class AzeriCardClientClass(APIClient):
                 timestamp: Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
+        @overload
+        def transfer_confirm(
+            self: 'AzeriCardClientClass[_Async]',
+            merchant: str,
+            srn: str,
+            amount: Numeric,
+            cur: str,
+            timestamp: Union[datetime, str] = datetime.now(),
+        ) -> Coroutine[Any, Any, APIResponse[TransferConfirmResponseSchema]]: ...
+        def transfer_confirm(self, *args: Any, **kwds: Any) -> Any: ...
+
+        @overload
         def transfer_decline(
-            self,
+            self: 'AzeriCardClientClass[_Sync]',
             merchant: str,
             srn: str,
             amount: Numeric,
@@ -405,6 +530,17 @@ class AzeriCardClientClass(APIClient):
                 timestamp: Dəyər verilmədikdə, `now` avtomatik göndəriləcək
             """  # noqa: E501
 
+        @overload
+        def transfer_decline(
+            self: 'AzeriCardClientClass[_Async]',
+            merchant: str,
+            srn: str,
+            amount: Numeric,
+            cur: str,
+            timestamp: Union[datetime, str] = datetime.now(),
+        ) -> Coroutine[Any, Any, APIResponse[TransferDeclineResponseSchema]]: ...
+        def transfer_decline(self, *args: Any, **kwds: Any) -> Any: ...
 
-AzeriCardClient = AzeriCardClientClass(sync=True)
-AzeriCardAsyncClient = AzeriCardClientClass(sync=False)
+
+AzeriCardClient: 'AzeriCardClientClass[_Sync]' = AzeriCardClientClass(sync=True)
+AzeriCardAsyncClient: 'AzeriCardClientClass[_Async]' = AzeriCardClientClass(sync=False)
