@@ -1,0 +1,201 @@
+# Integrify
+
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+  <a href="https://integrify.mmzeynalli.dev/"><img width="400" src="https://raw.githubusercontent.com/Integrify-SDK/integrify-python/main/docs/assets/integrify.png" alt="Integrify"></a>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/integrify/"><img alt="PyPI package" src="https://img.shields.io/pypi/v/integrify?color=%2334D058&label=pypi%20package"></a>
+  <a href="https://pypi.org/project/integrify/"><img alt="Supported Python versions" src="https://img.shields.io/pypi/pyversions/integrify.svg?color=%2334D058"></a>
+  <a href="https://pepy.tech/project/integrify"><img alt="Downloads" src="https://static.pepy.tech/badge/integrify"></a>
+  <br>
+  <a href="https://www.gnu.org/licenses/mit.en.html"><img alt="License" src="https://img.shields.io/badge/license-MIT-16A34A"></a>
+  <a href="https://docs.astral.sh/uv/"><img alt="uv workspace" src="https://img.shields.io/badge/uv-workspace-111827?logo=python&logoColor=white"></a>
+  <a href="https://github.com/Integrify-SDK/integrify-python"><img alt="Monorepo" src="https://img.shields.io/badge/monorepo-integrations-0F766E"></a>
+</p>
+<!-- markdownlint-enable MD033 -->
+
+---
+
+Integrify API inteqrasiyalarını rahatlaşdıran Python kitabxanasıdır. Bu repository bütün Integrify paketlərini bir monorepo daxilində birləşdirir: shared core + ayrıca publish olunan integration paketləri.
+
+**English below:** [English section](#english)
+
+## Mündəricat / Table of Contents
+
+- [Integrify](#integrify)
+  - [Mündəricat / Table of Contents](#mündəricat--table-of-contents)
+  - [Azərbaycanca](#azərbaycanca)
+    - [Dokumentasiya](#dokumentasiya)
+    - [Əsas özəlliklər](#əsas-özəlliklər)
+    - [Kitabxananın yüklənməsi](#kitabxananın-yüklənməsi)
+    - [İstifadəsi](#i̇stifadəsi)
+      - [Sync nümunə](#sync-nümunə)
+      - [Async nümunə](#async-nümunə)
+      - [Sorğu cavabı](#sorğu-cavabı)
+    - [Dəstəklənən paketlər](#dəstəklənən-paketlər)
+  - [English](#english)
+    - [Documentation](#documentation)
+    - [Key features](#key-features)
+    - [Installation](#installation)
+    - [Usage](#usage)
+      - [Sync example](#sync-example)
+      - [Async example](#async-example)
+      - [Response object shape](#response-object-shape)
+    - [Supported packages](#supported-packages)
+
+---
+
+## Azərbaycanca
+
+### Dokumentasiya
+
+- Dokumentasiya portalı: [https://integrify.mmzeynalli.dev](https://integrify.mmzeynalli.dev)
+- Kod bazası: [https://github.com/Integrify-SDK/integrify-python](https://github.com/Integrify-SDK/integrify-python)
+
+### Əsas özəlliklər
+
+- Hər integration ayrıca paketdir, yalnız lazım olanı yükləyib istifadə edirsiniz.
+- Shared `integrify-core` ilə kod təkrarının qarşısı alınır.
+- Paketlər birlikdə inkişaf etdirilir, amma ayrı-ayrı publish olunur.
+- uv workspace sayəsində bütün member-lər eyni mühitdə test/lint edilir.
+
+### Kitabxananın yüklənməsi
+
+```console
+pip install integrify
+pip install integrify[epoint]
+pip install integrify[epoint,lsim]
+pip install integrify[all]
+```
+
+### İstifadəsi
+
+#### Sync nümunə
+
+```python
+from integrify.epoint import EPointRequest
+
+resp = EPointRequest.pay(
+    amount=100,
+    currency="AZN",
+    order_id="12345678",
+    description="Ödəniş",
+)
+print(resp.ok, resp.body)
+```
+
+#### Async nümunə
+
+```python
+from integrify.epoint import EPointAsyncRequest
+
+resp = await EPointAsyncRequest.pay(
+    amount=100,
+    currency="AZN",
+    order_id="12345678",
+    description="Ödəniş",
+)
+print(resp.ok, resp.body)
+```
+
+#### Sorğu cavabı
+
+```python
+class ApiResponse:
+    ok: bool
+    status_code: int
+    headers: dict
+    body: object
+```
+
+### [Dəstəklənən paketlər](#supported-packages)
+
+Mövcud per-integration repository-lərin bu monorepo-ya köçürülməsi üçün [MIGRATION.md](./MIGRATION.md) faylına baxın.
+
+---
+
+## English
+
+Integrify is a Python toolkit for API integrations. This repository is the monorepo for the Integrify package family: shared core plus independently published integration packages.
+
+### Documentation
+
+- Project docs portal: [https://integrify.mmzeynalli.dev](https://integrify.mmzeynalli.dev)
+- Code repository: [https://github.com/Integrify-SDK/integrify-python](https://github.com/Integrify-SDK/integrify-python)
+
+### Key features
+
+- Each integration is installed independently, so users install only what they need.
+- Shared `integrify-core` avoids duplicated base logic.
+- Packages are developed together but released independently.
+- uv workspace keeps linting and tests unified across members.
+
+### Installation
+
+```console
+pip install integrify
+pip install integrify[epoint]
+pip install integrify[epoint,lsim]
+pip install integrify[all]
+```
+
+### Usage
+
+#### Sync example
+
+```python
+from integrify.epoint import EPointRequest
+
+resp = EPointRequest.pay(
+    amount=100,
+    currency="AZN",
+    order_id="12345678",
+    description="Payment",
+)
+print(resp.ok, resp.body)
+```
+
+#### Async example
+
+```python
+from integrify.epoint import EPointAsyncRequest
+
+resp = await EPointAsyncRequest.pay(
+    amount=100,
+    currency="AZN",
+    order_id="12345678",
+    description="Payment",
+)
+print(resp.ok, resp.body)
+```
+
+#### Response object shape
+
+```python
+class ApiResponse:
+    ok: bool
+    status_code: int
+    headers: dict
+    body: object
+```
+
+For migration steps from older per-integration repositories, see [MIGRATION.md](./MIGRATION.md).
+
+### Supported packages
+
+> [!Caution]
+> Bütün sorğular rəsmi dokumentasiyalara uyğun yazılsa da, Integrify qeyri-rəsmi API klient-dir.
+>
+> Even though all requests are written according to official documentation, Integrify is unofficial library for these integrations
+
+| Service                                                                             |                                        Core requests/                   Əsas sorğular                                        |                                                 All requests/Bütün sorğular                                                  | Documentation                                                                                                                | Tested in production/Real mühitdə test                                                                                       | Lead developer/Əsas Developer                     |
+| ----------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| [EPoint](https://github.com/Integrify-SDK/integrify-epoint-python)                  |                                                              ✅                                                               | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Full](https://integrify.mmzeynalli.dev/integrations/epoint/)                                                                | ✅                                                                                                                            | [Miradil Zeynallı](https://github.com/mmzeynalli) |
+| [KapitalBank](https://github.com/Integrify-SDK/integrify-kapitalbank-python)        |                                                              ✅                                                               |                                                              ✅                                                               | [Full](https://integrify.mmzeynalli.dev/integrations/kapitalbank/)                                                           | ✅                                                                                                                            | [Zaman Kazımov](https://github.com/kazimovzaman2) |
+| [LSIM](https://github.com/Integrify-SDK/integrify-lsim-python)                      |                                                              ✅                                                               |                                                              ✅                                                               | [Full](https://integrify.mmzeynalli.dev/integrations/lsim/)                                                                  | ✅                                                                                                                            | [Miradil Zeynallı](https://github.com/mmzeynalli) |
+| [Posta Guvercini](https://github.com/Integrify-SDK/integrify-postaguvercini-python) |                                                              ✅                                                               |                                                              ✅                                                               | [Full](https://integrify.mmzeynalli.dev/integrations/posta-guvercini/)                                                       | ✅                                                                                                                            | [Zaman Kazımov](https://github.com/kazimovzaman2) |
+| [Azericard](https://github.com/Integrify-SDK/integrify-azericard-python)            |                                                              ✅                                                               | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Full](https://integrify.mmzeynalli.dev/integrations/azericard/)                                                             | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Miradil Zeynallı](https://github.com/mmzeynalli) |
+| [Clopos](https://github.com/Integrify-SDK/integrify-clopos-python)                  |                                                              ✅                                                               |                                                              ✅                                                               | [Full](https://integrify.mmzeynalli.dev/en/integrations/clopos/)                                                             | ![loading](https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/az/docs/assets/spinner-solid.svg)                | [Miradil Zeynallı](https://github.com/mmzeynalli) |
+| [Payriff](https://github.com/Integrify-SDK/integrify-payriff-python)                | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Vahid Həsənzadə](https://github.com/vahidzhe)    |

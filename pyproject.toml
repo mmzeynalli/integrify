@@ -1,0 +1,103 @@
+[project]
+name = "integrify"
+version = "3.0.0"
+description = "Umbrella package for the Integrify family of API-integration libraries. Install only the integrations you need via extras, e.g. `pip install integrify[epoint]`."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
+keywords = ["integrify", "api", "integration", "azerbaijan", "payment", "sms"]
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+    "Framework :: Pydantic",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Internet :: WWW/HTTP",
+]
+# A bare `pip install integrify` pulls in only the shared core.
+# Each integration is a separate distribution, opted into via an extra below.
+dependencies = ["integrify-core"]
+
+[project.urls]
+Homepage = "https://integrify.mmzeynalli.dev"
+Repository = "https://github.com/Integrify-SDK/integrify-python"
+Documentation = "https://integrify.mmzeynalli.dev"
+
+[project.optional-dependencies]
+azericard = ["integrify-azericard"]
+clopos = ["integrify-clopos"]
+epoint = ["integrify-epoint"]
+kapitalbank = ["integrify-kapitalbank"]
+lsim = ["integrify-lsim"]
+postaguvercini = ["integrify-postaguvercini"]
+# Convenience: pull in every integration at once.
+all = [
+    "integrify-azericard",
+    "integrify-clopos",
+    "integrify-epoint",
+    "integrify-kapitalbank",
+    "integrify-lsim",
+    "integrify-postaguvercini",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# The umbrella distribution ships no importable code of its own — it only
+# aggregates the member distributions through extras. The `integrify` import
+# namespace itself is a PEP 420 namespace provided by `integrify-core` and by
+# each integration package.
+[tool.hatch.build.targets.wheel]
+bypass-selection = true
+
+# --------------------------------------------------------------------------- #
+#  uv workspace                                                               #
+#                                                                             #
+#  Every distribution under packages/* is a workspace member, developed and   #
+#  locked together but PUBLISHED INDEPENDENTLY to PyPI. Bring an existing     #
+#  repo in with `git subtree` (see MIGRATION.md) and it becomes a member      #
+#  automatically because it has its own pyproject.toml.                       #
+# --------------------------------------------------------------------------- #
+[tool.uv.workspace]
+members = ["packages/*"]
+
+# During local development, resolve the member distributions from the
+# workspace instead of PyPI. On a published `pip install`, these names resolve
+# to the real PyPI distributions.
+[tool.uv.sources]
+integrify-core = { workspace = true }
+integrify-azericard = { workspace = true }
+integrify-clopos = { workspace = true }
+integrify-epoint = { workspace = true }
+integrify-kapitalbank = { workspace = true }
+integrify-lsim = { workspace = true }
+integrify-postaguvercini = { workspace = true }
+
+[dependency-groups]
+# Tooling shared across the whole workspace; run duties/pre-commit from root.
+dev = [
+    "ruff>=0.3.5,<0.4",
+    "mypy>=1.9",
+    "pytest>=8.1.1,<9",
+    "pytest-mock>=3.14.0,<4",
+    "pre-commit>=3.7",
+]
