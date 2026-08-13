@@ -1,0 +1,125 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.py'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths:
+      - '**.py'
+  schedule:
+    # cron every week on monday
+    - cron: "0 0 * * 1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.13"
+          - "3.12"
+          - "3.11"
+          - "3.10"
+          - "3.9"
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Secrets -> env
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+      #----------------------------------------------
+      #  -----  Checkout -----
+      #----------------------------------------------
+      - uses: actions/checkout@v4
+      #----------------------------------------------
+      #  -----  install & configure uv  -----
+      #----------------------------------------------
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-uv-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
+        run: uv sync --no-dev --no-group=docs
+      #----------------------------------------------
+      #              run test suite
+      #----------------------------------------------
+      - run: mkdir coverage
+      - name: Run tests
+        run: |
+          make test
+        env:
+          COVERAGE_FILE: coverage/.coverage.py${{ matrix.python-version }}
+          CONTEXT: py${{ matrix.python-version }}
+      - name: Store coverage files
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py${{ matrix.python-version }}
+          path: coverage
+          include-hidden-files: true
+  coverage-combine:
+    needs: [test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v4
+      #----------------------------------------------
+      #  -----  install & configure uv  -----
+      #----------------------------------------------
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.9'
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-uv-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-Linux-3.9-${{ hashFiles('pyproject.toml') }}
+      #----------------------------------------------
+      - name: Get coverage files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          path: coverage
+          merge-multiple: true
+      - run: ls -la coverage
+      - run: make coverage title=${{ github.sha }}
+      - name: Store coverage HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: htmlcov
+          include-hidden-files: true

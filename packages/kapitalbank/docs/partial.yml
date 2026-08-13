@@ -1,0 +1,8 @@
+Kapital Bank:
+  - "integrations/kapitalbank/index.md"
+  - "integrations/kapitalbank/env.md"
+  - API Referansı:
+    - "integrations/kapitalbank/api-reference/client.md"
+    - Schemas:
+      - Response: "integrations/kapitalbank/api-reference/response.md"
+      - Utils & Enums: "integrations/kapitalbank/api-reference/utils.md"
