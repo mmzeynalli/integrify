@@ -1,0 +1,150 @@
+[build-system]
+requires = ["hatchling==1.26.3"]
+build-backend = "hatchling.build"
+
+[project]
+name = "integrify-core"
+version = "1.2.0"
+description = "Integrify API inteqrasiyalarını rahatlaşdıran bünovrə (core) kitabxanadır."
+authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
+requires-python = ">=3.9"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+    "Framework :: Pydantic",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Internet :: WWW/HTTP",
+]
+dependencies = [
+    "pydantic>=2.11.10,<3",
+    "httpx>=0.27.2,<1",
+]
+
+[project.urls]
+Homepage = "https://integrify.mmzeynalli.dev/"
+Repository = "https://github.com/Integrify-SDK/integrify-core-python"
+Documentation = "https://integrify.mmzeynalli.dev/"
+
+[dependency-groups]
+gh = [
+    "pytest>=8.1.1,<9",
+    "pytest-mock>=3.14.0,<4",
+    "smokeshow>=0.4.0,<0.5",
+    "coverage>=7.6.3,<8",
+    "duty>=1.5.0",
+]
+dev = [
+    "pytest>=8.1.1,<9",
+    "pytest-mock>=3.14.0,<4",
+    "mypy>=1.9.0,<2",
+    "ruff>=0.3.5,<0.4",
+    "pre-commit>=3.8.0,<4",
+    "ptpython>=3.0.29,<4",
+    "bandit>=1.7.10,<2",
+    "coverage>=7.6.3,<8",
+    "pylint>=3.3.1,<4",
+    "duty>=1.5.0",
+]
+docs = [
+    "mkdocs-material[imaging]>=9.6.4,<10",
+    "mkdocstrings[python]>=0.28.1,<1.0.0",
+    "mkdocs-panzoom-plugin>=0.1.3,<0.2",
+    "griffe-pydantic>=1.1.0,<2",
+]
+
+[tool.uv]
+default-groups = ["gh", "dev", "docs"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/integrify"]
+
+[tool.hatch.build.targets.wheel]
+include = ["src/integrify"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/integrify" = "integrify"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+src = ["src", "tests", "duties.py"]
+
+[tool.ruff.lint]
+select = [
+    "F",  # Pyflakes
+    "E",  # Pycodestyle
+    "W",  # warnings
+    "I",  # isort
+    "T",  # Ban print statements (T201)
+    "UP", # pyupgrade (modern typing / syntax fixes)
+]
+ignore-init-module-imports = true
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.pylint.MASTER]
+ignore-paths = ["tests/", ".venv/", ".venvs/", "test.py"]
+disable = ["C0114", "C0115", "C0301", "R0913", "R0914", "R0917", "R0801"]
+
+[tool.mypy]
+exclude = ["tests/*", "test.py"]
+plugins = ["pydantic.mypy"]
+mypy_path = "src"
+namespace_packages = true
+explicit_package_bases = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src/"]
+filterwarnings = ["ignore::UserWarning"]
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+fail_under = 95
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["src/integrify/test.py"]
+branch = true
+relative_files = true
+context = "${CONTEXT}"
+
+[tool.coverage.paths]
+source = [
+    "src/",
+    "/Users/runner/work/interify/interify/src/",
+    'D:\a\integrify\integrify\src',
+]
+
+[tool.bandit]
+skips = ["B101"]
