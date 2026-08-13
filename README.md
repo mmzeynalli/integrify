@@ -60,6 +60,10 @@ Integrify API inteqrasiyalarını rahatlaşdıran Python kitabxanasıdır. Bu re
 - Shared `integrify-core` ilə kod təkrarının qarşısı alınır.
 - Paketlər birlikdə inkişaf etdirilir, amma ayrı-ayrı publish olunur.
 - uv workspace sayəsində bütün member-lər eyni mühitdə test/lint edilir.
+- Kitabxana həm sync, həm də async sorğu dəyişimini dəstəkləyir.
+- Kitabaxanadakı bütün sinif və funksiyalar tamamilə dokumentləşdirilib.
+- Kitabaxanadakı bütün sinif və funksiyalar tipləndirildiyindən, "type hinting" aktivdir.
+- Sorğuların çoxunun məntiq axını (flowsu) izah edilib.
 
 ### Kitabxananın yüklənməsi
 
@@ -131,6 +135,10 @@ Integrify is a Python toolkit for API integrations. This repository is the monor
 - Shared `integrify-core` avoids duplicated base logic.
 - Packages are developed together but released independently.
 - uv workspace keeps linting and tests unified across members.
+- Library supports both sync and async requests
+- Every class and type in the library is documented
+- Everything in library is type hinted
+- Explanation of most of the request flows are explained
 
 ### Installation
 

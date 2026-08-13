@@ -24,21 +24,21 @@ Use `git subtree add` for each package.
 
 ```bash
 # Shared core first.
-git subtree add --prefix=packages/integrify-core \
-    https://github.com/Integrify-SDK/integrify-core-python.git main
+git subtree add --prefix=packages/core \
+  https://github.com/Integrify-SDK/integrify-core-python.git main
 
 # Integrations.
-git subtree add --prefix=packages/integrify-epoint \
-    https://github.com/Integrify-SDK/integrify-epoint-python.git main
-git subtree add --prefix=packages/integrify-kapitalbank \
-    https://github.com/Integrify-SDK/integrify-kapitalbank-python.git main
-git subtree add --prefix=packages/integrify-azericard \
-    https://github.com/Integrify-SDK/integrify-azericard-python.git main
-git subtree add --prefix=packages/integrify-clopos \
-    https://github.com/Integrify-SDK/integrify-clopos-python.git main
-git subtree add --prefix=packages/integrify-lsim \
-    https://github.com/Integrify-SDK/integrify-lsim-python.git main
-git subtree add --prefix=packages/integrify-postaguvercini \
+git subtree add --prefix=packages/epoint \
+  https://github.com/Integrify-SDK/integrify-epoint-python.git main
+git subtree add --prefix=packages/kapitalbank \
+  https://github.com/Integrify-SDK/integrify-kapitalbank-python.git main
+git subtree add --prefix=packages/azericard \
+  https://github.com/Integrify-SDK/integrify-azericard-python.git main
+git subtree add --prefix=packages/clopos \
+  https://github.com/Integrify-SDK/integrify-clopos-python.git main
+git subtree add --prefix=packages/lsim \
+  https://github.com/Integrify-SDK/integrify-lsim-python.git main
+git subtree add --prefix=packages/postaguvercini \
     https://github.com/Integrify-SDK/integrify-postaguvercini-python.git main
 ```
 
@@ -93,7 +93,7 @@ uv publish
 If old repositories are still receiving commits briefly, pull updates using:
 
 ```bash
-git subtree pull --prefix=packages/integrify-epoint \
+git subtree pull --prefix=packages/epoint \
     https://github.com/Integrify-SDK/integrify-epoint-python.git main
 ```
 

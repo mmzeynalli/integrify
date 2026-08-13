@@ -1,0 +1,41 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish (e.g. integrify-epoint)'
+        required: true
+        type: choice
+        options:
+          - integrify
+          - integrify-core
+          - integrify-epoint
+          - integrify-kapitalbank
+          - integrify-azericard
+          - integrify-clopos
+          - integrify-lsim
+          - integrify-postaguvercini
+
+jobs:
+  publish:
+    name: "Publish ${{ github.event.inputs.package }}"
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/p/${{ github.event.inputs.package }}/
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.9"
+
+      - name: Build distribution
+        run: uv build --package ${{ github.event.inputs.package }}
+
+      - name: Upload package to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.12.4

@@ -1,0 +1,28 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format
+        name: format
+        language: system
+        files: \.py$
+        entry: just format
+      - id: lint
+        name: lint
+        language: system
+        files: \.py$
+        entry: just lint
+      - id: typecheck
+        name: typecheck
+        language: system
+        files: \.py$
+        entry: just type-check
+      - id: secure
+        name: secure
+        entry: just secure
+        language: system
+        pass_filenames: false
+      - id: test
+        name: test
+        entry: just test
+        language: system
+        pass_filenames: false
