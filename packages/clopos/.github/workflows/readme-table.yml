@@ -1,0 +1,51 @@
+name: Readme API Table
+
+on:
+  schedule:
+    # cron every day
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Fetch remote README
+      run: |
+        curl -sSL "https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/refs/heads/main/README.md" -o remote_readme.md
+
+    - name: Extract section from remote README
+      run: |
+        # Extract content between markers in remote README
+        awk '/<!-- START SECTION -->/{flag=1;next}/<!-- END SECTION -->/{flag=0}flag' remote_readme.md > extracted_section.md
+
+    - name: Insert into local README
+      run: |
+        # Replace content in local README after a marker
+        marker="<!-- AUTO-UPDATE SECTION -->"
+        tmp_file=$(mktemp)
+        awk -v marker="$marker" -v insert="$(cat extracted_section.md)" '
+        {
+          print $0
+          if ($0 ~ marker) {
+            print insert
+            exit  # Stop after inserting content
+          }
+        }
+        ' README.md > "$tmp_file"
+        mv "$tmp_file" README.md
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add README.md
+        git diff --cached --quiet || git commit -m "Update README from remote source"
+        git push
