@@ -1,0 +1,7 @@
+Posta Guvercini:
+  - "integrations/posta-guvercini/index.md"
+  - "integrations/posta-guvercini/env.md"
+  - API Referansı:
+    - "integrations/posta-guvercini/api-reference/client.md"
+    - Schemas:
+      - Response: "integrations/posta-guvercini/api-reference/response.md"
