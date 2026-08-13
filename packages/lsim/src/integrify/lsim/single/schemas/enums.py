@@ -1,0 +1,30 @@
+from enum import Enum
+
+
+class Code(int, Enum):
+    """`error_code` field-inin dəyərləri."""
+
+    IN_QUEUE = 100
+    DELIVERED = 101
+    UNDELIVERED = 102
+    EXPIRED = 103
+    REJECTED = 104
+    CANCELLED = 105
+    ERROR = 106
+    UNKNOWN = 107
+    SENT = 108
+    BLACK_LISTED = 109
+
+    INVALID_KEY = -100
+    TOO_LONG_TEXT = -101
+    WRONG_NUMBER_FORMAT = -102
+    INVALID_SENDER_NAME = -103
+    INSUFFICIENT_BALANCE = -104
+    NUMBER_IN_BLACK_LIST = -105
+    INVALID_TRANSACTION_ID = -106
+    IP_ADDRESS_NOT_ALLOWED = -107
+    INVALID_HASH = -108
+    NO_HOST = -109
+    REPORTING_LIMIT_EXCEEDED = -110
+
+    INTERNAL_ERROR = -500
