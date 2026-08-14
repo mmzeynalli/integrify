@@ -1,0 +1,11 @@
+[build]
+base = "."
+publish = "docs/site"
+command = """
+pip3 install --user uv && 
+export PATH=$PATH:$HOME/.local/bin && 
+uv sync && 
+uv pip install . && 
+uv run --active --no-sync zensical build -d ../site/ -f docs/az/mkdocs.yml --strict && 
+uv run --active --no-sync zensical build -d ../site/en -f docs/en/mkdocs.yml --strict && 
+"""

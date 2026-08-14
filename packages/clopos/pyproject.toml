@@ -7,7 +7,7 @@ name = "integrify-clopos"
 version = "0.1.0"
 description = "Integrify is a library that simplifies API integrations. This library is designed for Clopos integration."
 authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 readme = "README.md"
 license = "MIT"
 classifiers = [
@@ -27,7 +27,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",

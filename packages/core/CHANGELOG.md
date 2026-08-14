@@ -1,41 +1,61 @@
-## v1.2.0 (2026-08-11)
+# Changelog
 
-### What's Changed
+All notable changes to `integrify-core` are documented here. The format is based
+on [Keep a Changelog](https://keepachangelog.com/) and this project follows
+[Semantic Versioning](https://semver.org/).
 
-* Payload handlers are now **stateless**: the request model is built per-call instead of being stored on the handler, so shared/singleton handlers are safe under concurrent (including async) requests.
-* Handler `req_model`, `resp_model` and `dry` can now be declared as class attributes, in addition to `__init__` arguments (backward compatible).
-* Added sync/async type markers `_Sync`, `_Async` and the `_Mode` `TypeVar`, enabling correctly-typed async clients through overloads.
-* `APIClient` now dispatches requests via `__getattr__` instead of `__getattribute__` (faster; only triggered on an attribute miss).
-* The `httpx` client is now created lazily and can be closed: added `close()`/`aclose()` and (async) context-manager support. Importing a client no longer opens connections.
-* Request `timeout` is now configurable (default: 10s).
-* Non-JSON or empty response bodies no longer raise `JSONDecodeError`; `APIResponse` now decodes defensively.
-* `PayloadBaseModel.from_args` now raises on duplicate or excess positional arguments.
+## [1.2.0] - 2026-08-11
 
+### Added
 
-## v1.1.1 (2026-08-08)
+- Handler `req_model`, `resp_model` and `dry` can be declared as class attributes, in addition to `__init__` arguments (backward compatible).
+- Sync/async type markers `_Sync`, `_Async` and the `_Mode` `TypeVar`, enabling correctly-typed async clients through overloads.
+- Lazy `httpx` client with `close()`/`aclose()` and (async) context-manager support — importing a client no longer opens connections.
+- Configurable request `timeout` (default: 10s).
 
-### What's Changed
+### Changed
 
-* Bumped maximal httpx version from 0.28.0 to 1.
-* Added dependabot
+- Payload handlers are now **stateless**: the request model is built per-call instead of being stored on the handler, so shared/singleton handlers are safe under concurrent (including async) requests.
+- `APIClient` dispatches requests via `__getattr__` instead of `__getattribute__` (faster; only triggered on an attribute miss).
 
-## v1.1.0 (2025-10-28)
+### Fixed
 
-### What's Changed
+- Non-JSON or empty response bodies no longer raise `JSONDecodeError`; `APIResponse` now decodes defensively.
+- `PayloadBaseModel.from_args` now raises on duplicate or excess positional arguments.
 
-* Bumped minimal pydantic version from 2.8 to 2.11.
-* Added new constant: `UNSET`. Used for differentiating None from missing (or unset) values. `UnsetField`/`UnsetOrNoneField` were also added as annotated pydantic fields.
-* Now all requests can also pass request header as argument (see Clopos).
-* Added function `_build_request_lambda` to enable subclasses to override without overriding whole `__getattribute__`. Can be used to enforce some arguments.
+## [1.1.1] - 2026-08-08
 
-## v1.0.5 (2025-10-20)
+### Chore
 
-### What's Changed
+- Raised the maximum supported `httpx` version from 0.28 to 1.
+- Added Dependabot.
 
-* Fixed and made integrify-core a namespace package.
+## [1.1.0] - 2025-10-28
 
-## v1.0.3 (2025-07-19)
+### Added
 
-### What's Changed
+- `UNSET` constant for distinguishing `None` from missing/unset values, plus `UnsetField`/`UnsetOrNoneField` annotated pydantic fields.
+- Requests can now pass the request headers as an argument (see Clopos).
+- `_build_request_lambda` hook so subclasses can enforce arguments without overriding `__getattribute__`.
 
-* Refactored [old library](https://github.com/mmzeynalli/integrify) to new style.
+### Chore
+
+- Raised the minimum `pydantic` version from 2.8 to 2.11.
+
+## [1.0.5] - 2025-10-20
+
+### Fixed
+
+- Made `integrify-core` a proper namespace package.
+
+## [1.0.3] - 2025-07-19
+
+### Added
+
+- Initial release — refactored from the [old library](https://github.com/mmzeynalli/integrify) to the new style.
+
+[1.2.0]: https://github.com/Integrify-SDK/integrify-python/compare/core-1.1.1...core-1.2.0
+[1.1.1]: https://github.com/Integrify-SDK/integrify-python/compare/core-1.1.0...core-1.1.1
+[1.1.0]: https://github.com/Integrify-SDK/integrify-python/compare/core-1.0.5...core-1.1.0
+[1.0.5]: https://github.com/Integrify-SDK/integrify-python/compare/core-1.0.3...core-1.0.5
+[1.0.3]: https://github.com/Integrify-SDK/integrify-python/releases/tag/core-1.0.3

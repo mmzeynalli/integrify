@@ -1,0 +1,125 @@
+site_name: Integrify
+site_description: Integrify is a library that simplifies third-party API integrations.
+site_url: https://integrify.mmzeynalli.dev/en/
+site_author: Miradil Zeynalli
+copyright: Copyright &copy; Integrify-SDK
+
+repo_name: Integrify-SDK/integrify-python
+repo_url: https://github.com/Integrify-SDK/integrify-python
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.ico
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.tooltips
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+
+extra:
+  alternate:
+    - name: Azərbaycanca
+      link: /az/
+      lang: az
+    - name: English
+      link: /en/
+      lang: en
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Integrify-SDK/integrify-python
+
+plugins:
+  - search
+  - panzoom:
+      full_screen: true
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths:
+            - ../../packages/core/src
+            - ../../packages/epoint/src
+            - ../../packages/kapitalbank/src
+            - ../../packages/azericard/src
+            - ../../packages/lsim/src
+            - ../../packages/postaguvercini/src
+            - ../../packages/clopos/src
+          options:
+            show_root_heading: true
+            show_source: false
+            show_if_no_docstring: true
+            inherited_members: true
+            members_order: source
+            unwrap_annotated: true
+            filters:
+              - '!^_'
+            merge_init_into_class: true
+            docstring_section_style: spacy
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            extensions:
+              - griffe_pydantic
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Clopos:
+      - integrations/clopos/index.md
+      - integrations/clopos/env.md
+      - API Reference:
+          - API Client: integrations/clopos/api-reference/client.md
+          - Schemas:
+              - Response: integrations/clopos/api-reference/response.md
+              - Enums: integrations/clopos/api-reference/enums.md
+          - integrations/clopos/api-reference/helper-functions.md

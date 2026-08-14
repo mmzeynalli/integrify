@@ -1,41 +1,100 @@
 name: Publish
 
+# Publishing is driven by the tag / release name, which encodes which package
+# to publish: `<package>-<version>`, e.g.
+#   epoint-1.3.0    -> publishes integrify-epoint      (packages/epoint)
+#   core-1.2.1      -> publishes integrify-core         (packages/core)
+#   integrify-3.0.0 -> publishes the umbrella integrify (repo root)
+#
+# NOTE: only trigger on tags created ON the monorepo (current layout). The
+# backfilled historical tags point at pre-monorepo commits and must not be
+# used to publish (they will fail the reachability / pyproject checks below).
+#
+# Auth: a single PyPI API token (covering all projects) stored as the repo
+# secret PYPI_API_TOKEN.
+
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
-      package:
-        description: 'Package to publish (e.g. integrify-epoint)'
+      tag:
+        description: 'Tag to publish (e.g. epoint-1.3.0)'
         required: true
-        type: choice
-        options:
-          - integrify
-          - integrify-core
-          - integrify-epoint
-          - integrify-kapitalbank
-          - integrify-azericard
-          - integrify-clopos
-          - integrify-lsim
-          - integrify-postaguvercini
+        type: string
 
 jobs:
-  publish:
-    name: "Publish ${{ github.event.inputs.package }}"
+  parse:
+    name: Resolve package from tag
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-    environment:
-      name: pypi
-      url: https://pypi.org/p/${{ github.event.inputs.package }}/
+    outputs:
+      dist: ${{ steps.p.outputs.dist }}
+      pkgdir: ${{ steps.p.outputs.pkgdir }}
+      version: ${{ steps.p.outputs.version }}
+      tag: ${{ steps.p.outputs.tag }}
+    steps:
+      - id: p
+        run: |
+          TAG="${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          echo "Tag: $TAG"
+          if [[ ! "$TAG" =~ ^(.+)-([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            echo "::error::Tag '$TAG' is not in <package>-<version> form"; exit 1
+          fi
+          NAME="${BASH_REMATCH[1]}"
+          VER="${BASH_REMATCH[2]}"
+          if [[ "$NAME" == "integrify" ]]; then
+            DIST="integrify"; PKGDIR="."
+          else
+            DIST="integrify-$NAME"; PKGDIR="packages/$NAME"
+          fi
+          {
+            echo "dist=$DIST"
+            echo "pkgdir=$PKGDIR"
+            echo "version=$VER"
+            echo "tag=$TAG"
+          } >> "$GITHUB_OUTPUT"
+          echo "Resolved: $DIST @ $VER (dir: $PKGDIR)"
+
+  publish:
+    name: "Publish ${{ needs.parse.outputs.dist }} ${{ needs.parse.outputs.version }}"
+    needs: parse
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.parse.outputs.tag }}
+          fetch-depth: 0
+
+      - name: Verify tag is reachable from main
+        run: |
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "::error::Tag ${{ needs.parse.outputs.tag }} is not an ancestor of main; refusing to publish off an unmerged commit."
+            exit 1
+          fi
+          echo "OK: ${{ needs.parse.outputs.tag }} is reachable from main."
+
+      - name: Verify tag version matches pyproject
+        run: |
+          PYPROJ="${{ needs.parse.outputs.pkgdir }}/pyproject.toml"
+          if [[ ! -f "$PYPROJ" ]]; then
+            echo "::error::$PYPROJ not found at tag ${{ needs.parse.outputs.tag }}"; exit 1
+          fi
+          FILE_VER="$(grep -m1 '^version = ' "$PYPROJ" | sed -E 's/^version = "(.*)"/\1/')"
+          echo "pyproject: $FILE_VER   tag: ${{ needs.parse.outputs.version }}"
+          if [[ "$FILE_VER" != "${{ needs.parse.outputs.version }}" ]]; then
+            echo "::error::Tag version ${{ needs.parse.outputs.version }} does not match $PYPROJ ($FILE_VER)"; exit 1
+          fi
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.9"
+          python-version: "3.10"
 
-      - name: Build distribution
-        run: uv build --package ${{ github.event.inputs.package }}
+      - name: Build ${{ needs.parse.outputs.dist }}
+        run: uv build --package ${{ needs.parse.outputs.dist }}
 
-      - name: Upload package to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.12.4
+      - name: Publish to PyPI
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

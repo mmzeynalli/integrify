@@ -1,20 +1,39 @@
-## v1.2.0 (2026-08-11)
+# Changelog
 
-### What's Changed
+All notable changes to `integrify-epoint` are documented here. The format is based
+on [Keep a Changelog](https://keepachangelog.com/) and this project follows
+[Semantic Versioning](https://semver.org/).
 
-* Added full type hints and autocomplete for the async client (`EPointAsyncRequest`) via sync/async overloads.
-* Fixed response/callback parsing crashing on unknown bank response codes (`Code[...]` `KeyError`); unknown codes now fall back to the raw code.
-* Migrated payload handlers to the class-attribute style.
-* Requires `integrify-core>=1.2.0`.
+## [1.2.0] - 2026-08-11
 
-## v1.1.0 (2025-24-11)
+### Added
 
-### What's Changed
+- Full type hints and autocomplete for the async client (`EPointAsyncRequest`) via sync/async overloads.
 
-* Added support to both old and new version of integrify-core.
+### Changed
 
-## v1.0.0 (2025-07-19)
+- Migrated payload handlers to the class-attribute style.
 
-### What's Changed
+### Fixed
 
-* Refactored [old library](https://github.com/mmzeynalli/integrify) to new style.
+- Response/callback parsing no longer crashes on unknown bank response codes (`Code[...]` `KeyError`); unknown codes fall back to the raw code.
+
+### Chore
+
+- Requires `integrify-core>=1.2.0`.
+
+## [1.1.0] - 2025-11-24
+
+### Added
+
+- Support for both the old and new versions of `integrify-core`.
+
+## [1.0.0] - 2025-07-19
+
+### Added
+
+- Initial release — refactored from the [old library](https://github.com/mmzeynalli/integrify) to the new style.
+
+[1.2.0]: https://github.com/Integrify-SDK/integrify-python/compare/epoint-1.1.0...epoint-1.2.0
+[1.1.0]: https://github.com/Integrify-SDK/integrify-python/compare/epoint-1.0.0...epoint-1.1.0
+[1.0.0]: https://github.com/Integrify-SDK/integrify-python/releases/tag/epoint-1.0.0

@@ -1,14 +1,32 @@
-## v1.1.0 (2026-08-11)
+# Changelog
 
-### What's Changed
+All notable changes to `integrify-postaguvercini` are documented here. The format
+is based on [Keep a Changelog](https://keepachangelog.com/) and this project
+follows [Semantic Versioning](https://semver.org/).
 
-* Added full type hints and autocomplete for the async client (`PostaGuverciniAsyncClient`) via sync/async overloads.
-* Fixed `ImportError` that prevented the package from importing against `integrify-core>=1.1` (removed `_UNSET`/`Unsettable` names).
-* Migrated payload handlers to the class-attribute style.
-* Requires `integrify-core>=1.2.0`.
+## [1.1.0] - 2026-08-11
 
-## v1.0.0 (2025-07-19)
+### Added
 
-### What's Changed
+- Full type hints and autocomplete for the async client (`PostaGuverciniAsyncClient`) via sync/async overloads.
 
-* Refactored [old library](https://github.com/mmzeynalli/integrify) to new style.
+### Changed
+
+- Migrated payload handlers to the class-attribute style.
+
+### Fixed
+
+- `ImportError` that prevented the package from importing against `integrify-core>=1.1` (removed `_UNSET`/`Unsettable` names).
+
+### Chore
+
+- Requires `integrify-core>=1.2.0`.
+
+## [1.0.0] - 2025-07-19
+
+### Added
+
+- Initial release — refactored from the [old library](https://github.com/mmzeynalli/integrify) to the new style.
+
+[1.1.0]: https://github.com/Integrify-SDK/integrify-python/compare/postaguvercini-1.0.0...postaguvercini-1.1.0
+[1.0.0]: https://github.com/Integrify-SDK/integrify-python/releases/tag/postaguvercini-1.0.0

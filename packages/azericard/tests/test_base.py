@@ -64,6 +64,7 @@ def test_html_form(azericard_client: 'AzeriCardClientClass'):
     'amount,exception',
     [(1, does_not_raise()), (2, pytest.raises(ValidationError))],
 )
+@requires_env()
 def test_signature_verification(amount, exception):
     from integrify.azericard.schemas.callback import TransferCallbackSchema
     from integrify.azericard.schemas.enums import CardStatus
@@ -93,6 +94,7 @@ def test_signature_verification(amount, exception):
         ('757983078a9a4f5197686311ce5fc4a3', pytest.raises(ValidationError)),
     ],
 )
+@requires_env()
 def test_transfer_signature_verification(expected_signature, exception):
     from integrify.azericard.schemas.enums import TransferStatusCode
     from integrify.azericard.schemas.response import TransferDeclineResponseSchema

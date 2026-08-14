@@ -1,0 +1,165 @@
+site_name: Integrify
+site_description: Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabxanasıdır.
+site_url: https://integrify.mmzeynalli.dev/az/
+site_author: Miradil Zeynalli
+copyright: Copyright &copy; Integrify-SDK
+
+repo_name: Integrify-SDK/integrify-python
+repo_url: https://github.com/Integrify-SDK/integrify-python
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: az
+  logo: assets/logo.svg
+  favicon: assets/favicon.ico
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.tooltips
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/lightbulb
+        name: Qaranlıq rejimə keç
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/lightbulb-outline
+        name: İşıqlı rejimə keç
+
+extra:
+  alternate:
+    - name: Azərbaycanca
+      link: /az/
+      lang: az
+    - name: English
+      link: /en/
+      lang: en
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Integrify-SDK/integrify-python
+
+plugins:
+  - search
+  - panzoom:
+      full_screen: true
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths:
+            - ../../packages/core/src
+            - ../../packages/epoint/src
+            - ../../packages/kapitalbank/src
+            - ../../packages/azericard/src
+            - ../../packages/lsim/src
+            - ../../packages/postaguvercini/src
+            - ../../packages/clopos/src
+          options:
+            show_root_heading: true
+            show_source: false
+            show_if_no_docstring: true
+            inherited_members: true
+            members_order: source
+            unwrap_annotated: true
+            filters:
+              - '!^_'
+            merge_init_into_class: true
+            docstring_section_style: spacy
+            signature_crossrefs: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            extensions:
+              - griffe_pydantic
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Ana səhifə: index.md
+  - "Daxili (Core)": integrations/core/api-reference.md
+  - EPoint:
+      - integrations/epoint/index.md
+      - integrations/epoint/env.md
+      - API Referansı:
+          - integrations/epoint/api-reference/client.md
+          - Schemas:
+              - Response: integrations/epoint/api-reference/response.md
+              - Callback: integrations/epoint/api-reference/callback.md
+          - integrations/epoint/api-reference/helper-functions.md
+  - Kapital Bank:
+      - integrations/kapitalbank/index.md
+      - integrations/kapitalbank/env.md
+      - API Referansı:
+          - integrations/kapitalbank/api-reference/client.md
+          - Schemas:
+              - Response: integrations/kapitalbank/api-reference/response.md
+              - "Utils & Enums": integrations/kapitalbank/api-reference/utils.md
+  - Azericard:
+      - integrations/azericard/index.md
+      - integrations/azericard/env.md
+      - API Referansı:
+          - integrations/azericard/api-reference/client.md
+          - Schemas:
+              - Response: integrations/azericard/api-reference/response.md
+              - Callback: integrations/azericard/api-reference/callback.md
+              - Common: integrations/azericard/api-reference/common-schemas.md
+              - Helpers: integrations/azericard/api-reference/helper-functions.md
+  - LSIM:
+      - integrations/lsim/index.md
+      - integrations/lsim/env.md
+      - API Referansı:
+          - Single SMS:
+              - integrations/lsim/api-reference/single/client.md
+              - Schemas:
+                  - Response: integrations/lsim/api-reference/single/response.md
+                  - Enums: integrations/lsim/api-reference/single/enums.md
+          - Bulk SMS:
+              - integrations/lsim/api-reference/bulk/client.md
+              - Schemas:
+                  - Response: integrations/lsim/api-reference/bulk/response.md
+                  - Enums: integrations/lsim/api-reference/bulk/enums.md
+  - Posta Güvərçini:
+      - integrations/posta-guvercini/index.md
+      - integrations/posta-guvercini/env.md
+      - API Referansı:
+          - integrations/posta-guvercini/api-reference/client.md
+          - Schemas:
+              - Response: integrations/posta-guvercini/api-reference/response.md

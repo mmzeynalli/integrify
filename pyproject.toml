@@ -3,7 +3,7 @@ name = "integrify"
 version = "3.0.0"
 description = "Umbrella package for the Integrify family of API-integration libraries. Install only the integrations you need via extras, e.g. `pip install integrify[epoint]`."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 authors = [{ name = "mmzeynalli", email = "miradil.zeynalli@gmail.com" }]
 keywords = ["integrify", "api", "integration", "azerbaijan", "payment", "sms"]
@@ -24,7 +24,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -121,7 +120,7 @@ docs = [
 default-groups = ["gh", "dev", "docs"]
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py310"
 line-length = 100
 src = ["packages"]
 
@@ -164,3 +163,7 @@ context = "${CONTEXT}"
 [tool.bandit]
 exclude_dirs = ["tests"]
 skips = ["B101"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/**" = ["T201"]      # CLI-style helper scripts may print
+"**/tests/**" = ["PLC0415"]  # local (in-function) imports are idiomatic in tests

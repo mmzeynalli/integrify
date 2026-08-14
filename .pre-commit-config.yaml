@@ -24,5 +24,6 @@ repos:
       - id: test
         name: test
         entry: just test
+        stages: [pre-push]
         language: system
         pass_filenames: false
