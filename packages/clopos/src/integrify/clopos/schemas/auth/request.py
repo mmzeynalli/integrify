@@ -1,7 +1,6 @@
-from pydantic import Field
-
 from integrify.api import PayloadBaseModel
 from integrify.clopos import env
+from pydantic import Field
 
 
 class AuthRequest(PayloadBaseModel):

@@ -1,5 +1,6 @@
 from integrify.epoint.helpers import decode_callback_data
 from integrify.epoint.schemas.callback import CallbackDataSchema
+
 from tests.conftest import requires_env
 
 

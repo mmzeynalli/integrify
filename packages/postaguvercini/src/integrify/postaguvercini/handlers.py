@@ -19,7 +19,7 @@ class BasePayloadHandler(APIPayloadHandler):
     ClassVar kimi təyin olunur."""
 
     def handle_response(self, resp):
-        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
+        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)
 
         api_resp.ok = api_resp.body.status_code == 200
         api_resp.status_code = 500 if api_resp.body.status_code > 500 else api_resp.body.status_code

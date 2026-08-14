@@ -1,7 +1,6 @@
 from functools import partial
 
 import pytest
-
 from integrify.lsim.bulk.client import LSIMBulkSMSClientClass
 from integrify.lsim.single.client import LSIMSingleSMSClientClass
 from integrify.test import pytest_addoption  # noqa: F401

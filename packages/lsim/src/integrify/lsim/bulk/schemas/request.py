@@ -1,8 +1,7 @@
-from pydantic import Field
-
 from integrify.lsim import env
 from integrify.lsim.types import DateTime
 from integrify.schemas import PayloadBaseModel
+from pydantic import Field
 
 
 class SendBulkSMSOneMessageRequestSchema(PayloadBaseModel):
@@ -12,9 +11,9 @@ class SendBulkSMSOneMessageRequestSchema(PayloadBaseModel):
     bulkmessage: str
 
     scheduled: DateTime
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)  # type: ignore[assignment]
-    title: str = Field(default=env.LSIM_SENDER_NAME, validate_default=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)
+    title: str = Field(default=env.LSIM_SENDER_NAME, validate_default=True)
 
     operation: str = 'submit'
     isbulk: bool = True
@@ -27,9 +26,9 @@ class SendBulkSMSDifferentMessagesRequestSchema(PayloadBaseModel):
     messages: list[str]
 
     scheduled: DateTime
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)  # type: ignore[assignment]
-    title: str = Field(default=env.LSIM_SENDER_NAME, validate_default=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)
+    title: str = Field(default=env.LSIM_SENDER_NAME, validate_default=True)
 
     operation: str = 'submit'
     isbulk: bool = False
@@ -38,8 +37,8 @@ class SendBulkSMSDifferentMessagesRequestSchema(PayloadBaseModel):
 class GetBulkSMSReportRequestSchema(PayloadBaseModel):
     taskid: int
 
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)
     operation: str = 'report'
 
 
@@ -52,6 +51,6 @@ class GetBulkSMSDeatiledWithDateReportRequestSchema(GetBulkSMSReportRequestSchem
 
 
 class GetBalanceRequestSchema(PayloadBaseModel):
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True)
     operation: str = 'units'

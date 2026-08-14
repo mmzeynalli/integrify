@@ -2,7 +2,6 @@ import base64
 import json
 
 import httpx
-
 from integrify.api import APIPayloadHandler
 from integrify.epoint import env
 from integrify.epoint.helpers import generate_signature
@@ -48,7 +47,7 @@ class BasePayloadHandler(APIPayloadHandler):
         }
 
     def handle_response(self, resp: httpx.Response) -> APIResponse[_ResponseT]:
-        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)  # type: ignore[assignment]
+        api_resp: APIResponse[MinimalResponseSchema] = super().handle_response(resp)
 
         # EPoint həmişə 200 qaytarır, error olsa belə
         if isinstance(api_resp.body.status, TransactionStatusExtended):
@@ -56,7 +55,7 @@ class BasePayloadHandler(APIPayloadHandler):
         else:
             api_resp.ok = api_resp.body.status == TransactionStatus.SUCCESS
 
-        return api_resp  # type: ignore[return-value]
+        return api_resp
 
 
 class PaymentPayloadHandler(BasePayloadHandler):

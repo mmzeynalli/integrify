@@ -1,8 +1,5 @@
 import secrets
 from decimal import Decimal
-from typing import Union
-
-from pydantic import BaseModel, Field
 
 from integrify.azericard import env
 from integrify.azericard.schemas.enums import (
@@ -11,6 +8,7 @@ from integrify.azericard.schemas.enums import (
     AuthorizationType,
 )
 from integrify.azericard.utils import TimeStampOut
+from pydantic import BaseModel, Field
 
 
 class AzeriCardMinimalDataSchema(BaseModel):
@@ -18,10 +16,10 @@ class AzeriCardMinimalDataSchema(BaseModel):
     """Satıcı sifariş ID-si, rəqəmsal. Son 6 rəqəm sistem izi audit nömrəsi kimi istifadə olunur,
     terminal id üçün bir gün ərzində unikal olmalıdır"""
 
-    terminal: str = Field(default=env.AZERICARD_MERCHANT_ID)  # type: ignore[assignment]
+    terminal: str = Field(default=env.AZERICARD_MERCHANT_ID)
     """Bank tərəfindən təyin edilmiş Merchant Terminal ID"""
 
-    trtype: Union[AuthorizationType, AuthorizationResponseType, AuthorizationMiscType] = Field(
+    trtype: AuthorizationType | AuthorizationResponseType | AuthorizationMiscType = Field(
         min_length=1, max_length=2
     )
     """Tranzaksiya növü. Mümkün dəyərlər üçün enum faylına bax."""

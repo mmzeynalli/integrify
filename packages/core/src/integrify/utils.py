@@ -1,9 +1,9 @@
 from enum import Enum
-from typing import Annotated, Literal, TypeVar, Union
+from typing import Annotated, Literal, TypeVar
 
 from pydantic import BaseModel, Field
 
-_ResponseT = TypeVar('_ResponseT', bound=Union[BaseModel, dict])
+_ResponseT = TypeVar('_ResponseT', bound=BaseModel | dict)
 """Dynamic response type."""
 
 T = TypeVar('T')
@@ -31,10 +31,10 @@ class UnsetType:
 
 UNSET = UnsetType()
 
-Unset = Union[T, Literal[UNSET]]  # type: ignore[valid-type]
+Unset = T | Literal[UNSET]
 """ Optional argument tipi """
 
-UnsetOrNone = Union[T, Literal[UNSET], None]  # type: ignore[valid-type]
+UnsetOrNone = T | Literal[UNSET] | None
 """None dəyəri ala bilən optional argument tipi"""
 
 UnsetField = Annotated[Unset[T], Field(default=UNSET, exclude_if=lambda x: x is UNSET)]

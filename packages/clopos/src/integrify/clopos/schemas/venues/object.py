@@ -1,6 +1,5 @@
-from pydantic import BaseModel
-
 from integrify.utils import UnsetOrNoneField
+from pydantic import BaseModel
 
 
 class Venue(BaseModel):

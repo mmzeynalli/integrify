@@ -1,12 +1,10 @@
-from typing import Optional
-
 from integrify.clopos import env
 from integrify.clopos.client import CloposClientClass
 from integrify.utils import UNSET
 
 
 class CloposTestClientClass(CloposClientClass):
-    _token: Optional[str] = None
+    _token: str | None = None
 
     def _build_request_lambda(self, func, url, verb, handler):
         # No headers needed in auth

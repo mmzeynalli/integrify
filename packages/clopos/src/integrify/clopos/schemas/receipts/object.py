@@ -1,12 +1,10 @@
 from decimal import Decimal
-from typing import Optional
-
-from pydantic import BaseModel, Field
 
 from integrify.clopos.helpers import IsoDateTime
 from integrify.clopos.schemas.common.object import Timestamp
 from integrify.clopos.schemas.enums import DiscountType, OrderStatus
 from integrify.utils import UnsetField, UnsetOrNoneField
+from pydantic import BaseModel, Field
 
 
 class ReceiptProductIn(BaseModel):
@@ -70,7 +68,7 @@ class ReceiptProduct(ReceiptProductIn):
     receipt_id: int
     """The ID of the receipt associated with the receipt product"""
 
-    product_hash: Optional[str]
+    product_hash: str | None
     """The hash of the product associated with the receipt product"""
 
     preprint_count: int
@@ -85,10 +83,10 @@ class ReceiptProduct(ReceiptProductIn):
     seller_id: int
     """The ID of the seller associated with the receipt product"""
 
-    loyalty_type: Optional[str]
+    loyalty_type: str | None
     """The loyalty type of the receipt product"""
 
-    loyalty_value: Optional[Decimal]
+    loyalty_value: Decimal | None
     """The loyalty value of the receipt product"""
 
     discount_rate: Decimal
@@ -97,7 +95,7 @@ class ReceiptProduct(ReceiptProductIn):
     discount_value: Decimal
     """The discount value of the receipt product"""
 
-    discount_type: Optional[DiscountType]
+    discount_type: DiscountType | None
     """The discount type of the receipt product"""
 
     total_discount: Decimal

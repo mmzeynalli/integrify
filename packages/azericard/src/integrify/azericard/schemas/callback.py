@@ -1,15 +1,13 @@
 from decimal import Decimal
 from hashlib import md5
-from typing import Optional
-
-from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, model_validator
-from pydantic.alias_generators import to_pascal
-from typing_extensions import Self
 
 from integrify.azericard import env
 from integrify.azericard.schemas.common import AzeriCardMinimalWithAmountDataSchema
 from integrify.azericard.schemas.enums import Action, CardStatus
 from integrify.azericard.utils import TimeStampIn
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, model_validator
+from pydantic.alias_generators import to_pascal
+from typing_extensions import Self
 
 
 class AuthCallbackSchema(AzeriCardMinimalWithAmountDataSchema):
@@ -21,7 +19,7 @@ class AuthCallbackSchema(AzeriCardMinimalWithAmountDataSchema):
     rc: str = Field(min_length=2, max_length=2)
     """Əməliyyat cavab kodu (ISO-8583 Sahə 39)"""
 
-    approval: Optional[str] = Field(..., min_length=6, max_length=6)
+    approval: str | None = Field(..., min_length=6, max_length=6)
     """Müştəri bankının təsdiq kodu (ISO-8583 Sahə 38). Kart idarəetmə sistemi
     tərəfindən təmin edilmədikdə boş ola bilər."""
 
@@ -36,10 +34,10 @@ class AuthCallbackSchema(AzeriCardMinimalWithAmountDataSchema):
 
 
 class AuthCallbackWithCardDataSchema(AuthCallbackSchema):
-    card: Optional[str]
+    card: str | None
     """Masklanmış kart nömrəsi"""
 
-    token: Optional[str]
+    token: str | None
     """Saxlanılacaq kartın TOKEN parametri"""
 
 

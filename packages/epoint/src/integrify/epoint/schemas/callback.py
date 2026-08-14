@@ -1,10 +1,8 @@
 from decimal import Decimal
-from typing import Optional
 from urllib.parse import parse_qsl
 
-from pydantic import BaseModel, model_validator
-
 from integrify.epoint.schemas.response import BaseWithCodeSchema
+from pydantic import BaseModel, model_validator
 
 
 class CallbackDataSchema(BaseModel):
@@ -26,15 +24,15 @@ class CallbackDataSchema(BaseModel):
 class DecodedCallbackDataSchema(BaseWithCodeSchema):
     """Decode olunmuş callback data schema-sı"""
 
-    order_id: Optional[str] = None
+    order_id: str | None = None
     """Tətbiqinizdə unikal əməliyyat ID"""
 
-    card_id: Optional[str] = None
+    card_id: str | None = None
     """Ödənişləri yerinə yetirmək üçün istifadə edilməsi
     lazım olan unikal kart identifikatoru"""
 
-    split_amount: Optional[Decimal] = None
+    split_amount: Decimal | None = None
     """İkinci istifadəçi üçün ödəniş məbləği."""
 
-    other_attr: Optional[str] = None
+    other_attr: str | None = None
     """Əlavə göndərdiyiniz seçimlər"""

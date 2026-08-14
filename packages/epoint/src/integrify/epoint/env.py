@@ -1,6 +1,5 @@
 import os
 from enum import Enum
-from typing import Optional
 from warnings import warn
 
 VERSION = '1.0.3'
@@ -9,8 +8,8 @@ EPOINT_PUBLIC_KEY: str = os.getenv('EPOINT_PUBLIC_KEY', '')
 EPOINT_PRIVATE_KEY: str = os.getenv('EPOINT_PRIVATE_KEY', '')
 
 EPOINT_INTERFACE_LANG: str = os.getenv('EPOINT_INTERFACE_LANG', 'az')
-EPOINT_SUCCESS_REDIRECT_URL: Optional[str] = os.getenv('EPOINT_SUCCESS_REDIRECT_URL')
-EPOINT_FAILED_REDIRECT_URL: Optional[str] = os.getenv('EPOINT_FAILED_REDIRECT_URL')
+EPOINT_SUCCESS_REDIRECT_URL: str | None = os.getenv('EPOINT_SUCCESS_REDIRECT_URL')
+EPOINT_FAILED_REDIRECT_URL: str | None = os.getenv('EPOINT_FAILED_REDIRECT_URL')
 EPOINT_LOGGER_NAME: str = os.getenv('EPOINT_LOGGER_NAME', 'epoint')
 
 

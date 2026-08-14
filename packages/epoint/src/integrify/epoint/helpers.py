@@ -28,6 +28,6 @@ def decode_callback_data(data: CallbackDataSchema) -> DecodedCallbackDataSchema:
         data: Callback datası
     """
     if data.signature != generate_signature(data.data):
-        return None  # type: ignore[return-value]
+        return None
 
     return DecodedCallbackDataSchema.model_validate(json.loads(base64.b64decode(data.data)))

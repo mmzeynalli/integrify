@@ -1,16 +1,16 @@
 from datetime import date, datetime
-from typing import Annotated, Union
+from typing import Annotated
 
 from pydantic import BeforeValidator
 
 IsoDateTime = Annotated[
-    Union[str, datetime, None],
+    str | datetime | None,
     BeforeValidator(lambda v: v.isoformat() if isinstance(v, datetime) else v),
 ]
 """ISO 8601 date-time format Pydantic field validator."""
 
 IsoDate = Annotated[
-    Union[str, datetime, None],
+    str | datetime | None,
     BeforeValidator(lambda v: v.isoformat() if isinstance(v, date) else v),
 ]
 

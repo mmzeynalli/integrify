@@ -1,11 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 from hashlib import md5
-from typing import ClassVar, Optional, Union
-
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
-from pydantic.alias_generators import to_pascal
-from typing_extensions import Self
+from typing import ClassVar
 
 from integrify.azericard import env
 from integrify.azericard.schemas.enums import (
@@ -15,6 +11,9 @@ from integrify.azericard.schemas.enums import (
     TransferStatusCode,
 )
 from integrify.azericard.utils import TimeStampIn
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic.alias_generators import to_pascal
+from typing_extensions import Self
 
 
 class GetTransactionStatusResponseSchema(BaseModel):
@@ -57,7 +56,7 @@ class GetTransactionStatusResponseSchema(BaseModel):
     int_ref: str = Field(validation_alias='INT_REF')
     """Orijinal əməliyyat INT_REF"""
 
-    trtype: Union[AuthorizationType, AuthorizationResponseType] = Field(
+    trtype: AuthorizationType | AuthorizationResponseType = Field(
         validation_alias='Original transaction TRTYPE'
     )
     """Orijinal əməliyyat TRTYPE"""
@@ -74,7 +73,7 @@ class GetTransactionStatusResponseSchema(BaseModel):
 
     @field_validator('timestamp', 'date', mode='before')
     @classmethod
-    def validate_timestamp(cls, val: Union[datetime, str]) -> datetime:
+    def validate_timestamp(cls, val: datetime | str) -> datetime:
         """İnput string dəyərdirsə, datetime obyektinə çevirən funksiya"""
         if isinstance(val, datetime):
             return val
@@ -103,19 +102,19 @@ class TransferDeclineResponseSchema(BaseModel):
     srn: str = Field(validation_alias='SRN')
     """Unikal əməliyyat nömrəsi"""
 
-    amount: Optional[Decimal] = None
+    amount: Decimal | None = None
     """Ödəniş məbləği"""
 
-    cur: Optional[str] = None
+    cur: str | None = None
     """Ödəniş valyutası"""
 
-    status: Optional[str] = None
+    status: str | None = None
     """Status Mesajı"""
 
-    timestamp: Optional[TimeStampIn] = None
+    timestamp: TimeStampIn | None = None
     """Sorğunun vaxtı"""
 
-    response_code: Union[TransferStatusCode, int]
+    response_code: TransferStatusCode | int
     """Uğur(suz)luq kodu"""
 
     message: str

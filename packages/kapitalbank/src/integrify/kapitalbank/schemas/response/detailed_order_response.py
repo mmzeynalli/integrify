@@ -1,34 +1,32 @@
 from datetime import datetime
-from typing import Dict, Optional
-
-from pydantic import Field
 
 from integrify.kapitalbank.schemas.enums import TransactionStatus
 from integrify.kapitalbank.schemas.utils import BaseSchema
+from pydantic import Field
 
 
 class StoredToken(BaseSchema):
     id: int
-    cof_provider_rid: Optional[str] = None
-    rid_bycofp: Optional[str] = None
+    cof_provider_rid: str | None = None
+    rid_bycofp: str | None = None
 
 
 class CardAuthentication(BaseSchema):
     need_cvv2: bool
     need_tds: bool
-    tran_id: Optional[str] = None
-    tds_ds_tran_id: Optional[str] = None
-    timestamp: Optional[datetime] = None
-    tds_protocol_ver: Optional[str] = None
-    eci: Optional[str] = None
-    tds_a_res: Optional[str] = None
+    tran_id: str | None = None
+    tds_ds_tran_id: str | None = None
+    timestamp: datetime | None = None
+    tds_protocol_ver: str | None = None
+    eci: str | None = None
+    tds_a_res: str | None = None
 
 
 class CardDetails(BaseSchema):
-    authentication: Optional[CardAuthentication] = None
+    authentication: CardAuthentication | None = None
     expiration: str
     brand: str
-    issuer_rid: Optional[str] = None
+    issuer_rid: str | None = None
 
 
 class SrcToken(BaseSchema):
@@ -37,7 +35,7 @@ class SrcToken(BaseSchema):
     role: str
     status: str
     reg_time: datetime
-    entry_mode: Optional[str] = None
+    entry_mode: str | None = None
     display_name: str
     card: CardDetails
 
@@ -90,7 +88,7 @@ class DetailedOrderType(BaseSchema):
     title: str
     rid: str
     payment_methods: list[str]
-    card_brands: Optional[list[str]] = None
+    card_brands: list[str] | None = None
     allow_tds_attempt: bool
     allow_tds_cant: bool
     allow_tds_challenged: bool
@@ -106,36 +104,36 @@ class DetailedOrderType(BaseSchema):
 class DetailedOrderInformationResponseSchema(BaseSchema):
     id: int
     hpp_url: str
-    hpp_redirect_url: Optional[str] = None
+    hpp_redirect_url: str | None = None
     password: str
     status: TransactionStatus
-    prev_status: Optional[str] = None
+    prev_status: str | None = None
     last_status_login: str
     amount: float
     currency: str
-    terminal: Dict
+    terminal: dict
     src_amount: float
     src_amount_full: float
     src_currency: str
-    dst_amount: Optional[float] = None
-    dst_currency: Optional[str] = None
-    stored_tokens: Optional[list[StoredToken]] = None
+    dst_amount: float | None = None
+    dst_currency: str | None = None
+    stored_tokens: list[StoredToken] | None = None
     create_time: datetime
-    finish_time: Optional[datetime] = None
+    finish_time: datetime | None = None
     cvv2_auth_status: str
-    tds_v1_auth_status: Optional[str] = None
-    tds_v2_auth_status: Optional[str] = None
-    tds_server_url: Optional[str] = None
+    tds_v1_auth_status: str | None = None
+    tds_v2_auth_status: str | None = None
+    tds_server_url: str | None = None
     authorized_charge_amount: float
     cleared_charge_amount: float
     cleared_refund_amount: float
     description: str
     language: str
-    src_token: Optional[SrcToken] = None
-    consumer_device: Optional[ConsumerDevice] = None
+    src_token: SrcToken | None = None
+    consumer_device: ConsumerDevice | None = None
     merchant: Merchant
     initiation_env_kind: str
     type: DetailedOrderType
     hpp_cof_capture_purposes: list[str]
     cust_attrs: list[str]
-    report_pubs: Dict
+    report_pubs: dict

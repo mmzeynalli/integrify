@@ -1,6 +1,5 @@
 import os
 from enum import Enum
-from typing import Optional
 from warnings import warn
 
 from integrify.utils import Environment
@@ -22,7 +21,7 @@ KAPITAL_USERNAME: str = os.getenv('KAPITAL_USERNAME', '')
 KAPITAL_PASSWORD: str = os.getenv('KAPITAL_PASSWORD', '')
 
 KAPITAL_INTERFACE_LANG: str = os.getenv('KAPITAL_INTERFACE_LANG', 'az')
-KAPITAL_REDIRECT_URL: Optional[str] = os.getenv('KAPITAL_REDIRECT_URL')
+KAPITAL_REDIRECT_URL: str | None = os.getenv('KAPITAL_REDIRECT_URL')
 
 
 if not KAPITAL_USERNAME or not KAPITAL_PASSWORD:

@@ -126,7 +126,7 @@ class KapitalClientClass(APIClient, Generic[_Mode]):
         # Bu köməkçi metod nəticələri sinxron istifadə edir (`.body.data`), ona görə
         # yalnız sync klient üçün mənalıdır. Alt-metodların overload-ları `self`-in
         # `KapitalClientClass[_Sync]` olmasını tələb etdiyi üçün `self`-i sync kimi cast edirik.
-        sync_self: 'KapitalClientClass[_Sync]' = self  # type: ignore[assignment]
+        sync_self: KapitalClientClass[_Sync] = self
 
         order_response = sync_self.order_with_saved_card(  # pylint: disable=assignment-from-no-return
             amount=amount,

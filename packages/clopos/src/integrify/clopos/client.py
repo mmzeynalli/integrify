@@ -1,5 +1,6 @@
+from collections.abc import Coroutine
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Any, Coroutine, Generic, Literal, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Generic, Literal, overload
 
 from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.clopos import env
@@ -62,7 +63,7 @@ class CloposClientClass(APIClient, Generic[_Mode]):
     def __init__(
         self,
         name='Clopos',
-        base_url: Optional[str] = env.API.BASE_URL,
+        base_url: str | None = env.API.BASE_URL,
         default_handler=None,
         sync: bool = True,
         dry: bool = False,
@@ -688,7 +689,7 @@ class CloposClientClass(APIClient, Generic[_Mode]):
             self: 'CloposClientClass[_Sync]',
             page: Unset[int] = 1,
             limit: Unset[int] = 50,
-            selects: Unset[Union[str, list[str]]] = UNSET,
+            selects: Unset[str | list[str]] = UNSET,
             filters: Unset[GetProducstRequestFilter] = UNSET,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -737,7 +738,7 @@ class CloposClientClass(APIClient, Generic[_Mode]):
             self: 'CloposClientClass[_Async]',
             page: Unset[int] = 1,
             limit: Unset[int] = 50,
-            selects: Unset[Union[str, list[str]]] = UNSET,
+            selects: Unset[str | list[str]] = UNSET,
             filters: Unset[GetProducstRequestFilter] = UNSET,
             *,
             headers: Unset[dict[str, str]] = UNSET,
@@ -1160,8 +1161,8 @@ class CloposClientClass(APIClient, Generic[_Mode]):
             limit: Unset[int] = 50,
             sort_by: Unset[str] = 'created_at',
             sort_order: Unset[int] = -1,
-            date_from: Unset[Union[str, datetime]] = UNSET,
-            date_to: Unset[Union[str, datetime]] = UNSET,
+            date_from: Unset[str | datetime] = UNSET,
+            date_to: Unset[str | datetime] = UNSET,
             *,
             headers: Unset[dict[str, str]] = UNSET,
         ) -> APIResponse[ObjectListResponse[Receipt]]:
@@ -1199,8 +1200,8 @@ class CloposClientClass(APIClient, Generic[_Mode]):
             limit: Unset[int] = 50,
             sort_by: Unset[str] = 'created_at',
             sort_order: Unset[int] = -1,
-            date_from: Unset[Union[str, datetime]] = UNSET,
-            date_to: Unset[Union[str, datetime]] = UNSET,
+            date_from: Unset[str | datetime] = UNSET,
+            date_to: Unset[str | datetime] = UNSET,
             *,
             headers: Unset[dict[str, str]] = UNSET,
         ) -> Coroutine[Any, Any, APIResponse[ObjectListResponse[Receipt]]]: ...

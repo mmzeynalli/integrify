@@ -1,10 +1,7 @@
-from typing import Union
-
-from pydantic import Field
-
 from integrify.clopos.schemas.common.object import Image, Media, Timestamp
 from integrify.clopos.schemas.enums import CategoryType
 from integrify.utils import UnsetOrNoneField
+from pydantic import Field
 
 
 class Category(Timestamp):
@@ -59,7 +56,7 @@ class Category(Timestamp):
     color: UnsetOrNoneField[str]
     """HEX color"""
 
-    properties: UnsetOrNoneField[Union[dict, list]]
+    properties: UnsetOrNoneField[dict | list]
     """Additional settings and visibility info"""
 
     media: list[Media]

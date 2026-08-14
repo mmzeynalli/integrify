@@ -15,6 +15,7 @@ repos:
         name: typecheck
         language: system
         files: \.py$
+        exclude: (^|/)tests/
         entry: just type-check
       - id: secure
         name: secure

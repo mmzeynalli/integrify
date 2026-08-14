@@ -1,12 +1,12 @@
 from functools import partial
 
 import pytest
-
 from integrify.clopos.schemas.common.response import ObjectResponse
 from integrify.clopos.schemas.orders.object import Order
 from integrify.schemas import APIResponse
 from integrify.test import pytest_addoption  # noqa: F401
 from integrify.test import requires_env as _requires_env
+
 from tests.client import CloposTestClientClass
 from tests.mocks import *  # noqa: F403
 
@@ -46,7 +46,7 @@ def authed_dry_client(client):
 
 @pytest.fixture(scope='package')
 def new_order_resp(authed_client: 'CloposTestClientClass'):
-    resp = authed_client.create_order(  # type: ignore[call-overload]
+    resp = authed_client.create_order(
         customer_id=1,
         payload={
             'service': {

@@ -1,10 +1,10 @@
 from functools import partial
 
 import pytest
-from pytest_mock import MockerFixture
-
 from integrify.test import pytest_addoption  # noqa: F401
 from integrify.test import requires_env as _requires_env
+from pytest_mock import MockerFixture
+
 from tests.mocks import *  # noqa: F403
 
 requires_env = partial(_requires_env, 'EPOINT_PUBLIC_KEY', 'EPOINT_PRIVATE_KEY')

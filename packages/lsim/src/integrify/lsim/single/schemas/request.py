@@ -1,10 +1,9 @@
 from hashlib import md5
 
-from pydantic import Field, computed_field
-
 from integrify.lsim import env
 from integrify.lsim.types import DateTime
 from integrify.schemas import PayloadBaseModel
+from pydantic import Field, computed_field
 
 
 class SendSMSGetRequestSchema(PayloadBaseModel):
@@ -15,9 +14,9 @@ class SendSMSGetRequestSchema(PayloadBaseModel):
     """Mesaj məzmunu"""
 
     # Not required
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True, exclude=True)  # type: ignore[assignment]
-    sender: str = env.LSIM_SENDER_NAME  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True, exclude=True)
+    sender: str = env.LSIM_SENDER_NAME
     """SMS göndərənin adı (LSIM tərəfindən təmin olunur)"""
     unicode: bool = False
     """Mesajın unicode olub/olmaması. Əgər mesajda unikod simvollar (`ə`, `ş`, `ü` və s.) istifadə
@@ -43,8 +42,8 @@ class SendSMSPostRequestSchema(SendSMSGetRequestSchema):
 
 
 class CheckBalanceRequestSchema(PayloadBaseModel):
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
-    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True, exclude=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
+    password: str = Field(default=env.LSIM_PASSWORD, validate_default=True, exclude=True)
 
     @computed_field
     def key(self) -> str:
@@ -60,7 +59,7 @@ class GetReportGetRequestSchema(PayloadBaseModel):
     """Uğurlu SMS göndərdikdə, yaradılan SMS ID-si"""
 
     # Not required
-    login: str = Field(env.LSIM_LOGIN, validate_default=True)  # type: ignore[assignment]
+    login: str = Field(env.LSIM_LOGIN, validate_default=True)
     """Uğurlu SMS göndərildikdə alınan transaction id"""
 
 

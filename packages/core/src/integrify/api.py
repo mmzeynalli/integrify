@@ -1,11 +1,10 @@
 import string
-from collections.abc import Coroutine
+from collections.abc import Callable, Coroutine
 from functools import cached_property
-from typing import Any, Callable, ClassVar, Optional, TypeVar, Union
+from typing import Any, ClassVar, Optional, TypeVar
 from urllib.parse import urljoin
 
 import httpx
-
 from integrify.logger import LOGGER_FUNCTION
 from integrify.schemas import APIResponse, DryResponse, PayloadBaseModel
 from integrify.utils import UNSET, _ResponseT
@@ -45,11 +44,11 @@ class APIClient:
     def __init__(
         self,
         name: str,
-        base_url: Optional[str] = None,
+        base_url: str | None = None,
         default_handler: Optional['APIPayloadHandler'] = None,
         sync: bool = True,
         dry: bool = False,
-        timeout: Optional[float] = DEFAULT_TIMEOUT,
+        timeout: float | None = DEFAULT_TIMEOUT,
     ):
         """
         Args:
@@ -75,7 +74,7 @@ class APIClient:
         self.handlers: dict[str, APIPayloadHandler] = {}
         """API sorğularının payload (request və response) handler-lərının mapping-i"""
 
-    def add_url(self, route_name: str, url: str, verb: str, base_url: Optional[str] = None) -> None:
+    def add_url(self, route_name: str, url: str, verb: str, base_url: str | None = None) -> None:
         """Yeni endpoint əlavə etmə funksiyası
 
         Args:
@@ -188,7 +187,7 @@ class APIPayloadHandler:
     və ya geriyə uyğunluq üçün `__init__`-ə ötürülə bilər.
     """
 
-    req_model: ClassVar[Optional[type[PayloadBaseModel]]] = None
+    req_model: ClassVar[type[PayloadBaseModel] | None] = None
     """Sorğunun payload model-i"""
 
     resp_model: ClassVar[Any] = dict
@@ -212,13 +211,13 @@ class APIPayloadHandler:
         # Geriyə uyğunluq: dəyər `__init__`-ə ötürülübsə, instansiya səviyyəsində
         # class atributunu override edirik; əks halda ClassVar dəyəri qalır.
         if req_model is not UNSET:
-            self.req_model = req_model  # type: ignore[misc]
+            self.req_model = req_model
         if resp_model is not UNSET:
-            self.resp_model = resp_model  # type: ignore[misc]
+            self.resp_model = resp_model
         if dry is not UNSET:
-            self.dry = dry  # type: ignore[misc]
+            self.dry = dry
 
-    def build_request_model(self, *args, **kwds) -> Optional[PayloadBaseModel]:
+    def build_request_model(self, *args, **kwds) -> PayloadBaseModel | None:
         """Verilən argumentlərdən `self.req_model` instansiyasını yaradan funksiya.
 
         Model heç bir instansiya state-i saxlamadan qaytarılır (thread/async safe).
@@ -228,7 +227,7 @@ class APIPayloadHandler:
 
         return None
 
-    def set_urlparams(self, url: str, req_model: Optional[PayloadBaseModel] = None) -> str:
+    def set_urlparams(self, url: str, req_model: PayloadBaseModel | None = None) -> str:
         """URL-in query-param-larını set etmək üçün funksiya (əgər varsa)
 
         Args:
@@ -268,7 +267,7 @@ class APIPayloadHandler:
         Misal üçün: Bax [`EPointClientClass`](https://integrify.mmzeynalli.dev/integrations/epoint/api-reference/client/#integrify.epoint.client.EPointClientClass)
         """
 
-    def handle_payload(self, req_model: Optional[PayloadBaseModel], *args, **kwds):
+    def handle_payload(self, req_model: PayloadBaseModel | None, *args, **kwds):
         """Verilən sorğu modelini payload-a (dict) çevirən funksiya.
         `self.req_model` qeyd edilməyibsə, bu funksiya override olunmalıdır (!).
 
@@ -298,7 +297,7 @@ class APIPayloadHandler:
         """
         return data  # pragma: no cover
 
-    def handle_request(self, req_model: Optional[PayloadBaseModel], *args, **kwds):
+    def handle_request(self, req_model: PayloadBaseModel | None, *args, **kwds):
         """Sorğu üçün payload-u hazırlayan funksiya. Üç mərhələ icra edir,
         və bu mərhələlər override oluna bilər. (Misal üçün:
         Bax [`EPointClientClass`](https://integrify.mmzeynalli.dev/integrations/epoint/api-reference/client/#integrify.epoint.client.EPointClientClass)
@@ -317,14 +316,14 @@ class APIPayloadHandler:
     def handle_response(
         self,
         resp: httpx.Response,
-    ) -> Union[APIResponse[_ResponseT], httpx.Response]:
+    ) -> APIResponse[_ResponseT] | httpx.Response:
         """Sorğudan gələn cavab payload-ı handle edən funksiya. `self.resp_model` schema-sı
         verilibsə, onunla parse və validate olunur, əks halda, json/dict formatında qaytarılır.
         """
         if not self.resp_model:
             return resp
 
-        return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)  # type: ignore[name-defined]
+        return APIResponse[self.resp_model].model_validate(resp, from_attributes=True)
 
 
 class APIExecutor:
@@ -335,7 +334,7 @@ class APIExecutor:
         name: str,
         sync: bool = True,
         dry: bool = False,
-        timeout: Optional[float] = DEFAULT_TIMEOUT,
+        timeout: float | None = DEFAULT_TIMEOUT,
     ):
         """
         Args:
@@ -352,7 +351,7 @@ class APIExecutor:
         self.logger = LOGGER_FUNCTION(name)
 
     @cached_property
-    def client(self) -> Union[httpx.Client, httpx.AsyncClient]:
+    def client(self) -> httpx.Client | httpx.AsyncClient:
         """httpx sorğu client-i.
 
         Lazy yaradılır: import zamanı deyil, ilk sorğuda açılır. Beləliklə, `AsyncClient`
@@ -383,14 +382,10 @@ class APIExecutor:
         self,
     ) -> Callable[
         [str, str, APIPayloadHandler, Any],  # input args
-        Union[
-            Union[httpx.Response, APIResponse[_ResponseT], DryResponse],
-            Coroutine[
-                Any,
-                Any,
-                Union[httpx.Response, APIResponse[_ResponseT], DryResponse],
-            ],
-        ],  # output
+        httpx.Response
+        | APIResponse[_ResponseT]
+        | DryResponse
+        | Coroutine[Any, Any, httpx.Response | APIResponse[_ResponseT] | DryResponse],  # output
     ]:
         """Sync/async request atan funksiyanı seçən attribute"""
         if self.sync:
@@ -404,9 +399,9 @@ class APIExecutor:
         verb: str,
         handler: APIPayloadHandler,
         *args,
-        headers: Optional[dict] = None,
+        headers: dict | None = None,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], DryResponse]:
+    ) -> httpx.Response | APIResponse[_ResponseT] | DryResponse:
         """Sync sorğu atan funksiya
 
         Args:
@@ -456,9 +451,9 @@ class APIExecutor:
         verb: str,
         handler: APIPayloadHandler,
         *args,
-        headers: Optional[dict] = None,
+        headers: dict | None = None,
         **kwds,
-    ) -> Union[httpx.Response, APIResponse[_ResponseT], DryResponse]:
+    ) -> httpx.Response | APIResponse[_ResponseT] | DryResponse:
         """Async sorğu atan funksiya
 
         Args:

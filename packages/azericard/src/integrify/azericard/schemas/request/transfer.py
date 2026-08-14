@@ -2,12 +2,11 @@ from decimal import Decimal
 from hashlib import md5
 from typing import ClassVar
 
-from pydantic import AliasGenerator, ConfigDict, Field, computed_field
-from pydantic.alias_generators import to_pascal
-
 from integrify.azericard import env
 from integrify.azericard.utils import TimeStampOut
 from integrify.schemas import PayloadBaseModel
+from pydantic import AliasGenerator, ConfigDict, Field, computed_field
+from pydantic.alias_generators import to_pascal
 
 
 class BaseTransferRequestSchema(PayloadBaseModel):
@@ -28,7 +27,7 @@ class BaseTransferRequestSchema(PayloadBaseModel):
     cur: str = Field(min_length=3, max_length=3)
     """Ödəniş valyutasının 3 rəqəmli kodu (AZN - 944)"""
 
-    @computed_field  # type: ignore[prop-decorator]
+    @computed_field
     @property
     def signature(self) -> str:
         """Yaradılmış data üçün signature generasiyası"""

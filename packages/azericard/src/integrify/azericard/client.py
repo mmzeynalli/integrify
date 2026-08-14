@@ -1,6 +1,6 @@
 from collections.abc import Coroutine
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Generic, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Generic, overload
 from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, APIPayloadHandler, APIResponse, _Async, _Mode, _Sync
@@ -32,8 +32,8 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
     def __init__(
         self,
         name: str = 'AzeriCard',
-        base_url: Optional[str] = None,
-        default_handler: Optional[APIPayloadHandler] = None,
+        base_url: str | None = None,
+        default_handler: APIPayloadHandler | None = None,
         sync: bool = True,
         dry: bool = False,
     ):
@@ -108,15 +108,15 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             order: str,
             desc: str,
             trtype: AuthorizationType,
-            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
-            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            email: str = env.AZERICARD_MERCHANT_EMAIL,
             country: Unsettable[str] = _UNSET,
             merch_gmt: Unsettable[str] = _UNSET,
-            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
-            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            backref: str = env.AZERICARD_CALLBACK_URL,
+            timestamp: datetime | str = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,
             name: Unsettable[str] = _UNSET,
             m_info: Unsettable[MInfo] = _UNSET,
         ) -> DryResponse:
@@ -161,15 +161,15 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             order: str,
             desc: str,
             trtype: AuthorizationType,
-            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
-            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            email: str = env.AZERICARD_MERCHANT_EMAIL,
             country: Unsettable[str] = _UNSET,
             merch_gmt: Unsettable[str] = _UNSET,
-            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
-            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            backref: str = env.AZERICARD_CALLBACK_URL,
+            timestamp: datetime | str = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,
             name: Unsettable[str] = _UNSET,
             m_info: Unsettable[MInfo] = _UNSET,
         ) -> Coroutine[Any, Any, DryResponse]: ...
@@ -184,8 +184,8 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             rrn: str,
             int_ref: str,
             trtype: AuthorizationResponseType,
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            timestamp: datetime | str = datetime.now(),
         ) -> DryResponse:
             """PreAuthorization (pulu bloklama) sorğusuna cavab və ya direkt ödənişi refund sorğusu
 
@@ -220,8 +220,8 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             rrn: str,
             int_ref: str,
             trtype: AuthorizationResponseType,
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            timestamp: datetime | str = datetime.now(),
         ) -> Coroutine[Any, Any, DryResponse]: ...
         def finalize(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -233,15 +233,15 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             order: str,
             desc: str,
             trtype: AuthorizationType,
-            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
-            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            email: str = env.AZERICARD_MERCHANT_EMAIL,
             country: Unsettable[str] = _UNSET,
             merch_gmt: Unsettable[str] = _UNSET,
-            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
-            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            backref: str = env.AZERICARD_CALLBACK_URL,
+            timestamp: datetime | str = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,
             name: Unsettable[str] = _UNSET,
             m_info: Unsettable[MInfo] = _UNSET,
         ) -> DryResponse:
@@ -285,15 +285,15 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             order: str,
             desc: str,
             trtype: AuthorizationType,
-            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
-            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            email: str = env.AZERICARD_MERCHANT_EMAIL,
             country: Unsettable[str] = _UNSET,
             merch_gmt: Unsettable[str] = _UNSET,
-            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
-            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            backref: str = env.AZERICARD_CALLBACK_URL,
+            timestamp: datetime | str = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,
             name: Unsettable[str] = _UNSET,
             m_info: Unsettable[MInfo] = _UNSET,
         ) -> Coroutine[Any, Any, DryResponse]: ...
@@ -308,15 +308,15 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             desc: str,
             trtype: AuthorizationType,
             token: str,
-            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
-            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            email: str = env.AZERICARD_MERCHANT_EMAIL,
             country: Unsettable[str] = _UNSET,
             merch_gmt: Unsettable[str] = _UNSET,
-            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
-            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            backref: str = env.AZERICARD_CALLBACK_URL,
+            timestamp: datetime | str = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,
             name: Unsettable[str] = _UNSET,
             m_info: Unsettable[MInfo] = _UNSET,
         ) -> DryResponse:
@@ -362,15 +362,15 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             desc: str,
             trtype: AuthorizationType,
             token: str,
-            merch_name: str = env.AZERICARD_MERCHANT_NAME,  # type: ignore[assignment]
-            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            email: str = env.AZERICARD_MERCHANT_EMAIL,  # type: ignore[assignment]
+            merch_name: str = env.AZERICARD_MERCHANT_NAME,
+            merch_url: str = env.AZERICARD_MERCHANT_EMAIL,
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            email: str = env.AZERICARD_MERCHANT_EMAIL,
             country: Unsettable[str] = _UNSET,
             merch_gmt: Unsettable[str] = _UNSET,
-            backref: str = env.AZERICARD_CALLBACK_URL,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
-            lang: str = env.AZERICARD_INTERFACE_LANG,  # type: ignore[assignment]
+            backref: str = env.AZERICARD_CALLBACK_URL,
+            timestamp: datetime | str = datetime.now(),
+            lang: str = env.AZERICARD_INTERFACE_LANG,
             name: Unsettable[str] = _UNSET,
             m_info: Unsettable[MInfo] = _UNSET,
         ) -> Coroutine[Any, Any, DryResponse]: ...
@@ -379,10 +379,10 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
         @overload
         def get_transaction_status(
             self: 'AzeriCardClientClass[_Sync]',
-            tran_trtype: Union[AuthorizationType, AuthorizationResponseType],
+            tran_trtype: AuthorizationType | AuthorizationResponseType,
             order: str,
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            timestamp: datetime | str = datetime.now(),
         ) -> APIResponse[GetTransactionStatusResponseSchema]:
             """Bitmiş tranzaksiyanın statusunu alma sorğusu
 
@@ -408,10 +408,10 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
         @overload
         def get_transaction_status(
             self: 'AzeriCardClientClass[_Async]',
-            tran_trtype: Union[AuthorizationType, AuthorizationResponseType],
+            tran_trtype: AuthorizationType | AuthorizationResponseType,
             order: str,
-            terminal: str = env.AZERICARD_MERCHANT_ID,  # type: ignore[assignment]
-            timestamp: Union[datetime, str] = datetime.now(),
+            terminal: str = env.AZERICARD_MERCHANT_ID,
+            timestamp: datetime | str = datetime.now(),
         ) -> Coroutine[Any, Any, APIResponse[GetTransactionStatusResponseSchema]]: ...
         def get_transaction_status(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -466,7 +466,7 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             srn: str,
             amount: Numeric,
             cur: str,
-            timestamp: Union[datetime, str] = datetime.now(),
+            timestamp: datetime | str = datetime.now(),
         ) -> APIResponse[TransferConfirmResponseSchema]:
             """User-ə ödənişi təsdiqləmək sorğusu
 
@@ -496,7 +496,7 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             srn: str,
             amount: Numeric,
             cur: str,
-            timestamp: Union[datetime, str] = datetime.now(),
+            timestamp: datetime | str = datetime.now(),
         ) -> Coroutine[Any, Any, APIResponse[TransferConfirmResponseSchema]]: ...
         def transfer_confirm(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -507,7 +507,7 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             srn: str,
             amount: Numeric,
             cur: str,
-            timestamp: Union[datetime, str] = datetime.now(),
+            timestamp: datetime | str = datetime.now(),
         ) -> APIResponse[TransferDeclineResponseSchema]:
             """User-ə ödənişi imtina etmək sorğusu
 
@@ -537,7 +537,7 @@ class AzeriCardClientClass(APIClient, Generic[_Mode]):
             srn: str,
             amount: Numeric,
             cur: str,
-            timestamp: Union[datetime, str] = datetime.now(),
+            timestamp: datetime | str = datetime.now(),
         ) -> Coroutine[Any, Any, APIResponse[TransferDeclineResponseSchema]]: ...
         def transfer_decline(self, *args: Any, **kwds: Any) -> Any: ...
 

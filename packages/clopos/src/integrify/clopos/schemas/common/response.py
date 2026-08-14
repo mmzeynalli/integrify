@@ -1,8 +1,7 @@
-from typing import Generic, Literal, Optional, TypeVar
-
-from pydantic import BaseModel
+from typing import Generic, Literal, TypeVar
 
 from integrify.utils import UnsetField
+from pydantic import BaseModel
 
 _ObjectTypeT = TypeVar('_ObjectTypeT', bound=BaseModel)
 
@@ -42,14 +41,14 @@ class ObjectListResponse(PaginatedResponse, Generic[_ObjectTypeT]):
 
 
 class Errors(BaseModel):
-    message: Optional[str] = None
-    type: Optional[str] = None
-    exception: Optional[str] = None
-    code: Optional[int] = None
-    http_code: Optional[int] = None
+    message: str | None = None
+    type: str | None = None
+    exception: str | None = None
+    code: int | None = None
+    http_code: int | None = None
 
 
 class ErrorResponse(BaseModel):
     success: Literal[False]
     error: list[Errors] = []
-    message: Optional[str] = None
+    message: str | None = None

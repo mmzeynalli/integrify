@@ -1,21 +1,19 @@
 from decimal import Decimal
-from typing import Dict, Optional
-
-from pydantic import Field
 
 from integrify.kapitalbank import env
 from integrify.kapitalbank.schemas.utils import BaseSchema
 from integrify.schemas import PayloadBaseModel
+from pydantic import Field
 
 
 class CreateOrderRequestSchema(PayloadBaseModel, BaseSchema):
     amount: Decimal
     currency: str
     description: str
-    language: Optional[str] = env.KAPITAL_INTERFACE_LANG
-    hpp_redirect_url: Optional[str] = Field(default=env.KAPITAL_REDIRECT_URL)
-    type_rid: Optional[str] = Field(default='Order_SMS')
-    hpp_cof_capture_purposes: Optional[list[str]] = Field(default=['Cit'])
+    language: str | None = env.KAPITAL_INTERFACE_LANG
+    hpp_redirect_url: str | None = Field(default=env.KAPITAL_REDIRECT_URL)
+    type_rid: str | None = Field(default='Order_SMS')
+    hpp_cof_capture_purposes: list[str] | None = Field(default=['Cit'])
 
 
 class OrderInformationRequestSchema(PayloadBaseModel):
@@ -34,14 +32,14 @@ class RefundOrderRequestSchema(PayloadBaseModel):
 
 
 class SaveCardRequestSchema(CreateOrderRequestSchema):
-    type_rid: Optional[str] = Field(default='Order_DMS')
-    hpp_cof_capture_purposes: Optional[list[str]] = Field(default=['Cit', 'Recurring'])
-    aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
+    type_rid: str | None = Field(default='Order_DMS')
+    hpp_cof_capture_purposes: list[str] | None = Field(default=['Cit', 'Recurring'])
+    aut: dict[str, str] = Field(default={'purpose': 'AddCard'})
 
 
 class PayAndSaveCardRequestSchema(CreateOrderRequestSchema):
-    type_rid: Optional[str] = Field(default='Order_SMS')
-    aut: Dict[str, str] = Field(default={'purpose': 'AddCard'})
+    type_rid: str | None = Field(default='Order_SMS')
+    aut: dict[str, str] = Field(default={'purpose': 'AddCard'})
 
 
 class FullReverseOrderRequestSchema(PayloadBaseModel):
@@ -70,7 +68,7 @@ class PartialReverseOrderRequestSchema(PayloadBaseModel):
 
 
 class OrderWithSavedCardRequestSchema(CreateOrderRequestSchema):
-    type_rid: Optional[str] = Field(default='Order_REC')
+    type_rid: str | None = Field(default='Order_REC')
     hpp_redirect_url: None = None
     hpp_cof_capture_purposes: None = None
 
@@ -89,5 +87,5 @@ class ProcessPaymentWithSavedCardRequestSchema(PayloadBaseModel):
     amount: Decimal
     order_id: int
     password: str
-    phase: Optional[str] = Field(default='Single')
-    conditions: Optional[Dict[str, str]] = Field(default={'cofUsage': 'Cit'})
+    phase: str | None = Field(default='Single')
+    conditions: dict[str, str] | None = Field(default={'cofUsage': 'Cit'})

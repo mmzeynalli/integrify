@@ -1,11 +1,10 @@
 import os
 from enum import Enum
-from typing import Optional
 
 VERSION = 'v1'
 
-POSTA_GUVERCINI_USERNAME: Optional[str] = os.getenv('POSTA_GUVERCINI_USERNAME', None)
-POSTA_GUVERCINI_PASSWORD: Optional[str] = os.getenv('POSTA_GUVERCINI_PASSWORD', None)
+POSTA_GUVERCINI_USERNAME: str | None = os.getenv('POSTA_GUVERCINI_USERNAME', None)
+POSTA_GUVERCINI_PASSWORD: str | None = os.getenv('POSTA_GUVERCINI_PASSWORD', None)
 
 
 class API(str, Enum):

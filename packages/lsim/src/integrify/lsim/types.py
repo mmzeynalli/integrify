@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Annotated, Union
+from typing import Annotated
 
 from pydantic import BeforeValidator, Field
 
 FORMAT = '%Y-%m-%d %H:%M:%S'
 
 
-def timestamp_to_str(value: Union[str, datetime]) -> Union[str, None]:
+def timestamp_to_str(value: str | datetime) -> str | None:
     """Verilmiş datetime-i uyğun string formata salır.
     Əgər string şəklində verilibsə, format uyğunluğu yoxlanılır."""
     if isinstance(value, str):
@@ -23,7 +23,7 @@ def timestamp_to_str(value: Union[str, datetime]) -> Union[str, None]:
 
 
 DateTime = Annotated[
-    Union[str, datetime],
+    str | datetime,
     Field(default='NOW'),
     BeforeValidator(timestamp_to_str),
     'LSIM-ə göndəriləcək timestamp (YYYY-mm-DD HH:MM:SS formatına salınır)',

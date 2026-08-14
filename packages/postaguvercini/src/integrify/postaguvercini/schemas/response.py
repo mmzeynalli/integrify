@@ -1,5 +1,3 @@
-from typing import Optional
-
 from integrify.postaguvercini.schemas.utils import BaseSchema
 
 
@@ -32,12 +30,12 @@ class StatusResultSchema(BaseSchema):
 
 
 class SendSMSResponseSchema(MinimalResponseSchema):
-    result: Optional[list[SendSingleSMSResultSchema]]
+    result: list[SendSingleSMSResultSchema] | None
 
 
 class StatusResponseSchema(MinimalResponseSchema):
-    result: Optional[list[StatusResultSchema]]
+    result: list[StatusResultSchema] | None
 
 
 class CreditBalanceResponseSchema(MinimalResponseSchema):
-    result: Optional[CreditBalanceResultSchema]
+    result: CreditBalanceResultSchema | None

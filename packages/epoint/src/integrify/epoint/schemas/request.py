@@ -1,10 +1,8 @@
 from decimal import Decimal
-from typing import Optional
-
-from pydantic import Field
 
 from integrify.epoint import env
 from integrify.schemas import PayloadBaseModel
+from pydantic import Field
 
 
 class MinimalPaymentRequestSchema(PayloadBaseModel):
@@ -14,14 +12,14 @@ class MinimalPaymentRequestSchema(PayloadBaseModel):
 
 
 class BasePaymentRequestSchema(MinimalPaymentRequestSchema):
-    success_redirect_url: Optional[str] = env.EPOINT_SUCCESS_REDIRECT_URL
-    error_redirect_url: Optional[str] = env.EPOINT_FAILED_REDIRECT_URL
-    description: Optional[str] = None
+    success_redirect_url: str | None = env.EPOINT_SUCCESS_REDIRECT_URL
+    error_redirect_url: str | None = env.EPOINT_FAILED_REDIRECT_URL
+    description: str | None = None
 
 
 ##############################################################################
 class PaymentRequestSchema(BasePaymentRequestSchema):
-    other_attr: Optional[dict] = None
+    other_attr: dict | None = None
 
 
 class GetTransactionStatusRequestSchema(PayloadBaseModel):
@@ -42,29 +40,29 @@ class PayAndSaveCardRequestSchema(BasePaymentRequestSchema):
 
 class PayoutRequestSchema(MinimalPaymentRequestSchema):
     card_id: str
-    description: Optional[str] = None
+    description: str | None = None
 
 
 class RefundRequestSchema(PayloadBaseModel):
     transaction: str = Field(validation_alias='transaction_id')
     currency: str
-    amount: Optional[Decimal] = None
+    amount: Decimal | None = None
 
 
 class SplitPayRequestSchema(BasePaymentRequestSchema):
     split_user: str = Field(validation_alias='split_user_id')
     split_amount: Decimal
-    other_attr: Optional[dict] = None
+    other_attr: dict | None = None
 
 
 class SplitPayWithSavedCardRequestSchema(MinimalPaymentRequestSchema):
     card_id: str
     split_user: str = Field(validation_alias='split_user_id')
     split_amount: Decimal
-    description: Optional[str] = None
+    description: str | None = None
 
 
 class SplitPayAndSaveCardRequestSchema(BasePaymentRequestSchema):
     split_user: str = Field(validation_alias='split_user_id')
     split_amount: Decimal
-    description: Optional[str] = None
+    description: str | None = None

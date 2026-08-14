@@ -1,11 +1,9 @@
 import base64
 import json
 from functools import cached_property
-from typing import ClassVar, Optional
+from typing import ClassVar
 
 import httpx
-from pydantic import BaseModel
-
 from integrify.api import APIPayloadHandler, APIResponse, _ResponseT
 from integrify.kapitalbank.env import KAPITAL_PASSWORD, KAPITAL_USERNAME
 from integrify.kapitalbank.schemas.request import (
@@ -34,6 +32,7 @@ from integrify.kapitalbank.schemas.response import (
     ProcessPaymentWithSavedCardResponseSchema,
     RefundOrderResponseSchema,
 )
+from pydantic import BaseModel
 
 
 def _safe_json(resp: httpx.Response) -> dict:
@@ -51,7 +50,7 @@ class BasePayloadHandler(APIPayloadHandler):
     """Kapitalbank üçün baza handler. `req_model`/`resp_model`/`data_key`
     alt class-larda ClassVar kimi təyin olunur."""
 
-    data_key: ClassVar[Optional[str]] = None
+    data_key: ClassVar[str | None] = None
 
     @cached_property
     def headers(self):
@@ -97,7 +96,7 @@ class BasePayloadHandler(APIPayloadHandler):
             except (ValueError, TypeError):
                 api_resp.body.error = None
 
-        return api_resp  # type: ignore[return-value]
+        return api_resp
 
     def get_response_data(self, response_json: dict) -> dict:
         """`self.data_key` varsa, o key-dəki datanı götürmək"""

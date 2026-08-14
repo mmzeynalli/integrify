@@ -1,13 +1,12 @@
 from typing import Literal
 
-from pydantic import Field, model_serializer
-from typing_extensions import TypedDict
-
 from integrify.clopos.helpers import IsoDate
 from integrify.clopos.schemas.common.request import PaginatedDataRequest
 from integrify.clopos.schemas.enums import Gender
 from integrify.schemas import PayloadBaseModel
 from integrify.utils import UnsetField, UnsetOrNoneField
+from pydantic import Field, model_serializer
+from typing_extensions import TypedDict
 
 
 class CustomerFilter(TypedDict):

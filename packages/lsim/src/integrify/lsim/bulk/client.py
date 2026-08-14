@@ -63,9 +63,9 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
             msisdns: list[str],
             bulkmessage: str,
             scheduled: str = 'NOW',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            title: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            title: str = base_env.LSIM_SENDER_NAME,
         ) -> APIResponse[SendBulkSMSResponseSchema]:
             """Bir SMS-i toplu şəkildə bir çox nəfərə göndərmək sorğusu
 
@@ -98,9 +98,9 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
             msisdns: list[str],
             bulkmessage: str,
             scheduled: str = 'NOW',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            title: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            title: str = base_env.LSIM_SENDER_NAME,
         ) -> Coroutine[Any, Any, APIResponse[SendBulkSMSResponseSchema]]: ...
         def bulk_send_one_message(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -111,9 +111,9 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
             msisdns: list[str],
             messages: list[str],
             scheduled: str = 'NOW',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            title: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            title: str = base_env.LSIM_SENDER_NAME,
         ) -> APIResponse[SendBulkSMSResponseSchema]:
             """Toplu şəkildə bir çox nəfərə fərqli SMS göndərmək sorğusu
 
@@ -147,9 +147,9 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
             msisdns: list[str],
             messages: list[str],
             scheduled: str = 'NOW',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            title: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            title: str = base_env.LSIM_SENDER_NAME,
         ) -> Coroutine[Any, Any, APIResponse[SendBulkSMSResponseSchema]]: ...
         def bulk_send_different_messages(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -157,8 +157,8 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         def get_report(
             self: 'LSIMBulkSMSClientClass[_Sync]',
             taskid: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> APIResponse[GetBulkSMSReportResponseSchema]:
             """Toplu göndərilmiş SMSlərin report sorğusu
 
@@ -183,8 +183,8 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         def get_report(
             self: 'LSIMBulkSMSClientClass[_Async]',
             taskid: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[GetBulkSMSReportResponseSchema]]: ...
         def get_report(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -192,8 +192,8 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         def get_detailed_report(
             self: 'LSIMBulkSMSClientClass[_Sync]',
             taskid: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> APIResponse[GetBulkSMSDetailedReportResponseSchema]:
             """Toplu göndərilmiş SMSlərin detallı report sorğusu
 
@@ -218,8 +218,8 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         def get_detailed_report(
             self: 'LSIMBulkSMSClientClass[_Async]',
             taskid: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[GetBulkSMSDetailedReportResponseSchema]]: ...
         def get_detailed_report(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -227,8 +227,8 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         def get_detailed_report_with_dates(
             self: 'LSIMBulkSMSClientClass[_Sync]',
             taskid: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> APIResponse[GetBulkSMSDetailedReportResponseSchema]:
             """Toplu göndərilmiş SMSlərin detallı report (+ tarix) sorğusu
 
@@ -253,16 +253,16 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         def get_detailed_report_with_dates(
             self: 'LSIMBulkSMSClientClass[_Async]',
             taskid: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[GetBulkSMSDetailedReportResponseSchema]]: ...
         def get_detailed_report_with_dates(self, *args: Any, **kwds: Any) -> Any: ...
 
         @overload
         def check_balance(
             self: 'LSIMBulkSMSClientClass[_Sync]',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> APIResponse[GetBalanceResponseSchema]:
             """Balansı öyrənmək sorğusu
 
@@ -285,8 +285,8 @@ class LSIMBulkSMSClientClass(APIClient, Generic[_Mode]):
         @overload
         def check_balance(
             self: 'LSIMBulkSMSClientClass[_Async]',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[GetBalanceResponseSchema]]: ...
         def check_balance(self, *args: Any, **kwds: Any) -> Any: ...
 

@@ -1,5 +1,5 @@
 from collections.abc import Coroutine
-from typing import TYPE_CHECKING, Any, Generic, Optional, overload
+from typing import TYPE_CHECKING, Any, Generic, overload
 from typing import SupportsFloat as Numeric
 
 from integrify.api import APIClient, _Async, _Mode, _Sync
@@ -36,7 +36,7 @@ class EPointClientClass(APIClient, Generic[_Mode]):
     def __init__(
         self,
         name='EPoint',
-        base_url: Optional[str] = env.API.BASE_URL,
+        base_url: str | None = env.API.BASE_URL,
         default_handler=None,
         sync: bool = True,
         dry: bool = False,

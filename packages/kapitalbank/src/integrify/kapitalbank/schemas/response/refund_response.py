@@ -1,7 +1,6 @@
-from pydantic import field_validator
-
 from integrify.kapitalbank.schemas.enums import PMO_RESULT_CODES
 from integrify.kapitalbank.schemas.utils import BaseSchema
+from pydantic import field_validator
 
 
 class Match(BaseSchema):

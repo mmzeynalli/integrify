@@ -3,12 +3,11 @@ from unittest.mock import patch
 import httpx
 import pytest
 from httpx import Response
-from pydantic import BaseModel
-from pytest_mock import MockerFixture
-
 from integrify.api import APIClient, APIPayloadHandler
 from integrify.schemas import PayloadBaseModel
 from integrify.utils import UNSET, UnsetField
+from pydantic import BaseModel
+from pytest_mock import MockerFixture
 
 
 class RequestSchema(PayloadBaseModel):

@@ -1,10 +1,9 @@
 import json
-from typing import Any, ClassVar, Generic, Union
-
-from pydantic import BaseModel, Field, field_validator
-from typing_extensions import TypedDict
+from typing import Any, ClassVar, Generic
 
 from integrify.utils import _ResponseT
+from pydantic import BaseModel, Field, field_validator
+from typing_extensions import TypedDict
 
 
 class APIResponse(BaseModel, Generic[_ResponseT]):
@@ -26,7 +25,7 @@ class APIResponse(BaseModel, Generic[_ResponseT]):
 
     @field_validator('body', mode='before')
     @classmethod
-    def convert_to_dict(cls, v: Union[str, bytes]):
+    def convert_to_dict(cls, v: str | bytes):
         """Binary content-i dict-ə çevirərək, validation-a hazır vəziyyətə gətirir.
 
         Cavab JSON deyilsə (məs., gateway xətası zamanı HTML səhifə və ya boş body),

@@ -43,7 +43,7 @@ req = AzericardClient.pay(
 
 form = json_to_html_form(req)
 print(form)  # <form action="https://testmpi.3dsecure.az/cgi-bin/cgi_link" method="POST">
-             #   <input type="hidden" name="ORDER" value="12345678"> ...
+#   <input type="hidden" name="ORDER" value="12345678"> ...
 ```
 
 ## Callback Sorğusu { #callback-request }

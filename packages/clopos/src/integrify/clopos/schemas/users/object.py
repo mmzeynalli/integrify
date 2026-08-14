@@ -1,5 +1,3 @@
-from typing import Union
-
 from integrify.clopos.schemas.common.object import Timestamp
 from integrify.utils import UnsetOrNoneField
 
@@ -56,7 +54,7 @@ class User(Timestamp):
     bonus_balance_id: UnsetOrNoneField[int]
     """Balance ID of the user"""
 
-    properties: UnsetOrNoneField[Union[dict, list]]
+    properties: UnsetOrNoneField[dict | list]
     """User properties"""
 
     image: UnsetOrNoneField[list[str]]

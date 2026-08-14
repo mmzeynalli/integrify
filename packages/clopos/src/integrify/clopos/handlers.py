@@ -1,9 +1,7 @@
 # pylint: disable=wrong-import-order,ungrouped-imports
 import json
 from functools import cached_property
-from typing import Annotated, Union
-
-from pydantic import Field
+from typing import Annotated
 
 from integrify.api import APIPayloadHandler
 from integrify.clopos import env
@@ -40,25 +38,24 @@ from integrify.clopos.schemas.receipts.request import (
 )
 from integrify.clopos.schemas.stations.object import Station
 from integrify.clopos.schemas.stations.request import GetStationsRequest
+from pydantic import Field
 
 
 class AuthHandler(APIPayloadHandler):
     def __init__(
         self,
         req_model=AuthRequest,
-        resp_model=Annotated[Union[AuthResponse, ErrorResponse], Field(discriminator='success')],
+        resp_model=Annotated[AuthResponse | ErrorResponse, Field(discriminator='success')],
         dry=False,
     ):
-        super().__init__(req_model, resp_model, dry)  # ty: ignore[invalid-argument-type]
+        super().__init__(req_model, resp_model, dry)
 
 
 class AuthedAPIPayloadHandler(APIPayloadHandler):
     def __init__(self, req_model=None, resp_model=None, dry=False):
         super().__init__(
             req_model,
-            Annotated[
-                Union[resp_model, ErrorResponse], Field(discriminator='success')
-            ],  # ty: ignore[invalid-argument-type]
+            Annotated[resp_model | ErrorResponse, Field(discriminator='success')],
             dry,
         )
 

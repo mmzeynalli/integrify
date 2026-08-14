@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
+from integrify.azericard.schemas.enums import AuthorizationResponseType, AuthorizationType
 from pytest_mock import MockerFixture
 
-from integrify.azericard.schemas.enums import AuthorizationResponseType, AuthorizationType
 from tests.conftest import requires_env
 
 if TYPE_CHECKING:

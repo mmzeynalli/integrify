@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import time_machine
-
 from integrify.lsim.types import timestamp_to_str
 
 

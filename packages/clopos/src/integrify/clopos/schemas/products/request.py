@@ -1,13 +1,12 @@
-from typing import Literal, Union
-
-from pydantic import Field, field_serializer, model_serializer
-from typing_extensions import NotRequired, TypedDict
+from typing import Literal
 
 from integrify.api import PayloadBaseModel
 from integrify.clopos.helpers import BoolInt
 from integrify.clopos.schemas.common.request import ByIDRequest, PaginatedDataRequest
 from integrify.clopos.schemas.enums import ProductType
 from integrify.utils import UnsetField
+from pydantic import Field, field_serializer, model_serializer
+from typing_extensions import NotRequired, TypedDict
 
 
 class GetProducstRequestFilter(TypedDict):
@@ -52,7 +51,7 @@ class GetProducstRequestFilter(TypedDict):
 
 
 class GetProductsRequest(PaginatedDataRequest):
-    selects: UnsetField[Union[list[str], str]] = Field(serialization_alias='selects[]')
+    selects: UnsetField[list[str] | str] = Field(serialization_alias='selects[]')
     filters: UnsetField[GetProducstRequestFilter]
 
     @field_serializer('selects')

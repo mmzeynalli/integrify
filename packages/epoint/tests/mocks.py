@@ -1,6 +1,5 @@
 import pytest
 from httpx import Response
-
 from integrify.epoint.schemas.enums import TransactionStatus, TransactionStatusExtended
 
 MESSAGE_SUCCESS = 'Təsdiq edildi'

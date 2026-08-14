@@ -1,10 +1,9 @@
 from decimal import Decimal
 from typing import Literal
 
-from pydantic import BaseModel, Field
-
 from integrify.clopos.schemas.enums import ProductType
 from integrify.utils import UnsetOrNoneField
+from pydantic import BaseModel, Field
 
 
 class Timestamp(BaseModel):

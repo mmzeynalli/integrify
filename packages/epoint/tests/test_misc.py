@@ -1,9 +1,9 @@
 import os
 from typing import TYPE_CHECKING
 
+from integrify.test import live
 from pytest_mock import MockerFixture
 
-from integrify.test import live
 from tests.conftest import requires_env
 from tests.mocks import MESSAGE_TRANSACTION_FAIL
 

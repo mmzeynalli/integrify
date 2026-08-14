@@ -165,5 +165,61 @@ exclude_dirs = ["tests"]
 skips = ["B101"]
 
 [tool.ruff.lint.per-file-ignores]
-"scripts/**" = ["T201"]      # CLI-style helper scripts may print
-"**/tests/**" = ["PLC0415"]  # local (in-function) imports are idiomatic in tests
+"scripts/**" = ["T201"]                 # CLI-style helper scripts may print
+"**/tests/**" = ["PLC0415", "PLR2004"]  # in-function imports & literal expected values are idiomatic in tests
+"**/handlers.py" = ["PLR2004"]          # HTTP status-code comparisons (200/404/500)
+"packages/core/src/integrify/api.py" = ["PLR0913", "PLR0917"]   # APIClient.__init__ config args
+"packages/clopos/src/integrify/clopos/client.py" = ["PLR0915"]  # long client __init__
+
+# --------------------------------------------------------------------------- #
+#  ty (static type checker) — https://docs.astral.sh/ty/                      #
+#                                                                             #
+#  ty 0.0.71 is pre-1.0 and has known gaps around pydantic Field defaults,    #
+#  generic-variance narrowing, sentinel Literal types and **kwargs splat.     #
+#  The rules below silence the false positives those produce on this          #
+#  pydantic-heavy codebase; every other ty rule stays on. Tests deliberately  #
+#  pass invalid values (os.getenv() -> str | None, None) to exercise error    #
+#  paths, so they are not type-checked.                                       #
+# --------------------------------------------------------------------------- #
+[tool.ty.environment]
+python-version = "3.10"
+
+[tool.ty.src]
+exclude = ["**/tests/**"]
+
+[tool.ty.rules]
+# Optional env-vars (str | None) are used as parameter/Field defaults, validated
+# at runtime via requires_env(). The default-vs-annotation mismatch is intended.
+invalid-parameter-default = "ignore"
+invalid-assignment = "ignore"
+# Handlers narrow the generic base return (APIResponse[Unknown] | Response) to a
+# concrete schema — a generic-variance gap in ty, not a real defect.
+invalid-return-type = "ignore"
+
+[[tool.ty.overrides]]
+# core/utils.py models an "unset" sentinel as Union[T, Literal[UNSET]]; ty cannot
+# express Literal[<instance>]. Downstream schemas subscript the resulting alias.
+include = ["**/utils.py", "**/schemas/**"]
+[tool.ty.overrides.rules]
+invalid-type-form = "ignore"
+not-subscriptable = "ignore"
+
+[[tool.ty.overrides]]
+# APIClient exposes req_model/resp_model/dry as class config that instances may
+# override; httpx .request(**request_kwds) can't be verified through a dict splat.
+include = ["**/api.py"]
+[tool.ty.overrides.rules]
+invalid-attribute-access = "ignore"
+invalid-argument-type = "ignore"
+
+[[tool.ty.overrides]]
+# logfire / loguru are optional logging backends, guarded by try/except import.
+include = ["**/logger.py"]
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"
+
+[[tool.ty.overrides]]
+# integrify/test.py: pytest helper; skipif signature quirk under ty.
+include = ["**/integrify/test.py"]
+[tool.ty.overrides.rules]
+unknown-argument = "ignore"

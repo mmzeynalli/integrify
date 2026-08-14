@@ -1,7 +1,4 @@
 from decimal import Decimal
-from typing import Union
-
-from pydantic import BaseModel
 
 from integrify.clopos.schemas.common.object import (
     Image,
@@ -17,6 +14,7 @@ from integrify.clopos.schemas.common.object import (
 from integrify.clopos.schemas.enums import ProductType
 from integrify.clopos.schemas.venues.object import Venue
 from integrify.utils import UnsetOrNoneField
+from pydantic import BaseModel
 
 
 class Product(Timestamp):
@@ -173,7 +171,7 @@ class Product(Timestamp):
     venues: UnsetOrNoneField[list[Venue]]
     """The venues the product is available in"""
 
-    properties: UnsetOrNoneField[Union[dict, list]]
+    properties: UnsetOrNoneField[dict | list]
     """The properties of the product"""
 
     media: UnsetOrNoneField[list[Media]]

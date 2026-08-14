@@ -1,10 +1,10 @@
 from datetime import datetime
-from typing import Annotated, Union
+from typing import Annotated
 
 from pydantic import BeforeValidator, Field
 
 
-def timestamp_to_str(timestamp: Union[datetime, str]) -> str:
+def timestamp_to_str(timestamp: datetime | str) -> str:
     """Serialize etdikdə timestamp-i AzeriCard formatına salan funksiya"""
 
     if isinstance(timestamp, datetime):
@@ -13,7 +13,7 @@ def timestamp_to_str(timestamp: Union[datetime, str]) -> str:
     return timestamp
 
 
-def str_to_timestamp(timestamp: Union[datetime, str]) -> datetime:
+def str_to_timestamp(timestamp: datetime | str) -> datetime:
     """Deserialize etdikdə timestamp-i datetime obyektine salan funksiya"""
 
     if isinstance(timestamp, datetime):

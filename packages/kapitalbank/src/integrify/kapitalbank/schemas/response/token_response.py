@@ -1,8 +1,7 @@
-from pydantic import Field
-
 from integrify.kapitalbank.schemas.response.detailed_order_response import SrcToken
 from integrify.kapitalbank.schemas.response.refund_response import RefundOrderResponseSchema
 from integrify.kapitalbank.schemas.utils import BaseSchema
+from pydantic import Field
 
 
 class LinkCardTokenResponseSchema(BaseSchema):

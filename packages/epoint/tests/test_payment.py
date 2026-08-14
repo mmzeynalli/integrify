@@ -1,9 +1,9 @@
 from httpx import Response
-from pytest_mock import MockerFixture
-
 from integrify.epoint.client import EPointClientClass
 from integrify.epoint.schemas.enums import TransactionStatus
 from integrify.test import live
+from pytest_mock import MockerFixture
+
 from tests.conftest import requires_env
 
 

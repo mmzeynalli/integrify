@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from integrify.lsim.single.schemas.enums import Code
 from integrify.test import live
+
 from tests.conftest import requires_env
 
 if TYPE_CHECKING:

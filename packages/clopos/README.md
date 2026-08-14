@@ -82,14 +82,18 @@ Note that, these values MIGHT be unset. In this case, you should send it in head
 # CLOPOS_CLIENT_ID, CLOPOS_CLIENT_SECRET and CLOPOS_BRAND have been set as env variables
 from integrify.clopos.client import CloposClient
 
-venue1_id=1
-venue2_id=2
+venue1_id = 1
+venue2_id = 2
 
 token1 = CloposClient.auth(venue_id=venue1_id).body.token
-categories1 = CloposClient.get_categories(headers={'x-token': token1, 'x-venue': venue1_id}).body.data
+categories1 = CloposClient.get_categories(
+    headers={'x-token': token1, 'x-venue': venue1_id}
+).body.data
 
 token2 = CloposClient.auth(venue_id=venue2_id).body.token
-categories2 = CloposClient.get_categories(headers={'x-token': token1, 'x-venue': venue2_id}).body.data
+categories2 = CloposClient.get_categories(
+    headers={'x-token': token1, 'x-venue': venue2_id}
+).body.data
 ```
 
 If you want to fetch categories from different brand, just manually add `x-brand` to the header.
@@ -100,12 +104,14 @@ For auth, instead of headers, you will just send these as params.
 # No env was set
 from integrify.clopos.client import CloposClient
 
-client_id='eNUKI04aYJRU6TBhh5bwUrvmEORgQoxM'
-client_secret='dqYkWUpDjzvKOgbP3ar8tSNKJbwMyYe1V5R7DHClfSNYkap5C5XxRA6PmzoPv1I2'
-brand='openapitest'
-venue_id='1'
+client_id = 'eNUKI04aYJRU6TBhh5bwUrvmEORgQoxM'
+client_secret = 'dqYkWUpDjzvKOgbP3ar8tSNKJbwMyYe1V5R7DHClfSNYkap5C5XxRA6PmzoPv1I2'
+brand = 'openapitest'
+venue_id = '1'
 
-token = CloposClient.auth(client_id=client_id, client_secret=client_secret, brand=brand, venue_id=venue_id).body.token
+token = CloposClient.auth(
+    client_id=client_id, client_secret=client_secret, brand=brand, venue_id=venue_id
+).body.token
 ```
 
 ### List of requests

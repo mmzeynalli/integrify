@@ -1,18 +1,9 @@
 import base64
 import json
 from functools import cache
-from typing import ClassVar, Literal, Optional, Union
+from typing import ClassVar, Literal
 
 import rsa
-from pydantic import (
-    AliasGenerator,
-    ConfigDict,
-    Field,
-    computed_field,
-    field_serializer,
-)
-from typing_extensions import TypedDict
-
 from integrify.azericard import env
 from integrify.azericard.schemas.common import (
     AzeriCardMinimalDataSchema,
@@ -24,6 +15,14 @@ from integrify.azericard.schemas.enums import (
     AuthorizationType,
 )
 from integrify.schemas import PayloadBaseModel
+from pydantic import (
+    AliasGenerator,
+    ConfigDict,
+    Field,
+    computed_field,
+    field_serializer,
+)
+from typing_extensions import TypedDict
 
 
 @cache
@@ -44,7 +43,7 @@ class BaseRequestSchema(PayloadBaseModel):
     model_config = ConfigDict(alias_generator=AliasGenerator(serialization_alias=str.upper))
 
     @computed_field
-    def p_sign(self) -> Optional[str]:
+    def p_sign(self) -> str | None:
         """P_SIGN generasiyası"""
         if not self.SIGNATURE_FIELDS:
             return None  # pragma: no cover
@@ -94,20 +93,20 @@ class AuthRequestSchema(BaseRequestSchema, AzeriCardMinimalWithAmountDataSchema)
 
     # Next three fields can be set either through
     # functions or environment, but they MUST be set
-    desc: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)  # type: ignore[assignment]
-    merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)  # type: ignore[assignment]
-    merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)  # type: ignore[assignment]
+    desc: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)
+    merch_name: str = Field(default=env.AZERICARD_MERCHANT_NAME, min_length=1, max_length=50)
+    merch_url: str = Field(default=env.AZERICARD_MERCHANT_URL, min_length=1, max_length=250)
 
-    email: Optional[str] = Field(default=env.AZERICARD_MERCHANT_EMAIL, max_length=80)
-    country: Optional[str] = Field(None, max_length=2)
-    merch_gmt: Optional[str] = Field(None, min_length=1, max_length=5)
-    backref: str = Field(default=env.AZERICARD_CALLBACK_URL, min_length=1, max_length=250)  # type: ignore[assignment]
+    email: str | None = Field(default=env.AZERICARD_MERCHANT_EMAIL, max_length=80)
+    country: str | None = Field(None, max_length=2)
+    merch_gmt: str | None = Field(None, min_length=1, max_length=5)
+    backref: str = Field(default=env.AZERICARD_CALLBACK_URL, min_length=1, max_length=250)
     lang: str = Field(default=env.AZERICARD_INTERFACE_LANG, min_length=2, max_length=2)
-    name: Optional[str] = Field(None, min_length=2, max_length=45)
-    m_info: Optional[MInfo] = None
+    name: str | None = Field(None, min_length=2, max_length=45)
+    m_info: MInfo | None = None
 
     @field_serializer('m_info')
-    def serialize_minfo_to_b64(self, m_info: Optional[MInfo]):
+    def serialize_minfo_to_b64(self, m_info: MInfo | None):
         """M_INFO dcit-ini base64 encodelaşdırılması"""
         if not m_info:
             return None
@@ -205,7 +204,7 @@ class GetTransactionStatusRequestSchema(BaseRequestSchema, AzeriCardMinimalDataS
         'timestamp',
         'nonce',
     ]
-    tran_trtype: Union[AuthorizationType, AuthorizationResponseType] = Field(
+    tran_trtype: AuthorizationType | AuthorizationResponseType = Field(
         min_length=1,
         max_length=2,
     )

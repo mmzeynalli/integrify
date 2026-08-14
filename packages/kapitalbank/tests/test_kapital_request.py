@@ -1,9 +1,9 @@
 from httpx import Response
-from pytest_mock import MockFixture
-
 from integrify.kapitalbank.client import KapitalClientClass
 from integrify.kapitalbank.schemas.enums import ErrorCode
 from integrify.test import live
+from pytest_mock import MockFixture
+
 from tests.conftest import requires_env
 
 

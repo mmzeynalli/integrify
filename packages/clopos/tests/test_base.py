@@ -9,6 +9,7 @@ from integrify.clopos.schemas.sales.object import PaymentMethod, SaleType
 from integrify.clopos.schemas.stations.object import Station
 from integrify.clopos.schemas.users.object import User
 from integrify.clopos.schemas.venues.object import Venue
+
 from tests.conftest import requires_env
 
 if TYPE_CHECKING:

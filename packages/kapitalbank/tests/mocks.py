@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pytest
 from httpx import Response
-
 from integrify.kapitalbank.schemas.enums import ErrorCode
 
 

@@ -84,9 +84,9 @@ from integrify.epoint import EPointRequest
 
 resp = EPointRequest.pay(
     amount=100,
-    currency="AZN",
-    order_id="12345678",
-    description="Ödəniş",
+    currency='AZN',
+    order_id='12345678',
+    description='Ödəniş',
 )
 print(resp.ok, resp.body)
 ```
@@ -98,9 +98,9 @@ from integrify.epoint import EPointAsyncRequest
 
 resp = await EPointAsyncRequest.pay(
     amount=100,
-    currency="AZN",
-    order_id="12345678",
-    description="Ödəniş",
+    currency='AZN',
+    order_id='12345678',
+    description='Ödəniş',
 )
 print(resp.ok, resp.body)
 ```
@@ -159,9 +159,9 @@ from integrify.epoint import EPointRequest
 
 resp = EPointRequest.pay(
     amount=100,
-    currency="AZN",
-    order_id="12345678",
-    description="Payment",
+    currency='AZN',
+    order_id='12345678',
+    description='Payment',
 )
 print(resp.ok, resp.body)
 ```
@@ -173,9 +173,9 @@ from integrify.epoint import EPointAsyncRequest
 
 resp = await EPointAsyncRequest.pay(
     amount=100,
-    currency="AZN",
-    order_id="12345678",
-    description="Payment",
+    currency='AZN',
+    order_id='12345678',
+    description='Payment',
 )
 print(resp.ok, resp.body)
 ```

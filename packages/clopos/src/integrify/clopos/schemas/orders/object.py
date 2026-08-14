@@ -1,13 +1,12 @@
 from decimal import Decimal
 from typing import Union
 
-from pydantic import BaseModel
-
 from integrify.clopos.schemas.common.object import Service, Timestamp
 from integrify.clopos.schemas.enums import DiscountType, OrderStatus
 from integrify.clopos.schemas.products.object import Product
 from integrify.clopos.schemas.sales.object import PaymentMethod, SaleType
 from integrify.utils import UnsetField, UnsetOrNoneField
+from pydantic import BaseModel
 
 
 class ServiceIn(BaseModel):

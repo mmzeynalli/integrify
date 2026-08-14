@@ -1,6 +1,6 @@
 from collections.abc import Coroutine
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Generic, Union, overload
+from typing import TYPE_CHECKING, Any, Generic, overload
 
 from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.postaguvercini import env
@@ -55,12 +55,12 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
             self: 'PostaGuverciniClientClass[_Sync]',
             message: str,
             receivers: list[str],
-            send_date: Unsettable[Union[str, datetime]] = _UNSET,
-            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
+            send_date: Unsettable[str | datetime] = _UNSET,
+            expire_date: Unsettable[str | datetime] = _UNSET,
             channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> APIResponse[SendSMSResponseSchema]:
             """Tək SMS göndərilməsi
 
@@ -96,12 +96,12 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
             self: 'PostaGuverciniClientClass[_Async]',
             message: str,
             receivers: list[str],
-            send_date: Unsettable[Union[str, datetime]] = _UNSET,
-            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
+            send_date: Unsettable[str | datetime] = _UNSET,
+            expire_date: Unsettable[str | datetime] = _UNSET,
             channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[SendSMSResponseSchema]]: ...
         def send_single_sms(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -109,12 +109,12 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
         def send_multiple_sms(
             self: 'PostaGuverciniClientClass[_Sync]',
             messages: list[SMSMessage],
-            send_date: Unsettable[Union[str, datetime]] = _UNSET,
-            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
+            send_date: Unsettable[str | datetime] = _UNSET,
+            expire_date: Unsettable[str | datetime] = _UNSET,
             channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> APIResponse[SendSMSResponseSchema]:
             """Çoxlu SMS göndərilməsi
 
@@ -150,12 +150,12 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
         def send_multiple_sms(
             self: 'PostaGuverciniClientClass[_Async]',
             messages: list[SMSMessage],
-            send_date: Unsettable[Union[str, datetime]] = _UNSET,
-            expire_date: Unsettable[Union[str, datetime]] = _UNSET,
+            send_date: Unsettable[str | datetime] = _UNSET,
+            expire_date: Unsettable[str | datetime] = _UNSET,
             channel: ChannelType = ChannelType.OTP,
             originator: Unsettable[str] = _UNSET,
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[SendSMSResponseSchema]]: ...
         def send_multiple_sms(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -163,8 +163,8 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
         def get_status(
             self: 'PostaGuverciniClientClass[_Sync]',
             message_ids: list[str],
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> APIResponse[StatusResponseSchema]:
             """SMS status sorğusu
 
@@ -191,16 +191,16 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
         def get_status(
             self: 'PostaGuverciniClientClass[_Async]',
             message_ids: list[str],
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[StatusResponseSchema]]: ...
         def get_status(self, *args: Any, **kwds: Any) -> Any: ...
 
         @overload
         def credit_balance(
             self: 'PostaGuverciniClientClass[_Sync]',
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> APIResponse[CreditBalanceResponseSchema]:
             """Kredit balans sorğusu
 
@@ -225,8 +225,8 @@ class PostaGuverciniClientClass(APIClient, Generic[_Mode]):
         @overload
         def credit_balance(
             self: 'PostaGuverciniClientClass[_Async]',
-            username: str = env.POSTA_GUVERCINI_USERNAME,  # type: ignore[assignment]
-            password: str = env.POSTA_GUVERCINI_PASSWORD,  # type: ignore[assignment]
+            username: str = env.POSTA_GUVERCINI_USERNAME,
+            password: str = env.POSTA_GUVERCINI_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[CreditBalanceResponseSchema]]: ...
         def credit_balance(self, *args: Any, **kwds: Any) -> Any: ...
 

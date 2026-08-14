@@ -1,8 +1,6 @@
 # Main aspects of Clopos: Product, Sales, Order and Receipt
 from typing import TYPE_CHECKING
 
-from pytest_mock import MockerFixture
-
 from integrify.clopos.schemas.common.response import ErrorResponse, ObjectResponse
 from integrify.clopos.schemas.enums import OrderStatus, ProductType
 from integrify.clopos.schemas.orders.object import Order
@@ -10,6 +8,8 @@ from integrify.clopos.schemas.price_lists.object import PriceList, PriceListPric
 from integrify.clopos.schemas.products.object import Product, StopList
 from integrify.clopos.schemas.receipts.object import Receipt, ReceiptStockOperation
 from integrify.schemas import APIResponse
+from pytest_mock import MockerFixture
+
 from tests.client import CloposTestClientClass
 from tests.conftest import requires_env
 

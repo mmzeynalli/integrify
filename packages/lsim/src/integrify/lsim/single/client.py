@@ -1,6 +1,6 @@
 from collections.abc import Coroutine
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Generic, Union, overload
+from typing import TYPE_CHECKING, Any, Generic, overload
 
 from integrify.api import APIClient, _Async, _Mode, _Sync
 from integrify.lsim import env as base_env
@@ -55,9 +55,9 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
             self: 'LSIMSingleSMSClientClass[_Sync]',
             msisdn: str,
             text: str,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            sender: str = base_env.LSIM_SENDER_NAME,
             unicode: bool = False,
         ) -> APIResponse[BaseGetResponseSchema]:
             """SMS göndərən GET sorğusu
@@ -91,9 +91,9 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
             self: 'LSIMSingleSMSClientClass[_Async]',
             msisdn: str,
             text: str,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            sender: str = base_env.LSIM_SENDER_NAME,
             unicode: bool = False,
         ) -> Coroutine[Any, Any, APIResponse[BaseGetResponseSchema]]: ...
         def send_sms_get(self, *args: Any, **kwds: Any) -> Any: ...
@@ -103,11 +103,11 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
             self: 'LSIMSingleSMSClientClass[_Sync]',
             msisdn: str,
             text: str,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            sender: str = base_env.LSIM_SENDER_NAME,
             unicode: bool = False,
-            scheduled: Union[str, datetime] = 'NOW',
+            scheduled: str | datetime = 'NOW',
         ) -> APIResponse[BasePostResponseSchema]:
             """SMS göndərən POST sorğusu
 
@@ -142,19 +142,19 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
             self: 'LSIMSingleSMSClientClass[_Async]',
             msisdn: str,
             text: str,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
-            sender: str = base_env.LSIM_SENDER_NAME,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
+            sender: str = base_env.LSIM_SENDER_NAME,
             unicode: bool = False,
-            scheduled: Union[str, datetime] = 'NOW',
+            scheduled: str | datetime = 'NOW',
         ) -> Coroutine[Any, Any, APIResponse[BasePostResponseSchema]]: ...
         def send_sms_post(self, *args: Any, **kwds: Any) -> Any: ...
 
         @overload
         def check_balance(
             self: 'LSIMSingleSMSClientClass[_Sync]',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> APIResponse[BaseGetResponseSchema]:
             """LSIM balans sorğusu
 
@@ -180,8 +180,8 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
         @overload
         def check_balance(
             self: 'LSIMSingleSMSClientClass[_Async]',
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
-            password: str = base_env.LSIM_PASSWORD,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
+            password: str = base_env.LSIM_PASSWORD,
         ) -> Coroutine[Any, Any, APIResponse[BaseGetResponseSchema]]: ...
         def check_balance(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -189,7 +189,7 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
         def get_report_get(
             self: 'LSIMSingleSMSClientClass[_Sync]',
             trans_id: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
         ) -> APIResponse[ReportGetResponseSchema]:
             """Göndərilmiş SMS-in reportunu alan GET sorğusu
 
@@ -213,7 +213,7 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
         def get_report_get(
             self: 'LSIMSingleSMSClientClass[_Async]',
             trans_id: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
         ) -> Coroutine[Any, Any, APIResponse[ReportGetResponseSchema]]: ...
         def get_report_get(self, *args: Any, **kwds: Any) -> Any: ...
 
@@ -221,7 +221,7 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
         def get_report_post(
             self: 'LSIMSingleSMSClientClass[_Sync]',
             trans_id: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
         ) -> APIResponse[ReportPostResponseSchema]:
             """Göndərilmiş SMS-in reportunu alan POST sorğusu
 
@@ -245,7 +245,7 @@ class LSIMSingleSMSClientClass(APIClient, Generic[_Mode]):
         def get_report_post(
             self: 'LSIMSingleSMSClientClass[_Async]',
             trans_id: int,
-            login: str = base_env.LSIM_LOGIN,  # type: ignore[assignment]
+            login: str = base_env.LSIM_LOGIN,
         ) -> Coroutine[Any, Any, APIResponse[ReportPostResponseSchema]]: ...
         def get_report_post(self, *args: Any, **kwds: Any) -> Any: ...
 

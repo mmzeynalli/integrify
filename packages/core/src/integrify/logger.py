@@ -1,17 +1,17 @@
 import logging
+from collections.abc import Callable
 from functools import partial
-from typing import Callable
 
 try:
-    import logfire  # type: ignore[import-not-found]
+    import logfire
 except ModuleNotFoundError:
-    logfire = None  # pylint: disable=invalid-name
+    logfire = None
 
 
 try:
-    import loguru  # type: ignore[import-not-found]
+    import loguru
 except ModuleNotFoundError:
-    loguru = None  # pylint: disable=invalid-name
+    loguru = None
 
 
 LOGGER: Callable = logging.getLogger

@@ -1,7 +1,6 @@
-from pydantic import computed_field
-
 from integrify.kapitalbank.schemas.enums import TransactionStatus
 from integrify.kapitalbank.schemas.utils import BaseSchema
+from pydantic import computed_field
 
 
 class CreateOrderResponseSchema(BaseSchema):
@@ -9,7 +8,7 @@ class CreateOrderResponseSchema(BaseSchema):
     password: str
     hpp_url: str
 
-    @computed_field  # type: ignore[prop-decorator]
+    @computed_field
     @property
     def redirect_url(self) -> str:
         """Redirect url generasiyası"""

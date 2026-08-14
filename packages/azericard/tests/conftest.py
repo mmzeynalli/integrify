@@ -1,7 +1,6 @@
 from functools import partial
 
 import pytest
-
 from integrify.test import requires_env as _requires_env
 
 from .mocks import *  # noqa: F403

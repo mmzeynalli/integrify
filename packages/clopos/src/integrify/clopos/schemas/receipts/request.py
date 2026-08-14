@@ -1,11 +1,10 @@
 from decimal import Decimal
 
-from pydantic import BaseModel
-
 from integrify.clopos.helpers import IsoDateTime
 from integrify.clopos.schemas.common.request import ByIDRequest, PaginatedDataRequest
 from integrify.clopos.schemas.enums import OrderStatus
 from integrify.utils import UnsetField
+from pydantic import BaseModel
 
 
 class PaymentMethodIn(BaseModel):

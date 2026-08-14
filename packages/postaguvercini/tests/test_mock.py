@@ -1,7 +1,7 @@
 from httpx import Response
+from integrify.postaguvercini.client import PostaGuverciniClientClass
 from pytest_mock import MockFixture
 
-from integrify.postaguvercini.client import PostaGuverciniClientClass
 from tests.conftest import requires_env
 
 

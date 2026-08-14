@@ -1,15 +1,12 @@
-from typing import Optional, Union
-
-from pydantic import BaseModel, Field, model_validator
-
 from integrify.lsim.bulk.schemas.enums import Code, SMSStatus
+from pydantic import BaseModel, Field, model_validator
 
 
 class SendBulkSMSResponseSchema(BaseModel):
-    response_code: Union[Code, int]
+    response_code: Code | int
     """Sorğunun uğur(suz)luq kodu"""
 
-    task_id: Optional[int] = None
+    task_id: int | None = None
     """Sorğunun id-si. Bu id-ni report almaqda istifadə edə bilərsiniz"""
 
     @model_validator(mode='before')
@@ -23,7 +20,7 @@ class SendBulkSMSResponseSchema(BaseModel):
 
 
 class GetBulkSMSReportResponseSchema(BaseModel):
-    response_code: Union[Code, int]
+    response_code: Code | int
     """Sorğunun uğur(suz)luq kodu"""
 
     expired: int = -1
@@ -67,11 +64,11 @@ class SMSReportSchema(BaseModel):
     msisdn: int
     message: str
     status: SMSStatus
-    date: Optional[str] = None
+    date: str | None = None
 
 
 class GetBulkSMSDetailedReportResponseSchema(BaseModel):
-    response_code: Union[Code, str]
+    response_code: Code | str
     """Sorğunun uğur(suz)luq kodu"""
 
     body: list[SMSReportSchema]
@@ -87,7 +84,7 @@ class GetBulkSMSDetailedReportResponseSchema(BaseModel):
 
 
 class GetBalanceResponseSchema(BaseModel):
-    response_code: Union[Code, str]
+    response_code: Code | str
     """Sorğunun uğur(suz)luq kodu"""
 
     units: int
