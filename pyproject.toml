@@ -93,14 +93,14 @@ integrify-postaguvercini = { workspace = true }
 
 [dependency-groups]
 gh = [
-    "pytest>=8.1.1,<9",
+    "pytest>=8.1.1,<10",
     "pytest-mock>=3.14.0,<4",
     "smokeshow>=0.5.0,<0.6",
     "coverage>=7.6.3,<8",
     "time-machine>=2.16.0",
 ]
 dev = [
-    "pytest>=8.1.1,<9",
+    "pytest>=8.1.1,<10",
     "pytest-mock>=3.14.0,<4",
     "ty>=0.0.71",
     "ruff>=0.9",
