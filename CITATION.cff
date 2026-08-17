@@ -20,7 +20,7 @@ keywords:
   - integrify
   - api
   - integration
-  - payment
-  - sms
+  - payment-gateway
+  - sms-gateway
   - azerbaijan
-license: GPL-3.0-or-later
+license: MIT

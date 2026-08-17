@@ -9,42 +9,16 @@
 <p align="center">
     <em>Integrify is a library that simplifies API integrations. This library is designed for Clopos integration.</em>
 </p>
-<p align="center">
-<a href="https://github.com/Integrify-SDK/integrify-clopos-python/actions/workflows/test.yml" target="_blank">
-    <img src="https://github.com/Integrify-SDK/integrify-clopos-python/actions/workflows/test.yml/badge.svg?branch=main" alt="Test">
-</a>
-<a href="https://github.com/Integrify-SDK/integrify-clopos-python/actions/workflows/publish.yml" target="_blank">
-    <img src="https://github.com/Integrify-SDK/integrify-clopos-python/actions/workflows/publish.yml/badge.svg" alt="Publish">
-</a>
-<a href="https://pypi.org/project/integrify-clopos" target="_blank">
-  <img src="https://img.shields.io/pypi/v/integrify-clopos?color=%2334D058&label=pypi%20package" alt="Package version">
-</a>
-<a href="https://app.netlify.com/sites/integrify-docs/deploys">
-  <img src="https://api.netlify.com/api/v1/badges/d8931b6a-80c7-41cb-bdbb-bf6ef5789f80/deploy-status" alt="Netlify Status">
-</a>
-</p>
-<p align="center">
-<a href="https://pepy.tech/project/integrify-clopos" target="_blank">
-  <img src="https://static.pepy.tech/badge/integrify-clopos" alt="Downloads">
-</a>
-<a href="https://pypi.org/project/integrify-clopos" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/integrify-clopos.svg?color=%2334D058" alt="Supported Python versions">
-</a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/Integrify-SDK/integrify-clopos-python" target="_blank">
-    <img src="https://coverage-badge.samuelcolvin.workers.dev/Integrify-SDK/integrify-clopos-python.svg" alt="Coverage">
-</a>
-
-</p>
 
 ---
 
 **Documentation**: [https://integrify.mmzeynalli.dev/integrations/clopos/about/](https://integrify.mmzeynalli.dev/integrations/clopos/about/)
 
-**Source code**: [https://github.com/Integrify-SDK/integrify-clopos-python](https://github.com/Integrify-SDK/integrify-clopos-python)
+**Source code**: [https://github.com/integrify-sdk/integrify-python/tree/main/packages/clopos](https://github.com/integrify-sdk/integrify-python/tree/main/packages/clopos)
 
 ---
 
-## Official Documentation (v1.0.1)
+## Official Documentation (v2)
 
 [English](https://developer.clopos.com/)
 
@@ -154,16 +128,3 @@ user = CloposClient.get_user_by_id(id=1, headers={'x-token': token}).body.data
 
 > [!Caution]
 > Integrify is unofficial library, even though it is based on official documentation.
-
-## Other supported integrations
-
-<!-- AUTO-UPDATE SECTION -->
-| Servis                                                                              |                                                        Əsas sorğular                                                         |                                                        Bütün sorğular                                                        | Dokumentləşdirilmə                                                                                                           | Real mühitdə test                                                                                                            | Əsas developer                                    |
-| ----------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [EPoint](https://github.com/Integrify-SDK/integrify-epoint-python)                  |                                                              ✅                                                               | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Tam](https://integrify.mmzeynalli.dev/integrations/epoint/)                                                                 | ✅                                                                                                                            | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [KapitalBank](https://github.com/Integrify-SDK/integrify-kapitalbank-python)        |                                                              ✅                                                               |                                                              ✅                                                               | [Tam](https://integrify.mmzeynalli.dev/integrations/kapitalbank/)                                                            | ✅                                                                                                                            | [Zaman Kazımov](https://github.com/kazimovzaman2) |
-| [LSIM](https://github.com/Integrify-SDK/integrify-lsim-python)                      |                                                              ✅                                                               |                                                              ✅                                                               | [Tam](https://integrify.mmzeynalli.dev/integrations/lsim/)                                                                   | ✅                                                                                                                            | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [Posta Guvercini](https://github.com/Integrify-SDK/integrify-postaguvercini-python) |                                                              ✅                                                               |                                                              ✅                                                               | [Tam](https://integrify.mmzeynalli.dev/integrations/posta-guvercini/)                                                        | ✅                                                                                                                            | [Zaman Kazımov](https://github.com/kazimovzaman2) |
-| [Azericard](https://github.com/Integrify-SDK/integrify-azericard-python)            |                                                              ✅                                                               | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Tam](https://integrify.mmzeynalli.dev/integrations/azericard/)                                                              | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [Clopos](https://github.com/Integrify-SDK/integrify-clopos-python)                  |                                                              ✅                                                               |                                                              ✅                                                               | [Full](https://integrify.mmzeynalli.dev/en/integrations/clopos/)                                                             | ![loading](https://raw.githubusercontent.com/mmzeynalli/integrify/main/docs/az/docs/assets/spinner-solid.svg)                | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [Payriff](https://github.com/Integrify-SDK/integrify-payriff-python)                | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Vahid Həsənzadə](https://github.com/vahidzhe)    |

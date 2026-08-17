@@ -9,38 +9,12 @@
 <p align="center">
     <em>Integrify API inteqrasiyalarını rahatlaşdıran sorğular kitabaxanasıdır. Bu kitabxana Azericard inteqrasiyası üçün nəzərdə tutulmuşdur.</em>
 </p>
-<p align="center">
-<a href="https://github.com/Integrify-SDK/integrify-azericard-python/actions/workflows/test.yml" target="_blank">
-    <img src="https://github.com/Integrify-SDK/integrify-azericard-python/actions/workflows/test.yml/badge.svg?branch=main" alt="Test">
-</a>
-<a href="https://github.com/Integrify-SDK/integrify-azericard-python/actions/workflows/publish.yml" target="_blank">
-    <img src="https://github.com/Integrify-SDK/integrify-azericard-python/actions/workflows/publish.yml/badge.svg" alt="Publish">
-</a>
-<a href="https://pypi.org/project/integrify-azericard" target="_blank">
-  <img src="https://img.shields.io/pypi/v/integrify-azericard?color=%2334D058&label=pypi%20package" alt="Package version">
-</a>
-<a href="https://app.netlify.com/sites/integrify-docs/deploys">
-  <img src="https://api.netlify.com/api/v1/badges/d8931b6a-80c7-41cb-bdbb-bf6ef5789f80/deploy-status" alt="Netlify Status">
-</a>
-</p>
-<p align="center">
-<a href="https://pepy.tech/project/integrify-azericard" target="_blank">
-  <img src="https://static.pepy.tech/badge/integrify-azericard" alt="Downloads">
-</a>
-<a href="https://pypi.org/project/integrify-azericard" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/integrify-azericard.svg?color=%2334D058" alt="Supported Python versions">
-</a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/Integrify-SDK/integrify-azericard-python" target="_blank">
-    <img src="https://coverage-badge.samuelcolvin.workers.dev/Integrify-SDK/integrify-azericard-python.svg" alt="Coverage">
-</a>
-
-</p>
 
 ---
 
 **Dokumentasiya**: [https://integrify.mmzeynalli.dev/integrations/azericard/about/](https://integrify.mmzeynalli.dev/integrations/azericard/about/)
 
-**Kod**: [https://github.com/Integrify-SDK/integrify-azericard-python](https://github.com/Integrify-SDK/integrify-azericard-python)
+**Kod**: [https://github.com/integrify-sdk/integrify-python/tree/main/packages/azericard](https://github.com/integrify-sdk/integrify-python/tree/main/packages/azericard)
 
 ---
 
@@ -158,15 +132,3 @@ Sorğudan asılı olaraq, bu data-lar callback-də **GƏLMİR** (yəni, avtomati
 | `auth_and_save_card`   | -                |
 | `auth_with_saved_card` | -                |
 | `finalize`             | `card`, `token`  |
-
-## Dəstəklənən başqa API inteqrasiyaları
-
-<!-- AUTO-UPDATE SECTION -->
-| Servis                                                                              |                                                        Əsas sorğular                                                         |                                                        Bütün sorğular                                                        | Dokumentləşdirilmə                                                                                                           | Real mühitdə test                                                                                                            | Əsas developer                                    |
-| ----------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [EPoint](https://github.com/Integrify-SDK/integrify-epoint-python)                  |                                                              ✅                                                               | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Tam](https://integrify.mmzeynalli.dev/integrations/epoint/about/)                                                           | ✅                                                                                                                            | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [KapitalBank](https://github.com/Integrify-SDK/integrify-kapitalbank-python)        |                                                              ✅                                                               |                                                              ✅                                                               | [Tam](https://integrify.mmzeynalli.dev/integrations/kapital/about/)                                                          | ✅                                                                                                                            | [Zaman Kazımov](https://github.com/kazimovzaman2) |
-| [LSIM](https://github.com/Integrify-SDK/integrify-lsim-python)                      |                                                              ✅                                                               |                                                              ✅                                                               | [Tam](https://integrify.mmzeynalli.dev/integrations/lsim/about/)                                                             | ✅                                                                                                                            | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [Posta Guvercini](https://github.com/Integrify-SDK/integrify-postaguvercini-python) |                                                              ✅                                                               |                                                              ✅                                                               | [Tam](https://integrify.mmzeynalli.dev/integrations/posta-guvercini/about/)                                                  | ✅                                                                                                                            | [Zaman Kazımov](https://github.com/kazimovzaman2) |
-| [Azericard](https://github.com/Integrify-SDK/integrify-azericard-python)            |                                                              ✅                                                               | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Tam](https://integrify.mmzeynalli.dev/integrations/azericard/about)                                                         | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Miradil Zeynallı](https://github.com/mmzeynalli) |
-| [Payriff](https://github.com/Integrify-SDK/integrify-payriff-python)                | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | ![loading](https://raw.githubusercontent.com/Integrify-SDK/integrify-docs-python/main/docs/az/docs/assets/spinner-solid.svg) | [Vahid Həsənzadə](https://github.com/vahidzhe)    |

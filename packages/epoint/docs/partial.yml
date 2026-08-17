@@ -1,9 +1,0 @@
-EPoint:
-  - "integrations/epoint/index.md"
-  - "integrations/epoint/env.md"
-  - API Referansı:
-    - "integrations/epoint/api-reference/client.md"
-    - Schemas:
-      - Response: "integrations/epoint/api-reference/response.md"
-      - Callback: "integrations/epoint/api-reference/callback.md"
-    - "integrations/epoint/api-reference/helper-functions.md"

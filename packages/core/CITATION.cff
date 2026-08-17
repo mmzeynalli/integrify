@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: Integrify
+title: Integrify-Core
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -11,7 +11,7 @@ authors:
   - given-names: Miradil
     family-names: Zeynalli
     email: miradil.zeynalli@gmail.com
-repository-code: 'https://github.com/Integrify-SDK/integrify-core-python'
+repository-code: 'https://github.com/integrify-sdk/integrify-python/tree/main/packages/core'
 url: 'https://integrify.mmzeynalli.dev/'
 abstract: >-
   Integrify is a request library that eases the API
@@ -19,4 +19,4 @@ abstract: >-
 keywords:
   - integrify
   - integrify-core
-license: GPL-3.0-or-later
+license: MIT
