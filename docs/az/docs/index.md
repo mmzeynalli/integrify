@@ -14,13 +14,15 @@ Bütün sorğuların həm **sinxron**, həm də **asinxron** versiyası var və 
 
 ## İnteqrasiyalar
 
-| İnteqrasiya | Növ | Sənəd |
-| :--- | :--- | :--- |
-| EPoint | Ödəniş | [Keçid](integrations/epoint/index.md) |
-| Kapital Bank | Ödəniş | [Keçid](integrations/kapitalbank/index.md) |
-| Azericard | Ödəniş | [Keçid](integrations/azericard/index.md) |
-| LSIM | SMS | [Keçid](integrations/lsim/index.md) |
-| Posta Güvərçini | SMS | [Keçid](integrations/posta-guvercini/index.md) |
+| İnteqrasiya     | Növ                        | Sənəd                                                                  |
+| :-------------- | :------------------------- | :--------------------------------------------------------------------- |
+| EPoint          | Ödəniş                     | [Keçid](integrations/epoint/index.md)                                  |
+| Kapital Bank    | Ödəniş                     | [Keçid](integrations/kapitalbank/index.md)                             |
+| Azericard       | Ödəniş                     | [Keçid](integrations/azericard/index.md)                               |
+| LSIM            | SMS                        | [Keçid](integrations/lsim/index.md)                                    |
+| Posta Güvərçini | SMS                        | [Keçid](integrations/posta-guvercini/index.md)                         |
+| Clopos          | Restoran idarəetməsi (POS) | [Keçid (EN)](https://integrify.mmzeynalli.dev/en/integrations/clopos/) |
+| ECustoms        | Logistika (məxfi)          | [Keçid](integrations/ecustoms/index.md)                                |
 
 > Clopos (POS) inteqrasiyasının sənədi hələlik yalnız **[İngiliscə](https://integrify.mmzeynalli.dev/en/)** mövcuddur.
 

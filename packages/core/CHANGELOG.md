@@ -4,6 +4,14 @@ All notable changes to `integrify-core` are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/) and this project follows
 [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-08-17
+
+### Changed
+
+- Widened the `_ResponseT` bound to `BaseModel | dict | list`, so integrations whose
+  endpoints return a JSON array at the root can type their responses as
+  `APIResponse[list[SomeSchema]]`.
+
 ## [1.2.0] - 2026-08-11
 
 ### Added
